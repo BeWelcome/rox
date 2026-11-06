@@ -1,32 +1,37 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's groups (GroupInformationExtractor): a card each with where they stand and why they're in. Expects groupmemberships. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'groups' %}
+{% set S = 'App\\Doctrine\\GroupMembershipStatusType::' %}
 
 {% block content %}
-    <h1>{{ 'mydata.groups.headline'|trans }}</h1>
-    <p>{{ 'mydata.groups.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.groups.headline'|trans, abstract: 'mydata.groups.abstract'|trans}) }}
     {% if groupmemberships|length == 0 %}
-    <p><strong>{{ 'mydata.groups.no.groups.'|trans }}</strong></p>
+        {{ my.empty('fa-users', 'mydata.groups.no.groups.'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for membership in groupmemberships %}
-                <div class="card o-card">
-                    <div class="card-header text-truncate">
-                        {{ membership.group.name }}
+                {% set _status = membership.status %}
+                <article class="c-mydata-card">
+                    <div class="c-mydata-section-card__head">
+                        <span class="c-mydata-tile" aria-hidden="true"><i class="fas fa-users"></i></span>
+                        <h2 class="c-mydata-card__title" style="margin: 0;">{{ membership.group.name }}</h2>
                     </div>
-                    <div class="card-body">
-
-                <p>{% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}{{ 'mydata.groups.joined'|trans({'joined': membership.created}) }}{% endif %}
-                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP') %}{{ 'mydata.groups.wantin'|trans({'wantin': membership.created}) }}{% endif %}
-                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP') %}{{ 'mydata.groups.kicked'|trans({'kicked': membership.updated}) }}{% endif %}
-                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::INVITED_INTO_GROUP') %}{{ 'mydata.groups.invited'|trans({'kicked': membership.created}) }}{% endif %}</p>
-                {% if membership.comment %}
-                    <p>{{ 'mydata.groups.why.im.here'|trans }}</p>
-                    <p>{{ membership.comment|purify }}</p>
-                {% endif %}
-
-                    </div>
-                    <div class="card-footer text-right"> <a class="btn btn-primary" href="{{ url('group_start', {'group_id': membership.group.id}) }}">{{ 'goto group' }}</a></div>
-                </div>
-        {% endfor %}
+                    <p class="c-mydata-card__meta" style="margin-top: 0.6rem;">
+                        {% if _status == constant(S ~ 'CURRENT_MEMBER') %}<span class="c-mydata-tag c-mydata-tag--green">{{ 'mydata.groups.joined'|trans({'joined': membership.created}) }}</span>
+                        {% elseif _status == constant(S ~ 'APPLIED_FOR_MEMBERSHIP') %}<span class="c-mydata-tag c-mydata-tag--orange">{{ 'mydata.groups.wantin'|trans({'wantin': membership.created}) }}</span>
+                        {% elseif _status == constant(S ~ 'INVITED_INTO_GROUP') %}<span class="c-mydata-tag c-mydata-tag--orange">{{ 'mydata.groups.invited'|trans({'kicked': membership.created}) }}</span>
+                        {% elseif _status == constant(S ~ 'KICKED_FROM_GROUP') %}<span class="c-mydata-tag">{{ 'mydata.groups.kicked'|trans({'kicked': membership.updated}) }}</span>{% endif %}
+                    </p>
+                    {% if membership.comment|striptags|trim %}
+                        <div class="c-mydata-box">
+                            <span class="c-mydata-label">{{ 'mydata.groups.why.im.here'|trans }}</span>
+                            <div class="c-mydata-card__text">{{ membership.comment|purify }}</div>
+                        </div>
+                    {% endif %}
+                    <div class="c-mydata-card__foot"><span></span><a class="c-mydata-more" href="{{ url('group_start', {group_id: membership.group.id}) }}">{{ 'mydata.groups.goto'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a></div>
+                </article>
+            {% endfor %}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

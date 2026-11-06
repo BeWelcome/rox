@@ -1,207 +1,152 @@
 {% extends 'private/mydata.html.twig' %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock %}
+{#
+  The member's profile (MemberDataExtractor): the header with the picture (full size in a viewer, :target), then the
+  translated fields by language in tabs that work without JavaScript (radio buttons, _mydata.css). Expects member and
+  picture (ProfilePicture::files, null without one).
+#}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'profile' %}
 
 {% block content %}
     {% set fields = member.translations %}
-    <main role="main">
-        <div class="container-lg">
-            <div class="row"> {# header #}
-                <div class="col-12 col-md-6">
-                    <div class="p-2"><img src="{{ profilepicture }}"
-                                          alt="{{ 'mydata.profile.picture'|trans }}"
-                                          class="float-left img-thumbnail"></div>
+    {{ my.head({group: 'you', title: 'mydata.profile.headline'|trans, abstract: 'mydata.profile.abstract'|trans}) }}
 
-                    <h2 class="u:text-32 m-0 d-inline"><strong>{{ member.username }}</strong><br>
-                        <span class="h5">{{ member.accommodation|trans }}</span><br>
-                        <span class="h4">{{ member.name }}</span>
-                    </h2>
+    <section class="c-mydata-card c-mydata-profile">
+        <div class="c-mydata-profile__picture">
+            {% if picture %}
+                <a href="#picture" aria-label="{{ 'mydata.picture.open'|trans }}">
+                    <img src="{{ picture.thumbnail }}" alt="{{ 'mydata.profile.picture'|trans }}">
+                    <span class="c-mydata-profile__expand" aria-hidden="true"><i class="fas fa-expand"></i></span>
+                </a>
+            {% else %}
+                <img src="images/empty_avatar.png" alt="">
+            {% endif %}
+        </div>
+        <div class="c-mydata-profile__who">
+            <h2>{{ member.username }}</h2>
+            <div class="c-mydata-tags">
+                <span class="c-mydata-tag{{ member.accommodation != 'neverask' ? ' c-mydata-tag--green' }}">{{ member.accommodation|trans }}</span>
+            </div>
+            {% if member.name %}<p>{{ member.name }}</p>{% endif %}
+            {% set address = member.activeAddress %}
+            {% if address %}
+                {% set location = address.location %}
+                {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+                {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+                <p>
+                    <i class="fas fa-location-dot" aria-hidden="true"></i>
+                    <a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>,
+                    {% if location.admin1 is not null %}<a href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode}) }}">{{ regionName }}</a>,{% endif %}
+                    <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+                </p>
+            {% endif %}
+        </div>
+        <dl class="c-mydata-profile__facts">
+            <dt>{{ 'age'|trans }}</dt><dd>{{ member.age }}</dd>
+            <dt>{{ 'gender'|trans }}</dt><dd>{{ member.gender|trans }}</dd>
+            <dt>{{ 'membersince'|trans }}</dt><dd>{{ member.created|format_date('medium') }}</dd>
+            <dt>{{ 'mydata.profile.status'|trans }}</dt><dd>{{ member.status|trans }}</dd>
+        </dl>
+    </section>
 
-                    {# the place of the active address, linked as on the profile (profile/header.html.twig) #}
-                    {% set address = member.activeAddress %}
-                    {% if address %}
-                        {% set location = address.location %}
-                        {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
-                        {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
-                        <h5>
-                            <strong><a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a></strong>,
-                            {% if location.admin1 is not null %}<a href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode}) }}">{{ regionName }}</a>,{% endif %}
-                            <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
-                        </h5><!-- city -->
-                    {% endif %}
-
-                    <div class="o-form-group form-inline small">{{ member.status|trans }}</div>
-
-                </div>
-                <div class="col-12 col-md-6" style="border-left: 1px solid #ccc;">
-
-                    <p class="m-0">
-                        {{ 'age'|trans }}: {{ member.age }}, {{ 'gender'|trans }}: {{ member.gender|trans }}
-                        <br> <span
-                                class="font-weight-bold">{{ 'membersince'|trans }}: {{ member.created|format_datetime('medium', 'short') }}
-                    </p>
-                </div>
-                <div class="col-12">
-                <ul class="nav nav-pills" id="profileTab" role="tablist">
+    {% if fields is not empty %}
+        <div class="c-mydata-tabs">
+            {% for locale in fields|keys %}
+                <input type="radio" name="c-mydata-language" id="c-mydata-language-{{ locale }}"{% if loop.first %} checked{% endif %}>
+            {% endfor %}
+            <nav class="c-mydata-tabs__list" aria-label="{{ 'profile.languages'|trans }}">
                 {% for locale in fields|keys %}
-                    <li class="nav-item">
-                        <a class="nav-link{% if loop.first %} active{% endif %}" id="{{ locale }}-tab" data-toggle="tab" href="#{{ locale }}" role="tab" aria-controls="{{ locale }}" aria-selected="true">{{ ('lang_' ~ locale)|lower|trans }}</a>
-                    </li>
+                    <label for="c-mydata-language-{{ locale }}">{{ ('lang_' ~ locale)|lower|trans }}</label>
                 {% endfor %}
-                </ul>
-                </div>
-            </div> {# end of header #}
-            <div class="tab-content" id="profileTabContent">
-                {% set fallback = fields|keys|first %}
-                {% for locale in fields|keys %}
-                    <div  class="tab-pane fade {% if loop.first %}show active{% endif %}" role="tabpanel" aria-labelledby="{{ locale }}-tab" id="{{ locale }}">
-                        <div class="row mt-2">
-                        <div class="col-12 col-md-6">
-
-                            <div id="profilesummary" class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'profile.about.me'|trans({}, "messages", locale) }}</h3>
-
-                                <div class="p-2">
-                                    {{ fields[locale]['ProfileSummary']|purify }}
-                                </div>
-                            </div>
-                            <div id="occupation" class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'occupation'|trans({}, "messages", locale) }}</h3>
-                                <div class="p-2">
-                                    {{ fields[locale]['Occupation'] }}
-                                </div>
-                            </div>
-
-                            <div id="languages" class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'profile.languages'|trans({}, "messages", locale) }}</h3>
-
-                                <div class="p-2">
-                                    {% for ll in member.languageLevels %}
-                                    <p class="m-0">{{ (ll.language.wordCode)|lower|trans({}, "messages", locale) }} <sup class="ml-1 gray">{{ ('LanguageLevel_' ~ ll.level)|lower|trans({}, "messages", locale) }}</sup></p>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <div id="interests" class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'profile.interests'|trans({}, "messages", locale) }}</h3>
-                                <div class="p-2">
-                                    <div class="h5 mb-0">{{ 'profile.hobbies'|trans({}, "messages", locale) }}</div>
-                                    <div>{{ fields[locale]['Hobbies']|purify }}</div>
-
-                                    <div class="h5 mb-0">{{ 'profile.books'|trans({}, "messages", locale) }}</div>
-                                    <div>{{ fields[locale]['Books'] }}</div>
-
-                                    <div class="h5 mb-0">{{ 'profile.music'|trans({}, "messages", locale) }}</div>
-                                    <div>{{ fields[locale]['Music'] }}</div>
-
-                                    <div class="h5 mb-0">{{ 'profile.movies'|trans({}, "messages", locale) }}</div>
-                                    <div>{{ fields[locale]['Movies'] }}</div>
-
-                                    <div class="h5 mb-0">{{ 'profile.organizations'|trans({}, "messages", locale) }}</div>
-                                    <div>{{ fields[locale]['Organizations'] }}</div>
-                                </div>
-                            </div>
-                            <div id="travel" class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'profile.travel.experience'|trans({}, "messages", locale) }}</h3>
-                                <div class="p-2">
-                                    <dl>
-                                        <dt class="h5">{{ 'profile.past.trips'|trans({}, "messages", locale) }}</dt>
-                                        <dd>{{ fields[locale]['PastTrips']|purify }}</dd>
-                                        <dt class="h5">{{ 'profile.planned.trips'|trans({}, "messages", locale) }}</dt>
-                                        <dd>{{ fields[locale]['PlannedTrips']|purify }}</dd>
-                                    </dl>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div id="accommodationinfo" class="card o-card mb-3">
-                                <h3 class="card-header {% if member.accommodation == 'neverask' %}bg-secondary{% endif %}">{{ 'profileaccommodation'|trans({}, "messages", locale) }}</h3>
-                                <div class="card-block p-2">
-                                    <div class="card-text m-0">
-
-                                        <div id="quickinfo" class="float-right text-right">
-                                            {% if 'CanHostWeelChair' in member.typicalOffer %}
-                                                <img src="images/wheelchairblue.png" alt="{{ 'wheelchair'|trans({}, "messages", locale) }}"
-                                                     title="{{ 'canhostwheelchairyes'|trans({}, "messages", locale) }}"/>
-                                            {% endif %}
-                                            <img src="images/{{ member.accommodation }}.png" alt="{{ 'accommodation' }}"
-                                                 title="{{ ('canoffer'~member.accommodation)|trans({}, "messages", locale) }}">
-                                        </div>
-
-                                        <div id="accommodation<?= $accIdSuffix ?>" class="clearfix mb-1">
-                                            <div class="guests h5">{{ 'profilenumberofguests'|trans({}, "messages", locale) }}
-                                                : {{ member.maxGuest }}</div>
-                                            {% if fields[locale]['MaxLenghtOfStay'] %}
-                                                <div class="stay h5 mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", locale) }}:</div>
-                                                <div>{{ fields[locale]['MaxLenghtOfStay']|purify }}</div>
-                                            {% endif %}
-                                            {% if fields[locale]['ILiveWith'] %}
-                                                <div class="stay h5 mb-0">{{ 'profileilivewith'|trans({}, "messages", locale) }}:</div>
-                                                <div>{{ fields[locale]['ILiveWith']|purify }}</div>
-                                            {% endif %}
-                                            {% if fields[locale]['PleaseBring'] %}
-                                                <div class="stay h5 mb-0">{{ 'profilepleasebring'|trans({}, "messages", locale) }}:</div>
-                                                <div>{{ fields[locale]['PleaseBring']|purify }}</div>
-                                            {% endif %}
-
-                                            {# a list (dinner, guidedtour); the keys as on the profile #}
-                                            {% set offers = member.standardOffers %}
-                                            {% if offers|length %}
-                                                <div class="h5 mb-0">{{ 'profileofferguests'|trans({}, "messages", locale) }}:</div>
-
-                                                {% for offer in offers %}
-                                                    {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", locale) }}
-                                                    {% if not loop.last %}<br>{% endif %}
-                                                {% endfor %}
-                                            {% endif %}
-
-                                            <div class="h5 mb-0">{{ 'profileofferhosts'|trans({}, "messages", locale) }}:</div>
-                                            <div>{{ fields[locale]['OfferHosts'] }}</div>
-
-                                            <div class="h5 mb-0">{{ 'otherinfosforguest'| trans({}, "messages", locale) }}:</div>
-                                            <div>
-                                                {{ fields[locale]['AdditionalAccomodationInfo']|purify }}
-                                                {{ fields[locale]['InformationToGuest']|purify }}
-                                            </div>
-
-                                            <div class="h5 mb-0">{{ 'profilepublictransport'| trans({}, "messages", locale) }}:</div>
-                                            <div>{{ fields[locale]['PublicTransport'] }}</div>
-
-                                            <div class="h5 mb-0">{{ 'profilehouserules'|trans({}, "messages", locale) }}:</div>
-                                            {# a list already; the keys as on the profile (restriction_no.smoking, ...) #}
-                                            {% for restriction in member.restrictions %}
-                                                {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", locale) }}
-                                                {% if not loop.last %}<br>{% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card o-card mb-3">
-                                <h3 class="card-header bg-secondary">{{ 'contactinfo'|trans({}, "messages", locale) }}</h3>
-                                <div class="p-2">
-                                    <dl id="address">
-                                        <dt class="h5">{{ 'name'| trans({}, "messages", locale) }}</dt>
-                                        <dd>{{ member.firstname }} {{ member.secondname }} {{ member.lastname }}</dd>
-
-                                        <dt class="h5">{{ 'address'| trans({}, "messages", locale) }}</dt>
-                                        <dd>member.street<br>
-                                            member.zip {{ member.city.name }}<br>
-                                            {{ member.country.name }}
-                                        </dd>
-                                    </dl>
-                                </div>
+            </nav>
+            {% for locale in fields|keys %}
+                {% set f = fields[locale] %}
+                <section class="c-mydata-tabs__panel" lang="{{ locale }}">
+                    <div class="c-mydata-columns">
+                        <div class="c-mydata-card">
+                            <h3 class="c-mydata-card__title">{{ 'profile.about.me'|trans({}, 'messages', locale) }}</h3>
+                            <div class="c-mydata-card__text">{{ f['ProfileSummary']|default('')|purify }}</div>
+                            <span class="c-mydata-label">{{ 'occupation'|trans({}, 'messages', locale) }}</span>
+                            <div>{{ f['Occupation']|default('') }}</div>
+                            <span class="c-mydata-label">{{ 'profile.languages'|trans({}, 'messages', locale) }}</span>
+                            <div class="c-mydata-tags">
+                                {% for ll in member.languageLevels %}
+                                    <span class="c-mydata-tag">{{ ('lang_' ~ ll.language.shortCode)|lower|trans({}, 'messages', locale) }} · {{ ('LanguageLevel_' ~ ll.level)|lower|trans({}, 'messages', locale) }}</span>
+                                {% endfor %}
                             </div>
                         </div>
+
+                        <div class="c-mydata-card">
+                            <h3 class="c-mydata-card__title">{{ 'profile.interests'|trans({}, 'messages', locale) }}</h3>
+                            {% for key, label in {Hobbies: 'profile.hobbies', Books: 'profile.books', Music: 'profile.music', Movies: 'profile.movies', Organizations: 'profile.organizations'} %}
+                                <span class="c-mydata-label">{{ label|trans({}, 'messages', locale) }}</span>
+                                <div>{{ f[key]|default('')|purify }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="c-mydata-card">
+                            <h3 class="c-mydata-card__title">{{ 'profile.accommodation'|trans({}, 'messages', locale) }}</h3>
+                            <span class="c-mydata-label">{{ 'profilenumberofguest'|trans({}, 'messages', locale) }}</span>
+                            <div>{{ member.maxGuests }}</div>
+                            {% for key, label in {MaxLenghtOfStay: 'profile.max.length.of.stay', ILiveWith: 'profile.i.live.with', PleaseBring: 'profile.please.bring', OfferHosts: 'profile.offer.hosts', PublicTransport: 'profile.getting.there'} %}
+                                {% if f[key]|default('') %}
+                                    <span class="c-mydata-label">{{ label|trans({}, 'messages', locale) }}</span>
+                                    <div>{{ f[key]|purify }}</div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if member.standardOffers is not empty %}
+                                <span class="c-mydata-label">{{ 'profile.offer.guests'|trans({}, 'messages', locale) }}</span>
+                                <div class="c-mydata-tags">
+                                    {% for offer in member.standardOffers %}<span class="c-mydata-tag">{{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, 'messages', locale) }}</span>{% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if f['AdditionalAccomodationInfo']|default('') or f['InformationToGuest']|default('') %}
+                                <span class="c-mydata-label">{{ 'profile.additional.information.for.guests'|trans({}, 'messages', locale) }}</span>
+                                <div>{{ f['AdditionalAccomodationInfo']|default('')|purify }} {{ f['InformationToGuest']|default('')|purify }}</div>
+                            {% endif %}
+                            {% if member.restrictions is not empty %}
+                                <span class="c-mydata-label">{{ 'profile.house.rules'|trans({}, 'messages', locale) }}</span>
+                                <div class="c-mydata-tags">
+                                    {% for restriction in member.restrictions %}<span class="c-mydata-tag">{{ ('restriction_' ~ restriction)|lower|trans({}, 'messages', locale) }}</span>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="c-mydata-card">
+                            <h3 class="c-mydata-card__title">{{ 'profile.travel.experience'|trans({}, 'messages', locale) }}</h3>
+                            <span class="c-mydata-label">{{ 'profile.past.trips'|trans({}, 'messages', locale) }}</span>
+                            <div>{{ f['PastTrips']|default('')|purify }}</div>
+                            <span class="c-mydata-label">{{ 'profile.planned.trips'|trans({}, 'messages', locale) }}</span>
+                            <div>{{ f['PlannedTrips']|default('')|purify }}</div>
+                        </div>
+
+                        <div class="c-mydata-card">
+                            <h3 class="c-mydata-card__title">{{ 'contactinfo'|trans({}, 'messages', locale) }}</h3>
+                            <span class="c-mydata-label">{{ 'name'|trans({}, 'messages', locale) }}</span>
+                            <div>{{ member.name }}</div>
+                            {% if address %}
+                                <span class="c-mydata-label">{{ 'address'|trans({}, 'messages', locale) }}</span>
+                                <div>
+                                    {{ address.streetName }} {{ address.houseNumber }}<br>
+                                    {{ address.zip }} {{ address.location.name }}<br>
+                                    {{ address.location.country.name }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
+                </section>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if picture %}
+        <div class="c-mydata-viewer" id="picture" role="dialog" aria-label="{{ 'mydata.profile.picture'|trans }}">
+            <a class="c-mydata-viewer__scrim" href="#" aria-label="{{ 'mydata.picture.close'|trans }}"></a>
+            <div class="c-mydata-viewer__box">
+                <img src="{{ picture.original }}" alt="{{ 'mydata.profile.picture'|trans }}">
+                <a class="c-mydata-viewer__close" href="#" aria-label="{{ 'mydata.picture.close'|trans }}"><i class="fas fa-xmark" aria-hidden="true"></i></a>
+                <a class="c-mydata-viewer__open" href="{{ picture.original }}">{{ 'mydata.picture.open.file'|trans }} <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
             </div>
         </div>
-        <!-- content -->            <!-- col-12 -->
-    </main>
+    {% endif %}
 {% endblock content %}

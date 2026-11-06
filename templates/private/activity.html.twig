@@ -1,18 +1,23 @@
 {% extends 'private/mydata.html.twig' %}
+{# An activity the member signed up for (ActivitiesExtractor), in activities/. Expects activity, organizer, status, comment. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'activities' %}
+{% set A = 'App\\Entity\\ActivityAttendee::' %}
 
 {% block content %}
-    <h1>{{ activity.title }} <a class="btn btn-primary" href="{{ url('activities_show', {'id': activity.id}) }}">{{ 'goto activity' }}</a></h1>
-    <p>{{ 'mydata.activity.starts.ends'|trans({'starts': activity.starts, 'ends': activity.ends}) }}</p>
-    <p>{{ activity.description | purify}}</p>
-
-    <p>{{ activity.address | purify }}</p>
-    <p>{{ 'mydata.activity.location.country'|trans({'location': activity.location.name, 'country': activity.location.country.name}) }}</p>
-
-    {% if organizer %}<p>{{ 'mydata.activity.organizer'|trans }}</p>{% endif %}
-    <p>
-        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_NO') %}{{ 'mydata.activity.wont.attend'|trans }}{% endif -%}
-        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_MAYBE') %}{{ 'mydata.activity.maybe.attend'|trans }}{% endif -%}
-        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_YES') %}{{ 'mydata.activity.will.attend'|trans }}{% endif -%}
-    </p>
-    <p>{{ comment|purify }}</p>
+    {{ my.head({group: 'community', title: activity.title, prefix: '../', back: {url: '../activities.html', label: 'mydata.activities.headline'|trans}}) }}
+    <article class="c-mydata-card">
+        <div class="c-mydata-tags">
+            {% if organizer %}<span class="c-mydata-tag c-mydata-tag--orange">{{ 'mydata.activity.organizer'|trans }}</span>{% endif %}
+            {% if status == constant(A ~ 'ATTENDS_YES') %}<span class="c-mydata-tag c-mydata-tag--green">{{ 'mydata.activity.will.attend'|trans }}</span>
+            {% elseif status == constant(A ~ 'ATTENDS_MAYBE') %}<span class="c-mydata-tag c-mydata-tag--orange">{{ 'mydata.activity.maybe.attend'|trans }}</span>
+            {% elseif status == constant(A ~ 'ATTENDS_NO') %}<span class="c-mydata-tag">{{ 'mydata.activity.wont.attend'|trans }}</span>{% endif %}
+        </div>
+        <p class="c-mydata-card__meta" style="margin-top: 0.75rem;">{{ 'mydata.activity.starts.ends'|trans({'starts': activity.starts, 'ends': activity.ends}) }}</p>
+        <div class="c-mydata-card__text">{{ activity.description|purify }}</div>
+        <span class="c-mydata-label">{{ 'address'|trans }}</span>
+        <div>{{ activity.address|purify }}<br>{{ 'mydata.activity.location.country'|trans({'location': activity.location.name, 'country': activity.location.country.name}) }}</div>
+        {% if comment %}<div class="c-mydata-box">{{ comment|purify }}</div>{% endif %}
+        <div class="c-mydata-card__foot"><span></span>{{ my.site(url('activities_show', {id: activity.id})) }}</div>
+    </article>
 {% endblock content %}

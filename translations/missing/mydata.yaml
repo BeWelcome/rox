@@ -204,3 +204,63 @@ mydata.friends.confirmed:
 mydata.friends.pending:
     - 'Not yet'
     - Shown in the personal data export for a friendship that isn''t confirmed
+mydata.export:
+    - 'Personal data export'
+    - 'Data export: the label in the top bar of every page and above the overview''s title.'
+mydata.sections:
+    - 'Sections'
+    - 'Data export: label of the sidebar with all sections (for screen readers).'
+mydata.group.you:
+    - 'You'
+    - 'Data export: the sidebar''s group of profile, gallery, trips, friends and references.'
+mydata.group.conversations:
+    - 'Conversations'
+    - 'Data export: the sidebar''s group of messages, requests and invitations.'
+mydata.group.community:
+    - 'Community'
+    - 'Data export: the sidebar''s group of groups, posts, activities, polls and news.'
+mydata.group.account:
+    - 'Account'
+    - 'Data export: the sidebar''s group of donations, rights, translations, logs and notifications.'
+mydata.back:
+    - 'Back to the overview'
+    - 'Data export: the link under an empty section.'
+mydata.open.site:
+    - 'Open on BeWelcome'
+    - 'Data export: a link to the page on the site (needs a connection and the login).'
+mydata.stats.sent.received:
+    - '{sent} sent · {received} received'
+    - 'Data export overview: how many messages, requests or invitations were sent and received. Keep {sent} and {received}.'
+mydata.stats.sent:
+    - 'Sent'
+    - 'Data export: the number of messages, requests or invitations sent.'
+mydata.stats.received:
+    - 'Received'
+    - 'Data export: the number of messages, requests or invitations received.'
+mydata.conversation.readonly:
+    - 'A copy of the conversation. To answer, open it on BeWelcome.'
+    - 'Data export: under a conversation.'
+mydata.stay.nights:
+    - 'Nights'
+    - 'Data export: the number of nights of a request or invitation.'
+mydata.picture.open:
+    - 'Show the picture'
+    - 'Data export, profile: the link on the profile picture (for screen readers).'
+mydata.picture.close:
+    - 'Close'
+    - 'Data export, profile: closes the full-size picture.'
+mydata.picture.open.file:
+    - 'Open file'
+    - 'Data export, profile: opens the picture file itself.'
+mydata.profile.status:
+    - 'Status'
+    - 'Data export, profile: the label of the member''s status (active, …).'
+mydata.permalink:
+    - 'Permalink'
+    - 'Data export, posts: the link to the post on the site.'
+mydata.groups.goto:
+    - 'Go to group'
+    - 'Data export, groups: the link to the group on the site.'
+mydata.polls.no.title:
+    - 'Poll without a title'
+    - 'Data export, polls: a poll that has no title.'

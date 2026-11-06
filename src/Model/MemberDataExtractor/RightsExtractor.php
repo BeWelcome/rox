@@ -6,10 +6,12 @@ use App\Entity\Member;
 
 final class RightsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $volunteerRights = $member->getVolunteerRights();
 
-        return $this->writePersonalDataFile(['volunteerrights' => $volunteerRights], 'rights', $tempDir . 'rights.html');
+        $this->writePersonalDataFile(['volunteerrights' => $volunteerRights], 'rights', $tempDir . 'rights.html');
+
+        return ['rights' => \count($volunteerRights)];
     }
 }

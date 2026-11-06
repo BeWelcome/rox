@@ -1,23 +1,20 @@
 {% extends 'private/mydata.html.twig' %}
-
-{% block javascripts %}
-    {% for jsfile in  encore_entry_js_files('gallery')%}
-        <script src="{% if isSubDir is defined %}../{% endif %}{{ jsfile|trim('/') }}"></script>
-    {% endfor %}
-{% endblock javascripts %}
+{# The member's gallery (GalleryItemsExtractor): the pictures as copied into gallery/. Expects hrefs. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'gallery' %}
 
 {% block content %}
-    <h1>{{ 'mydata.gallery.headline' | trans }}</h1>
-    <p>{{ 'mydata.gallery.abstract' | trans }}</p>
+    {{ my.head({group: 'you', title: 'mydata.gallery.headline'|trans, abstract: 'mydata.gallery.abstract'|trans}) }}
     {% if hrefs|length == 0 %}
-        <p>{{ 'mydata.gallery.no.images'|trans }}</p>
+        {{ my.empty('fa-images', 'mydata.gallery.no.images'|trans) }}
     {% else %}
-        <div id="masonry-grid" class="row mb-2">
-        {% for href in hrefs %}
-            <div class="col-12 col-md-4">
-                <a href="{{ href }}"><img class="img-thumbnail" src="{{ href }}"></a>
-            </div>
-        {% endfor %}
+        <div class="c-mydata-gallery">
+            {% for href in hrefs %}
+                <figure>
+                    <a href="{{ href }}"><img src="{{ href }}" alt="" loading="lazy"></a>
+                    <figcaption>{{ href|split('/')|last }}</figcaption>
+                </figure>
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}

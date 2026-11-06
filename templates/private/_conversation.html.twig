@@ -1,0 +1,59 @@
+{#
+  A conversation as one card: who with and its subject, for a request or invitation the stay, then the messages by
+  day (the member's own on the right), read-only. Expects section (messages, requests, invitations), conversation
+  (MessagesExtractor::writeConversations) and member; in messages/, requests/ or invitations/ (isSubDir).
+#}
+{% import 'private/_macros.html.twig' as my %}
+{% set _other = conversation.other %}
+{% set _last = conversation.last %}
+{% set _request = conversation.request %}
+{% set _subject = _last.subject ? _last.subject.subject|striptags : 'conversation.with'|trans({username: _other.username}) %}
+{{ my.head({group: 'conversations', title: _subject, prefix: '../', back: {url: '../' ~ section ~ '.html', label: ('mydata.' ~ section ~ '.headline')|trans}}) }}
+
+<article class="c-mydata-card c-mydata-convo">
+    <header class="c-mydata-convo__head">
+        <img class="c-mydata-avatar" src="../images/empty_avatar.png" alt="">
+        <div class="c-mydata-convo__who">
+            <strong>{{ _other.username }}</strong>
+            {% set _place = _other.activeAddress ? _other.activeAddress.location.name : null %}
+            <span>{{ _place ? _place ~ ' · ' }}{{ _subject }}</span>
+        </div>
+        {{ my.site(url('conversation_view', {id: _last.id})) }}
+    </header>
+
+    {% if _request %}
+        {% set _status = {0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted'}[_request.status] ?? 'open' %}
+        {% set _tone = {accepted: 'green', tentatively: 'orange', declined: 'red', cancelled: '', open: 'orange'}[_status] %}
+        <div class="c-mydata-stay">
+            <span class="c-mydata-stay__dot" aria-hidden="true"></span>
+            <span class="c-mydata-stay__date"><small>{{ 'request.arrival'|trans }}</small><strong>{{ _request.arrival|format_date('medium') }}</strong></span>
+            {% if _request.departure %}
+                <span class="c-mydata-stay__date"><small>{{ 'request.departure'|trans }}</small><strong>{{ _request.departure|format_date('medium') }}</strong></span>
+                <span class="c-mydata-stay__date"><small>{{ 'mydata.stay.nights'|trans }}</small><strong>{{ date(_request.departure).diff(date(_request.arrival)).days }}</strong></span>
+            {% endif %}
+            <span class="c-mydata-stay__date"><small>{{ 'request.number_of_travellers'|trans }}</small><strong>{{ _request.numberOfTravellers }}</strong></span>
+            {% if _request.flexible %}<span class="c-mydata-tag">{{ 'request.flexible'|trans }}</span>{% endif %}
+            <span class="c-mydata-tag{{ _tone ? ' c-mydata-tag--' ~ _tone }}">{{ ('request.status.' ~ _status)|trans }}</span>
+        </div>
+    {% endif %}
+
+    <div class="c-mydata-thread">
+        {% set _day = null %}
+        {% for message in conversation.messages %}
+            {% set _own = message.sender == member %}
+            {% if message.created|date('Y-m-d') != _day %}
+                {% set _day = message.created|date('Y-m-d') %}
+                <div class="c-inbox-thread__day"><span>{{ message.created|format_date('long') }}</span></div>
+            {% endif %}
+            <div class="c-bubble-row{{ _own ? ' is-own' }}">
+                {% if not _own %}<img class="c-bubble__avatar" src="../images/empty_avatar.png" alt="">{% endif %}
+                <div class="c-bubble{{ _own ? ' c-bubble--own' }}">
+                    <div class="c-bubble__text">{{ message.message|purify }}</div>
+                    <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">{{ message.created|format_time('short') }}</time>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <p class="c-mydata-convo__note"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'mydata.conversation.readonly'|trans }}</p>
+</article>

@@ -10,7 +10,7 @@ use App\Entity\Member;
  */
 final class FriendsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $repository = $this->getRepository(Friend::class);
         /** @var Friend[] $friendships */
@@ -26,6 +26,8 @@ final class FriendsExtractor extends AbstractExtractor implements ExtractorInter
             'confirmed' => $friend->getConfirmed(),
         ], $friendships);
 
-        return $this->writePersonalDataFile(['relations' => $relations], 'relations', $tempDir . 'relations.html');
+        $this->writePersonalDataFile(['relations' => $relations], 'relations', $tempDir . 'relations.html');
+
+        return ['relations' => \count($relations)];
     }
 }

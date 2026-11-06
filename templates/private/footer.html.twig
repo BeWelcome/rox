@@ -1,13 +1,5 @@
-{% block content %}
-<footer>
-    <div id="footer_content" class="stickyfooter my-0 py-0">
-        <div class="container my-1">
-            <div class="row align-items-center row justify-content-end">
-                <div class="col-12 mt-1">
-                    {{ 'mydata.generated'|trans({'date_generated':date_generated}) }}
-                </div>
-            </div>
-        </div>
-    </div>
+{# The end of every page of the export: when it was made. #}
+<footer class="c-mydata-foot">
+    <span><i class="far fa-clock" aria-hidden="true"></i>{{ 'mydata.generated'|trans({'date_generated': date_generated}) }}</span>
+    <span>BeWelcome · BeVolunteer</span>
 </footer>
-{% endblock %}

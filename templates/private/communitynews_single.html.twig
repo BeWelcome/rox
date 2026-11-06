@@ -1,5 +1,8 @@
-<div class="card o-card">
-    <div class="card-header text-truncate">{{ news.title }}</div>
-    <div class="card-body">{{ news.text|purify|truncate(500) }}</div>
-    <div class="card-footer text-right"><a class="btn btn-primary" href="{{ url('communitynews_show', {'id':news.id}) }}">{{ 'showfull'|trans }}</a></div>
-</div>
+{# A community news as a card (communitynews.html.twig). Expects news. #}
+{% import 'private/_macros.html.twig' as my %}
+<article class="c-mydata-card">
+    <h2 class="c-mydata-card__title">{{ news.title }}</h2>
+    <p class="c-mydata-card__meta">{{ news.createdAt|format_date('medium') }}</p>
+    <div class="c-mydata-card__text">{{ news.text|purify }}</div>
+    <div class="c-mydata-card__foot"><span></span>{{ my.site(url('communitynews_show', {id: news.id})) }}</div>
+</article>

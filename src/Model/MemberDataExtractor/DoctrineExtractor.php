@@ -20,11 +20,13 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
         parent::__construct($entrypointLookup, $environment, $registry);
     }
 
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $repository = $this->getRepository($this->className);
         $data = $repository->findBy([$this->memberRelationName => $member]);
 
-        return $this->writePersonalDataFile([$this->alias => $data, 'member' => $member], $this->alias, $tempDir . $this->alias . '.html');
+        $this->writePersonalDataFile([$this->alias => $data, 'member' => $member], $this->alias, $tempDir . $this->alias . '.html');
+
+        return [$this->alias => \count($data)];
     }
 }

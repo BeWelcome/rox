@@ -1,24 +1,22 @@
 {% extends 'private/mydata.html.twig' %}
+{# The log entries about the member (DoctrineExtractor). Expects logs. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'logs' %}
 
 {% block content %}
-    <h1>{{ 'mydata.logs.headline'|trans }}</h1>
-    <p>{{ 'mydata.logs.abstract'|trans }}</p>
+    {{ my.head({group: 'account', title: 'mydata.logs.headline'|trans, abstract: 'mydata.logs.abstract'|trans}) }}
     {% if logs|length == 0 %}
-    <p><strong>{{ 'mydata.logs.no.logs'|trans }}</strong></p>
+        {{ my.empty('fa-list', 'mydata.logs.no.logs'|trans) }}
     {% else %}
-        <table class="table table-striped">
-            <tr>
-                <th>{{ 'mydata.logs.type'|trans }}</th>
-                <th>{{ 'mydata.logs.message'|trans }}</th>
-                <th>{{ 'created'|trans }}</th>
-            </tr>
-            {% for log in logs %}
-                <tr>
-                    <td>{{ log.type }}</td>
-                    <td>{{ log.logMessage }}</td>
-                    <td>{{ log.created | format_date('medium') }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="c-mydata-card c-mydata-table-card">
+            <table class="c-mydata-table">
+                <thead><tr><th>{{ 'mydata.logs.type'|trans }}</th><th>{{ 'mydata.logs.message'|trans }}</th><th>{{ 'created'|trans }}</th></tr></thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr><td><span class="c-mydata-tag">{{ log.type }}</span></td><td class="is-long">{{ log.logMessage }}</td><td>{{ log.created|format_date('medium') }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

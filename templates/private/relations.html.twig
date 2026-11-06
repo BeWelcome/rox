@@ -1,30 +1,32 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's friends (FriendsExtractor): who asked, when, confirmed or not. Expects relations. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'relations' %}
 
 {% block content %}
-    <h1>{{ 'mydata.friends.headline'|trans }}</h1>
-    <p>{{ 'mydata.friends.abstract'|trans }}</p>
+    {{ my.head({group: 'you', title: 'mydata.friends.headline'|trans, abstract: 'mydata.friends.abstract'|trans}) }}
     {% if relations|length == 0 %}
-        <p>{{ 'mydata.friends.none'|trans }}</p>
+        {{ my.empty('fa-user-group', 'mydata.friends.none'|trans) }}
     {% else %}
-        <table class="table table-sm">
-            <thead>
-                <tr>
+        <div class="c-mydata-card c-mydata-table-card">
+            <table class="c-mydata-table">
+                <thead><tr>
                     <th>{{ 'mydata.friends.member'|trans }}</th>
                     <th>{{ 'mydata.friends.requester'|trans }}</th>
                     <th>{{ 'mydata.friends.created'|trans }}</th>
                     <th>{{ 'mydata.friends.confirmed'|trans }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for relation in relations %}
-                    <tr>
-                        <td>{{ relation.other.username }}</td>
-                        <td>{{ relation.requester.username }}</td>
-                        <td>{{ relation.created|format_datetime('short', 'short') }}</td>
-                        <td>{{ relation.confirmed ? relation.confirmed|format_datetime('short', 'short') : 'mydata.friends.pending'|trans }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </tr></thead>
+                <tbody>
+                    {% for relation in relations %}
+                        <tr>
+                            <td>{{ my.person(relation.other.username, '', 24) }}</td>
+                            <td>{{ relation.requester.username }}</td>
+                            <td>{{ relation.created|format_datetime('short', 'short') }}</td>
+                            <td>{% if relation.confirmed %}{{ relation.confirmed|format_datetime('short', 'short') }}{% else %}<span class="c-mydata-tag c-mydata-tag--orange">{{ 'mydata.friends.pending'|trans }}</span>{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endif %}
 {% endblock content %}

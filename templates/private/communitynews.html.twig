@@ -1,14 +1,16 @@
 {% extends 'private/mydata.html.twig' %}
+{# The community news the member wrote (DoctrineExtractor). Expects communitynews. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'communitynews' %}
 
 {% block content %}
-    <h1>{{ 'mydata.communitynews.headline' | trans }}</h1>
-    <p>{{ 'mydata.communitynews.abstract' | trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.communitynews.headline'|trans, abstract: 'mydata.communitynews.abstract'|trans}) }}
     {% if communitynews|length == 0 %}
-        <p>{{ 'mydata.communitynews.no.communitynews'|trans }}</p>
+        {{ my.empty('fa-newspaper', 'mydata.communitynews.no.communitynews'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for news in communitynews %}
-                {% include 'private/communitynews_single.html.twig' with { 'news': news } %}
+                {% include 'private/communitynews_single.html.twig' with {news: news} %}
             {% endfor %}
         </div>
     {% endif %}

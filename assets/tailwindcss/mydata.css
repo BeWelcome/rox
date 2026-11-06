@@ -1,0 +1,16 @@
+/*
+ * The personal data export (templates/private, MemberModel): static pages that work offline from the unzipped
+ * folder. Everything the pages need comes from here: the fonts and Font Awesome (no CDN), the site's components
+ * and the export's own layout. MemberModel copies the files this CSS uses and makes its url()s relative.
+ */
+@import "@fontsource/signika/400.css";
+@import "@fontsource/signika/600.css";
+@import "@fontsource/signika/700.css";
+@import "@fontsource/noto-sans/400.css";
+@import "@fontsource/noto-sans/600.css";
+@import "@fontsource/noto-sans/700.css";
+@import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
+@import "@fortawesome/fontawesome-free/css/solid.min.css";
+@import "@fortawesome/fontawesome-free/css/regular.min.css";
+@import "./tailwind.css";
+@import "./private/_mydata.css";

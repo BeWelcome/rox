@@ -7,7 +7,7 @@ use App\Entity\Member;
 
 final class CommunityNewsCommentsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         // Get community news comments the member wrote
         $commentRepository = $this->getRepository(CommunityNewsComment::class);
@@ -28,6 +28,8 @@ final class CommunityNewsCommentsExtractor extends AbstractExtractor implements 
             $newsAndComments[$comment->getCommunityNews()->getId()] = $commentWithNews;
         }
 
-        return $this->writePersonalDataFile(['newsAndComments' => $newsAndComments], 'communitynews_comments', $tempDir . 'communitynews_comments.html');
+        $this->writePersonalDataFile(['newsAndComments' => $newsAndComments], 'communitynews_comments', $tempDir . 'communitynews_comments.html');
+
+        return ['communitynews_comments' => \count($newsAndComments)];
     }
 }

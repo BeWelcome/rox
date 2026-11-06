@@ -1,24 +1,23 @@
 {% extends 'private/mydata.html.twig' %}
+{# The texts the member translated (DoctrineExtractor). Expects translations. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'translations' %}
 
 {% block content %}
-    <h1>{{ 'mydata.translations.headline' | trans }}</h1>
-    <p>{{ 'mydata.translations.abstract' | trans }}</p>
+    {{ my.head({group: 'account', title: 'mydata.translations.headline'|trans, abstract: 'mydata.translations.abstract'|trans}) }}
     {% if translations|length == 0 %}
-        <p>{{ 'mydata.translations.no.translations'|trans }}</p>
+        {{ my.empty('fa-language', 'mydata.translations.no.translations'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for translation in translations %}
-                <div class="card o-card">
-                    <div class="card-header text-truncate">
-                        {{ translation.code }}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ translation.code }}</h2>
+                    <div class="c-mydata-card__text">{{ translation.sentence|purify|truncate(500) }}</div>
+                    <div class="c-mydata-card__foot">
+                        <span class="c-mydata-tag">{{ ('lang_' ~ translation.language.shortCode)|lower|trans }}</span>
+                        <span>{{ translation.created|format_date('medium') }}</span>
                     </div>
-                    <div class="card-body">
-                        <p><small class="text-muted">{{ translation.code }}</small><br>
-                        {{ translation.sentence|purify|truncate(500, ' <strong><a style="color:#f37000" href="' ~ url('translation_edit', {'code': translation.code, 'locale':translation.shortCode}) ~ '">' ~ 'showfull'|trans ~ '</a></strong>') }}</p>
-                        <p><strong>{{ 'language'|trans|capitalize }}:</strong> {{ translation.language.wordCode|lower|trans }}<br>
-                            <strong>{{ 'created'|trans|capitalize }}:</strong> {{ translation.created }}</p>
-                    </div>
-                </div>
+                </article>
             {% endfor %}
         </div>
     {% endif %}

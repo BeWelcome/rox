@@ -1,43 +1,36 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's trips (DoctrineExtractor): a card each with its travellers and legs. Expects trips. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'trips' %}
+{% set O = 'App\\Doctrine\\LegOptionsType::' %}
 
 {% block content %}
-    <h1>{{ 'mydata.trips.headline' | trans }}</h1>
-    <p>{{ 'mydata.trips.abstract' | trans }}</p>
+    {{ my.head({group: 'you', title: 'mydata.trips.headline'|trans, abstract: 'mydata.trips.abstract'|trans}) }}
     {% if trips|length == 0 %}
-        <p>{{ 'mydata.trips.no.trips'|trans }}</p>
+        {{ my.empty('fa-route', 'mydata.trips.no.trips'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for trip in trips %}
-                <div class="card o-card">
-                    <div class="card-header text-truncate">
-                        {{ trip.summary }}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ trip.summary }}</h2>
+                    <div class="c-mydata-tags">
+                        <span class="c-mydata-tag">{{ 'trip.count.of.travellers'|trans({'countOfTravellers': trip.countOfTravellers}) }}</span>
+                        {% if trip.additionalInfo %}<span class="c-mydata-tag">{{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>{% endif %}
                     </div>
-                    <div class="card-body">
-                        <p>{{ trip.description }}</p>
-                        <p>{{ 'trip.count.of.travellers'|trans({'countOfTravellers':trip.countOfTravellers}) }}</p>
-                        <p>{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                    {% if trip.description %}<p>{{ trip.description }}</p>{% endif %}
+                    <ul class="c-mydata-legs">
                         {% for leg in trip.legs %}
-                            <p>
-                                {% if leg.location %}
-                                    {{ leg.location.name }}, {{ leg.location.country.name }}
-                                {% else %}
-                                    {{ 'trip.location.none'|trans }}
-                                {% endif %}
-                            </p>
-                            {% if constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options %}
-                                <p>{{ 'trip.option.private'|trans }}</p>
-                            {% endif %}
-
-                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-                                <p>{{ 'trip.option.meet.locals'|trans }}</p>
-                            {% endif %}
-
-                            {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-                                <p>{{ 'trip.option.looking.for.host'|trans }}</p>
-                            {% endif %}
+                            <li>
+                                <span class="c-mydata-tile" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
+                                <strong>{{ leg.location ? leg.location.name ~ ', ' ~ leg.location.country.name : 'trip.location.none'|trans }}</strong>
+                                {% if leg.arrival is defined and leg.arrival %}<span>{{ leg.arrival|format_date('medium') }}{% if leg.departure ?? null %} – {{ leg.departure|format_date('medium') }}{% endif %}</span>{% endif %}
+                                {% for option, label in {PRIVATE: 'trip.option.private', MEET_LOCALS: 'trip.option.meet.locals', LOOKING_FOR_HOST: 'trip.option.looking.for.host'} %}
+                                    {% if constant(O ~ option) in leg.options %}<span class="c-mydata-tag c-mydata-tag--orange">{{ label|trans }}</span>{% endif %}
+                                {% endfor %}
+                            </li>
                         {% endfor %}
-                    </div>
-                </div>
+                    </ul>
+                </article>
             {% endfor %}
         </div>
     {% endif %}

@@ -1,41 +1,21 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's polls (PollsExtractor): the ones they created, contributed to and voted in, each on its page in polls/. Expects created, voted. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'polls' %}
 
 {% block content %}
-    <h1>{{ 'mydata.polls.headline'|trans }}</h1>
-    <p>{{ 'mydata.polls.abstract'|trans }}</p>
-    <div class="card-columns">
-        <div class="card o-card">
-            <div class="card-header text-truncate">
-                {{ 'mydata.polls.created.headline'|trans }}
-            </div>
-            <div class="card-body">
-                {{ 'mydata.polls.created.abstract'|trans }}
-            </div>
-            <div class="card-footer text-right">
-                <a class="btn btn-primary" href="polls/polls_created.html">{{ 'showdetails'|trans }}</a>
-            </div>
-        </div>
-        <div class="card o-card">
-            <div class="card-header text-truncate">
-                {{ 'mydata.polls.contributed.headline'|trans }}
-            </div>
-            <div class="card-body">
-                {{ 'mydata.polls.contributed.abstract'|trans }}
-            </div>
-            <div class="card-footer text-right">
-                <a class="btn btn-primary" href="polls/polls_contributed.html">{{ 'showdetails'|trans }}</a>
-            </div>
-        </div>
-        <div class="card o-card">
-            <div class="card-header text-truncate">
-                {{ 'mydata.polls.voted.headline'|trans }}
-            </div>
-            <div class="card-body">
-                {{ 'mydata.polls.voted.abstract'|trans }}
-            </div>
-            <div class="card-footer text-right">
-                <a class="btn btn-primary" href="polls/polls_voted.html">{{ 'showdetails'|trans }}</a>
-            </div>
-        </div>
+    {{ my.head({group: 'community', title: 'mydata.polls.headline'|trans, abstract: 'mydata.polls.abstract'|trans}) }}
+    <div class="c-mydata-grid">
+        {% for kind, count in {created: created ?? 0, contributed: voted ?? 0, voted: voted ?? 0} %}
+            <a class="c-mydata-card c-mydata-section-card{{ count == 0 ? ' is-empty' }}" href="polls/polls_{{ kind }}.html">
+                <div class="c-mydata-section-card__head">
+                    <span class="c-mydata-tile" aria-hidden="true"><i class="fas fa-square-poll-vertical"></i></span>
+                    <h3>{{ ('mydata.polls.' ~ kind ~ '.headline')|trans }}</h3>
+                    {% if count > 0 %}<span class="c-mydata-side__count">{{ count }}</span>{% endif %}
+                </div>
+                <p>{{ ('mydata.polls.' ~ kind ~ '.abstract')|trans }}</p>
+                <span class="c-mydata-section-card__more">{{ 'showdetails'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
+        {% endfor %}
     </div>
-{% endblock %}
+{% endblock content %}

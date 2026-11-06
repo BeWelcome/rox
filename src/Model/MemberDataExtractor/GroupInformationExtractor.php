@@ -7,7 +7,7 @@ use Exception;
 
 final class GroupInformationExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         // Groups the member is in and why
         $memberships = [];
@@ -25,6 +25,8 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
             }
         }
 
-        return $this->writePersonalDataFile(['groupmemberships' => $memberships], 'groups', $tempDir . 'groups.html');
+        $this->writePersonalDataFile(['groupmemberships' => $memberships], 'groups', $tempDir . 'groups.html');
+
+        return ['groups' => \count($memberships)];
     }
 }

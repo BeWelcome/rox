@@ -1,30 +1,50 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+{#
+  The frame of every page of the personal data export (MemberModel, the extractors): the top bar, the sections in a
+  sidebar and the page. Static files: everything is relative, pages in a subdirectory (messages/, polls/, …) set
+  isSubDir. The sidebar and the member's chip need every section's count, known once all pages are written: the
+  pages leave markers that MemberModel replaces (the mockups pass mydata_sections and get them right away).
+  Pages set section (the sidebar's active row).
+#}
+{% set _prefix = (isSubDir ?? false) ? '../' : '' %}
+{% set _section = section ?? '' %}
+<html lang="{{ app.request ? app.request.locale : app.locale }}">
 <head>
-    <title>{{ 'mydata.page.title'|trans }}</title>
-    {% for cssfile in  encore_entry_css_files('bewelcome')%}
-        <link rel="stylesheet" href="{% if isSubDir is defined %}../{% endif %}{{ cssfile|trim('/') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ 'mydata.page.title'|trans }}{% endblock %}</title>
+    {% for cssfile in encore_entry_css_files('mydata') %}
+        <link rel="stylesheet" href="{{ _prefix }}{{ cssfile|trim('/', 'left') }}">
     {% endfor %}
-    {% for cssfile in  encore_entry_css_files('tailwind')%}
-        <link rel="stylesheet" href="{% if isSubDir is defined %}../{% endif %}{{ cssfile|trim('/') }}">
-    {% endfor %}
-    {% block javascripts %}
-        {% for jsfile in  encore_entry_js_files('bewelcome')%}
-            <script src="{% if isSubDir is defined %}../{% endif %}{{ jsfile|trim('/') }}"></script>
-        {% endfor %}
-    {% endblock javascripts %}
 </head>
-<body>
-<nav class="navbar navbar-expand-md navbar-light bg-primary bordert-1 borderb-1">
-    <div class="container-lg">
-        <a class="navbar-brand ml-3" href="{% if isSubDir is defined %}../{% endif %}index.html"><img src="{% if isSubDir is defined %}../{% endif %}images/logo_email_2025.png" alt="{{ 'bewelcome' | trans }}"></a>
+<body class="c-mydata">
+<header class="c-mydata-top">
+    <div class="c-mydata-top__inner">
+        <a class="c-mydata-top__brand" href="{{ _prefix }}index.html">
+            <img src="{{ _prefix }}images/logo_icon_2025.svg" alt="">
+            <img src="{{ _prefix }}images/logo_text_2025.svg" alt="{{ 'bewelcome'|trans }}">
+        </a>
+        <div class="c-mydata-top__chips">
+            <span class="c-mydata-chip c-mydata-chip--export"><i class="fas fa-box-archive" aria-hidden="true"></i><span>{{ 'mydata.export'|trans }}</span></span>
+            {%- if mydata_sections is defined -%}
+                {% include 'private/_me.html.twig' with {member: member ?? app.user, picture: picture ?? null, prefix: _prefix} only %}
+            {%- else -%}
+                <!--mydata:me-->
+            {%- endif -%}
+        </div>
     </div>
-</nav>
-<main>
-    <div class="container-lg">
+</header>
+<div class="c-mydata-body">
+    {%- if mydata_sections is defined -%}
+        {% include 'private/_sidebar.html.twig' with {sections: mydata_sections, active: _section, prefix: _prefix} only %}
+    {%- else -%}
+        <!--mydata:sidebar:{{ _section }}-->
+    {%- endif -%}
+    <main class="c-mydata-main">
+        {% block header %}{% endblock %}
         {% block content %}{% endblock content %}
-    </div>
-</main>
-{% include 'private/footer.html.twig' with {'date_generated': date_generated}%}
+        {% include 'private/footer.html.twig' %}
+    </main>
+</div>
 </body>
 </html>

@@ -8,7 +8,7 @@ use App\Entity\PrivilegeScope;
 
 final class PrivilegesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $privilegesCombined = [];
         $privilegesRepository = $this->getRepository(PrivilegeScope::class);
@@ -42,6 +42,8 @@ final class PrivilegesExtractor extends AbstractExtractor implements ExtractorIn
             }
         }
 
-        return $this->writePersonalDataFile(['privileges' => $privilegesCombined], 'privileges', $tempDir . 'privileges.html');
+        $this->writePersonalDataFile(['privileges' => $privilegesCombined], 'privileges', $tempDir . 'privileges.html');
+
+        return ['privileges' => \count($privilegesCombined)];
     }
 }

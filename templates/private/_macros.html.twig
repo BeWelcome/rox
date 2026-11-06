@@ -1,0 +1,38 @@
+{# Pieces of the export's pages (templates/private). #}
+
+{#
+  The page's head: a back link, the group's eyebrow, the title and the abstract. options: group (mydata.group.*),
+  title, abstract (texts), back ({url, label}, the overview without).
+#}
+{% macro head(options) %}
+    {% set _prefix = options.prefix ?? '' %}
+    <header class="c-mydata-head">
+        {% if options.back is defined %}
+            <a class="c-mydata-head__back" href="{{ options.back.url }}"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ options.back.label }}</a>
+        {% else %}
+            <a class="c-mydata-head__back" href="{{ _prefix }}index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'mydata.overview'|trans }}</a>
+        {% endif %}
+        {% if options.group is defined %}<p class="c-mydata-head__eyebrow">{{ ('mydata.group.' ~ options.group)|trans }}</p>{% endif %}
+        <h1 class="c-mydata-head__title">{{ options.title }}</h1>
+        {% if options.abstract is defined and options.abstract %}<p class="c-mydata-head__abstract">{{ options.abstract }}</p>{% endif %}
+    </header>
+{% endmacro %}
+
+{# A section without anything: its icon, the text, the way back. #}
+{% macro empty(icon, text, prefix = '') %}
+    <div class="c-mydata-card c-mydata-empty">
+        <span class="c-mydata-empty__icon" aria-hidden="true"><i class="fas {{ icon }}"></i></span>
+        <p class="c-mydata-empty__text">{{ text }}</p>
+        <a class="c-mydata-more" href="{{ prefix }}index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'mydata.back'|trans }}</a>
+    </div>
+{% endmacro %}
+
+{# A link to the page on BeWelcome (needs a connection and the login). #}
+{% macro site(url) %}
+    <a class="c-mydata-pill" href="{{ url }}">{{ 'mydata.open.site'|trans }} <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+{% endmacro %}
+
+{# Someone else: the empty avatar (other members' pictures aren't in the export) and the username. #}
+{% macro person(username, prefix = '', size = 32) %}
+    <span class="c-mydata-person"><img class="c-mydata-avatar" src="{{ prefix }}images/empty_avatar.png" alt="" width="{{ size }}" height="{{ size }}"><strong>{{ username }}</strong></span>
+{% endmacro %}

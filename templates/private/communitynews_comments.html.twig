@@ -1,14 +1,16 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's comments on community news (CommunityNewsCommentsExtractor), by news. Expects newsAndComments. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'communitynews_comments' %}
 
 {% block content %}
-    <h1>{{ 'mydata.communitynewscomments.headline' | trans }}</h1>
-    <p>{{ 'mydata.communitynewscomments.abstract' | trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.communitynewscomments.headline'|trans, abstract: 'mydata.communitynewscomments.abstract'|trans}) }}
     {% if newsAndComments|length == 0 %}
-        <p>{{ 'mydata.communitynews.no.comments'|trans }}</p>
+        {{ my.empty('fa-comment', 'mydata.communitynews.no.comments'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for commentsAndNews in newsAndComments %}
-                {% include 'private/communitynews_comment.html.twig' with { 'commentsAndNews': commentsAndNews } %}
+                {% include 'private/communitynews_comment.html.twig' with {commentsAndNews: commentsAndNews} %}
             {% endfor %}
         </div>
     {% endif %}

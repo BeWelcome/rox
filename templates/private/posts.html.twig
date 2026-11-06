@@ -1,77 +1,48 @@
 {% extends 'private/mydata.html.twig' %}
+{#
+  The member's forum and group posts (ForumPostsExtractor), newest first: a card each with where and when, the text
+  and its translations. Expects posts.
+#}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'posts' %}
 
 {% block content %}
-    <h1>{{ 'mydata.posts.headline'|trans }}</h1>
-    <p>{{ 'mydata.posts.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.posts.headline'|trans, abstract: 'mydata.posts.abstract'|trans}) }}
     {% if posts|length == 0 %}
-        <p><strong>{{ 'mydata.posts.no.posts'|trans }}</strong></p>
+        {{ my.empty('fa-comments', 'mydata.posts.no.posts'|trans) }}
     {% else %}
         {% for post in posts %}
             {% set threadLink -%}
-                {% if not post.thread is null %}
-                    {%- if not post.thread.agora -%}
-                        {{ url('group_forum_thread', {group_id: post.thread.group.id, thread: post.thread.id}) }}
-                    {%- else -%}
-                        {{ url('forum_thread', {threadId: post.thread.id}) }}
-                    {%- endif -%}
-                {% endif %}
+                {%- if post.thread is not null -%}
+                    {{- post.thread.agora ? url('forum_thread', {threadId: post.thread.id}) : url('group_forum_thread', {group_id: post.thread.group.id, thread: post.thread.id}) -}}
+                {%- endif -%}
             {%- endset %}
-            <div class="l-forum-single-post {% if loop.index is even %}l-forum-single-post--dark{% endif %}">
-                <!-- left column -->
-                <div class="c-single-post-user_info">
-                    <a id="post{{ post.id }}" style="position: relative; top:-50px;"></a>
-                    <div class="d-flex flex-row text-break">
-                        <img class="profileimg avatar-48 mr-1" width="48" height="48" src="{{ url('avatar', {username: post.author.Username, size: 48}) }}">
-                        <div class="small">
-                            <a href="{{ url('members_profile', {username: post.author.Username}) }}">{{ post.author.Username }}</a>
-                            {% set address = post.author.activeAddress %}
-                            {% if address %}
-                                <br>{{ address.location.name }}
-                                <br>{{ address.location.country.name|default('') }}
-                            {% endif %}
-                        </div>
-                    </div>
+            <article class="c-mydata-card" id="post{{ post.id }}">
+                <div class="c-mydata-card__foot" style="margin: 0 0 0.75rem; padding: 0; border: 0;">
+                    {% set _address = post.author.activeAddress %}
+                    <span class="c-mydata-person"><img class="c-mydata-avatar" src="images/empty_avatar.png" alt="" width="32" height="32"><strong>{{ post.author.username }}</strong>{% if _address %} · {{ _address.location.name }}{% endif %}</span>
+                    <span>
+                        <i class="far fa-comment" aria-hidden="true"></i> {{ post.created|format_datetime('medium', 'short') }}
+                        · <i class="far fa-eye" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ post.PostVisibility)|lower|trans }}
+                        {% if threadLink is not empty %} · <a href="{{ threadLink }}#post{{ post.id }}"><i class="fas fa-link" aria-hidden="true"></i> {{ 'mydata.permalink'|trans }}</a>{% endif %}
+                    </span>
                 </div>
-                <div class="c-single-post-post_info">
-                    <div class="d-flex flex-column flex-sm-row small">
-                        <div class="mr-1"><span><i class="fa fa-comment fa-w-16 mr-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime() }}</span></div>
-                        <div class="mr-1"><i class="fa fa-eye fa-w-16 mr-1" title="{{ 'forum_label_visibility'|trans }})"></i>{{ ('forum_edit_vis_' ~ post.PostVisibility)|lower|trans }}</div>
+                {% set translations = post.messageTranslations %}
+                {% for locale, translation in translations %}
+                    <div class="{{ not loop.first ? 'c-mydata-post__translation' }}" lang="{{ translation.language.shortCode }}">
+                        {% if translations|length > 1 %}<small class="c-mydata-label">{{ ('lang_' ~ translation.language.shortCode)|lower|trans }} ({{ translation.language.shortCode }})</small>{% endif %}
+                        <div class="c-mydata-card__text">{{ translation.message|purify|nl2br }}</div>
                     </div>
-                </div>
-                <div class="c-single-post-report"></div>
-                <div class="c-single-post-permalink">{% if not threadLink is empty %}<a href="{{ threadLink }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a>{% endif %}</div>
-
-                <!-- message -->
-                <div class="c-single-post-content u:flex u:flex-col u:justify-between">
-                    <div id="d{{ post.IdContent }}" class="js-highlight">
-                        {% set translations = post.messageTranslations %}
-                        {% for locale, translation in translations %}
-                            <div class="post">
-                                {% if translations|length > 1 %}
-                                    {% if not loop.first %}<hr class="u:my-8" style="border-top:1px solid gray;">{% endif %}
-                                    <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
-                                {% endif %}
-                                {{ translation.message | purify | nl2br }}
-                            </div>
-                        {% endfor %}
+                {% endfor %}
+                {% if post.thread is not null %}
+                    <div class="c-mydata-card__foot">
+                        <span>
+                            {% if not post.thread.agora %}{{ 'group'|trans }} <a href="{{ url('group_start', {group_id: post.thread.group.id}) }}">{{ post.thread.group.name|striptags }}</a> · {% endif %}
+                            {{ 'search_topic_text'|trans }} <a href="{{ threadLink }}">{{ post.thread.title|striptags }}</a>
+                        </span>
                     </div>
-                    <div class="u:flex u:mt-8 u:justify-end">
-                        <small>
-                            {% if not post.thread is null %}
-                                {% if not post.thread.agora %}
-                                    <span class="gray">{{ 'group'|trans }}:</span>
-                                    <a href="{{ url('group_start', {group_id: post.thread.group.id}) }}">{{ post.thread.group.name|striptags }}</a>
-                                {% endif %}
-
-                                <span class="gray">{{ 'search_topic_text'|trans }}</span>
-                                <a href="{{ threadLink }}">{{ post.thread.title|striptags }}</a>
-                            {% endif %}
-                        </small>
-                    </div>
-                </div>
-                <div class="c-single-post-edit"></div>
-                <!-- end message -->
-            </div>
+                {% endif %}
+            </article>
         {% endfor %}
     {% endif %}
-{% endblock %}
+{% endblock content %}

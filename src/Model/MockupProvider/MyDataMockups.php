@@ -24,6 +24,7 @@ use App\Entity\Right;
 use App\Entity\RightVolunteer;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
+use App\Model\MemberDataExtractor\MyDataSections;
 use Carbon\Carbon;
 use DateTime;
 
@@ -37,6 +38,16 @@ use DateTime;
 class MyDataMockups implements MockupProviderInterface
 {
     use MockupEntities;
+
+    /** How many items the sections of the mockups have (the sidebar, the overview) */
+    private const array SAMPLE_COUNTS = [
+        'profile' => 1, 'gallery' => 4, 'trips' => 2, 'relations' => 3, 'comments' => 5,
+        'messages' => 12, 'messages_sent' => 40, 'messages_received' => 52,
+        'requests' => 3, 'requests_sent' => 4, 'requests_received' => 5,
+        'invitations' => 1, 'invitations_sent' => 6, 'invitations_received' => 7,
+        'groups' => 4, 'posts' => 18, 'subscriptions' => 6, 'polls' => 2, 'communitynews_comments' => 2,
+        'logs' => 30, 'browser_push_subscriptions' => 1,
+    ];
 
     private const array MOCKUPS = [
         'start page' => [
@@ -137,39 +148,12 @@ class MyDataMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $name = $parameters['name'];
-        // every page of the export has the date in its footer
-        $generated = ['date_generated' => new DateTime()];
-        if ('post (thread)' === $name) {
-            return array_merge($generated, $this->getPostInForum($parameters));
-        }
-        if ('post (group)' === $name) {
-            return array_merge($generated, $this->getPostInGroup($parameters));
-        }
-        if ('message' === $name || 'request' === $name || 'invitation' === $name) {
-            return array_merge($generated, $this->getMessage($parameters));
-        }
-
-        if (isset($parameters['count'])) {
-            return array_merge($generated, $this->getMockEntities($parameters));
-        }
-
-        $extracted = $this->getExtractedEntities();
-
-        $member = $parameters['user'];
-
-        return [
-            'extracted' => $extracted,
-            'member' => $member,
-            'date_generated' => new DateTime(),
-            'profilepicture' => '/members/avatar/' . $member->getUsername() . '/48',
-            'messagesSent' => 2,
-            'messagesReceived' => 3,
-            'requestsSent' => 4,
-            'requestsReceived' => 5,
-            'invitationsSent' => 6,
-            'invitationsReceived' => 7,
-        ];
+        // every page has the sidebar with the sections and the member in the top bar (MemberModel puts them in
+        // once the export is written; here they come right away)
+        return array_merge(
+            ['mydata_sections' => MyDataSections::withCounts(self::SAMPLE_COUNTS), 'member' => $parameters['user'], 'picture' => null],
+            $this->pageVariables($parameters),
+        );
     }
 
     /**
@@ -179,7 +163,7 @@ class MyDataMockups implements MockupProviderInterface
     {
         return match ($feature) {
             'post (thread)', 'post (group)' => ['deleted' => ['yes' => 'yes', 'no' => 'no']],
-            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'pictures', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
+            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
             default => match ($locale) {
                 'en', 'de', 'fr', 'es', 'pt', 'pt-br', 'gl' => [
                     'count' => [
@@ -208,6 +192,52 @@ class MyDataMockups implements MockupProviderInterface
         };
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    private function pageVariables(array $parameters): array
+    {
+        $name = $parameters['name'];
+        // every page of the export has the date in its footer
+        $generated = ['date_generated' => new DateTime()];
+        if ('post (thread)' === $name) {
+            return array_merge($generated, $this->getPostInForum($parameters));
+        }
+        if ('post (group)' === $name) {
+            return array_merge($generated, $this->getPostInGroup($parameters));
+        }
+        if ('message' === $name || 'request' === $name || 'invitation' === $name) {
+            return array_merge($generated, ['conversation' => $this->getConversation($parameters, 'message' !== $name), 'isSubDir' => true]);
+        }
+
+        if (isset($parameters['count'])) {
+            return array_merge($generated, $this->getMockEntities($parameters));
+        }
+
+        $extracted = $this->getExtractedEntities();
+
+        $member = $parameters['user'];
+
+        $conversations = [$this->getConversation($parameters, 'messages' !== $name)];
+
+        return [
+            'extracted' => $extracted,
+            'member' => $member,
+            'date_generated' => new DateTime(),
+            'sections' => MyDataSections::withCounts(self::SAMPLE_COUNTS),
+            'counts' => self::SAMPLE_COUNTS,
+            'conversations' => $conversations,
+            'created' => 1,
+            'voted' => 2,
+            'messagesSent' => 2,
+            'messagesReceived' => 3,
+            'requestsSent' => 4,
+            'requestsReceived' => 5,
+            'invitationsSent' => 6,
+            'invitationsReceived' => 7,
+        ];
+    }
+
     private function getExtractedEntities(): array
     {
         return [
@@ -220,7 +250,6 @@ class MyDataMockups implements MockupProviderInterface
             'gallery',
             'logs',
             'newsletters',
-            'pictures',
             'polls_contributed',
             'polls_created',
             'polls_voted',
@@ -275,6 +304,7 @@ class MyDataMockups implements MockupProviderInterface
                         [
                             'title' => 'Comment title',
                             'text' => 'Comment text',
+                            'created' => new DateTime(),
                         ],
                     ],
                 ];
@@ -304,10 +334,6 @@ class MyDataMockups implements MockupProviderInterface
                 break;
             case 'newsletters':
                 $mockEntity = $this->newsletter();
-                break;
-            case 'pictures':
-                // Nothing to do here; included twig template will show the needed amount of
-                // profile pictures as broken images
                 break;
             case 'polls_created':
                 $key = 'polls';
@@ -421,7 +447,8 @@ class MyDataMockups implements MockupProviderInterface
     {
         return self::withId(new CommunityNews(), 1)
             ->setTitle('Community News')
-            ->setText('Community News text');
+            ->setText('Community News text')
+            ->setCreatedAt(new DateTime());
     }
 
     private function postsData($count): array
@@ -519,23 +546,28 @@ class MyDataMockups implements MockupProviderInterface
         return $result;
     }
 
-    private function getMessage(array $parameters): array
+    /**
+     * A conversation as MessagesExtractor::writeConversations has it: the messages oldest first, with the other
+     * member and, for a request or invitation, its stay.
+     *
+     * @return array<string, mixed>
+     */
+    private function getConversation(array $parameters, bool $withStay): array
     {
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
         $leg = $this->invitationUtility->getLeg($host);
-        $thread = $this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
+        $messages = array_reverse($this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4));
+        $last = $messages[\count($messages) - 1];
 
         return [
-            'message' => $thread[0],
-            $parameters['name'] => $thread[0],
-            'leg' => $leg,
-            'host' => $host,
-            'guest' => $guest,
-            'thread' => $thread,
-            'is_spam' => false,
-            'show_deleted' => false,
+            'file' => 'messages/message-2026-01-01-1.html',
+            'messages' => $messages,
+            'first' => $messages[0],
+            'last' => $last,
+            'other' => $guest,
+            'request' => $withStay ? $last->getRequest() : null,
         ];
     }
 

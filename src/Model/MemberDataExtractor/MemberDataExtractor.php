@@ -3,18 +3,18 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
+use App\Entity\MemberPhoto;
 
+/**
+ * The profile page, with the member's profile picture as ProfilePicturesExtractor copies it into pictures/.
+ */
 final class MemberDataExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
-        return $this->writePersonalDataFile(
-            [
-                'member' => $member,
-                'profilepicture' => 'images/empty_avatar.png',
-            ],
-            'profile',
-            $tempDir . 'profile.html'
-        );
+        $photos = $this->getRepository(MemberPhoto::class)->findBy(['member' => $member], ['created' => 'DESC']);
+        $this->writePersonalDataFile(['member' => $member, 'picture' => ProfilePicture::files($photos)], 'profile', $tempDir . 'profile.html');
+
+        return ['profile' => 1];
     }
 }

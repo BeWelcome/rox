@@ -49,6 +49,10 @@ class ActivityModel
         $activityRepository = $this->entityManager->getRepository(Activity::class);
         $activities = $activityRepository->findBy(['id' => $activityIds]);
         foreach ($activities as $activity) {
+            // the attendees first: the database keeps an activity that still has them
+            foreach ($activity->getAttendees() as $attendee) {
+                $this->entityManager->remove($attendee);
+            }
             $this->entityManager->remove($activity);
         }
         $this->entityManager->flush();

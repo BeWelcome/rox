@@ -233,3 +233,12 @@ App\Entity\Preference:
         DefaultValue: Never
         PossibleValues: Never;Immediately;Daily;Weekly;Monthly
         Status: 'Normal'
+    NEW_MEMBERS_COUNTRIES:
+        position: 200
+        codename: 'NewMembersCountries'
+        codeDescription: 'admin.newmembers.countries'
+        description: 'The countries a volunteer greets new members of (geoname ids, comma separated)'
+        created: <DateTime()>
+        DefaultValue: ''
+        PossibleValues: ''
+        Status: 'Inactive'

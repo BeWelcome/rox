@@ -4,7 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
+use App\Entity\Preference;
+use App\Logger\Logger;
 use App\Model\Admin\NewMembersModel;
+use App\Service\MessageSender;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +46,9 @@ class NewMembersController extends AbstractController
         MemberStatusType::ASKED_TO_LEAVE,
     ];
 
+    /** The most members one standard greeting goes to */
+    public const int BULK_LIMIT = 50;
+
     private const array GREETINGS = [
         'local' => NewMembersModel::LOCAL_GREETING,
         'global' => NewMembersModel::GLOBAL_GREETING,
@@ -52,6 +58,8 @@ class NewMembersController extends AbstractController
         private readonly NewMembersModel $model,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly MessageSender $messageSender,
+        private readonly Logger $logger,
     ) {
     }
 
@@ -63,13 +71,95 @@ class NewMembersController extends AbstractController
 
         /** @var Member $volunteer */
         $volunteer = $this->getUser();
+        $locale = $request->getLocale();
+        $profile = $this->profile($request);
+        $countries = $this->countries($volunteer);
+        $options = $this->model->getCountries($all, $locale, $profile);
+        $chosen = [];
+        foreach ($countries as $id) {
+            $option = array_values(array_filter($options, static fn (array $country): bool => $country['id'] === $id))[0] ?? null;
+            $chosen[] = $option ?? ['id' => $id, 'name' => $this->countryName($id, $locale), 'count' => 0];
+        }
 
         return $this->render('admin/newmembers/list.html.twig', [
-            'members' => $this->model->getPager($all, $request->getLocale(), $page, $this->getItemsPerPage($volunteer)),
+            'members' => $this->model->getPager($all, $locale, $page, $this->getItemsPerPage($volunteer), $countries, $profile),
             'all' => $all,
             'can_change_status' => $this->canChangeStatus(),
             'statuses' => self::STATUSES,
+            'chosen' => $chosen,
+            'addable' => array_values(array_filter($options, static fn (array $country): bool => !\in_array($country['id'], $countries, true))),
+            'profile' => $profile,
+            'profile_counts' => $this->model->getProfileCounts($all, $countries),
+            'waiting' => $this->model->countWaiting(),
+            'bulk_limit' => self::BULK_LIMIT,
         ]);
+    }
+
+    /**
+     * Adds a country to the volunteer's countries or removes one; kept for their next visits.
+     */
+    #[Route(path: '/admin/newmembers/countries', name: 'newmembers_countries', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function countriesChange(Request $request): RedirectResponse
+    {
+        $this->denyUnlessAnyGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME]);
+        /** @var Member $volunteer */
+        $volunteer = $this->getUser();
+
+        $countries = $this->countries($volunteer);
+        $add = $request->request->getInt('add');
+        $remove = $request->request->getInt('remove');
+        if (0 < $add && !\in_array($add, $countries, true) && null !== $this->countryName($add, 'en')) {
+            $countries[] = $add;
+        }
+        $countries = array_values(array_filter($countries, static fn (int $id): bool => $id !== $remove));
+        $this->saveCountries($volunteer, $countries);
+
+        return $this->redirectToRoute('newmembers', $this->listParameters($request, 1));
+    }
+
+    /**
+     * One standard greeting to the selected members, each as their own message from the volunteer; the greeting is
+     * marked as sent for all of them.
+     */
+    #[Route(
+        path: '/admin/newmembers/greeting/{greeting}',
+        name: 'newmembers_greeting_bulk',
+        requirements: ['greeting' => 'local|global'],
+        methods: ['POST'],
+    )]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function bulkGreeting(Request $request, string $greeting): RedirectResponse
+    {
+        $this->denyUnlessAnyGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME]);
+        /** @var Member $volunteer */
+        $volunteer = $this->getUser();
+
+        $usernames = \array_slice(array_values(array_unique(array_filter(array_map('strval', $request->request->all('usernames'))))), 0, self::BULK_LIMIT);
+        $subject = trim($request->request->getString('subject'));
+        $text = trim($request->request->getString('text'));
+        if ([] === $usernames || '' === $subject || '' === $text) {
+            $this->addTranslatedFlash('error', 'admin.newmembers.bulk.incomplete');
+
+            return $this->redirectToRoute('newmembers', $this->listParameters($request, $request->request->getInt('page', 1)));
+        }
+
+        $members = $this->entityManager->getRepository(Member::class)->findBy(['username' => $usernames]);
+        foreach ($members as $member) {
+            $body = str_replace('%username%', $member->getUsername(), nl2br(htmlspecialchars($text), false));
+            $this->messageSender->send($volunteer, $member, null, str_replace('%username%', $member->getUsername(), $subject), $body);
+            $this->model->markGreetingSent($member, self::GREETINGS[$greeting]);
+        }
+        $this->logger->write(\sprintf(
+            'Standard %s greeting to %d new members: %s',
+            $greeting,
+            \count($members),
+            implode(', ', array_map(static fn (Member $member): string => $member->getUsername(), $members)),
+        ), 'NewMembers');
+
+        $this->addTranslatedFlash('notice', 'admin.newmembers.bulk.sent.' . $greeting, ['count' => \count($members)]);
+
+        return $this->redirectToRoute('newmembers', $this->listParameters($request, $request->request->getInt('page', 1)));
     }
 
     /**
@@ -119,7 +209,64 @@ class NewMembersController extends AbstractController
             '%status%' => $this->translator->trans('memberstatus' . strtolower($status)),
         ]);
 
-        return $this->redirectToRoute('newmembers', ['page' => max(1, $request->request->getInt('page', 1))]);
+        return $this->redirectToRoute('newmembers', $this->listParameters($request, $request->request->getInt('page', 1)));
+    }
+
+    /**
+     * @return array<string, int|string> the list's page and profile filter
+     */
+    private function listParameters(Request $request, int $page): array
+    {
+        $profile = $this->profile($request);
+
+        return array_filter(['page' => max(1, $page), 'profile' => NewMembersModel::PROFILE_ALL === $profile ? null : $profile]);
+    }
+
+    private function profile(Request $request): string
+    {
+        $profile = $request->query->getString('profile', $request->request->getString('profile'));
+
+        return \in_array($profile, NewMembersModel::PROFILES, true) ? $profile : NewMembersModel::PROFILE_ALL;
+    }
+
+    /**
+     * @return list<int> the geoname ids of the volunteer's countries (Preference::NEW_MEMBERS_COUNTRIES)
+     */
+    private function countries(Member $volunteer): array
+    {
+        $value = $volunteer->getMemberPreferenceValue($this->countriesPreference());
+
+        return array_values(array_unique(array_filter(array_map('intval', explode(',', $value)))));
+    }
+
+    /**
+     * @param list<int> $countries
+     */
+    private function saveCountries(Member $volunteer, array $countries): void
+    {
+        $memberPreference = $volunteer->getMemberPreference($this->countriesPreference());
+        $memberPreference->setValue(implode(',', $countries));
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
+    }
+
+    private function countriesPreference(): Preference
+    {
+        /** @var Preference $preference */
+        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy(['codename' => Preference::NEW_MEMBERS_COUNTRIES]);
+
+        return $preference;
+    }
+
+    /** a country's name in the language, else in English (one the list has no members of any more) */
+    private function countryName(int $id, string $locale): ?string
+    {
+        $name = $this->entityManager->getConnection()->fetchOne(
+            "SELECT COALESCE((SELECT t.content FROM location_translation t WHERE t.object_id = l.geoname_id AND t.field = 'name' AND t.locale IN (?, 'en') ORDER BY t.locale = ? DESC LIMIT 1), l.name) FROM location l WHERE l.geoname_id = ?",
+            [$locale, $locale, $id],
+        );
+
+        return false === $name ? null : (string) $name;
     }
 
     private function canChangeStatus(): bool

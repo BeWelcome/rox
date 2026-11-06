@@ -1,0 +1,106 @@
+/*
+ * The new members (templates/admin/newmembers/list.html.twig): the volunteer tools' frame (main.c-vtools,
+ * c-vtools__head), one card with the filters (countries, profile), the selection bar and a row per member; the
+ * standard greeting dialog (a native <dialog>, a bottom sheet on phones).
+ * Shares .c-tag, .c-cadmin-btn, .c-cadmin__pager and .c-cnews-empty.
+ */
+
+.c-newmembers__waiting { color: #64748b; font-size: 0.8125rem; }
+.c-newmembers__card { overflow: hidden; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); }
+.c-newmembers .c-cnews-empty { padding: 3rem 1.5rem; }
+
+/* Filters */
+.c-newmembers__filters { display: flex; flex-direction: column; gap: 0.85rem; padding: 1.1rem 1.5rem; background: #f8fafc; }
+.c-newmembers__filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.c-newmembers__label { flex: none; width: 6.5rem; color: #0f172a; font-size: 0.875rem; font-weight: 700; }
+.c-newmembers__pills { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 0.4rem; min-width: 0; }
+.c-newmembers__pill { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; padding: 0.3rem 0.4rem 0.3rem 0.85rem; border: 1px solid #f37000; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
+.c-newmembers__pill button { display: inline-flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; padding: 0; border: 0; border-radius: 999px; background: none; color: inherit; font-size: 0.75rem; cursor: pointer; }
+.c-newmembers__pill button:hover { background: #fde6d2; }
+.c-newmembers__add { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; }
+.c-newmembers__add > i,
+.c-newmembers__add > svg { position: absolute; left: 0.8rem; color: #64748b; font-size: 0.75rem; pointer-events: none; }
+.c-newmembers__add select { height: 2.1rem; padding: 0 0.9rem 0 2rem; border: 1px dashed #cbd5e1; border-radius: 999px; background: #fff; color: #334155; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.c-newmembers__add select:hover { border-color: #94a3b8; }
+.c-newmembers__hint { color: #64748b; font-size: 0.75rem; }
+.c-newmembers__segments { display: inline-flex; flex-wrap: wrap; gap: 0.2rem; padding: 3px; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; }
+.c-newmembers__segment,
+.c-newmembers__segment:hover { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; padding: 0.3rem 0.8rem; border-radius: 999px; color: #475569; font-size: 0.8125rem; font-weight: 700; text-decoration: none; cursor: pointer; }
+.c-newmembers__segment:hover { background: #f8fafc; }
+.c-newmembers__segment.is-active { background: #fff7ed; color: #0f172a; }
+.c-newmembers-dialog .c-newmembers__segment.is-active { color: #c2410c; }
+.c-newmembers__segment input { position: absolute; opacity: 0; pointer-events: none; }
+.c-newmembers__segment:focus-within { outline: 2px solid #f37000; outline-offset: 2px; }
+.c-newmembers__badge { min-width: 1.3rem; padding: 0.05rem 0.4rem; border-radius: 999px; background: #cbd5e1; color: #334155; font-size: 0.6875rem; text-align: center; }
+.c-newmembers__segment.is-active .c-newmembers__badge { background: #ea7a2e; color: #fff; }
+
+/* Selection bar */
+.c-newmembers__selection { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1.5rem; border-top: 1px solid #e2e8f0; }
+.c-newmembers__check { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0; color: #334155; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.c-newmembers input[type="checkbox"] { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: #f37000; cursor: pointer; }
+.c-newmembers .c-newmembers__send { min-height: 2.25rem; padding: 0.35rem 1rem; font-size: 0.875rem; }
+
+/* Rows */
+.c-newmembers__row { display: flex; flex-wrap: wrap; gap: 1rem 2rem; padding: 1.25rem 1.5rem; border-top: 1px solid #e2e8f0; }
+.c-newmembers__row.is-empty { padding: 0.85rem 1.5rem; }
+.c-newmembers__who { display: flex; flex: 999 1 26rem; align-items: flex-start; gap: 0.85rem; min-width: 0; }
+.c-newmembers__pick { flex: none; margin-top: 1rem !important; }
+.c-newmembers__row.is-empty .c-newmembers__pick { margin-top: 0.7rem !important; }
+.c-newmembers__avatar { flex: none; border-radius: 999px; object-fit: cover; }
+.c-newmembers__info { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.c-newmembers__info p { margin: 0; }
+.c-newmembers__name { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.c-newmembers__name a,
+.c-newmembers__name a:hover { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.125rem; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
+.c-newmembers__name a:hover { color: #c2410c; }
+.c-newmembers__name .c-tag { padding: 0.15rem 0.55rem; font-size: 0.75rem; }
+.c-newmembers__meta { color: #64748b; font-size: 0.8125rem; }
+.c-newmembers__email { color: #334155; font-size: 0.8125rem; overflow-wrap: anywhere; }
+.c-newmembers__summary { color: #1e293b; font-size: 0.9375rem; line-height: 1.55; overflow-wrap: anywhere; }
+.c-newmembers__summary.is-missing { color: #94a3b8; font-style: italic; }
+.c-newmembers__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
+.c-newmembers__tags .c-tag { padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+
+.c-newmembers__actions { display: flex; flex: 1 1 18rem; flex-direction: column; gap: 0.4rem; max-width: 22rem; }
+.c-newmembers .c-newmembers__label-small { margin: 0; color: #64748b; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.c-newmembers__greetings { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.4rem; }
+.c-newmembers__greetings form { margin: 0; }
+.c-newmembers__greet,
+.c-newmembers__sent { display: inline-flex; align-items: center; gap: 0.4rem; height: 2rem; padding: 0 0.85rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
+.c-newmembers__greet { border: 1.5px solid #f37000; background: #fff; color: #c2410c; cursor: pointer; }
+.c-newmembers__greet:hover { background: #fff7ed; }
+.c-newmembers__sent { background: #f1f5f9; color: #15803d; }
+.c-newmembers__status { display: flex; gap: 0.4rem; margin: 0; }
+.c-newmembers__status select { flex: 1; min-width: 0; height: 2.25rem; padding: 0 0.6rem; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; color: #0f172a; font-size: 0.875rem; }
+.c-newmembers__save { height: 2.25rem; padding: 0 0.9rem; border: 1.5px solid #e2e8f0; border-radius: 999px; background: #fff; color: #94a3b8; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.c-newmembers__save:disabled { cursor: default; }
+.c-newmembers__save.is-changed { border-color: #f37000; background: #f37000; color: #fff; }
+
+/* The standard greeting dialog */
+.c-newmembers-dialog { width: calc(100% - 2rem); max-width: 36rem; max-height: calc(100vh - 2rem); padding: 0; border: 0; border-radius: 1.25rem; background: #fff; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16); }
+.c-newmembers-dialog::backdrop { background: rgba(15, 23, 42, 0.35); }
+.c-newmembers-dialog__box { display: flex; flex-direction: column; gap: 1.1rem; margin: 0; padding: 1.5rem 1.75rem; }
+.c-newmembers-dialog__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.c-newmembers-dialog__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; }
+.c-newmembers-dialog__close { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border: 0; border-radius: 999px; background: #f1f5f9; color: #334155; cursor: pointer; }
+.c-newmembers-dialog__close:hover { background: #e2e8f0; }
+.c-newmembers-dialog__chips { display: flex; flex-wrap: wrap; gap: 0.35rem; max-height: 7rem; overflow-y: auto; }
+.c-newmembers-dialog__chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem 0.2rem 0.25rem; border-radius: 999px; background: #f1f5f9; color: #0f172a; font-size: 0.8125rem; font-weight: 600; }
+.c-newmembers-dialog__chip img { border-radius: 999px; object-fit: cover; }
+.c-newmembers-dialog__field { display: flex; flex-direction: column; gap: 0.4rem; margin: 0; }
+.c-newmembers-dialog__label { color: #0f172a; font-size: 0.875rem; font-weight: 700; }
+.c-newmembers-dialog__field .c-newmembers__segments { align-self: flex-start; }
+.c-newmembers-dialog .o-input { font-weight: 400; }
+.c-newmembers-dialog textarea.o-input { height: auto; min-height: 10rem; line-height: 1.5; resize: vertical; }
+.c-newmembers-dialog__info { display: flex; gap: 0.6rem; margin: 0; padding: 0.75rem 0.9rem; border-radius: 0.75rem; background: #f8fafc; color: #475569; font-size: 0.8125rem; line-height: 1.5; }
+.c-newmembers-dialog__info > i,
+.c-newmembers-dialog__info > svg { flex: none; margin-top: 0.2rem; color: #64748b; }
+.c-newmembers-dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; }
+
+@media (max-width: 575.98px) {
+  .c-newmembers__label { width: 100%; }
+  .c-newmembers__row { padding: 1rem; }
+  .c-newmembers__actions { max-width: none; }
+  .c-newmembers-dialog { width: 100%; max-width: none; margin: auto 0 0; border-radius: 1.25rem 1.25rem 0 0; }
+  .c-newmembers-dialog__box { padding: 1.25rem; }
+}

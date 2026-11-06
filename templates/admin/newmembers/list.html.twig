@@ -1,71 +1,215 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  The new members (Admin\NewMembersController): who signed up in the last 90 days. The greeting team sees the members
+  who still wait for a greeting, the safety team and the checkers (all) everybody and change a status. The volunteer's
+  countries (saved for them) and the profile filter narrow the list; members can be selected for one standard greeting
+  (the dialog, a message to each of them).
+  Expects members (pager), all, can_change_status, statuses, chosen and addable ({id, name, count}), profile,
+  profile_counts (by profile), waiting and bulk_limit.
+#}
+{% set token = csrf_token(constant('App\\Controller\\Admin\\NewMembersController::TOKEN')) %}
+{% set page = members.currentPage %}
 
-{% block content %}
-  <h1 class="u:text-24">{{ 'adminnewmembers'|trans }}</h1>
-  {% set token = csrf_token(constant('App\\Controller\\Admin\\NewMembersController::TOKEN')) %}
-  {% if members.haveToPaginate %}
-    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(members, 'rox_default') }}</div>
-  {% endif %}
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th colspan="3">{{ 'adminnewmembersmemberdetails'|trans }}</th>
-          <th></th>
-          {% if can_change_status %}<th>{{ 'memberstatus'|trans }}</th>{% endif %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for member in members %}
-          <tr class="js-new-member" data-username="{{ member.username }}">
-            <td>
-              {{ macros.avatar(member.username, 50, true) }}<br>
-              <a href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a><br>
-              {{ member.place }}{% if member.country %}, {{ member.country }}{% endif %}<br>
-              ({{ member.created }})
-            </td>
-            <td>
-              {% if all %}{{ member.email }}<br><br>{% endif %}
-              {{ member.summary }}
-            </td>
-            <td>
-              {% for language in member.languages %}
-                {{ ('lang_' ~ language.language)|trans }} ({{ ('language.level.' ~ language.level)|trans }}){% if not loop.last %}<br>{% endif %}
-              {% endfor %}
-            </td>
-            <td>
-              {% for greeting, sent in {local: member.local_greeting_sent, global: member.global_greeting_sent} %}
-                {% if not sent %}
-                  <form method="post" action="{{ path('newmembers_greeting', {username: member.username, greeting: greeting}) }}" target="_blank" class="mb-2">
-                    <input type="hidden" name="_token" value="{{ token }}">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">{{ ('adminnewmembers' ~ greeting ~ 'greeting')|trans }}</button>
-                  </form>
-                {% endif %}
-              {% endfor %}
-            </td>
-            {% if can_change_status %}
-              <td>
-                <form method="post" action="{{ path('newmembers_status', {username: member.username}) }}" class="d-flex gap-2">
-                  <input type="hidden" name="_token" value="{{ token }}">
-                  <input type="hidden" name="page" value="{{ members.currentPage }}">
-                  <select name="status" class="form-select form-select-sm" aria-label="{{ 'memberstatus'|trans }}">
-                    {% for status in statuses %}
-                      <option value="{{ status }}"{% if status == member.status %} selected{% endif %}>{{ ('memberstatus' ~ status|lower)|trans }}</option>
+{% block javascripts %}
+    {{ encore_entry_script_tags('admin/newmembers') }}
+{% endblock %}
+
+{% block main %}
+<main role="main" class="c-vtools c-newmembers">
+    <div class="container-lg">
+        <header class="c-vtools__head">
+            <div class="c-vtools__head-main">
+                <p class="c-page-head__eyebrow">{{ (all ? 'admin.newmembers.eyebrow.safety' : 'admin.newmembers.eyebrow.greeting')|trans }}</p>
+                <h1 class="c-page-head__title">{{ 'admin.newmembers.title'|trans }}</h1>
+                <p class="c-vtools__description">{{ (all ? 'admin.newmembers.description.safety' : 'admin.newmembers.description.greeting')|trans }}</p>
+            </div>
+            <span class="c-newmembers__waiting">{{ 'admin.newmembers.waiting'|trans({count: waiting}) }}</span>
+        </header>
+
+        <section class="c-newmembers__card">
+            <div class="c-newmembers__filters">
+                <div class="c-newmembers__filter" role="group" aria-labelledby="c-newmembers-countries">
+                    <span class="c-newmembers__label" id="c-newmembers-countries">{{ 'admin.newmembers.countries'|trans }}</span>
+                    <div class="c-newmembers__pills">
+                        {% for country in chosen %}
+                            <form class="c-newmembers__pill" method="post" action="{{ path('newmembers_countries') }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="remove" value="{{ country.id }}">
+                                <input type="hidden" name="profile" value="{{ profile }}">
+                                <span>{{ country.name }} ({{ country.count }})</span>
+                                <button type="submit" aria-label="{{ 'admin.newmembers.countries.remove'|trans({country: country.name}) }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                            </form>
+                        {% endfor %}
+                        {% if addable is not empty %}
+                            <form class="c-newmembers__add" method="post" action="{{ path('newmembers_countries') }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="profile" value="{{ profile }}">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <select name="add" class="js-newmembers-add" aria-label="{{ 'admin.newmembers.countries.add'|trans }}">
+                                    <option value="">{{ 'admin.newmembers.countries.add'|trans }}</option>
+                                    {% for country in addable %}
+                                        <option value="{{ country.id }}">{{ country.name }} ({{ country.count }})</option>
+                                    {% endfor %}
+                                </select>
+                                <noscript><button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet">{{ 'admin.newmembers.countries.add.button'|trans }}</button></noscript>
+                            </form>
+                        {% endif %}
+                        <span class="c-newmembers__hint">{{ (chosen is empty ? 'admin.newmembers.countries.all' : 'admin.newmembers.countries.saved')|trans }}</span>
+                    </div>
+                </div>
+                <div class="c-newmembers__filter" role="group" aria-labelledby="c-newmembers-profile">
+                    <span class="c-newmembers__label" id="c-newmembers-profile">{{ 'admin.newmembers.profile'|trans }}</span>
+                    <nav class="c-newmembers__segments">
+                        {% for option, count in profile_counts %}
+                            <a class="c-newmembers__segment{{ option == profile ? ' is-active' }}" href="{{ path('newmembers', option == 'all' ? {} : {profile: option}) }}"{% if option == profile %} aria-current="true"{% endif %}>
+                                {{ ('admin.newmembers.profile.' ~ option)|trans }}<span class="c-newmembers__badge">{{ count }}</span>
+                            </a>
+                        {% endfor %}
+                    </nav>
+                    <span class="c-newmembers__hint">{{ 'admin.newmembers.profile.hint'|trans }}</span>
+                </div>
+            </div>
+
+            {% if members.nbResults == 0 %}
+                <div class="c-cnews-empty">
+                    <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-user-plus"></i></span>
+                    {% set _empty = chosen is empty ? 'none' : 'countries' %}
+                    <p class="c-cnews-empty__title">{{ ('admin.newmembers.empty.' ~ _empty ~ '.title')|trans }}</p>
+                    <p class="c-cnews-empty__text">{{ ('admin.newmembers.empty.' ~ _empty ~ '.text')|trans }}</p>
+                </div>
+            {% else %}
+                <div class="c-newmembers__selection">
+                    <label class="c-newmembers__check">
+                        <input type="checkbox" class="js-newmembers-all">
+                        <span class="js-newmembers-all-label" data-none="{{ 'admin.newmembers.select.all'|trans({count: members.currentPageResults|length}) }}" data-some="{{ 'admin.newmembers.select.some'|trans }}">{{ 'admin.newmembers.select.all'|trans({count: members.currentPageResults|length}) }}</span>
+                    </label>
+                    <button type="button" class="c-cadmin-btn c-cadmin-btn--primary c-newmembers__send js-newmembers-open" disabled data-none="{{ 'admin.newmembers.send'|trans }}" data-some="{{ 'admin.newmembers.send.to'|trans }}">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i><span>{{ 'admin.newmembers.send'|trans }}</span>
+                    </button>
+                </div>
+
+                <div class="c-newmembers__list">
+                    {% for member in members.currentPageResults %}
+                        {% set _empty = not member.has_photo and not member.has_text %}
+                        {% set _status = member.status %}
+                        {% set _tone = _status == 'Active' ? ' c-tag--green' : (_status in ['Pending', 'Banned', 'Suspended'] ? ' c-tag--orange' : '') %}
+                        <article class="c-newmembers__row{{ _empty ? ' is-empty' }} js-new-member" data-username="{{ member.username }}">
+                            <div class="c-newmembers__who">
+                                <input type="checkbox" class="c-newmembers__pick js-newmembers-pick" name="usernames[]" value="{{ member.username }}" form="c-newmembers-greeting" aria-label="{{ 'admin.newmembers.select.member'|trans({username: member.username}) }}">
+                                <img class="c-newmembers__avatar" src="{{ path('avatar', {username: member.username, size: 100}) }}" alt="" width="{{ _empty ? 40 : 52 }}" height="{{ _empty ? 40 : 52 }}" loading="lazy">
+                                <div class="c-newmembers__info">
+                                    <p class="c-newmembers__name">
+                                        <a href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a>
+                                        <span class="c-tag{{ _tone }}">{{ ('memberstatus' ~ _status|lower)|trans }}</span>
+                                    </p>
+                                    <p class="c-newmembers__meta">
+                                        {% if member.place or member.country %}
+                                            <i class="fas fa-location-dot" aria-hidden="true"></i>
+                                            {{ member.place }}{% if member.place and member.country %}, {% endif %}{{ member.country }} ·
+                                        {% endif %}
+                                        {{ 'admin.newmembers.signed.up'|trans({ago: member.signed_up.diffForHumans, date: member.signed_up|date('Y-m-d')}) }}
+                                    </p>
+                                    {% if all and member.email %}
+                                        <p class="c-newmembers__email"><i class="far fa-envelope" aria-hidden="true"></i> {{ member.email }}</p>
+                                    {% endif %}
+                                    {% if member.has_text %}
+                                        <p class="c-newmembers__summary">{{ member.summary }}</p>
+                                    {% elseif member.has_photo %}
+                                        <p class="c-newmembers__summary is-missing">{{ 'admin.newmembers.no.text'|trans }}</p>
+                                    {% endif %}
+                                    {% if _empty or member.languages is not empty %}
+                                        <div class="c-newmembers__tags">
+                                            {% if _empty %}<span class="c-tag"><i class="fas fa-user-slash" aria-hidden="true"></i>{{ 'admin.newmembers.not.filled.in'|trans }}</span>{% endif %}
+                                            {% for language in member.languages %}
+                                                <span class="c-tag c-tag--type">{{ ('lang_' ~ language.language)|trans }} · {{ ('language.level.' ~ language.level)|trans|lower }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="c-newmembers__actions">
+                                <span class="c-newmembers__label-small">{{ 'admin.newmembers.greetings'|trans }}</span>
+                                <div class="c-newmembers__greetings">
+                                    {% for greeting, icon in {local: 'fa-location-dot', global: 'fa-globe'} %}
+                                        {% set _label = ('admin.newmembers.greeting.' ~ greeting)|trans %}
+                                        {% set _sent_label = ('admin.newmembers.greeting.' ~ greeting ~ '.sent')|trans %}
+                                        {% if member[greeting ~ '_greeting_sent'] %}
+                                            <span class="c-newmembers__sent"><i class="fas fa-check" aria-hidden="true"></i>{{ _sent_label }}</span>
+                                        {% else %}
+                                            <form method="post" action="{{ path('newmembers_greeting', {username: member.username, greeting: greeting}) }}" target="_blank" class="js-newmembers-greeting" data-sent="{{ _sent_label }}">
+                                                <input type="hidden" name="_token" value="{{ token }}">
+                                                <button type="submit" class="c-newmembers__greet"><i class="fas {{ icon }}" aria-hidden="true"></i>{{ _label }}</button>
+                                            </form>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% if can_change_status %}
+                                    <label class="c-newmembers__label-small" for="c-newmembers-status-{{ loop.index }}">{{ 'memberstatus'|trans }}</label>
+                                    <form class="c-newmembers__status js-newmembers-status" method="post" action="{{ path('newmembers_status', {username: member.username}) }}">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <input type="hidden" name="page" value="{{ page }}">
+                                        <input type="hidden" name="profile" value="{{ profile }}">
+                                        <select name="status" id="c-newmembers-status-{{ loop.index }}">
+                                            {% for status in statuses %}
+                                                <option value="{{ status }}"{% if status == _status %} selected{% endif %}>{{ ('memberstatus' ~ status|lower)|trans }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="c-newmembers__save">{{ 'save'|trans }}</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </article>
                     {% endfor %}
-                  </select>
-                  <button type="submit" class="btn btn-sm btn-primary">{{ 'save'|trans }}</button>
-                </form>
-              </td>
+                </div>
             {% endif %}
-          </tr>
-        {% else %}
-          <tr><td colspan="5">{{ 'admin.newmembers.none'|trans }}</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% if members.haveToPaginate %}
-    <div class="d-flex justify-content-end">{{ pagerfanta(members, 'rox_default') }}</div>
-  {% endif %}
-{% endblock content %}
+        </section>
+
+        {% if members.haveToPaginate %}
+            <nav class="c-cadmin__pager">{{ pagerfanta(members, 'rox_default') }}</nav>
+        {% endif %}
+    </div>
+
+    {% if members.nbResults > 0 %}
+        <dialog class="c-newmembers-dialog js-newmembers-dialog" aria-labelledby="c-newmembers-dialog-title">
+            <form class="c-newmembers-dialog__box" id="c-newmembers-greeting" method="post" action="{{ path('newmembers_greeting_bulk', {greeting: 'local'}) }}"
+                  data-local="{{ path('newmembers_greeting_bulk', {greeting: 'local'}) }}" data-global="{{ path('newmembers_greeting_bulk', {greeting: 'global'}) }}">
+                <input type="hidden" name="_token" value="{{ token }}">
+                <input type="hidden" name="page" value="{{ page }}">
+                <input type="hidden" name="profile" value="{{ profile }}">
+                <div class="c-newmembers-dialog__head">
+                    <div>
+                        <p class="c-page-head__eyebrow">{{ 'admin.newmembers.dialog.eyebrow'|trans }}</p>
+                        <h2 class="c-newmembers-dialog__title" id="c-newmembers-dialog-title" data-one="{{ 'admin.newmembers.dialog.title.one'|trans }}" data-label="{{ 'admin.newmembers.dialog.title'|trans }}"></h2>
+                    </div>
+                    <button type="button" class="c-newmembers-dialog__close js-newmembers-close" aria-label="{{ 'close'|trans }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                </div>
+                <div class="c-newmembers-dialog__chips js-newmembers-chips"></div>
+                <div class="c-newmembers-dialog__field" role="radiogroup" aria-labelledby="c-newmembers-counts">
+                    <span class="c-newmembers-dialog__label" id="c-newmembers-counts">{{ 'admin.newmembers.dialog.counts.as'|trans }}</span>
+                    <div class="c-newmembers__segments">
+                        {% for greeting in ['local', 'global'] %}
+                            <label class="c-newmembers__segment{{ loop.first ? ' is-active' }}">
+                                <input type="radio" name="greeting" value="{{ greeting }}" class="js-newmembers-kind"{{ loop.first ? ' checked' }}>{{ ('admin.newmembers.greeting.' ~ greeting)|trans }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <label class="c-newmembers-dialog__field">
+                    <span class="c-newmembers-dialog__label">{{ 'admin.newmembers.dialog.subject'|trans }}</span>
+                    <input class="o-input" type="text" name="subject" required maxlength="255" value="{{ 'admin.newmembers.dialog.subject.default'|trans }}">
+                </label>
+                <label class="c-newmembers-dialog__field">
+                    <span class="c-newmembers-dialog__label">{{ 'admin.newmembers.dialog.message'|trans }}</span>
+                    <textarea class="o-input" name="text" rows="8" required>{{ 'admin.newmembers.dialog.message.default'|trans({volunteer: app.user.username}) }}</textarea>
+                    <span class="c-newmembers__hint">{{ 'admin.newmembers.dialog.message.hint'|trans }}</span>
+                </label>
+                <p class="c-newmembers-dialog__info"><i class="fas fa-circle-info" aria-hidden="true"></i>{{ 'admin.newmembers.dialog.info'|trans }}</p>
+                <div class="c-newmembers-dialog__actions">
+                    <button type="button" class="c-cadmin-btn c-cadmin-btn--quiet js-newmembers-close">{{ 'cancel'|trans }}</button>
+                    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary"><i class="fas fa-paper-plane" aria-hidden="true"></i><span class="js-newmembers-submit" data-one="{{ 'admin.newmembers.dialog.send.one'|trans }}" data-label="{{ 'admin.newmembers.dialog.send'|trans }}"></span></button>
+                </div>
+            </form>
+        </dialog>
+    {% endif %}
+</main>
+{% endblock main %}

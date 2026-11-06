@@ -50,9 +50,11 @@ class LogController extends AbstractController
         ]);
         $logForm->handleRequest($request);
 
+        $selected = [];
         if ($logForm->isSubmitted() && $logForm->isValid()) {
             $data = $logForm->getData();
-            $types = $data['types'];
+            $selected = array_values($data['types'] ?? []);
+            $types = [] === $selected ? $logTypes : $selected;
             $username = $data['username'];
         }
         if (!empty($username)) {
@@ -64,8 +66,11 @@ class LogController extends AbstractController
         $logs = $logModel->getFilteredLogs($types, $member, $page, $limit);
 
         return $this->render('admin/logs/index.html.twig', [
-            'form' => $logForm->createView(),
             'logs' => $logs,
+            'log_types' => array_values($logTypes),
+            'selected' => $selected,
+            'username' => (string) $username,
+            'filters' => true,
         ]);
     }
 
@@ -88,6 +93,7 @@ class LogController extends AbstractController
 
         return $this->render('admin/logs/index.html.twig', [
             'logs' => $logs,
+            'filters' => false,
         ]);
     }
 }

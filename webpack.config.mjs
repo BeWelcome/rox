@@ -48,7 +48,6 @@ Encore
     .addEntry('search/loadpicker', './assets/js/search/loadpicker.js')
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/locations', './assets/js/search/locations.js')
-    .addEntry('search/map', './assets/js/search/map.js')
     .addEntry('groups/location', './assets/js/groups/location.js')
     .addEntry('groups/form', './assets/js/groups/form.js')
     .addEntry('requests', './assets/js/requests.js')

@@ -2,8 +2,6 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Form\CustomDataClass\SearchFormRequest;
-use App\Form\SearchFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -54,14 +52,6 @@ class HomeAndLoginMockups implements MockupProviderInterface
     {
         switch ($parameters['name']) {
             case 'homepage':
-                $searchFormRequest = new SearchFormRequest();
-                $searchFormRequest->show_map = true;
-                $searchFormRequest->accommodation_no = true;
-                $searchFormRequest->distance = 100;
-                $searchForm = $this->formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
-                    'action' => '/search/map',
-                ]);
-
                 $formBuilder = $this->formFactory->createBuilder();
                 $usernameForm = $formBuilder
                     ->add('username', TextType::class, [
@@ -81,7 +71,6 @@ class HomeAndLoginMockups implements MockupProviderInterface
                         'activities' => 1300,
                     ],
                     'username' => $usernameForm->createView(),
-                    'search' => $searchForm->createView(),
                     'images' => [
                         1 => [
                             'high' => '/images/homepicture-big-1.jpg',

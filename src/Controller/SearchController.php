@@ -43,15 +43,9 @@ class SearchController extends AbstractController
     }
 
     /**
-     * The URLs of the legacy member search.
+     * The old address of the member search.
      */
     #[Route(path: '/search', name: 'search_legacy', methods: ['GET'])]
-    #[Route(
-        path: '/search/members/{view}',
-        name: 'search_legacy_members',
-        requirements: ['view' => 'text|map|text/advanced|map/advanced|advanced'],
-        methods: ['GET'],
-    )]
     public function legacySearch(): RedirectResponse
     {
         return $this->redirectToRoute('search_locations', [], Response::HTTP_MOVED_PERMANENTLY);

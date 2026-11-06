@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Location;
-use App\Form\MapSearchFormType;
 use App\Model\StatisticsModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,11 +29,6 @@ class HomeController extends AbstractController
             return $this->forward(LandingController::class . '::show');
         }
 
-        // Find all members around 100km of the given location
-        $searchForm = $this->createForm(MapSearchFormType::class, null, [
-            'action' => '/search/map',
-        ]);
-
         $usernameForm = $this->createFormBuilder()
             ->add('username', TextType::class, [
                 'constraints' => [
@@ -50,7 +44,6 @@ class HomeController extends AbstractController
         $images = $this->getHomeImages();
 
         return $this->render('home/home.html.twig', [
-            'search' => $searchForm->createView(),
             'images' => $images,
             'username' => $usernameForm->createView(),
             'locale' => $request->getPreferredLanguage($locales),

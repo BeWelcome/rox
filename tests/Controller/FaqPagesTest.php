@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * The FAQ and its admin: members see the active questions of a category and the categories that have some; the FAQ
+ * The FAQ and its admin: members see the active questions of a category in the About pages' frame; the FAQ
  * volunteers (bwadmin has the Faq right) see every FAQ, sort them and the categories, and edit them. In the
  * fixtures the first category has three FAQs, the second two.
  */
@@ -33,8 +33,9 @@ final class FaqPagesTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         self::assertSame(['question' . $first, 'question' . $second], $crawler->filter('details.p-faq__item')->each(static fn ($item): string => (string) $item->attr('id')));
-        self::assertCount(1, $crawler->filter('.p-faq__category.is-active'));
-        self::assertSame('2', trim($crawler->filter('.p-faq__category.is-active .p-faq__count')->text()));
+        // in the About pages' frame, the category marked in the About menu
+        self::assertCount(1, $crawler->filter('.p-about__nav .p-about__link.is-active'));
+        self::assertCount(1, $crawler->filter('.p-faq__help a[href="/about/feedback"]'));
     }
 
     public function testTheAdminSeesEveryFaqAndSortsThem(): void

@@ -71,18 +71,6 @@ ORDER BY
     }
 
     /**
-     * @return array<int, int> the number of active FAQs of each category, by category id
-     */
-    public function countActiveFaqsByCategory(): array
-    {
-        $rows = $this->entityManager->getConnection()->fetchAllAssociative(
-            "SELECT idCategory AS category, COUNT(*) AS faqs FROM faq WHERE Active = 'Active' GROUP BY idCategory",
-        );
-
-        return array_column(array_map(static fn (array $row): array => [(int) $row['category'], (int) $row['faqs']], $rows), 1, 0);
-    }
-
-    /**
      * Puts the FAQs of the category in the given order; ids of other categories are left out.
      *
      * @param list<int> $ids

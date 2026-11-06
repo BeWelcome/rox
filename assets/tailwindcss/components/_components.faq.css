@@ -1,7 +1,7 @@
 /*
- * The FAQ (templates/faq/faq.html.twig) and its admin (templates/admin/faqs/): the categories with their counts on
- * the side, the questions in a white card opening their answers; in the admin the FAQs and categories as rows to
- * drag by their handle, and the forms. In the look of the policy and safety pages.
+ * The FAQ (templates/faq/faq.html.twig, in the About pages' card) and its admin (templates/admin/faqs/): the
+ * questions opening their answers and the box leading to the contact form; in the admin the categories with their
+ * counts on the side, the FAQs and categories as rows to drag by their handle, and the forms.
  */
 
 main.p-faq { padding: 2.5rem 0 4rem; background: #f0f0f0; }
@@ -23,9 +23,9 @@ main.p-faq { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 .p-faq__category.is-active { background: #fff7ed; color: #c2410c; }
 .p-faq__count { flex: none; min-width: 1.6rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: #f1f5f9; color: #64748b; font-size: 0.75rem; font-weight: 700; text-align: center; }
 .p-faq__category.is-active .p-faq__count { background: #ea7a2e; color: #fff; }
-.p-faq__help { display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
-.p-faq__help h2 { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.1rem; font-weight: 700; }
-.p-faq__help p { margin: 0; color: #475569; font-size: 0.9375rem; line-height: 1.55; }
+.p-faq .p-faq__help { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; margin-top: 2rem; padding: 1rem 1.25rem; border-radius: 0.9rem; background: #f8fafc; }
+.p-faq .p-faq__help h2 { margin: 0 0 0.15rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.1rem; font-weight: 700; }
+.p-faq .p-faq__help p { margin: 0; color: #475569; font-size: 0.9375rem; line-height: 1.55; }
 .p-faq__help a { text-decoration: none; }
 
 /* Questions */
@@ -33,6 +33,7 @@ main.p-faq { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 .p-faq__title { margin: 0 0 0.75rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
 .p-faq__item { border-top: 1px solid #e2e8f0; scroll-margin-top: 88px; }
 .p-faq__item:last-of-type { border-bottom: 1px solid #e2e8f0; }
+.p-faq__title + .p-faq__item { margin-top: 0.5rem; }
 .p-faq__item summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0.25rem; color: #0f172a; font-size: 1.0625rem; font-weight: 600; line-height: 1.4; list-style: none; cursor: pointer; transition: color 0.15s ease; }
 .p-faq__item summary::-webkit-details-marker { display: none; }
 .p-faq__item summary:hover { color: #c2410c; }

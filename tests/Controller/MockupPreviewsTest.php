@@ -91,8 +91,7 @@ class MockupPreviewsTest extends WebTestCase
 
     public function testTheTextsOfAMailCanBeTranslatedOnItsPreview(): void
     {
-        // translation mode is off: the preview has its texts listed all the same
-        $this->client->request('GET', '/admin/translations/mode/off');
+        // translation mode is off (as when logging in): the preview has its texts listed all the same
         $crawler = $this->client->request('GET', '/admin/translate/mockup/signups/' . rawurlencode('Confirm Email Address'));
 
         $this->assertResponseIsSuccessful();

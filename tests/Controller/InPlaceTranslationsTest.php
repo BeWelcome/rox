@@ -38,7 +38,7 @@ class InPlaceTranslationsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/search');
         self::assertCount(0, $crawler->filter('#translations'));
 
-        $this->client->request('GET', '/admin/translations/mode/on');
+        $this->switchTranslationMode();
         $crawler = $this->client->request('GET', '/groups/search');
         self::assertCount(1, $crawler->filter('#translations'));
         self::assertCount(1, $crawler->filter('.js-translation-drawer'));
@@ -51,7 +51,7 @@ class InPlaceTranslationsTest extends WebTestCase
             self::assertSame($empty, null === $group->filter('.js-in-place-empty')->attr('hidden'), (string) $group->attr('data-group'));
         });
 
-        $this->client->request('GET', '/admin/translations/mode/off');
+        $this->switchTranslationMode();
         self::assertCount(0, $this->client->request('GET', '/groups/search')->filter('#translations'));
     }
 
@@ -161,9 +161,20 @@ class InPlaceTranslationsTest extends WebTestCase
     private function pageInTranslationMode(string $locale = 'en'): Crawler
     {
         $server = ['HTTP_ACCEPT_LANGUAGE' => $locale];
-        $this->client->request('GET', '/admin/translations/mode/on', [], [], $server);
+        $this->switchTranslationMode($server);
 
         return $this->client->request('GET', '/groups/search', [], [], $server);
+    }
+
+    /**
+     * Turns translation mode on or off with the switch of the volunteer menu (a POST with its token).
+     *
+     * @param array<string, string> $server
+     */
+    private function switchTranslationMode(array $server = []): void
+    {
+        $crawler = $this->client->request('GET', '/groups/search', [], [], $server);
+        $this->client->submit($crawler->filter('#volunteer_menu form.c-translation-mode')->form(), [], $server);
     }
 
     private function item(Crawler $crawler, string $group): Crawler

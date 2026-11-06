@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 /**
  * Class TranslationController.
@@ -45,6 +46,9 @@ class TranslationController extends AbstractController
     use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
+    /** The CSRF token id of turning translation mode on or off (templates/layout/_translation_mode.html.twig). */
+    public const string MODE_TOKEN = 'translation-mode';
 
     public function __construct(private TranslationModel $translationModel, protected EntityManagerInterface $entityManager, private array $locales)
     {
@@ -474,9 +478,16 @@ class TranslationController extends AbstractController
         return new JsonResponse(['texts' => $texts]);
     }
 
-    #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'])]
-    public function setTranslationMode(Request $request, string $mode)
+    /**
+     * Turns translation mode on or off (the volunteer menu and the translation tool): the page then lists the texts it
+     * shows to translate them in place.
+     */
+    #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'], methods: ['POST'])]
+    #[IsCsrfTokenValid(self::MODE_TOKEN)]
+    public function setTranslationMode(Request $request, string $mode): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS);
+
         if ('on' === $mode) {
             $flashId = 'flash.translation.enabled';
         } else {

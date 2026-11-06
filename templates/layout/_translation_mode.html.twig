@@ -1,0 +1,15 @@
+{#
+  Translation mode on or off for translators (the Words right): "Translation mode: on" toggles it off and the other way
+  round (Admin\TranslationController::setTranslationMode). Shown to translators of the page's language, and to any
+  translator while it is on, so they can always turn it off. class: the button's classes.
+#}
+{% set _on = app.session.get('translation_mode') == 'on' %}
+{% if is_granted('ROLE_ADMIN_WORDS') and app.user and (_on or app.user.hasRightsForLocale(app.request.locale)) %}
+    <form method="post" action="{{ path('translation_mode', {mode: _on ? 'off' : 'on'}) }}" class="c-translation-mode">
+        <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\TranslationController::MODE_TOKEN')) }}">
+        <button type="submit" class="{{ class ?? '' }} c-translation-mode__button{{ _on ? ' is-on' }}" aria-pressed="{{ _on ? 'true' : 'false' }}">
+            <i class="fas fa-language fa-fw" aria-hidden="true"></i>
+            <span>{{ (_on ? 'translation.mode.state.on' : 'translation.mode.state.off')|trans }}</span>
+        </button>
+    </form>
+{% endif %}

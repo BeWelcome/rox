@@ -2,7 +2,7 @@
    page, a box per group (missing, not translated yet, translated) with up to ten texts in view; Edit, Translate and
    Create open the side panel. Texts replaced on the page light up briefly. */
 
-.c-in-place { --c-in-place-row: 3.75rem; box-sizing: border-box; max-width: 1110px; margin: 2rem auto; padding: 0 15px; color: #0f172a; text-align: left; }
+.c-in-place { --c-in-place-row: 3.75rem; box-sizing: border-box; width: 100%; max-width: 1110px; margin: 2rem auto; padding: 0 15px; color: #0f172a; text-align: left; }
 .c-in-place .c-in-place__title { display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.35rem; font-weight: 700; }
 .c-in-place__locale { padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.85rem; font-weight: 600; }
 
@@ -28,6 +28,9 @@
 .c-in-place__code { overflow: hidden; color: #475569; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap; }
 .c-in-place__meta { display: none; }
 .c-in-place .c-in-place__text { margin: 0.1rem 0 0; overflow: hidden; color: #0f172a; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
+/* on touch screens bewelcome.css makes every [title] a centred inline-flex box (for its tooltip); the texts keep
+   their full text in title, so they stay a block, start left and end in "…" */
+.c-in-place .c-in-place__text[title] { display: block; position: static; justify-content: normal; }
 .c-in-place__action,
 .c-in-place__action:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; padding: 0.35rem 0.85rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .c-in-place__action:hover { border-color: #f37000; color: #c2410c; }

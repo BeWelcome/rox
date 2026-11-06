@@ -162,7 +162,7 @@ final class CheckerTest extends WebTestCase
 
     private function token(Crawler $crawler): string
     {
-        return (string) $crawler->filter('form input[name="_token"]')->first()->attr('value');
+        return (string) $crawler->filter('main form input[name="_token"]')->first()->attr('value');
     }
 
     /**

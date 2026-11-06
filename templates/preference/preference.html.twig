@@ -20,6 +20,22 @@
          data-csrf-token="{{ csrf_token('preference_update') }}">
 
   <div class="p-preferences-list">
+    {# The site's language (PreferenceLanguage, which the form leaves out): switching goes through /rox/in/{locale},
+       which keeps it as the member's preference and shows the site in it at once #}
+    <section class="p-preference-card" id="language">
+      <div class="p-preference-card__copy">
+        <h2 class="p-preference-card__title">{{ 'preferencelanguage'|trans }}</h2>
+        <p class="p-preference-card__help">{{ 'preference.language.help'|trans }}</p>
+      </div>
+      <div class="p-preference-card__control">
+        <select id="preference_language" class="o-input p-preference-select" aria-label="{{ 'preferencelanguage'|trans }}"
+                onchange="window.location.href = this.value">
+          {% for lang in locales %}
+            <option value="{{ path('language', {locale: lang}) }}" lang="{{ lang }}"{% if lang == app.request.locale %} selected{% endif %}>{{ language_name(lang) }}{% if lang != app.request.locale %} · {{ language_name_translated(lang, app.request.locale) }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </section>
     {% for name, child in form.children %}
       {% if not (name starts with '_') %}
         {% set is_browser_push_preference = browser_push_enabled and name == constant('App\\Entity\\Preference::BROWSER_NOTIFICATIONS') %}

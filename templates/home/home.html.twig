@@ -287,7 +287,7 @@
     </section>
 </main>
 
-{% include 'footer.html.twig' %}
+{% include 'footer.html.twig' with {footer_on_mobile: true} %}
 
 {{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('password/showhide') }}

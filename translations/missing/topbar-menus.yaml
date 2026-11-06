@@ -1,0 +1,9 @@
+preference.language.help:
+  - 'The language BeWelcome is shown in.'
+  - 'Preferences: the help of the language, which changes the site at once.'
+translation.mode.state.on:
+  - 'Translation mode: on'
+  - 'Volunteer menu and the translation section of a page: translation mode is on; selecting it turns it off.'
+translation.mode.state.off:
+  - 'Translation mode: off'
+  - 'Volunteer menu and the translation section of a page: translation mode is off; selecting it turns it on.'

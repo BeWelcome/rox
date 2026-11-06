@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
 use DateTime;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
@@ -197,18 +197,10 @@ class ActivityRepository extends EntityRepository
         } elseif (0 === $distance) {
             $qb->andWhere('a.location = :location')->setParameter('location', $address->getLocation());
         } else {
-            $center = GeoLocation::fromDegrees((float) $address->getLatitude(), (float) $address->getLongitude());
-            $box = $center->boundingCoordinates($distance, 'km');
-            $qb
-                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:box, 0)), l.coordinates) = 1')
-                ->setParameter('box', \sprintf(
-                    'LINESTRING(%F %F, %F %F)',
-                    $box[0]->getLongitudeInDegrees(),
-                    $box[0]->getLatitudeInDegrees(),
-                    $box[1]->getLongitudeInDegrees(),
-                    $box[1]->getLatitudeInDegrees()
-                ))
-            ;
+            // the places with activities in the rectangle around the member (see PlacesInRectangle)
+            $places = new PlacesInRectangle($this->getEntityManager()->getConnection())
+                ->withActivities((float) $address->getLatitude(), (float) $address->getLongitude(), $distance);
+            PlacesInRectangle::restrict($qb, 'l.geonameId', $places, 'placesInRectangle');
         }
 
         return $this->paginate($qb, $page, $items);
@@ -259,8 +251,9 @@ class ActivityRepository extends EntityRepository
         $latitude = $address->getLatitude();
         $longitude = $address->getLongitude();
 
-        $edison = GeoLocation::fromDegrees($latitude, $longitude);
-        $coordinates = $edison->boundingCoordinates($distance, 'km');
+        // only the places with activities in the rectangle around the member join (see PlacesInRectangle)
+        $places = new PlacesInRectangle($this->getEntityManager()->getConnection())
+            ->withActivities((float) $latitude, (float) $longitude, (float) $distance);
 
         $qb = $this->createQueryBuilder('a');
         $qb
@@ -268,16 +261,12 @@ class ActivityRepository extends EntityRepository
                 Location::class,
                 'l',
                 Join::WITH,
-                'a.location = l.geonameId '
-                . 'AND MBRContains(ST_Envelope(ST_GeomFromText(:boundingBox, 0)), l.coordinates) = 1'
-            )
-            ->setParameter('boundingBox', \sprintf(
-                'LINESTRING(%F %F, %F %F)',
-                $coordinates[0]->getLongitudeInDegrees(),
-                $coordinates[0]->getLatitudeInDegrees(),
-                $coordinates[1]->getLongitudeInDegrees(),
-                $coordinates[1]->getLatitudeInDegrees()
-            ))
+                'a.location = l.geonameId AND ' . ([] === $places ? '1 = 0' : 'l.geonameId IN (:placesInRectangle)')
+            );
+        if ([] !== $places) {
+            $qb->setParameter('placesInRectangle', $places, ArrayParameterType::INTEGER);
+        }
+        $qb
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', new DateTime()->modify('+3 months'))

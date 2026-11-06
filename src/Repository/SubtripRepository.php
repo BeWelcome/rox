@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
@@ -162,20 +161,15 @@ class SubtripRepository extends EntityRepository
                 ->setParameter('location', $location)
             ;
         } else {
-            $center = new GeoPoint((float) $location->getLatitude(), (float) $location->getLongitude());
-            $boundingBox = $center->boundingBox($trip->getInvitationRadius(), 'km');
-            $lineString = \sprintf(
-                'LINESTRING(%F %F, %F %F)',
-                $boundingBox->getMinLongitude(),
-                $boundingBox->getMinLatitude(),
-                $boundingBox->getMaxLongitude(),
-                $boundingBox->getMaxLatitude()
+            // the places with members in the rectangle first (see PlacesInRectangle), then the exact distance
+            $places = new PlacesInRectangle($this->getEntityManager()->getConnection())->withMembers(
+                (float) $location->getLatitude(),
+                (float) $location->getLongitude(),
+                (float) $trip->getInvitationRadius(),
             );
-
+            PlacesInRectangle::restrict($qb, 'hostLocation.geonameId', $places, 'placesInRectangle');
             $qb
-                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), hostLocation.coordinates) = 1')
                 ->andWhere('ST_Distance_Sphere(hostLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :invitationRadiusMeters')
-                ->setParameter('lineString', $lineString)
                 ->setParameter('invitationRadiusMeters', $trip->getInvitationRadius() * 1000)
             ;
         }
@@ -231,21 +225,13 @@ class SubtripRepository extends EntityRepository
             ->addSelect('t')
         ;
 
-        // Bounding-box prefilter on the spatial index of location.coordinates, so the
+        // Only the legs to places in the rectangle around the member (see PlacesInRectangle), so the
         // haversine GeoDistance only runs on legs that can be in range instead of on every leg.
         // Without an address latitude/longitude are null and GeoDistance already matches nothing.
         if (null !== $latitude && null !== $longitude) {
-            $boundingBox = new GeoPoint((float) $latitude, (float) $longitude)->boundingBox($distance, 'km');
-            $qb
-                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:areaLineString, 0)), l.coordinates) = 1')
-                ->setParameter('areaLineString', \sprintf(
-                    'LINESTRING(%F %F, %F %F)',
-                    $boundingBox->getMinLongitude(),
-                    $boundingBox->getMinLatitude(),
-                    $boundingBox->getMaxLongitude(),
-                    $boundingBox->getMaxLatitude()
-                ))
-            ;
+            $places = new PlacesInRectangle($this->getEntityManager()->getConnection())
+                ->withLegs((float) $latitude, (float) $longitude, (float) $distance);
+            PlacesInRectangle::restrict($qb, 'l.geonameId', $places, 'placesInRectangle');
         }
 
         return $qb;

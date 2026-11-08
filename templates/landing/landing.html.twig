@@ -178,8 +178,13 @@
                     <button type="button" class="c-home-pill js-home-filter{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio" aria-checked="{{ messageFilter == 'Unread' ? 'true' : 'false' }}" data-group="messages">{{ 'landing.button.unread'|trans }}</button>
                 </div>
                 <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer">
-                    <a class="c-home-link" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">{{ 'landing.conversations'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                {% set _allConversations = inbox_total_count() %}
+                <div class="c-home-pane__footer c-home-pane__footer--more">
+                    <a class="c-home-more" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">
+                        {{ 'landing.conversations.all'|trans }}
+                        {% if _allConversations %}<span class="c-home-more__count">{{ _allConversations }}</span>{% endif %}
+                        <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
 
@@ -206,8 +211,12 @@
                     <input type="hidden" id="trips_radius" value="{{ _radius }}">
                 </div>
                 <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--end">
-                    <a class="c-home-link" href="{{ url('visitors') }}"><i class="far fa-map" aria-hidden="true"></i> {{ 'landing.bevisited.alltrips'|trans }}</a>
+                <div class="c-home-pane__footer c-home-pane__footer--more">
+                    <a class="c-home-more" href="{{ url('visitors') }}">
+                        {{ 'landing.bevisited.alltrips'|trans }}
+                        {% if visitorsCount %}<span class="c-home-more__count">{{ visitorsCount }}</span>{% endif %}
+                        <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </div>

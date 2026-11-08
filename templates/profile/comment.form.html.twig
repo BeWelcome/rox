@@ -15,7 +15,7 @@
 {% block subpage_back %}{{ url('members_profile', {username: member.username}) }}{% endblock %}
 {% block subpage_eyebrow %}{{ (editing ? 'comment.form.editing' : 'comment.form.new')|trans }}{% endblock %}
 {% block drawer_eyebrow %}<i class="fas fa-comment" aria-hidden="true"></i> {{ (editing ? 'comment.form.editing' : 'comment.form.new')|trans }}{% endblock %}
-{% block drawer_options %}noclose{% endblock %}
+{% block drawer_options %}{% endblock %}
 {% block drawer_avatar %}<img src="{{ url('avatar', {username: member.username, size: 100}) }}" alt="">{% endblock %}
 
 {% block javascripts %}

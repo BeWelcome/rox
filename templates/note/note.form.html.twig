@@ -9,7 +9,7 @@
 
 {% block subpage_title %}{{ member.visibleName ?: member.username }}{% endblock %}
 {% block drawer_eyebrow %}<span class="p-note-form__mark" aria-hidden="true"></span> {{ 'profile.note.about.eyebrow'|trans }}{% endblock %}
-{% block drawer_options %}track noclose{% endblock %}
+{% block drawer_options %}track{% endblock %}
 {% block drawer_avatar %}<img src="{{ url('avatar', {username: member.username, size: 100}) }}" alt="">{% endblock %}
 
 {% block subpage_body %}

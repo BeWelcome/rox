@@ -47,3 +47,43 @@ function closeMainMenuDropdownsIfWide() {
 });
 
 wideQuery.addEventListener('change', closeMainMenuDropdownsIfWide);
+
+// The member's menu: "Copy link" copies the profile address and says so for a moment; the menu
+// stays open (the click doesn't reach Bootstrap's handler on the document, which closes it).
+const shareButton = document.querySelector('#member_menu .js-member-share');
+if (shareButton) {
+  const copy = (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    // Without the clipboard API (plain http): the old way
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.append(field);
+    field.select();
+    const done = document.execCommand('copy');
+    field.remove();
+    return done ? Promise.resolve() : Promise.reject();
+  };
+  shareButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const label = shareButton.querySelector('.js-member-share-label');
+    copy(shareButton.dataset.url).then(() => {
+      if (!label) {
+        return;
+      }
+      clearTimeout(shareButton.resetTimer);
+      label.dataset.text = label.dataset.text || label.textContent;
+      label.textContent = label.dataset.done || label.dataset.text;
+      shareButton.classList.add('is-done');
+      shareButton.resetTimer = setTimeout(() => {
+        label.textContent = label.dataset.text;
+        shareButton.classList.remove('is-done');
+      }, 1800);
+    }).catch(() => {});
+  });
+}

@@ -8,10 +8,10 @@
 <aside class="p-search-preview p-contact-drawer js-contact-drawer" aria-hidden="true" data-from="{{ from|default('') }}">
   <div class="p-search-contact js-search-contact" hidden>
     <div class="p-search-contact__head">
-      <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
-        <i class="fas fa-arrow-left" aria-hidden="true"></i>
-      </button>
       <h2 class="p-search-contact__title js-search-contact-title"></h2>
+      <button type="button" class="p-search-contact__back p-search-contact__close js-search-contact-back" aria-label="{{ 'close'|trans }}">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
     </div>
     <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
   </div>

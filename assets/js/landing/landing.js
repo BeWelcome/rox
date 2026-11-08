@@ -5,6 +5,39 @@ import {initContactDrawer} from '../contact/drawer';
 // Visitors: write to a traveller or invite them in a side panel, without leaving the page
 initContactDrawer('home');
 
+// Messages received: the one opened in the panel is read now, its unread look goes
+document.addEventListener('click', (event) => {
+    const item = event.target.closest('.js-home-message.is-unread');
+    if (item && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+        item.classList.remove('is-unread');
+        item.querySelector('.c-home-item__dot')?.remove();
+        // A new request is now just waiting: grey like in the lists
+        item.querySelectorAll('.c-req-kind--new, .c-req-pill--new').forEach((part) => {
+            part.className = part.className.replace(/--new\b/, '--pending');
+        });
+        // One unread less on the tab
+        const count = document.querySelector('.c-home-tabs__link[aria-controls="conversations"] .c-home-tabs__count');
+        if (count) {
+            const left = (parseInt(count.textContent, 10) || 0) - 1;
+            if (left > 0) {
+                count.textContent = String(left);
+            } else {
+                count.remove();
+            }
+        }
+        readPending = true;
+    }
+}, true);
+// Once the conversation is open in the panel (it is marked read then), the envelope in the
+// top bar asks for its count again (updateCounters.js)
+let readPending = false;
+window.addEventListener('message', (event) => {
+    if (readPending && event.origin === window.location.origin && event.data && event.data.type === 'bw-contact-ready') {
+        readPending = false;
+        window.dispatchEvent(new CustomEvent('bw-conversations-read'));
+    }
+});
+
 function onChange(element, result) {
     const locationFullName = document.getElementById('tiny_location_fullname');
     const locationName = document.getElementById('tiny_location_name');

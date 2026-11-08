@@ -95,24 +95,58 @@
                     <img class="profileimg px-0 js-profile-picture" src="{{ url('avatar', { username: loggedInMember.username, size: 36 })}}" width="32" height="32" alt="{{ 'profile.picture' }}">
                     <span class="d-none d-md-inline topbar-member__name">{{ loggedInMember.Username }}</span>
                 </a>
+                {#
+                  The member's menu: who they are (photo, profile address) with View profile and Copy link
+                  (member-menu-dropdown.js), their things, their account, Log out.
+                  A compact card under the avatar on large screens, a full-screen sheet below xl.
+                #}
+                {% set _menuHosting = loggedInMember.Accommodation in ['yes', 'no'] ? loggedInMember.Accommodation : null %}
+                {% set _menuUrl = url('members_profile', { username: loggedInMember.username }) %}
                 <ul id="member_menu" class="dropdown-menu dropdown-menu-right member-menu" role="menu">
-                    {# Close: full-screen sheet below xl. #}
-                    <li class="member-menu__toolbar d-flex d-xl-none">
-                        <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
-                            <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
-                        </button>
+                    <li class="member-menu__card">
+                        <div class="member-menu__who">
+                            <img class="member-menu__avatar{{ _menuHosting ? ' member-menu__avatar--' ~ _menuHosting }}" src="{{ url('avatar', { username: loggedInMember.username, size: 96 }) }}" width="48" height="48" alt="">
+                            <div class="member-menu__id">
+                                <strong class="member-menu__name">{{ loggedInMember.Username }}</strong>
+                                <span class="member-menu__url">{{ _menuUrl|replace({ 'https://': '', 'http://': '', 'www.': '' }) }}</span>
+                            </div>
+                            <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="member-menu__actions">
+                            <a class="member-menu__btn" href="{{ path('members_profile', { username: loggedInMember.username }) }}">
+                                <i class="far fa-user" aria-hidden="true"></i> {{ 'member.menu.view.profile'|trans }}
+                            </a>
+                            <button type="button" class="member-menu__btn member-menu__btn--primary js-member-share" data-url="{{ _menuUrl }}" data-title="{{ loggedInMember.Username }}">
+                                <i class="fas fa-link" aria-hidden="true"></i> <span class="js-member-share-label" data-done="{{ 'member.menu.copied'|trans }}" aria-live="polite">{{ 'member.menu.copy.link'|trans }}</span>
+                            </button>
+                        </div>
                     </li>
-                    <li><a
-                            href="{{ path( 'members_profile' , {username: loggedInMember.username} ) }}"
-                            class="dropdown-item text-left">{{ 'profile' | trans }}</a></li>
-                    <li><a href="{{ path('profile_edit', {username: loggedInMember.username}) }}"
-                                              class="dropdown-item text-left">{{ 'profile.menu.edit.profile' | trans }}</a></li>
-                    <li><a href="{{ path('preferences', {'username': loggedInMember.username}) }}"
-                                              class="dropdown-item text-left">{{ 'profile.menu.preferences' | trans }}</a></li>
-                    <li><a href="{{ url('trips') }}" class="dropdown-item text-left">{{ 'trips.mytrips' | trans }}</a></li>
-                    <li><a href="{{ path('change_password', {'username': loggedInMember.username}) }}"
-                                              class="dropdown-item text-left">{{ 'profile.change.password.menu' | trans }}</a></li>
-                    <li><div class="dropdown-divider"></div></li>
+                    <li class="member-menu__heading">{{ 'member.menu.mine'|trans }}</li>
+                    <li><a class="member-menu__item" href="{{ path('profile_edit', {username: loggedInMember.username}) }}">
+                        <span class="member-menu__icon member-menu__icon--warm" aria-hidden="true"><i class="fas fa-pen"></i></span>
+                        <span class="member-menu__label">{{ 'profile.menu.edit.profile' | trans }}</span>
+                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
+                    </a></li>
+                    <li><a class="member-menu__item" href="{{ url('trips') }}">
+                        <span class="member-menu__icon member-menu__icon--warm" aria-hidden="true"><i class="fas fa-route"></i></span>
+                        <span class="member-menu__label">{{ 'trips.mytrips' | trans }}</span>
+                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
+                    </a></li>
+                    <li class="member-menu__sep" role="separator"></li>
+                    <li class="member-menu__heading">{{ 'member.menu.account'|trans }}</li>
+                    <li><a class="member-menu__item" href="{{ path('preferences', {'username': loggedInMember.username}) }}">
+                        <span class="member-menu__icon" aria-hidden="true"><i class="fas fa-sliders"></i></span>
+                        <span class="member-menu__label">{{ 'profile.menu.preferences' | trans }}</span>
+                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
+                    </a></li>
+                    <li><a class="member-menu__item" href="{{ path('change_password', {'username': loggedInMember.username}) }}">
+                        <span class="member-menu__icon" aria-hidden="true"><i class="fas fa-key"></i></span>
+                        <span class="member-menu__label">{{ 'profile.change.password.menu' | trans }}</span>
+                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
+                    </a></li>
+                    <li class="member-menu__sep" role="separator"></li>
                     <li class="member-menu__logout-item">
                         <a href="{{ url('_logout_main') }}" class="member-menu__logout"
                            data-browser-push-session
@@ -123,7 +157,7 @@
                            data-subscribe-url="{{ path('browser_push_subscription_upsert') }}"
                            data-unsubscribe-url="{{ path('browser_push_subscription_delete') }}"
                            data-csrf-token="{{ csrf_token('browser_push_subscription') }}">
-                            <span class="member-menu__logout-icon" aria-hidden="true"><i class="fas fa-sign-out-alt"></i></span>
+                            <span class="member-menu__logout-icon" aria-hidden="true"><i class="fas fa-arrow-right-from-bracket"></i></span>
                             <span class="member-menu__logout-text">{{ 'logout' | trans }}</span>
                         </a>
                     </li>

@@ -111,7 +111,7 @@ form.has-photos .c-photo-box.c-photo-box > textarea.js-plain-message { min-heigh
   cursor: pointer;
 }
 
-/* One-line answers: the round camera, tinted, next to the field */
+/* One-line answers: the round camera, white with a grey border, next to the field */
 .c-photo-attach {
   display: inline-flex;
   flex-shrink: 0;
@@ -120,14 +120,14 @@ form.has-photos .c-photo-box.c-photo-box > textarea.js-plain-message { min-heigh
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  border: 0;
+  border: 1px solid #e2e8f0;
   border-radius: 50%;
-  background: #fff1e6;
-  color: #9a3412;
+  background: #fff;
+  color: #475569;
   cursor: pointer;
 }
 .c-photo-attach i, .c-photo-attach svg { font-size: 0.95rem; }
-.c-photo-attach:hover { background: #fde3cf; }
+.c-photo-attach:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
 .c-photo-attach:disabled { opacity: 0.45; cursor: default; }
 
 /* ...and the tray above it */

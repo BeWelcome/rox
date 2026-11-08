@@ -1,0 +1,15 @@
+{#
+  Inbox pages loaded as a whole (phones, another folder or filter): the top bar and the list
+  stay still and only the conversation fades in, instead of flashing a whole new page
+  (cross-document view transitions; browsers without them just load the page). On a computer
+  a conversation picked in the list loads in the pane without reloading (conversations/inbox-nav.js).
+#}
+<style>
+    @view-transition { navigation: auto; }
+    #main_menu { view-transition-name: site-menu; }
+    .c-inbox__list { view-transition-name: inbox-list; }
+    .c-inbox__pane { view-transition-name: inbox-pane; }
+    ::view-transition-old(site-menu), ::view-transition-new(site-menu),
+    ::view-transition-old(inbox-list), ::view-transition-new(inbox-list) { animation: none; }
+    ::view-transition-group(*) { animation-duration: 0.2s; }
+</style>

@@ -102,6 +102,13 @@ export function createContactPanel(panel, {from, onBack}) {
             return;
         }
         panel.classList.add('is-loaded');
+        // A link or a form inside the panel loads another page there (the member's preview,
+        // back to the conversation, an answer): the spinner again until it is loaded
+        frame.contentWindow.addEventListener('beforeunload', () => {
+            if (isOpen()) {
+                panel.classList.remove('is-loaded');
+            }
+        });
     });
 
     window.addEventListener('message', (event) => {

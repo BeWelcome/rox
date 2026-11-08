@@ -101,6 +101,21 @@ class InboxFolders
     }
 
     /**
+     * All the conversations in the inbox of the logged-in member, read or not, for the
+     * "All conversations" link of the home page (Twig: inbox_total_count()).
+     */
+    #[AsTwigFunction('inbox_total_count')]
+    public function getTotalCount(): int
+    {
+        $member = $this->security->getUser();
+        if (!$member instanceof Member) {
+            return 0;
+        }
+
+        return new ConversationsAdapter($this->entityManager, $member, 2, false)->getNbResults();
+    }
+
+    /**
      * The latest message between the logged-in member and $other that is still in the inbox
      * (a plain conversation, a hosting request or an invitation), or null when there is none
      * (Twig: conversation_with(member), for the status strip of a profile). With $messagesOnly,

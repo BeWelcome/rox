@@ -8,13 +8,13 @@
 {% endblock %}
 
 {#
-  In the side panel of the edit page (?embed=1), the drawer has its own head: back arrow,
-  the section (drawer_eyebrow) and what is edited (drawer_title), a close button, then
+  In the side panel of the edit page (?embed=1), the drawer has its own head: the section (drawer_eyebrow) and what is edited (drawer_title), a close button, then
   a line on what it is for (drawer_intro). The form's save button goes to the bottom of
   the panel, next to "Cancel". With "track" in drawer_options, Save stays pale until
   something is changed, and while a choice marked data-ped-required is empty. drawer_avatar
-  (a picture next to the title) and "noclose" in drawer_options (no close button) are
-  for the panels about another member, such as the private note.
+  (a picture next to the title) is for the panels about another member, such as the private
+  note. "noclose" in drawer_options hides the cross, for a panel with its own way out (the
+  previous and next texts of the translation tool).
 #}
 {% block drawer_eyebrow %}<i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}{% endblock %}
 {% block drawer_title %}{{ block('subpage_title') }}{% endblock %}
@@ -35,9 +35,6 @@
     {%- endif %}>
     {% if embedded %}
       <header class="p-ped-head">
-        <button type="button" class="p-ped-head__btn js-ped-close" aria-label="{{ 'back'|trans }}">
-          <i class="fas fa-arrow-left" aria-hidden="true"></i>
-        </button>
         {% set avatar = block('drawer_avatar')|trim %}
         {% if avatar %}<span class="p-ped-head__avatar">{{ avatar|raw }}</span>{% endif %}
         <div class="p-ped-head__text">

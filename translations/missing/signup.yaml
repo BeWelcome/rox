@@ -49,3 +49,9 @@ signup.finalize.map.search:
 signup.confirm.key:
     - 'If the link does not work, enter this registration key on the confirmation page:'
     - Sign-up mail, above the registration key, for members whose mail program does not open the link.
+signup.error.too.many:
+    - 'Too many sign-ups from your address. Please try again in an hour.'
+    - Sign-up page, after too many sign-up attempts from one internet address within an hour.
+flash.signup.resend.too.many:
+    - 'The confirmation mail was already sent several times. Please check your spam folder or try again in an hour.'
+    - Profile page, when a member asked for the confirmation mail again too often within an hour.

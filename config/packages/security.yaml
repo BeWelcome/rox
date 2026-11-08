@@ -39,6 +39,12 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_check
+                # stateless token "authenticate" (config/packages/csrf.yaml): the login must come from this site
+                enable_csrf: true
+
+            # Limits per address and per member: see config/packages/rate_limiter.yaml.
+            login_throttling:
+                limiter: App\Security\LoginRateLimiter
 
             logout:
                 path:   /logout

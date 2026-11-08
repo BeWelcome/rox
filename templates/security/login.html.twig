@@ -70,7 +70,11 @@
 
             {% if error %}
                 <div class="p-login__error alert alert-danger u:mb-16" role="alert">
-                    {{ error.messageKey|trans(error.messageData, 'messages')|raw }}
+                    {% if retry_minutes %}
+                        {{ 'login.too.many.attempts'|trans({'minutes': retry_minutes}) }}
+                    {% else %}
+                        {{ error.messageKey|trans(error.messageData, 'messages')|raw }}
+                    {% endif %}
                 </div>
             {% endif %}
 

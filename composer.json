@@ -71,6 +71,7 @@
         "symfony/password-hasher": "8.2.*",
         "symfony/property-access": "8.2.*",
         "symfony/property-info": "8.2.*",
+        "symfony/rate-limiter": "8.2.*",
         "symfony/runtime": "8.2.*",
         "symfony/security-bundle": "8.2.*",
         "symfony/serializer": "8.2.*",

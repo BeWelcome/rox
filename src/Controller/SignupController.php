@@ -18,6 +18,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
@@ -40,6 +41,7 @@ class SignupController extends AbstractController
         SignupModel $signupModel,
         Security $security,
         array $locales,
+        RateLimiterFactoryInterface $signupIpLimiter,
     ): Response {
         $signupFormData = ['locale' => $request->getLocale()];
         if ($request->isMethod('POST')) {
@@ -54,6 +56,13 @@ class SignupController extends AbstractController
 
         $signupForm = $this->createForm(SignupFormType::class, $signupFormData);
         $signupForm->handleRequest($request);
+
+        // Every submission counts, also invalid ones, so bots trying many names from one address are stopped too.
+        $tooManySignups = $signupForm->isSubmitted()
+            && !$signupIpLimiter->create($request->getClientIp())->consume()->isAccepted();
+        if ($tooManySignups) {
+            $signupForm->addError(new FormError($this->getTranslator()->trans('signup.error.too.many')));
+        }
 
         if ($signupForm->isSubmitted() && $signupForm->isValid()) {
             $signupData = $signupForm->getData();
@@ -74,7 +83,7 @@ class SignupController extends AbstractController
 
         return $this->render('signup/first.step.html.twig', [
             'signup' => $signupForm->createView(),
-        ]);
+        ], new Response(status: $tooManySignups ? Response::HTTP_TOO_MANY_REQUESTS : Response::HTTP_OK));
     }
 
     #[Route(path: '/members/{username:member}/finalize', name: 'finish_setup', priority: 11)]
@@ -138,6 +147,7 @@ class SignupController extends AbstractController
         AuthenticationUtils $helper,
         Mailer $mailer,
         EntityManagerInterface $entityManager,
+        RateLimiterFactoryInterface $confirmationMailLimiter,
     ): Response {
         $username = $member->getUsername();
         if ($helper->getLastUsername() !== $username) {
@@ -149,6 +159,13 @@ class SignupController extends AbstractController
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (!$member) {
             throw $this->createAccessDeniedException();
+        }
+
+        // Each visit (also through the finalize page) sends a mail: limit how many reach the member's inbox.
+        if (!$confirmationMailLimiter->create('member-' . $member->getId())->consume()->isAccepted()) {
+            $this->addTranslatedFlash('error', 'flash.signup.resend.too.many');
+
+            return $this->redirectToRoute('members_profile', ['username' => $username]);
         }
 
         $subject = $this->getTranslator()->trans('signup.confirm.email');

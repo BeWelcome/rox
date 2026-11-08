@@ -134,11 +134,6 @@
                         <span class="member-menu__label">{{ 'trips.mytrips' | trans }}</span>
                         <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
                     </a></li>
-                    <li><a class="member-menu__item" href="{{ path('notes', {'username': loggedInMember.username}) }}">
-                        <span class="member-menu__icon member-menu__icon--warm" aria-hidden="true"><i class="fas fa-note-sticky"></i></span>
-                        <span class="member-menu__label">{{ 'profile.menu.my.notes' | trans }}</span>
-                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
-                    </a></li>
                     <li class="member-menu__sep" role="separator"></li>
                     <li class="member-menu__heading">{{ 'member.menu.account'|trans }}</li>
                     <li><a class="member-menu__item" href="{{ path('preferences', {'username': loggedInMember.username}) }}">

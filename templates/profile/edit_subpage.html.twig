@@ -13,7 +13,8 @@
   the panel, next to "Cancel". With "track" in drawer_options, Save stays pale until
   something is changed, and while a choice marked data-ped-required is empty. drawer_avatar
   (a picture next to the title) is for the panels about another member, such as the private
-  note. ("noclose" in drawer_options no longer hides the cross: it is the only way out.)
+  note. "noclose" in drawer_options hides the cross, for a panel with its own way out (the
+  previous and next texts of the translation tool).
 #}
 {% block drawer_eyebrow %}<i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}{% endblock %}
 {% block drawer_title %}{{ block('subpage_title') }}{% endblock %}
@@ -41,9 +42,11 @@
           <h1 class="p-ped-head__title">{{ block('drawer_title') }}</h1>
         </div>
         {{ block('drawer_tools') }}
+        {% if 'noclose' not in block('drawer_options') %}
         <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
           <i class="fas fa-times" aria-hidden="true"></i>
         </button>
+        {% endif %}
       </header>
       {% set intro = block('drawer_intro')|trim %}
       {% if intro %}<p class="p-ped-intro">{{ intro|raw }}</p>{% endif %}

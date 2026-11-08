@@ -1,0 +1,5 @@
+framework:
+    cache:
+        pools:
+            cache.rate_limiter:
+                adapter: cache.adapter.apcu

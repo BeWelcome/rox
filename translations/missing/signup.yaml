@@ -1,3 +1,9 @@
 signup.no.link:
     - "No link shown or you can't click it? Copy the link below into your browser"
     - Text shown in the signup confirmation email for mail programs that do not support clickable links.
+signup.error.too.many:
+    - 'Too many sign-ups from your address. Please try again in an hour.'
+    - Sign-up page, after too many sign-up attempts from one internet address within an hour.
+flash.signup.resend.too.many:
+    - 'The confirmation mail was already sent several times. Please check your spam folder or try again in an hour.'
+    - Profile page, when a member asked for the confirmation mail again too often within an hour.

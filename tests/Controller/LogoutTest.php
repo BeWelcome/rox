@@ -35,7 +35,7 @@ class LogoutTest extends WebTestCase
         $entityManager->flush();
 
         $client->request('GET', '/logout');
-        $client->request('POST', '/login_check', ['_username' => 'member-2', '_password' => 'a-password-1']);
+        $client->request('POST', '/login_check', ['_username' => 'member-2', '_password' => 'a-password-1', '_csrf_token' => 'csrf-token'], [], ['HTTP_SEC_FETCH_SITE' => 'same-origin']);
 
         $this->assertResponseRedirects();
         self::assertStringNotContainsString('/logout', (string) $client->getResponse()->headers->get('Location'));

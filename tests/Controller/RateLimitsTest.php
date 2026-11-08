@@ -123,9 +123,9 @@ final class RateLimitsTest extends WebTestCase
         $this->client->request(
             'POST',
             '/login_check',
-            ['_username' => $username, '_password' => $password],
+            ['_username' => $username, '_password' => $password, '_csrf_token' => 'csrf-token'],
             [],
-            ['REMOTE_ADDR' => $address],
+            ['REMOTE_ADDR' => $address, 'HTTP_SEC_FETCH_SITE' => 'same-origin'],
         );
     }
 

@@ -52,7 +52,7 @@ class AnalyticsTest extends WebTestCase
         $entityManager->flush();
         $this->client->request('GET', '/login');
 
-        $this->client->request('POST', '/login_check', ['_username' => 'member-2', '_password' => 'a-password-1']);
+        $this->client->request('POST', '/login_check', ['_username' => 'member-2', '_password' => 'a-password-1', '_csrf_token' => 'csrf-token'], [], ['HTTP_SEC_FETCH_SITE' => 'same-origin']);
         $this->client->followRedirect();
 
         self::assertStringContainsString('plausible("Login")', (string) $this->client->getResponse()->getContent());

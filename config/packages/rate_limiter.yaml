@@ -1,0 +1,38 @@
+rate_limiter:
+    limiters:
+        # Logins from one address, so one address can't try many accounts.
+        login_ip:
+            policy: sliding_window
+            limit: 25
+            interval: '1 minute'
+        # Logins for one member from all addresses, so spreading guesses over many addresses doesn't help.
+        # Kept loose because anyone can use it up and lock the member out for the interval.
+        login_member:
+            policy: sliding_window
+            limit: 10
+            interval: '15 minutes'
+        # Signup form submissions from one address.
+        signup_ip:
+            policy: sliding_window
+            limit: 10
+            interval: '1 hour'
+        # Resent confirmation mails for one member.
+        confirmation_mail:
+            policy: sliding_window
+            limit: 3
+            interval: '1 hour'
+
+when@prod:
+    framework:
+        cache:
+            pools:
+                cache.rate_limiter:
+                    adapter: cache.adapter.apcu
+
+when@test:
+    framework:
+        cache:
+            pools:
+                # Counts live as long as the kernel: tests that check a limit disable the client's reboot.
+                cache.rate_limiter:
+                    adapter: cache.adapter.array

@@ -4,3 +4,6 @@ login.password:
 login.username.or.email:
     - '@username'
     - Label for the username (or email) field on the login page /login
+login.too.many.attempts:
+    - '{minutes, plural, one {Too many failed logins. Please try again in # minute.} other {Too many failed logins. Please try again in # minutes.}}'
+    - Login page, after too many wrong passwords for one account or from one address. Keep {minutes} and #.

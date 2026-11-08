@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -66,27 +67,29 @@ class MockupPreviewsTest extends WebTestCase
         yield ['my_data', 'polls_contributed', 'Count: some'];
         yield ['newsletters', 'newsletters', 'Type: local'];
         yield ['newsletters', 'newsletters', 'Type: terms'];
+        yield ['home_and_login', 'login', 'Error: none'];
+        yield ['home_and_login', 'login', 'Error: too many attempts'];
     }
 
     #[DataProvider('previews')]
     public function testThePreviewRenders(string $feature, string $mockup, ?string $variant): void
     {
-        $crawler = $this->client->request('GET', '/admin/translations/mockups/' . $feature);
-        $this->assertResponseIsSuccessful();
-
-        // a preview is a link per mockup, or per variant (labelled "Parameter: variant")
-        $name = $mockup . (null === $variant ? '' : ' / ' . $variant);
-        $links = $crawler->filter('.p-tr-preview')
-            ->reduce(static fn ($card) => 0 === strcasecmp(trim($card->filter('.p-tr-preview__title')->text()), $mockup))
-            ->filter('a.p-tr-button')
-            ->reduce(static fn ($a) => null === $variant || 0 === strcasecmp(trim($a->text()), $variant));
-        self::assertCount(1, $links, $feature . '/' . $name . ' is not offered');
-
-        $crawler = $this->client->request('GET', (string) $links->attr('href'));
+        $crawler = $this->client->request('GET', $this->previewLink($feature, $mockup, $variant));
         $this->assertResponseIsSuccessful();
         // the mail's body or the page's content, without the site's menu and footer
         self::assertNotSame('', trim($crawler->filter('.p-tr-mockup__stage')->html()));
         self::assertCount(0, $crawler->filter('.p-tr-mockup__stage nav.navbar, .p-tr-mockup__stage footer #translations'));
+    }
+
+    public function testTheLoginPreviewShowsTheLockout(): void
+    {
+        $crawler = $this->client->request('GET', $this->previewLink('home_and_login', 'login', 'Error: too many attempts'));
+
+        $this->assertResponseIsSuccessful();
+        self::assertSame(
+            static::getContainer()->get(TranslatorInterface::class)->trans('login.too.many.attempts', ['minutes' => 15]),
+            trim($crawler->filter('.p-tr-mockup__stage .p-login__error')->text()),
+        );
     }
 
     public function testTheTextsOfAMailCanBeTranslatedOnItsPreview(): void
@@ -152,5 +155,23 @@ class MockupPreviewsTest extends WebTestCase
 
         self::assertGreaterThan(50, $count);
         self::assertSame([], $broken);
+    }
+
+    /**
+     * A preview is a link per mockup, or per variant (labelled "Parameter: variant").
+     */
+    private function previewLink(string $feature, string $mockup, ?string $variant): string
+    {
+        $crawler = $this->client->request('GET', '/admin/translations/mockups/' . $feature);
+        $this->assertResponseIsSuccessful();
+
+        $name = $mockup . (null === $variant ? '' : ' / ' . $variant);
+        $links = $crawler->filter('.p-tr-preview')
+            ->reduce(static fn ($card) => 0 === strcasecmp(trim($card->filter('.p-tr-preview__title')->text()), $mockup))
+            ->filter('a.p-tr-button')
+            ->reduce(static fn ($a) => null === $variant || 0 === strcasecmp(trim($a->text()), $variant));
+        self::assertCount(1, $links, $feature . '/' . $name . ' is not offered');
+
+        return (string) $links->attr('href');
     }
 }

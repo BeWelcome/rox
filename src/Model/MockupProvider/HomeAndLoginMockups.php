@@ -5,6 +5,7 @@ namespace App\Model\MockupProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeAndLoginMockups implements MockupProviderInterface
@@ -30,7 +31,8 @@ class HomeAndLoginMockups implements MockupProviderInterface
             'type' => 'page',
             'url' => '/login',
             'template' => 'security/login.html.twig',
-            'description' => 'The login page (without error message)',
+            'description' => 'The login page, without an error or after too many failed logins',
+            'with_parameters' => true,
         ],
     ];
 
@@ -87,14 +89,17 @@ class HomeAndLoginMockups implements MockupProviderInterface
                     ],
                 ];
             case 'login':
+                $tooManyAttempts = 'too_many_attempts' === ($parameters['error'] ?? null);
+
                 return [
-                    'error' => null,
+                    'error' => $tooManyAttempts ? new TooManyLoginAttemptsAuthenticationException(15) : null,
                     'last_username' => $parameters['user']->getUsername(),
                     'invalid_credentials' => false,
                     'resend_confirmation' => false,
                     'member_banned' => false,
                     'member_expired' => false,
                     'member_not_allowed_to_login' => false,
+                    'retry_minutes' => $tooManyAttempts ? 15 : null,
                 ];
             case 'login reminder (email)':
                 return ['receiver' => $parameters['user']];
@@ -107,6 +112,9 @@ class HomeAndLoginMockups implements MockupProviderInterface
 
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
-        return [];
+        return match ($feature) {
+            'login' => ['error' => ['none' => 'none', 'too many attempts' => 'too_many_attempts']],
+            default => [],
+        };
     }
 }

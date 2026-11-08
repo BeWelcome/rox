@@ -40,6 +40,10 @@ security:
                 login_path: security_login
                 check_path: security_check
 
+            # Limits per address and per member: see config/packages/rate_limiter.yaml.
+            login_throttling:
+                limiter: App\Security\LoginRateLimiter
+
             logout:
                 path:   /logout
                 target: /

@@ -36,6 +36,7 @@
             <h1 class="signup-layout__heading">{{ 'signup' | trans }}</h1>
 
             {{ form_start(signup, { 'attr': { autocomplete: 'off' } }) }}
+            {{ form_errors(signup) }}
 
             {% if signup.username.vars.value is empty %}
                 {{ form_row(signup.username, {'attr': {autofocus: 'autofocus'}}) }}

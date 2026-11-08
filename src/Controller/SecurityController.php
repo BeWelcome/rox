@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
@@ -36,6 +37,10 @@ class SecurityController extends AbstractController
             [
                 'last_username' => $lastUsername,
                 'error' => $error,
+                // Minutes until the next try once the login limit is reached.
+                'retry_minutes' => $error instanceof TooManyLoginAttemptsAuthenticationException
+                    ? max(1, (int) $error->getMessageData()['%minutes%'])
+                    : null,
             ]
         );
 

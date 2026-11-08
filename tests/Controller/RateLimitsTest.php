@@ -21,10 +21,25 @@ final class RateLimitsTest extends WebTestCase
 
     private KernelBrowser $client;
 
+    /** @var array<string, string|null> the env vars a test changed, with their values before */
+    private array $env = [];
+
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $this->client->disableReboot();
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->env as $name => $value) {
+            if (null === $value) {
+                unset($_ENV[$name], $_SERVER[$name]);
+            } else {
+                $_ENV[$name] = $_SERVER[$name] = $value;
+            }
+        }
+        parent::tearDown();
     }
 
     public function testWrongPasswordsFromManyAddressesLockTheMemberOut(): void
@@ -100,6 +115,37 @@ final class RateLimitsTest extends WebTestCase
         self::assertResponseStatusCodeSame(200, 'other addresses can still sign up');
     }
 
+    public function testTheSignupLimitPerAddressComesFromTheEnvironment(): void
+    {
+        $this->setEnv('RATE_LIMIT_SIGNUP_IP', '12');
+
+        for ($i = 1; $i <= 12; ++$i) {
+            $this->signup('raised' . $i, '10.0.8.1');
+            self::assertResponseStatusCodeSame(200, 'submission ' . $i . ' is within the raised limit');
+        }
+
+        $this->signup('raised13', '10.0.8.1');
+        self::assertResponseStatusCodeSame(429);
+    }
+
+    public function testTheLoginLimitPerAddressComesFromTheEnvironment(): void
+    {
+        $this->setEnv('RATE_LIMIT_LOGIN_IP', '30');
+
+        for ($i = 1; $i <= 26; ++$i) {
+            $this->login('nobody-' . $i, 'wrong', '10.0.9.1');
+        }
+        $this->login('member-2', self::PASSWORD, '10.0.9.1');
+        self::assertFalse($this->failed(), '26 failed logins are within the raised limit');
+
+        $this->client->getCookieJar()->clear();
+        for ($i = 27; $i <= 30; ++$i) {
+            $this->login('nobody-' . $i, 'wrong', '10.0.9.1');
+        }
+        $this->login('member-2', self::PASSWORD, '10.0.9.1');
+        self::assertTrue($this->failed(), 'the address is refused once it reaches the raised limit');
+    }
+
     public function testTheConfirmationMailIsResentThreeTimesAnHour(): void
     {
         // the page is for logged-in members whose last login name is their own
@@ -116,6 +162,15 @@ final class RateLimitsTest extends WebTestCase
         self::assertResponseRedirects('/members/member-2');
         $crawler = $this->client->followRedirect();
         self::assertStringContainsString($this->trans('flash.signup.resend.too.many'), $crawler->filter('body')->text());
+    }
+
+    /**
+     * Sets an env var before the first request, when the container reads it.
+     */
+    private function setEnv(string $name, string $value): void
+    {
+        $this->env[$name] = $_ENV[$name] ?? null;
+        $_ENV[$name] = $_SERVER[$name] = $value;
     }
 
     private function login(string $username, string $password, string $address): void

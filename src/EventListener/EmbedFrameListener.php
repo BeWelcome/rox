@@ -30,8 +30,11 @@ final class EmbedFrameListener
 
         $response = $event->getResponse();
         // Back to a conversation (a reply or an answer sent from the panel): it stays in the panel
-        if ($response instanceof RedirectResponse && !str_contains($response->getTargetUrl(), 'embed=')
-            && 1 === preg_match('~^(?:https?://[^/]+)?/conversation/\d+(?:[?#]|$)~', $response->getTargetUrl())) {
+        if (
+            $response instanceof RedirectResponse
+            && !str_contains($response->getTargetUrl(), 'embed=')
+            && 1 === preg_match('~^(?:https?://[^/]+)?/conversation/\d+(?:[?#]|$)~', $response->getTargetUrl())
+        ) {
             $target = $response->getTargetUrl();
             $fragment = '';
             if (false !== $hash = strpos($target, '#')) {

@@ -12021,9 +12021,9 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-compose-tools__item:hover, .c-compose-tools__item:focus { background: #fff7ed; color: #9a3412; }
 .c-compose-tools__item:hover i, .c-compose-tools__item:hover svg { color: #ea7a2e; }
 .c-compose-tools__menu .dropdown-divider { margin: 0.3rem 0.25rem; border-color: #f1f5f9; }
-/* Phones: two lines for the message, Send as a round button (its colour still says what it sends) */
+/* Phones: one line for the message (it grows with the text), Send as a round button (its colour still says what it sends) */
 @media (max-width: 575.98px) {
-  .c-decide .c-decide__foot--inline .c-decide__text { min-height: 4.1rem; }
+  .c-decide .c-decide__foot--inline .c-decide__text { min-height: 2.75rem; }
   .c-decide__foot--inline .c-decide__send { width: 2.75rem; padding: 0; border-radius: 50%; }
   .c-decide__foot--inline .c-decide__send > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .c-decide__foot--inline .c-decide__send { position: relative; }
@@ -12419,7 +12419,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .c-inbox__pane .c-inbox-compose--respond > form.c-decide { max-width: none; margin: 0; }
   .c-inbox__pane form.c-inbox-reply { align-items: center; gap: 0.45rem; }
   .c-inbox__pane .c-decide__foot--inline { display: flex; align-items: center; gap: 0.45rem; margin: 0; }
-  .c-inbox__pane .c-photo-attach { flex-shrink: 0; width: 2.5rem; height: 2.5rem; border: 0; border-radius: 50%; background: #f1f5f9; color: #334155; }
+  .c-inbox__pane .c-photo-attach { flex-shrink: 0; width: 2.5rem; height: 2.5rem; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #475569; }
   .c-inbox__pane form.c-inbox-reply textarea.c-inbox-reply__field,
   .c-inbox__pane .c-decide .c-decide__foot--inline .c-decide__text { flex: 1 1 auto; min-width: 0; min-height: 44px; margin: 0; padding: 0.6rem 1rem; border: 1px solid #e2e8f0; border-radius: 1.4rem; background: #f8fafc; color: #0f172a; font-size: 1rem; line-height: 1.35; resize: none; }
   .c-inbox__pane form.c-inbox-reply textarea.c-inbox-reply__field:focus,
@@ -13034,3 +13034,154 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-inbox-compose--respond:has(.c-decide__write:not([data-choice="reply"])) { margin-right: 0; margin-left: 0; border-radius: 0; }
 .c-decide__write .c-decide__picked .c-decide__unpick--quiet { width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 50%; background: none; color: #94a3b8; font-size: 0.8rem; transform: none; }
 .c-decide__write .c-decide__picked .c-decide__unpick--quiet:hover { background: rgba(15, 23, 42, 0.06); color: #475569; transform: none; }
+
+/* Side panels close with a cross on the right (no back arrow on the left) */
+.p-search-contact__head .p-search-contact__title { flex: 1; min-width: 0; }
+.p-search-contact__close { margin-left: auto; }
+.c-contact-head__close { margin-left: auto; }
+
+/* A message being sent: pale until the server has it, then solid */
+.c-bubble-row .c-bubble { transition: opacity 0.25s ease; }
+.c-bubble-row.is-pending .c-bubble { opacity: 0.55; }
+.c-bubble-row.is-failed .c-bubble { opacity: 1; box-shadow: 0 0 0 2px #fecaca; }
+
+/* Reply bar in the side panel: the panel foot already gives the padding and the line on top */
+.c-contact__foot--reply { padding: 0.75rem 1rem; }
+.c-contact__foot--reply .c-inbox-reply,
+.c-contact__foot--reply .c-inbox-reply:hover,
+.c-contact__foot--reply .c-inbox-reply:focus-visible { padding: 0; border-top: 0; }
+/* Phones: the reply bar keeps the same padding on hover, so nothing moves */
+@media (max-width: 767.98px) {
+  .c-inbox-reply:hover,
+  .c-inbox-reply:focus-visible { padding: 0.6rem 0.75rem; }
+}
+
+/* All the conversations with this member: a round button with their number, before the cross */
+.c-contact-head__all { position: relative; margin-left: auto; color: #334155; text-decoration: none; }
+.c-contact-head__all:hover { color: #0f172a; text-decoration: none; }
+.c-contact-head__all + .c-contact-head__close { margin-left: 0; }
+.c-contact-head__count { position: absolute; top: -0.35rem; right: -0.35rem; min-width: 1.25rem; height: 1.25rem; padding: 0 0.3rem; border: 2px solid #fff; border-radius: 999px; background: #0f172a; color: #fff; font-size: 0.6875rem; font-weight: 700; line-height: 1.25rem; text-align: center; box-sizing: content-box; }
+
+/* The stay card in the side panel sits on the same grey as the messages, as in the inbox */
+.c-contact--thread .c-contact__extra { margin: 0; padding: 0.75rem 1rem 0.25rem; border-top: 1px solid #eef0f3; background: #f4f4f5; }
+.c-contact--thread .c-contact__extra > .c-stay-card { border-color: transparent; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06); }
+
+/* The photo and name at the top of a conversation in the side panel open the member's preview */
+.c-contact-head__member { display: flex; align-items: center; gap: 0.75rem; min-width: 0; color: inherit; text-decoration: none; }
+.c-contact-head__member:hover { color: inherit; text-decoration: none; }
+.c-contact-head__member:hover .c-contact-head__name { color: #c2410c; }
+
+/* Opening another conversation from the list: the pane fades and a spinner shows until it is there (conversations.js) */
+.c-inbox__pane.is-loading { position: relative; }
+.c-inbox__pane.is-loading > :not(.c-inbox-pane__loader) { opacity: 0.35; pointer-events: none; transition: opacity 0.15s ease; }
+.c-inbox-pane__loader { position: absolute; top: 50%; left: 50%; z-index: 5; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 3px solid #fde6d2; border-top-color: #ea7a2e; border-radius: 50%; animation: p-search-preview-spin 0.8s linear infinite; }
+.c-inbox-item.is-loading .c-inbox-item__link { opacity: 0.7; }
+/* The conversation loaded in the pane fades in (conversations/inbox-nav.js) */
+.c-inbox__pane { transition: opacity 0.2s ease; }
+.c-inbox__pane.is-arriving { opacity: 0; transition: none; }
+
+/* Phones: a conversation opened from the list shows a loader until it is fully set up
+   (conversations.js adds .is-ready; without it, it shows anyway after a moment). The list
+   gets the loader while the conversation loads (conversations/inbox-nav.js). */
+.c-inbox__list.is-loading { position: relative; }
+.c-inbox__list.is-loading > :not(.c-inbox-pane__loader) { opacity: 0.35; pointer-events: none; transition: opacity 0.15s ease; }
+@keyframes c-inbox-reveal { to { visibility: visible; } }
+@keyframes c-inbox-fade { to { opacity: 0; } }
+@media (max-width: 767.98px) {
+  .c-inbox--thread .c-inbox__pane:not(.is-ready) { position: relative; }
+  .c-inbox--thread .c-inbox__pane:not(.is-ready) > * { visibility: hidden; animation: c-inbox-reveal 0s 2.5s forwards; }
+  .c-inbox--thread .c-inbox__pane:not(.is-ready)::after { position: absolute; top: 50%; left: 50%; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 3px solid #fde6d2; border-top-color: #ea7a2e; border-radius: 50%; animation: p-search-preview-spin 0.8s linear infinite, c-inbox-fade 0s 2.5s forwards; content: ""; }
+}
+
+/* Under the stay card in the side panel: no gap, the messages go under the card when scrolled */
+.c-contact--thread .c-contact__extra { position: relative; z-index: 1; padding-bottom: 0; }
+.c-contact--thread .c-contact__extra ~ .c-inbox-thread { padding-top: 0.75rem; }
+
+/* Home blocks: the link to everything at the bottom, centred under a thin line, with a count */
+.c-home-pane__footer--more { justify-content: center; margin-top: 0.4rem; padding-top: 0; border-top: 1px solid #f1f5f9; }
+.c-home-more,
+.c-home-more:hover { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1rem 0.2rem; color: #334155; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
+.c-home-more:hover { color: #0f172a; }
+.c-home-more__count { min-width: 1.6rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.75rem; font-weight: 700; text-align: center; }
+.c-home-more__chevron, .c-home-more svg.c-home-more__chevron { color: #94a3b8; font-size: 0.7rem; }
+.c-home-more:hover .c-home-more__chevron { color: #64748b; }
+
+/* =========================================================
+   The member's menu (layout/main_navigation.html.twig): who they are with View profile and
+   Copy link, their things, their account, Log out. A dark card under the avatar from xl,
+   a full-screen sheet below (the sheet itself comes from _navbar.scss).
+   ========================================================= */
+#member_menu { color: #f1f5f9; list-style: none; }
+#member_menu > li { list-style: none; }
+#member_menu .member-menu__card { margin: 0 0 0.35rem; padding: 0.25rem 0.25rem 0.6rem; }
+#member_menu .member-menu__who { display: flex; align-items: center; gap: 0.75rem; }
+#member_menu .member-menu__avatar { flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #3f3f46; }
+#member_menu .member-menu__avatar--yes { box-shadow: 0 0 0 2px #1c1e22, 0 0 0 4px #3fa75a; }
+#member_menu .member-menu__avatar--no { box-shadow: 0 0 0 2px #1c1e22, 0 0 0 4px #71717a; }
+#member_menu .member-menu__id { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+#member_menu .member-menu__name { overflow: hidden; color: #fff; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.0625rem; font-weight: 700; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+#member_menu .member-menu__url { overflow: hidden; color: #a1a1aa; font-size: 0.75rem; text-overflow: ellipsis; white-space: nowrap; }
+#member_menu .member-menu__close { display: none; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: #e4e4e7; font-size: 0.95rem; }
+#member_menu .member-menu__close:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+#member_menu .member-menu__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.85rem; }
+#member_menu .member-menu__btn,
+#member_menu .member-menu__btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-width: 0; padding: 0.55rem 0.6rem; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 0.8125rem; font-weight: 700; line-height: 1.2; white-space: nowrap; text-decoration: none; cursor: pointer; }
+#member_menu .member-menu__btn:hover { background: rgba(255, 255, 255, 0.17); }
+#member_menu .member-menu__btn--primary,
+#member_menu .member-menu__btn--primary:hover { background: #ea7a2e; }
+#member_menu .member-menu__btn--primary:hover { background: #dc6b1f; }
+#member_menu .member-menu__btn i, #member_menu .member-menu__btn svg { font-size: 0.75rem; }
+#member_menu .member-menu__btn > span { display: inline-flex; align-items: center; gap: 0.4rem; }
+#member_menu .member-menu__btn.is-done { background: #3fa75a; }
+#member_menu .member-menu__heading { display: none; }
+#member_menu .member-menu__sep { height: 1px; margin: 0.4rem 0.25rem; background: rgba(255, 255, 255, 0.1); }
+#member_menu .member-menu__item,
+#member_menu .member-menu__item:hover { display: flex; align-items: center; gap: 0.75rem; padding: 0.45rem 0.5rem; border-radius: 0.65rem; color: #f4f4f5; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
+#member_menu .member-menu__item:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+#member_menu .member-menu__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.55rem; background: rgba(255, 255, 255, 0.08); color: #d4d4d8; font-size: 0.85rem; }
+#member_menu .member-menu__icon--warm { background: rgba(234, 122, 46, 0.2); color: #f39a5a; }
+#member_menu .member-menu__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#member_menu .member-menu__chevron { display: none; color: #71717a; font-size: 0.7rem; }
+#member_menu.dropdown-menu.show .member-menu__logout-item { padding: 0; }
+#member_menu.dropdown-menu.show .member-menu__logout,
+#member_menu.dropdown-menu.show .member-menu__logout:hover { display: flex; justify-content: flex-start; gap: 0.75rem; width: 100%; padding: 0.45rem 0.5rem; border: 0; border-radius: 0.65rem; background: transparent; box-shadow: none; color: #a1a1aa; font-size: 0.9375rem; font-weight: 600; }
+#member_menu.dropdown-menu.show .member-menu__logout:hover { background: rgba(255, 255, 255, 0.07); color: #fca5a5; }
+#member_menu.dropdown-menu.show .member-menu__logout .member-menu__logout-icon { display: inline-flex; justify-content: center; width: 2rem; color: inherit; font-size: 0.9rem; }
+
+/* Large screens: a card under the avatar */
+@media (min-width: 1200px) {
+  #member_menu.member-menu.dropdown-menu.show { max-width: calc(100vw - 2rem); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem; background-color: #1c1e22; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); }
+}
+/* _navbar.scss sets these with !important in the "bootstrap" layer (bewelcome.css, the first
+   layer of the page, whose !important beats every later layer): the same layer with a stronger
+   selector wins */
+@layer bootstrap {
+  @media (min-width: 1200px) {
+    #member_menu.member-menu.dropdown-menu.show { inset: 100% 0 auto auto !important; width: 19rem !important; margin-top: 0.65rem !important; padding: 0.75rem !important; }
+  }
+}
+
+/* Below xl: the full-screen sheet, the card on top, headings, chevrons, Log out at the bottom */
+@media (max-width: 1199.98px) {
+  #member_menu.member-menu.dropdown-menu.show { padding: max(0.75rem, env(safe-area-inset-top, 0)) 0.9rem max(0.9rem, env(safe-area-inset-bottom, 0)); }
+  #member_menu .member-menu__card { margin: 0 0 0.75rem; padding: 0.9rem; border-radius: 1.1rem; background: rgba(255, 255, 255, 0.06); }
+  #member_menu .member-menu__avatar { width: 3.5rem; height: 3.5rem; }
+  #member_menu .member-menu__name { font-size: 1.25rem; }
+  #member_menu .member-menu__close { display: inline-flex; align-items: center; justify-content: center; align-self: flex-start; }
+  #member_menu .member-menu__btn,
+  #member_menu .member-menu__btn:hover { padding: 0.75rem; font-size: 0.875rem; }
+  #member_menu .member-menu__btn:hover { background: rgba(255, 255, 255, 0.17); }
+  #member_menu .member-menu__btn--primary,
+  #member_menu .member-menu__btn--primary:hover { background: #ea7a2e; }
+  #member_menu .member-menu__heading { display: block; margin: 0.5rem 0.4rem 0.35rem; color: #a1a1aa; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  #member_menu .member-menu__sep { margin: 0.5rem 0 0; background: transparent; }
+  #member_menu .member-menu__item,
+  #member_menu .member-menu__item:hover { padding: 0.65rem 0.4rem; font-size: 1rem; }
+  #member_menu .member-menu__icon { width: 2.4rem; height: 2.4rem; border-radius: 0.7rem; font-size: 0.95rem; }
+  #member_menu .member-menu__chevron { display: inline; }
+  #member_menu.dropdown-menu.show .member-menu__logout-item { margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  #member_menu.dropdown-menu.show .member-menu__logout,
+  #member_menu.dropdown-menu.show .member-menu__logout:hover { justify-content: center; padding: 0.85rem; border-radius: 999px; background: rgba(239, 68, 68, 0.14); color: #f87171; }
+  #member_menu.dropdown-menu.show .member-menu__logout:hover { background: rgba(239, 68, 68, 0.22); }
+  #member_menu.dropdown-menu.show .member-menu__logout .member-menu__logout-icon { width: auto; }
+}

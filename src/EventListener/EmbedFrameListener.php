@@ -15,7 +15,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * When such a page sends elsewhere (a form saved, then a redirect to a page that isn't
  * made for the panel), that page couldn't be shown in the frame: the frame gets a short
- * page instead that tells the panel where to go ("bw-embed-leave"). Runs after
+ * page instead that tells the panel where to go ("bw-embed-leave"). A redirect back to a
+ * conversation (a reply sent from the panel) keeps ?embed=1 and stays in the panel. Runs after
  * NelmioSecurityBundle.
  */
 #[AsEventListener(event: KernelEvents::RESPONSE, priority: -1024)]
@@ -28,6 +29,17 @@ final class EmbedFrameListener
         }
 
         $response = $event->getResponse();
+        // Back to a conversation (a reply or an answer sent from the panel): it stays in the panel
+        if ($response instanceof RedirectResponse && !str_contains($response->getTargetUrl(), 'embed=')
+            && 1 === preg_match('~^(?:https?://[^/]+)?/conversation/\d+(?:[?#]|$)~', $response->getTargetUrl())) {
+            $target = $response->getTargetUrl();
+            $fragment = '';
+            if (false !== $hash = strpos($target, '#')) {
+                $fragment = substr($target, $hash);
+                $target = substr($target, 0, $hash);
+            }
+            $response->setTargetUrl($target . (str_contains($target, '?') ? '&' : '?') . 'embed=1' . $fragment);
+        }
         if ($response instanceof RedirectResponse && !str_contains($response->getTargetUrl(), 'embed=')) {
             $url = json_encode(
                 $response->getTargetUrl(),

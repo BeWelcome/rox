@@ -1,4 +1,7 @@
 import {hasPhotos, initBubblePhotos, initMessagePhotos, photosHtml} from './contact/photos';
+import {sendInPlace} from './conversation-send';
+import {initRequests} from './request-page';
+import {initInboxNav} from './conversations/inbox-nav';
 
 // Conversation lists: "Select" switches the list into selection mode (checkboxes and
 // the action bar), "Select all" ticks every conversation on the page.
@@ -96,9 +99,13 @@ if (form) {
 
 // Reply box under a conversation: grows with the text, and sends the text as paragraphs
 // (messages are stored as HTML, like the ones written with the editor).
-const replyForm = document.querySelector('.js-inbox-reply');
-
-if (replyForm) {
+// Runs again when the inbox shows another conversation without reloading (inbox-nav.js).
+function initReply() {
+    const replyForm = document.querySelector('.js-inbox-reply');
+    if (!replyForm || replyForm.dataset.replyReady) {
+        return;
+    }
+    replyForm.dataset.replyReady = '1';
     const textarea = replyForm.querySelector('.js-inbox-reply-text');
     const button = replyForm.querySelector('button[type=submit]');
 
@@ -137,12 +144,44 @@ if (replyForm) {
         html.type = 'hidden';
         html.name = textarea.name;
         html.value = toHtml(textarea.value) + photosHtml(replyForm);
+        const name = textarea.name;
         textarea.removeAttribute('name');
         textarea.readOnly = true;
         replyForm.appendChild(html);
         button.disabled = true;
+        // Text only: the bubble shows at once and the page stays (photos go the usual way)
+        if (!hasPhotos(replyForm) && sendInPlace(replyForm, event.submitter, html.value, (sent) => {
+            html.remove();
+            textarea.name = name;
+            textarea.readOnly = false;
+            if (sent) {
+                textarea.value = '';
+            }
+            update();
+        })) {
+            event.preventDefault();
+        }
     });
 }
 
+initReply();
 initMessagePhotos();
 initBubblePhotos();
+
+// Desktop: a conversation picked in the list loads in the pane, without reloading the page
+initInboxNav(() => {
+    initReply();
+    initRequests();
+});
+
+// Phones: the conversation stays behind a loader until the page has finished setting it up
+// (icons, buttons), so it doesn't show half built (the CSS shows it anyway after a moment)
+const pane = document.querySelector('.c-inbox__pane');
+const paneReady = () => requestAnimationFrame(() => requestAnimationFrame(() => pane.classList.add('is-ready')));
+if (pane) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', paneReady);
+    } else {
+        paneReady();
+    }
+}

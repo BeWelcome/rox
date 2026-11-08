@@ -200,6 +200,12 @@ contact.trip.more:
 contact.trip.back:
     - 'Back to the trip'
     - Label next to the back arrow at the top of the side panel showing a traveller's short profile, opened from their trip
+landing.conversations.all:
+    - 'All conversations'
+    - Link at the bottom of the "Messages received" block of the home page, with the number of conversations next to it; opens the inbox
+contact.conversation.back:
+    - 'Back to the conversation'
+    - Label next to the back arrow at the top of the side panel showing a member's short profile, opened from a conversation with them
 contact.trip.near.you:
     - 'Near you'
     - Tag on the stop of a trip that is near the member, in the side panel of the home page (Visitors)
@@ -232,7 +238,7 @@ contact.head.conversation:
     - Small label above the member's name at the top of the side panel showing a conversation already started with them (profile)
 contact.conversations.all:
     - 'All conversations with this member ({count})'
-    - Link under the head of the side panel showing a conversation, when there are several with that member (messages, hosting requests, invitations)
+    - Spoken label of the round button next to the cross at the top of the side panel showing a conversation, when there are several with that member (messages, hosting requests, invitations)
 conversation.compose.tools:
     - 'Templates and more'
     - Tooltip of the round arrow button left of the message field in a conversation, it opens the reply templates (and Change dates)

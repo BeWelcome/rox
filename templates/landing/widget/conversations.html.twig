@@ -8,7 +8,9 @@
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}
         {% set closed = request and request.status in [1, 2] %}
-        <a class="c-home-item{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}">
+        {# Opens in the side panel of the home page, like Send on a profile (contact/drawer.js) #}
+        <a class="c-home-item js-contact-open js-home-message{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}"
+           data-title="{{ message.sender ? (message.sender.shortNameOrUsername ?? message.sender.username) : 'BeWelcome' }}">
             {% if message.sender %}
                 <span class="c-home-item__avatar-wrap">
                     <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">

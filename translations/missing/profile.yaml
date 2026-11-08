@@ -861,3 +861,18 @@ notices.finish.setup.title:
 notices.confirm.email.title:
     - 'Confirm your email address'
     - Top bar notifications, the signup is done but the email address isn't confirmed yet (the account is removed after a while otherwise)
+member.menu.view.profile:
+    - 'View profile'
+    - Button at the top of the member's own menu (their photo in the top bar); opens their profile
+member.menu.copy.link:
+    - 'Copy link'
+    - Button at the top of the member's own menu; copies the address of their profile
+member.menu.copied:
+    - 'Link copied'
+    - Shown for a moment on the "Copy link" button of the member's menu once the address is copied
+member.menu.mine:
+    - 'My stuff'
+    - On phones, small heading in the member's own menu above Edit my profile, My trips and My notes
+member.menu.account:
+    - 'Account'
+    - On phones, small heading in the member's own menu above My preferences and Change password

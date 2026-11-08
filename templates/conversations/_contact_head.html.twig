@@ -1,32 +1,59 @@
 {#
-  Top of the "contact a member" side panel (message or stay request, ?embed=1): back
-  arrow, the member's photo (a green ring when they can host, grey when not; none for a trip), and what is being written.
+  Top of the "contact a member" side panel (message or stay request, ?embed=1): the
+  member's photo (a green ring when they can host, grey when not; none for a trip), and what is being written, and a cross on the right that closes the panel.
   The back arrow asks the page around the frame to go back
   (contact/panel.js); "bw-contact-ready" tells it the frame has its own head.
   member: who the message or request goes to. kind: 'message', 'request', 'invitation', 'trip' or
   'preview' (the member's preview opened from a trip: only the back arrow and "Back to the trip"). A ?back= path (from the trip
   in the panel) makes the back arrow go back to it instead of closing the panel.
+  all_url / all_count (optional): a round button before the cross that opens all the conversations
+  with this member, with their number on it.
+  preview_in (optional, kind 'conversation'): 'message', 'request' or 'invitation'; the photo and name then
+  open the member's preview in the panel, its back arrow comes back to the conversation.
 #}
 {# A trip: the traveller is looking for a host, so whether they host isn't shown #}
 {% set _hosting = kind not in ['trip', 'preview'] and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
+{# A real way back (the member's preview from a trip, or ?back=): the arrow on the left. Otherwise the
+   panel closes: a cross on the right, like any drawer. #}
+{% set _goesBack = kind == 'preview' or app.request.query.get('back') %}
 <header class="c-contact-head">
+    {% if _goesBack %}
     <button type="button" class="c-contact-head__back js-contact-back" aria-label="{{ 'back'|trans }}">
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
     </button>
+    {% endif %}
     {% if kind == 'preview' %}
-    <p class="c-contact-head__backlabel">{{ 'contact.trip.back'|trans }}</p>
+    {# From a conversation (its back path starts with /conversation) or from a trip #}
+    <p class="c-contact-head__backlabel">{{ (app.request.query.get('back') starts with '/conversation' ? 'contact.conversation.back' : 'contact.trip.back')|trans }}</p>
     {% else %}
+    {% set _preview = kind == 'conversation' and (preview_in ?? null) ? path('search_member_preview', { username: member.username, embed: 1, in: preview_in, back: app.request.requestUri }) : null %}
+    {% if _preview %}<a class="c-contact-head__member" href="{{ _preview }}">{% endif %}
     <span class="c-contact-head__photo{{ _hosting ? ' c-contact-head__photo--' ~ _hosting }}">
         <img src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="">
         {% if _hosting %}<span class="visually-hidden">{{ ('member.hosting.' ~ _hosting)|trans }}</span>{% endif %}
     </span>
     <div class="c-contact-head__who">
+        {# An open conversation needs no label: the messages below say it #}
+        {% if kind != 'conversation' %}
         <p class="c-contact-head__kind">
             <i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user', trip: 'fa-suitcase' }[kind] ?? 'fa-envelope' }}" aria-hidden="true"></i>
             {{ ('contact.head.' ~ kind)|trans }}
         </p>
+        {% endif %}
         <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>
     </div>
+    {% if _preview %}</a>{% endif %}
+    {% endif %}
+    {% if all_url ?? null %}
+    <a class="c-contact-head__back c-contact-head__all" href="{{ all_url }}" target="_top" aria-label="{{ 'contact.conversations.all'|trans({ count: all_count }) }}">
+        <i class="far fa-comments" aria-hidden="true"></i>
+        <span class="c-contact-head__count" aria-hidden="true">{{ all_count }}</span>
+    </a>
+    {% endif %}
+    {% if not _goesBack %}
+    <button type="button" class="c-contact-head__back c-contact-head__close js-contact-back" aria-label="{{ 'close'|trans }}">
+        <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
     {% endif %}
 </header>
 <script>

@@ -190,6 +190,9 @@ window.addEventListener('browser-push-preference-changed', (event) => {
     updateCount();
 });
 
+// A conversation was just read without leaving the page (home page panel): count again
+window.addEventListener('bw-conversations-read', () => updateCount());
+
 window.addEventListener('browser-push-session-ending', (event) => {
     clearBrowserNotificationLastId(event.detail && event.detail.memberId);
 });

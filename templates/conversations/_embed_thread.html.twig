@@ -7,16 +7,9 @@
 #}
 {% set _count = conversations_with_count(correspondent) %}
 <div class="c-contact c-contact--thread">
-    {% include 'conversations/_contact_head.html.twig' with { member: correspondent, kind: 'conversation' } %}
-
-    {% if _count > 1 %}
-        {# Several conversations with this member (messages, requests): all of them in the inbox #}
-        <a class="c-contact__all" href="{{ path('conversations_with', { username: correspondent.username }) }}" target="_top">
-            <i class="fas fa-envelope" aria-hidden="true"></i>
-            {{ 'contact.conversations.all'|trans({ count: _count }) }}
-            <i class="fas fa-chevron-right c-contact__all-arrow" aria-hidden="true"></i>
-        </a>
-    {% endif %}
+    {# Several conversations with this member (messages, requests): a button in the head opens all of them in the inbox.
+       The photo and name open the member's preview in the panel. #}
+    {% include 'conversations/_contact_head.html.twig' with { member: correspondent, kind: 'conversation', all_url: _count > 1 ? path('conversations_with', { username: correspondent.username }) : null, all_count: _count, preview_in: current.request ? (current.request.inviteForLeg ? 'invitation' : 'request') : 'message' } %}
 
     {% if additional|trim is not empty %}
         <div class="c-contact__extra">{{ additional }}</div>

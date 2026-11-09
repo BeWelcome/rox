@@ -299,11 +299,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    app.userprovider:
-        public: true
-        class: App\Provider\UserProvider
-        arguments: [ '@App\Repository\MemberRepository' ]
-
     rox.twig_extension:
         public: true
         class: App\Twig\Extension

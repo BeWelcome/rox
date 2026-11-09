@@ -7,6 +7,7 @@ use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\UploadedImage;
+use App\Form\Admin\ForumNotificationsType;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
@@ -16,6 +17,7 @@ use App\Logger\Logger;
 use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
+use App\Service\MemberForumNotifications;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +26,7 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,6 +61,8 @@ class VolunteerToolController extends AbstractController
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE]],
         'messages_by_member' => ['route' => 'admin_tools_messages_by_member', 'icon' => 'comments', 'group' => 'members',
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM]],
+        'forum_notifications' => ['route' => 'admin_subscriptions', 'icon' => 'bell-slash', 'group' => 'members',
+            'rights' => [Member::ROLE_ADMIN_MANAGESUBSCRIPTIONS]],
         'messages_sent' => ['route' => 'admin_tools_messages_sent', 'icon' => 'envelope', 'group' => 'spam',
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE]],
         'requests_sent' => ['route' => 'admin_tools_requests_sent', 'icon' => 'bed', 'group' => 'spam',
@@ -81,6 +86,7 @@ class VolunteerToolController extends AbstractController
         Member::ROLE_ADMIN_ACCEPTER => 'admin.tools.right.accepter',
         Member::ROLE_ADMIN_CHECKER => 'admin.tools.right.checker',
         Member::ROLE_ADMIN_ADMIN => 'admin.tools.right.admin',
+        Member::ROLE_ADMIN_MANAGESUBSCRIPTIONS => 'admin.tools.right.managesubscriptions',
     ];
 
     /** Columns of Age by country it can be sorted by. */
@@ -121,6 +127,41 @@ class VolunteerToolController extends AbstractController
             'members' => $members,
             'term' => $term,
         ]);
+    }
+
+    /**
+     * Turns all forum notifications of a member on or off, e.g. when the member's mails bounce.
+     */
+    #[Route(path: '/admin/subscriptions', name: 'admin_subscriptions', methods: ['GET', 'POST'])]
+    public function forumNotifications(
+        Request $request,
+        MemberRepository $memberRepository,
+        MemberForumNotifications $notifications,
+    ): Response {
+        $this->denyUnlessAllowed('forum_notifications');
+
+        $form = $this->createForm(ForumNotificationsType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $member = $memberRepository->findOneBy(['username' => (string) $form->get('username')->getData()]);
+            if (null === $member) {
+                $form->get('username')->addError(new FormError('admin.subscriptions.unknown'));
+            } else {
+                $enable = $form->get('enable');
+                $enabled = $enable instanceof SubmitButton && $enable->isClicked();
+                $notifications->switch($member, $enabled);
+                $this->addFlash('notice', $this->getTranslator()->trans(
+                    $enabled ? 'admin.subscriptions.enabled' : 'admin.subscriptions.disabled',
+                    ['username' => $member->getUsername()],
+                ));
+
+                return $this->redirectToRoute('admin_subscriptions');
+            }
+        }
+
+        return $this->tool('forum_notifications', 'admin/tools/forum.notifications.html.twig', [
+            'form' => $form,
+        ], $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
     }
 
     #[Route(path: '/admin/tools/change', name: 'admin_tools_change_username')]

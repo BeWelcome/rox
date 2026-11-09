@@ -1,0 +1,45 @@
+{% extends 'admin/tools/_layout.html.twig' %}
+{#
+  Turning all forum notifications of a member on or off (right ManageSubscriptions): the member is searched by
+  username (suggestions from member/suggest), then one of the two buttons.
+#}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/forum-notifications') }}
+{% endblock javascripts %}
+
+{% block tool %}
+  {{ form_start(form, {attr: {class: 'c-vtools-form', novalidate: 'novalidate'}}) }}
+    {{ form_errors(form) }}
+    {# the buttons beside the field, so the suggestions open over nothing to click #}
+    <div class="c-vtools-notifications">
+      <div class="o-form-group c-vtools-notifications__field">
+        <label class="form-label" for="{{ form.username.vars.id }}">{{ 'label.username'|trans }}</label>
+        <div class="c-member-suggest-field">
+          <i class="fas fa-user c-vtools-notifications__icon" aria-hidden="true"></i>
+          {{ form_widget(form.username, {attr: {
+            class: 'o-input c-vtools-notifications__input',
+            placeholder: 'admin.subscriptions.member.placeholder'|trans,
+            autocomplete: 'off',
+            role: 'combobox',
+            'aria-autocomplete': 'list',
+            'aria-expanded': 'false',
+            'aria-controls': form.username.vars.id ~ '_list',
+          }}) }}
+          <ul class="c-member-suggest" id="{{ form.username.vars.id }}_list" role="listbox" hidden
+              data-loading="{{ 'admin.subscriptions.member.searching'|trans }}"
+              data-empty="{{ 'select.no.results'|trans }}"></ul>
+        </div>
+        {% if form.username.vars.errors|length > 0 %}
+          <ul class="c-massmail-form__errors">
+            {% for error in form.username.vars.errors %}<li>{{ error.message|trans }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="c-vtools-notifications__actions">
+        {{ form_widget(form.enable, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary'}}) }}
+        {{ form_widget(form.disable, {attr: {class: 'c-cadmin-btn c-cadmin-btn--quiet'}}) }}
+      </div>
+    </div>
+  {{ form_end(form) }}
+{% endblock tool %}

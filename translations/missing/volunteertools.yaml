@@ -34,6 +34,9 @@ admin.tools.right.checker:
 admin.tools.right.admin:
     - Admin
     - 'Volunteer tools: the Admin right, in the header.'
+admin.tools.right.managesubscriptions:
+    - 'Manage subscriptions'
+    - 'Volunteer tools: the ManageSubscriptions right, in the header.'
 admin.tools.group.members:
     - Members
     - 'Volunteer tools: group of the sidebar (find member, change username, messages by member).'
@@ -121,6 +124,12 @@ admin.tools.messages_by_member.title:
 admin.tools.messages_by_member.description:
     - 'Everyone a member exchanged messages, stay requests or invitations with.'
     - 'Volunteer tool Messages by member: description under the title.'
+admin.tools.forum_notifications.title:
+    - 'Forum notifications'
+    - 'Volunteer tool: title.'
+admin.tools.forum_notifications.description:
+    - 'Turns the mails about all subscribed threads and groups of a member on or off. The subscriptions stay.'
+    - 'Volunteer tool Forum notifications: description under the title.'
 admin.tools.messages_by_member.look.up:
     - 'Look up'
     - 'Volunteer tool Messages by member: the button.'

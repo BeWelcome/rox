@@ -247,7 +247,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         self::assertSame(0, $this->notifications($member->getId()));
         // the notice in the page names the member
         $notice = $this->client->followRedirect()->filter('.c-inline-flash__text');
-        $off = static::getContainer()->get(TranslatorInterface::class)->trans('admin.subscriptions.disabled', ['username' => 'member-2']);
+        $off = static::getContainer()->get(TranslatorInterface::class)->trans('admin.tools.forum_notifications.off', ['username' => 'member-2']);
         self::assertSame($off, trim($notice->text()));
 
         $this->client->request('GET', '/admin/subscriptions');

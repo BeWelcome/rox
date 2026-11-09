@@ -151,7 +151,7 @@ class VolunteerToolController extends AbstractController
                 $enabled = $enable instanceof SubmitButton && $enable->isClicked();
                 $notifications->switch($member, $enabled);
                 $this->addFlash('notice', $this->getTranslator()->trans(
-                    $enabled ? 'admin.subscriptions.enabled' : 'admin.subscriptions.disabled',
+                    $enabled ? 'admin.tools.forum_notifications.on' : 'admin.tools.forum_notifications.off',
                     ['username' => $member->getUsername()],
                 ));
 

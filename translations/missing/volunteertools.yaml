@@ -130,6 +130,12 @@ admin.tools.forum_notifications.title:
 admin.tools.forum_notifications.description:
     - 'Turns the mails about all subscribed threads and groups of a member on or off. The subscriptions stay.'
     - 'Volunteer tool Forum notifications: description under the title.'
+admin.tools.forum_notifications.on:
+    - 'The forum notifications of {username} are on.'
+    - 'Volunteer tool Forum notifications: confirmation after turning them on. Keep {username}.'
+admin.tools.forum_notifications.off:
+    - 'The forum notifications of {username} are off.'
+    - 'Volunteer tool Forum notifications: confirmation after turning them off. Keep {username}.'
 admin.tools.messages_by_member.look.up:
     - 'Look up'
     - 'Volunteer tool Messages by member: the button.'

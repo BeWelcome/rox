@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,11 +18,6 @@ use Symfony\Component\Process\Process;
 )]
 class CreateTestDatabase extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
-        parent::__construct();
-    }
-
     protected function configure(): void
     {
         $this
@@ -38,12 +32,6 @@ class CreateTestDatabase extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Will drop the database if one already exist. Needs to be used with --force.'
-            )
-            ->addOption(
-                'translations',
-                null,
-                InputOption::VALUE_NONE,
-                'Will download the current translations and languages.'
             )
         ;
     }

@@ -25,7 +25,6 @@ class RightAssignmentType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'admin.rights.member',
                 'disabled' => $options['username_locked'],
-                'attr' => ['class' => 'member-autocomplete-start', 'placeholder' => 'admin.rights.username'],
                 'constraints' => [new NotBlank(message: 'admin.rights.error.member')],
             ])
             ->add('right', EntityType::class, [

@@ -4,6 +4,7 @@
   removed ones (history) unless the box is unticked.
 #}
 {% import 'admin/rights/_macros.html.twig' as rm %}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
 {% set inline_notices = true %}
 
 {% block title %}{{ 'admin.rights.title'|trans }}{% endblock %}
@@ -20,7 +21,8 @@
       {% include 'admin/massmail/_flash.html.twig' %}
       <section class="c-home-card c-radmin-table-card" aria-label="{{ 'admin.rights.list.rights'|trans }}">
         <form method="get" action="{{ path('admin_rights_rights') }}" class="c-radmin-bar" data-autosubmit>
-          <input type="search" name="member" class="o-input c-radmin-bar__search" value="{{ filters.member }}" placeholder="{{ 'admin.rights.find.member'|trans }}" aria-label="{{ 'admin.rights.find.member'|trans }}">
+          {# part of a name filters; picking a suggested member filters by them #}
+          {{ member_suggest.input('member', filters.member, 'c-radmin-member-filter', {placeholder: 'admin.rights.find.member'|trans, label: 'admin.rights.find.member'|trans, submit: true, icon: true, class: 'c-radmin-bar__search'}) }}
           <select name="right" class="o-input c-radmin-bar__select" aria-label="{{ 'admin.rights.right'|trans }}">
             <option value="">{{ 'admin.rights.all'|trans }}</option>
             {% for right in rights %}

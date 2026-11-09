@@ -59,7 +59,7 @@ Encore
     .addEntry('activities_map', './assets/js/activities/map.js')
     .addEntry('leaflet', './assets/js/leaflet.js')
     .addEntry('member/autocomplete', './assets/js/member/autocomplete.js')
-    .addEntry('admin/forum-notifications', './assets/js/admin/forum-notifications.js')
+    .addEntry('member/suggest-fields', './assets/js/member/suggest-fields.js')
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
     .addEntry('admin/massmail', './assets/js/admin/massmail.js')
     .addEntry('admin/comments', './assets/js/admin/comments.js')

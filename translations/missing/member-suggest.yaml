@@ -1,0 +1,3 @@
+member.suggest.searching:
+  - 'Searching…'
+  - Shown in the member suggestions under a username field (volunteer tools, rights) while the members are searched.

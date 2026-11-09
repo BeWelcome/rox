@@ -58,7 +58,7 @@ main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 
 /* Search bar and forms */
 .c-vtools-search { display: flex; gap: 0.75rem; }
-.c-vtools-search .o-input { flex: 1; }
+.c-vtools-search .o-input, .c-vtools-search .c-member-suggest-field { flex: 1; }
 .c-vtools-form { display: flex; flex-direction: column; gap: 1.25rem; }
 .c-vtools-form .o-form-group { margin: 0; }
 .c-vtools-form__date { max-width: 16rem; }
@@ -128,15 +128,6 @@ main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 /* Forum notifications: the member search with the buttons beside it, so the suggestions open over nothing to click */
 .c-vtools-notifications { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.75rem 1rem; }
 .c-vtools-notifications__field { flex: 1 1 16rem; margin-bottom: 0; }
-.c-vtools-notifications__icon {
-  position: absolute;
-  top: 50%;
-  left: 0.9rem;
-  color: #94a3b8;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-.c-vtools-notifications .c-vtools-notifications__input { padding-left: 2.4rem; }
 /* level with the field: the label's height above the buttons */
 .c-vtools-notifications__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-top: 1.85rem; }
 @media (max-width: 575.98px) {

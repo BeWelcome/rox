@@ -4,6 +4,16 @@
  * positioned element): the list opens under it.
  */
 .c-member-suggest-field { position: relative; }
+/* with a user icon in the field */
+.c-member-suggest-field__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  color: #94a3b8;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.c-member-suggest-field--icon .o-input { padding-left: 2.4rem; }
 .c-member-suggest {
   position: absolute;
   top: calc(100% + 0.4rem);

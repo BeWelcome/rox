@@ -222,7 +222,6 @@ class VolunteerToolController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('username', TextType::class, [
                 'label' => 'admin.tools.username',
-                'attr' => ['class' => 'member-autocomplete'],
                 'constraints' => [new NotBlank()],
             ])
             ->setMethod('POST')

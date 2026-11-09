@@ -3,6 +3,7 @@
   The rights tool, Assign and Edit (Admin\RightsController): the member is fixed when the form was opened for them or
   edits an assignment, the right when it edits one. Errors under their fields; the hint shows the chosen right.
 #}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
 {% set inline_notices = true %}
 
 {% block title %}{{ 'admin.rights.title'|trans }}{% endblock %}
@@ -43,7 +44,16 @@
           {% if editing %}<input type="hidden" name="return" value="{{ return }}">{% endif %}
           {{ form_errors(form) }}
           <div class="c-massmail-form__pair">
-            {{ _self.field(form.username) }}
+            {# the member: suggested while typing (a fixed member stays a plain field) #}
+            <div class="o-form-group">
+              <label class="form-label" for="{{ form.username.vars.id }}">{{ form.username.vars.label|trans }}</label>
+              {{ member_suggest.field(form.username, {placeholder: 'admin.rights.username'|trans, icon: true}) }}
+              {% if form.username.vars.errors|length > 0 %}
+                <ul class="c-massmail-form__errors">
+                  {% for error in form.username.vars.errors %}<li>{{ error.message|trans }}</li>{% endfor %}
+                </ul>
+              {% endif %}
+            </div>
             {% if editing %}
               {# the right can't change: its name, not the select #}
               <div class="o-form-group">

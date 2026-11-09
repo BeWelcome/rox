@@ -10,6 +10,3 @@ admin.subscriptions.unknown:
 admin.subscriptions.member.placeholder:
   - 'Type a username…'
   - Placeholder of the member search on the volunteer page to turn forum notifications on or off.
-admin.subscriptions.member.searching:
-  - 'Searching…'
-  - Shown in the member suggestions while the members are searched (volunteer page to turn forum notifications on or off).

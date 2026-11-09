@@ -156,3 +156,19 @@ export function initMemberSuggest(input, list, onPick = () => {}) {
         }
     });
 }
+
+/**
+ * The fields of templates/_partials/member_suggest.html.twig: inputs with data-member-suggest, their list named by
+ * aria-controls. data-member-suggest="submit" sends the form when a member is picked (a look-up); otherwise
+ * picking only fills the field.
+ */
+export function initMemberSuggestFields(root = document) {
+    root.querySelectorAll('input[data-member-suggest]').forEach((input) => {
+        const list = document.getElementById(input.getAttribute('aria-controls'));
+        if (!list || input.disabled) {
+            return;
+        }
+        const submit = input.dataset.memberSuggest === 'submit' && input.form;
+        initMemberSuggest(input, list, submit ? () => input.form.requestSubmit() : () => {});
+    });
+}

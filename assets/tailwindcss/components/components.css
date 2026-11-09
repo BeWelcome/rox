@@ -1,5 +1,6 @@
 @import './_components.dashboard.css';
 @import './_components.suggest.css';
+@import './_components.member-suggest.css';
 @import './_components.profile.css';
 @import './_components.trips.css';
 @import './_components.trip-card.css';

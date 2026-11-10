@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
 {#
   The logs (Admin\LogController): what members and volunteers did on the site, newest first, filtered by type
   (chips, no chip = all) and member. The group logs (filters false) show the group entries only.
@@ -6,12 +7,8 @@
 #}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('member/autocomplete') }}
+    {{ encore_entry_script_tags('member/suggest-fields') }}
 {% endblock %}
-
-{% block stylesheets %}
-    {{ encore_entry_link_tags('member/autocomplete') }}
-{% endblock stylesheets %}
 
 {% block main %}
 <main role="main" class="c-vtools c-logs">
@@ -30,12 +27,12 @@
                     {% if log_types|length > 1 %}
                         <div class="c-logs__filter c-logs__filter--types" role="group" aria-labelledby="c-logs-types">
                             <span class="c-logs__label" id="c-logs-types">{{ 'admin.logs.type'|trans }}</span>
+                            {# several types can be on; Show logs sends them (the chips show their state themselves, CSS) #}
                             <div class="c-logs__chips">
                                 {% for type in log_types %}
-                                    {% set _on = type in selected %}
-                                    <label class="c-logs__chip{{ _on ? ' is-on' }}">
-                                        <input type="checkbox" name="log[types][]" value="{{ type }}"{{ _on ? ' checked' }} onchange="this.form.requestSubmit()">
-                                        {% if _on %}<i class="fas fa-check" aria-hidden="true"></i>{% endif %}{{ type }}
+                                    <label class="c-logs__chip">
+                                        <input type="checkbox" name="log[types][]" value="{{ type }}"{{ type in selected ? ' checked' }}>
+                                        <i class="fas fa-check c-logs__chip-check" aria-hidden="true"></i>{{ type }}
                                     </label>
                                 {% endfor %}
                             </div>
@@ -43,16 +40,14 @@
                     {% endif %}
                     <div class="c-logs__filter">
                         <label class="c-logs__label" for="c-logs-member">{{ 'admin.logs.member'|trans }}</label>
-                        <div class="c-logs__member">
-                            <i class="fas fa-user" aria-hidden="true"></i>
-                            <input class="o-input member-autocomplete-start" id="c-logs-member" type="text" name="log[username]" value="{{ username }}" placeholder="{{ 'admin.logs.member.placeholder'|trans }}" autocomplete="off" onchange="this.form.requestSubmit()">
-                        </div>
+                        {# picking a suggested member filters by them; part of a name and Enter filters too #}
+                        {{ member_suggest.input('log[username]', username, 'c-logs-member', {placeholder: 'admin.logs.member.placeholder'|trans, submit: true, icon: true, class: 'c-logs__member'}) }}
+                        <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-logs__show"><i class="fas fa-filter" aria-hidden="true"></i>{{ 'admin.logs.show'|trans }}</button>
                         {% if selected is not empty or username != '' %}
                             <a class="c-cadmin__clear" href="{{ path('admin_logs_overview') }}"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.logs.clear'|trans }}</a>
                         {% endif %}
                         <span class="c-logs__count">{{ 'admin.logs.count'|trans({count: logs.nbResults}) }}</span>
                     </div>
-                    <noscript><button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet">{{ 'button.update'|trans }}</button></noscript>
                 </form>
             {% endif %}
 

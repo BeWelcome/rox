@@ -27,11 +27,9 @@ class LogFormType extends AbstractType
                     'class' => 'select2',
                 ],
             ])
+            // a member search with suggestions in the template (member/suggest)
             ->add('username', TextType::class, [
                 'required' => false,
-                'attr' => [
-                    'class' => 'member-autocomplete',
-                ],
             ]);
     }
 

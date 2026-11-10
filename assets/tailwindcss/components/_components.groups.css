@@ -390,11 +390,7 @@ a.p-gadmin__row:hover { background: #f8fafc; color: #0f172a; }
 .p-gmembers__actions .p-group-btn { padding: 0.4rem 0.85rem; font-size: 0.8125rem; }
 .p-gmembers__admin { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 700; }
 .p-gmembers__invite { display: flex; gap: 0.5rem; }
-.p-gmembers__invite .o-input,
-.p-gmembers__invite .ts-wrapper { flex: 1; min-width: 0; }
-/* a username field, not a select: no chevron (Tom Select's Bootstrap theme draws one until the field has focus) */
-.p-gmembers .p-gmembers__invite .ts-wrapper.single { --ts-pr-caret: 0.75rem; }
-.p-gmembers .p-gmembers__invite .ts-wrapper.single .ts-control { background-image: none; }
+.p-gmembers__invite .c-member-suggest-field { flex: 1; min-width: 0; }
 .p-gmembers__hint { margin: 0.75rem 0 0; color: #64748b; font-size: 0.8125rem; }
 @media (max-width: 991.98px) {
   .p-gmembers { grid-template-columns: minmax(0, 1fr); }

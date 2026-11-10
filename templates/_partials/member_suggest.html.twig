@@ -10,6 +10,7 @@
     submit       true: picking a member sends the form (a look-up, a filter); otherwise it only fills the field
     icon         true: a user icon in the field
     class        classes of the wrapper, e.g. to size it in a row of filters
+    required     input only: the field must be filled
 #}
 
 {% macro field(field, options = {}) %}
@@ -39,6 +40,7 @@
     <input type="search" name="{{ name }}" id="{{ id }}" class="o-input" value="{{ value }}"
       {%- if options.placeholder ?? false %} placeholder="{{ options.placeholder }}"{% endif %}
       {%- if options.label ?? false %} aria-label="{{ options.label }}"{% endif %}
+      {%- if options.required ?? false %} required{% endif %}
       autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="{{ id }}_list"
       data-member-suggest="{{ (options.submit ?? false) ? 'submit' : 'fill' }}">
     {{ _self._list(id) }}

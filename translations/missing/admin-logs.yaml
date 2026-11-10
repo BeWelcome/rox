@@ -19,6 +19,9 @@ admin.logs.member.placeholder:
 admin.logs.clear:
     - 'Clear filters'
     - 'Logs: removes the type and member filters.'
+admin.logs.show:
+    - 'Show logs'
+    - 'Logs: the button that applies the chosen types and member.'
 admin.logs.count:
     - '{count, plural, =0 {No entries} one {One entry} other {# entries}}'
     - 'Logs: how many entries match the filters.'

@@ -56,10 +56,11 @@ final class ForumWritingTest extends WebTestCase
         self::assertResponseRedirects('/forums/s' . $thread->getId());
         self::assertTrue($thread->isAgora());
         self::assertSame('<p>Any ideas?</p>', $thread->getFirstPost()->getMessage());
-        // the author subscribed (the box is ticked); the BeWelcome group's member gets a notification, the author not
+        // the author subscribed (the box is ticked) and gets their own post too, so the whole thread is in their mail
+        // program; the BeWelcome group's member gets a notification
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $author->getId()]));
         self::assertSame(1, $this->notifications($thread->getFirstPost(), $reader));
-        self::assertSame(0, $this->notifications($thread->getFirstPost(), $author));
+        self::assertSame(1, $this->notifications($thread->getFirstPost(), $author));
     }
 
     public function testOnlyMembersStartThreadsInAGroup(): void

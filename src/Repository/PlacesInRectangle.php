@@ -15,6 +15,10 @@ use Doctrine\ORM\QueryBuilder;
  * DQL needs a comparison (MBRContains(...) = 1), and with that MariaDB reads every active address instead of
  * the few places in the rectangle. The callers filter on the ids with restrict() and keep their exact distance
  * check.
+ *
+ * SQL_NO_CACHE because of the query cache (query_cache_size on stage and production): when it may cache a query,
+ * InnoDB starts the transaction before reading, and then refuses to read a spatial index ("1207 Update locks
+ * cannot be acquired during a READ UNCOMMITTED transaction").
  */
 final class PlacesInRectangle
 {
@@ -79,7 +83,7 @@ final class PlacesInRectangle
         $boundingBox = new GeoPoint($latitude, $longitude)->boundingBox($distance, 'km');
 
         $ids = $this->connection->fetchFirstColumn(
-            'SELECT DISTINCT l.geoname_id FROM location l ' . $join
+            'SELECT SQL_NO_CACHE DISTINCT l.geoname_id FROM location l ' . $join
             . ' WHERE MBRContains(ST_Envelope(ST_GeomFromText(:rectangle, 0)), l.coordinates)',
             [
                 'rectangle' => \sprintf(

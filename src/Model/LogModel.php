@@ -4,26 +4,32 @@ namespace App\Model;
 
 use App\Entity\Log;
 use App\Entity\Member;
+use App\Pagerfanta\CappedCountAdapter;
 use Doctrine\ORM\EntityManagerInterface;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class LogModel
 {
+    /** The logs page counts the entries up to this many (CappedCountAdapter). */
+    public const int COUNT_CAP = 10000;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
-     * The logs of the given types (all if none) and member (all if none), newest first.
+     * The logs of the given types (all if none) and member (all if none), newest first; counted up to
+     * COUNT_CAP entries.
      */
     public function getFilteredLogs(array $types, ?Member $member, int|string $page, int|string $limit): Pagerfanta
     {
         $qb = $this->entityManager->getRepository(Log::class)->createQueryBuilder('l')
             ->addSelect('m')
             ->leftJoin('l.member', 'm')
-            ->orderBy('l.created', 'DESC');
+            ->orderBy('l.created', 'DESC')
+            // entries of the same second keep their order across pages (the indexes on created hold the id)
+            ->addOrderBy('l.id', 'DESC');
         if ([] !== $types) {
             $qb->andWhere('l.type IN (:types)')->setParameter('types', $types);
         }
@@ -31,7 +37,7 @@ class LogModel
             $qb->andWhere('l.member = :member')->setParameter('member', $member);
         }
 
-        $pagerFanta = new Pagerfanta(new QueryAdapter($qb, fetchJoinCollection: false));
+        $pagerFanta = new Pagerfanta(new CappedCountAdapter($qb, self::COUNT_CAP));
         $pagerFanta->setMaxPerPage((int) $limit);
         $pagerFanta->setCurrentPage((int) $page);
 

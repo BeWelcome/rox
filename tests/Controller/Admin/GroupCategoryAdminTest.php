@@ -231,7 +231,7 @@ final class GroupCategoryAdminTest extends WebTestCase
     private function countLogs(string $like): int
     {
         return (int) static::getContainer()->get(EntityManagerInterface::class)->getConnection()->fetchOne(
-            "SELECT COUNT(*) FROM logs WHERE Type = 'Group' AND Str LIKE ?",
+            "SELECT COUNT(*) FROM log WHERE type = 'Group' AND message LIKE ?",
             [$like],
         );
     }

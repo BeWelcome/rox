@@ -50,7 +50,8 @@
                         {% if selected is not empty or username != '' %}
                             <a class="c-cadmin__clear" href="{{ path('admin_logs_overview') }}"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.logs.clear'|trans }}</a>
                         {% endif %}
-                        <span class="c-logs__count">{{ 'admin.logs.count'|trans({count: logs.nbResults}) }}</span>
+                        {# counted up to a limit (LogModel::COUNT_CAP): more entries say so #}
+                        <span class="c-logs__count">{{ logs.adapter.capped ? 'admin.logs.count.more'|trans({count: logs.nbResults}) : 'admin.logs.count'|trans({count: logs.nbResults}) }}</span>
                     </div>
                     <noscript><button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet">{{ 'button.update'|trans }}</button></noscript>
                 </form>

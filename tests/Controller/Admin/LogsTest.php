@@ -92,7 +92,7 @@ final class LogsTest extends WebTestCase
         $entityManager->persist($log);
         $entityManager->flush();
         // the entity sets created when it's saved
-        $entityManager->getConnection()->executeStatement('UPDATE logs SET created = ? WHERE id = ?', [new DateTime($when)->format('Y-m-d H:i:s'), $log->getId()]);
+        $entityManager->getConnection()->executeStatement('UPDATE log SET created = ? WHERE id = ?', [new DateTime($when)->format('Y-m-d H:i:s'), $log->getId()]);
     }
 
     private function member(string $username): Member

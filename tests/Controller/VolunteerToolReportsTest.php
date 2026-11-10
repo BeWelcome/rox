@@ -150,7 +150,7 @@ class VolunteerToolReportsTest extends WebTestCase
     {
         [$member] = $this->members(1);
         $this->connection->executeStatement(
-            "INSERT INTO logs (Str, Type, created, idMember) VALUES ('volunteer tool report test', 'Login', NOW(), ?)",
+            "INSERT INTO log (message, type, created, member_id) VALUES ('volunteer tool report test', 'Login', NOW(), ?)",
             [$member->getId()]
         );
 

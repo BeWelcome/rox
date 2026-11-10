@@ -1,17 +1,86 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
+{% import 'forum/_report_macros.html.twig' as reportParts %}
 
-{% block content %}
-    <h1 class="h3">{{ 'forummyreporttomod'|trans }}
-        {% if post.thread %}: <a href="{{ forum.thread_url(post.thread) }}#post{{ post.id }}">{{ forum.thread_title(post.thread, app.request.locale) }}</a>{% endif %}
-    </h1>
-    <p class="small">{{ forum.author(post) }}, {{ post.created|format_datetime('short', 'short') }}</p>
-    <div class="border p-2 mb-3">{{ post.message|purify }}</div>
+{#
+  A member reports a post to the forum moderators, a page of the post's group like a new topic: the post quoted,
+  what is wrong with it (required; Send report stays greyed until there is a text), next to who reads the report.
+  After sending: the report's status and its messages (the moderators' answers too); the field adds to it.
+  post, report (null before the first message), form.
+#}
+{% set group_head_hidden = true %}
 
-    {% if report %}
-        <h2 class="h4">{{ 'forum.report.status'|trans }}: {{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }}</h2>
-        <div class="border p-2 mb-3" id="report-messages">{{ report.postComment|purify }}</div>
-    {% endif %}
+{% block title %}{{ 'forum.report.title'|trans }}{% endblock %}
 
-    {{ form(form) }}
+{% block group_content %}
+    {% set _thread = post.thread %}
+    {% set _topicUrl = path('forum_post', {postId: post.id}) %}
+    {% set _picture = group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
+    <div class="p-forum-new p-report-member">
+        <header class="p-forum-new__page-head">
+            <span class="p-forum-new__picture{{ group.beWelcome ? ' is-agora' }}"><img width="64" height="64" alt="" src="{{ _picture }}"></span>
+            <div>
+                <a class="p-forum-new__back" href="{{ _topicUrl }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ 'forum.report.back'|trans }}</a>
+                <h1 class="p-forum-new__title">{{ 'forum.report.title'|trans }}</h1>
+            </div>
+        </header>
+
+        <div class="p-forum-new__layout">
+            <aside class="p-forum-rules-aside">
+                <div class="p-forum-rules-aside__head">
+                    <span class="p-forum-rules-aside__icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+                    <h2>{{ 'forum.report.who.reads'|trans }}</h2>
+                </div>
+                <p>{{ 'forum.report.who.reads.text'|trans({author: post.author ? post.author.username : 'forum.former.member'|trans}) }}</p>
+                <p>{{ 'forum.report.moderators.can'|trans }}</p>
+                <a class="p-forum-rules-aside__more" href="{{ path('group_rules', {group_id: group.id}) }}">{{ 'forum.report.read.rules'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </aside>
+
+            {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-forum-new__card js-report-form'}}) }}
+                <div class="p-report-quote">
+                    <div class="p-report-quote__who">
+                        <img width="32" height="32" alt="" src="{{ post.author ? path('avatar', {username: post.author.username, size: 48}) : asset('images/empty_avatar_72_72.png') }}">
+                        <span><strong>{{ forum.author(post, false) }}</strong> · {{ post.created|format_datetime('medium', 'short') }}{% if _thread %} · {{ forum.thread_title(_thread, app.request.locale) }}{% endif %}</span>
+                    </div>
+                    <div class="p-report-quote__text">{{ post.messageIn(app.request.locale).message|purify|forum_text }}</div>
+                </div>
+
+                {% if report %}
+                    <div class="p-report-member__head">
+                        <h2>{{ 'forum.report.yours'|trans }}</h2>
+                        {{ reportParts.status(report) }}
+                    </div>
+                    <div id="report-messages">{{ reportParts.conversation(report) }}</div>
+                    <p class="p-report-member__hint">{{ 'forum.report.answer.hint'|trans }}</p>
+                {% endif %}
+
+                {% for _error in form.vars.errors %}<p class="p-forum-new__error p-forum-new__error--box">{{ _error.message }}</p>{% endfor %}
+                <div class="p-forum-new__field">
+                    <label class="p-forum-new__label" for="{{ form.comment.vars.id }}">{{ (report ? 'forum.report.add' : 'forum.report.whats.wrong')|trans }}</label>
+                    {{ form_widget(form.comment, {attr: {class: 'p-report__textarea', rows: 5}}) }}
+                    {% for _error in form.comment.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+                </div>
+
+                {% do form.send.setRendered %}
+                {{ form_rest(form) }}
+                <div class="p-forum-new__foot">
+                    <a class="p-group-btn" href="{{ _topicUrl }}">{{ 'cancel'|trans }}</a>
+                    <button type="submit" name="{{ form.send.vars.full_name }}" class="p-group-btn p-group-btn--primary js-report-send">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ (report ? 'forum.report.add.button' : 'forum.report.send.button')|trans }}
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <script>
+        (function () {
+            // Send report stays greyed until there is a text: the moderators need to know what is wrong
+            var form = document.querySelector('.js-report-form');
+            var text = form.querySelector('textarea');
+            var send = form.querySelector('.js-report-send');
+            var refresh = function () { send.disabled = text.value.trim() === ''; };
+            text.addEventListener('input', refresh);
+            refresh();
+        })();
+    </script>
 {% endblock %}

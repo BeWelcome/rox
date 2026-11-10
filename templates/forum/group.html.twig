@@ -1,14 +1,32 @@
 {% extends 'group/layout.html.twig' %}
 
+{#
+  A group's discussions. The forum moderators see hidden and deleted threads too, can show only the reported or the
+  hidden ones (?filter=reported|hidden) and get markers (open reports, pinned, who can see it, hidden after, deleted)
+  and a shield that opens the thread with the moderation panel on its Topic part.
+#}
 {% block group_content %}
     {% if not canRead %}
         <p>{{ 'groupsnotpublic'|trans }}</p>
     {% else %}
         <div class="p-forum__toolbar">{% include 'forum/_search_form.html.twig' %}</div>
-        {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending, showGroup: false} %}
+        {% if moderator %}
+            <div class="p-mod-bar">
+                <p class="p-mod-bar__hint"><i class="fas fa-shield-halved" aria-hidden="true"></i> {{ 'forum.moderation.hint'|trans }}</p>
+                <nav class="p-forum-seg p-mod-seg" aria-label="{{ 'forum.moderation.filter'|trans }}">
+                    {% for _name, _label in {all: 'forum.moderation.filter.all', reported: 'forum.moderation.filter.reported', hidden: 'forum.moderation.filter.hidden'} %}
+                        <a class="p-forum-seg__option{{ filter == _name ? ' is-active' }}" href="{{ path('group_forum', {group_id: group.id}|merge(_name == 'all' ? {} : {filter: _name})) }}"{% if filter == _name %} aria-current="page"{% endif %}>
+                            {{ _label|trans }}
+                            {% if filterCounts[_name] is defined %}<span class="p-mod-seg__count">{{ filterCounts[_name] }}</span>{% endif %}
+                        </a>
+                    {% endfor %}
+                </nav>
+            </div>
+        {% endif %}
+        {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending, showGroup: false, moderator: moderator, openReports: openReports} %}
         {% if threads.haveToPaginate %}
             <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'group_forum_pages', routeParams: {group_id: group.id}, pageParameter: '[page_id]'}) }}
+                {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'group_forum_pages', routeParams: {group_id: group.id}|merge(filter == 'all' ? {} : {filter: filter}), pageParameter: '[page_id]'}) }}
             </div>
         {% endif %}
     {% endif %}

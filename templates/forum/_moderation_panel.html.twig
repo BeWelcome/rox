@@ -1,0 +1,148 @@
+{#
+  The forum moderators' panel on a thread: in the side column on large screens, a bottom sheet over the page on
+  smaller ones. Two parts: This post (who can see it, whether its author can still edit it, deleted, Edit and
+  Translate, the reports about it) and Topic (its group, who can see it, pin, hidden after, deleted). The forms are
+  sent to forum_admin, which leads back here with ?moderate={postId}&section=…&saved=1.
+  panel: from ForumPagesController::getPanel() (open, section, saved, post, postForm, threadForm, reports).
+#}
+{% import 'forum/_report_macros.html.twig' as reports %}
+{% set _post = panel.post %}
+{% macro switch(field) %}
+    <label class="p-mod-switch" for="{{ field.vars.id }}">
+        <span class="p-mod-switch__text">{{ field.vars.label|trans }}</span>
+        <input type="checkbox" class="p-preference-toggle__input" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ field.vars.value }}"{% if field.vars.checked %} checked{% endif %}>
+        <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+    </label>
+    {% do field.setRendered %}
+{% endmacro %}
+{% macro select(field, help = null) %}
+    <div class="p-mod-field">
+        <label class="p-mod-field__label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+        {{ form_widget(field, {attr: {class: 'p-mod-input'}}) }}
+        {% if help %}<span class="p-mod-field__help">{{ help|trans }}</span>{% endif %}
+    </div>
+{% endmacro %}
+
+<div class="p-mod-backdrop js-mod-close"{% if not panel.open %} hidden{% endif %}></div>
+<section class="p-mod-panel js-mod-panel" data-post="{{ _post.id }}" aria-labelledby="mod-panel-title"{% if not panel.open %} hidden{% endif %}>
+    <span class="p-mod-panel__grabber" aria-hidden="true"></span>
+    <div class="p-mod-panel__head">
+        <span class="p-mod-panel__icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+        <h2 class="p-mod-panel__title" id="mod-panel-title">{{ 'forum.moderation.title'|trans }}</h2>
+        <button type="button" class="p-mod-panel__close js-mod-close" aria-label="{{ 'close'|trans }}" title="{{ 'close'|trans }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+    </div>
+
+    <div class="p-mod-panel__tabs" role="tablist">
+        <button type="button" role="tab" class="p-mod-panel__tab{{ panel.section == 'post' ? ' is-active' }}" data-mod-section="post" aria-selected="{{ panel.section == 'post' ? 'true' : 'false' }}">{{ 'forum.moderation.this.post'|trans }}</button>
+        <button type="button" role="tab" class="p-mod-panel__tab{{ panel.section == 'topic' ? ' is-active' }}" data-mod-section="topic" aria-selected="{{ panel.section == 'topic' ? 'true' : 'false' }}">{{ 'forum.moderation.topic'|trans }}</button>
+    </div>
+
+    {# This post #}
+    {% set _form = panel.postForm %}
+    {{ form_start(_form, {attr: {class: 'p-mod-panel__part', 'data-mod-part': 'post', hidden: panel.section != 'post'}}) }}
+        <div class="p-mod-preview">
+            <img width="32" height="32" alt="" src="{{ _post.author ? path('avatar', {username: _post.author.username, size: 48}) : asset('images/empty_avatar_72_72.png') }}">
+            <div class="p-mod-preview__body">
+                <p class="p-mod-preview__who"><strong>{{ _post.author ? _post.author.username : 'forum.former.member'|trans }}</strong> <span>{{ _post.created|format_datetime('medium', 'short') }}</span></p>
+                <p class="p-mod-preview__text">{{ _post.messageIn(app.request.locale).message|purify|striptags|trim|truncate(300) }}</p>
+            </div>
+        </div>
+        {{ _self.select(_form.visibility) }}
+        {{ _self.switch(_form.ownerCanStillEdit) }}
+        {{ _self.switch(_form.deleted) }}
+        <div class="p-mod-panel__actions">
+            <button type="submit" class="p-mod-btn p-mod-btn--primary">{{ 'forum.moderation.save.post'|trans }}</button>
+            {% if panel.saved == 'post' %}<span class="p-mod-saved"><i class="fas fa-check" aria-hidden="true"></i> {{ 'forum.moderation.saved'|trans }}</span>{% endif %}
+            <span class="p-mod-panel__links">
+                <a href="{{ path('forum_edit', {postId: _post.id}) }}">{{ 'forum.moderation.edit'|trans }}</a>
+                <a href="{{ path('forum_translate', {postId: _post.id}) }}">{{ 'forum.moderation.translate'|trans }}</a>
+            </span>
+        </div>
+        {% if panel.reports is not empty %}
+            <div class="p-mod-panel__reports">
+                <p class="p-mod-eyebrow">{{ 'forum.moderation.reports.of.post'|trans }}</p>
+                {% for report in panel.reports %}
+                    <a class="p-mod-report-row" href="{{ path('forum_report_member', {postId: _post.id, memberId: report.reporter.id}) }}">
+                        <img width="32" height="32" alt="" loading="lazy" src="{{ path('avatar', {username: report.reporter.username, size: 48}) }}">
+                        <span class="p-mod-report-row__who"><strong>{{ report.reporter.username }}</strong><span>{{ reports.waiting(report) }}</span></span>
+                        {{ reports.status(report) }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {{ form_end(_form) }}
+
+    {# Topic #}
+    {% set _form = panel.threadForm %}
+    {{ form_start(_form, {attr: {class: 'p-mod-panel__part', 'data-mod-part': 'topic', hidden: panel.section != 'topic'}}) }}
+        {{ _self.select(_form.group, 'forum.moderation.group.help') }}
+        {{ _self.select(_form.visibility) }}
+        <div class="p-mod-panel__pair">
+            <div class="p-mod-field">
+                <label class="p-mod-field__label" for="{{ _form.stickyValue.vars.id }}">{{ _form.stickyValue.vars.label|trans }}</label>
+                {{ form_widget(_form.stickyValue, {attr: {class: 'p-mod-input'}}) }}
+            </div>
+            <div class="p-mod-field">
+                <label class="p-mod-field__label" for="{{ _form.expiryDate.vars.id }}">{{ _form.expiryDate.vars.label|trans }}</label>
+                {{ form_widget(_form.expiryDate, {attr: {class: 'p-mod-input'}}) }}
+            </div>
+        </div>
+        <span class="p-mod-field__help p-mod-field__help--pair">{{ 'forum.moderation.pin.help'|trans }}</span>
+        {{ _self.switch(_form.deleted) }}
+        <div class="p-mod-panel__actions">
+            <button type="submit" class="p-mod-btn p-mod-btn--primary">{{ 'forum.moderation.save.thread'|trans }}</button>
+            {% if panel.saved == 'topic' %}<span class="p-mod-saved"><i class="fas fa-check" aria-hidden="true"></i> {{ 'forum.moderation.saved'|trans }}</span>{% endif %}
+        </div>
+    {{ form_end(_form) }}
+</section>
+<script>
+    (function () {
+        var panel = document.querySelector('.js-mod-panel');
+        if (!panel) { return; }
+        var backdrop = document.querySelector('.p-mod-backdrop');
+        var layout = panel.closest('.p-thread__layout');
+        var show = function (section) {
+            panel.querySelectorAll('[data-mod-section]').forEach(function (tab) {
+                var on = tab.getAttribute('data-mod-section') === section;
+                tab.classList.toggle('is-active', on);
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            panel.querySelectorAll('[data-mod-part]').forEach(function (part) {
+                part.hidden = part.getAttribute('data-mod-part') !== section;
+            });
+        };
+        var open = function (section) {
+            panel.hidden = false;
+            backdrop.hidden = false;
+            layout.classList.add('has-panel');
+            if (section) { show(section); }
+        };
+        var close = function () {
+            panel.hidden = true;
+            backdrop.hidden = true;
+            layout.classList.remove('has-panel');
+            document.querySelectorAll('.p-thread-post.is-moderated').forEach(function (post) { post.classList.remove('is-moderated'); });
+            document.querySelectorAll('.p-mod-post-shield.is-on').forEach(function (shield) { shield.classList.remove('is-on'); });
+            if (window.history.replaceState) { window.history.replaceState(null, '', window.location.pathname + window.location.hash); }
+        };
+        panel.querySelectorAll('[data-mod-section]').forEach(function (tab) {
+            tab.addEventListener('click', function () { show(tab.getAttribute('data-mod-section')); });
+        });
+        document.querySelectorAll('.js-mod-close').forEach(function (button) { button.addEventListener('click', close); });
+        document.querySelectorAll('[data-mod-open]').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                open(button.getAttribute('data-mod-open'));
+            });
+        });
+        // the shield of the post in the panel opens it here; the others load the page with their post
+        document.querySelectorAll('[data-moderate-post="' + panel.getAttribute('data-post') + '"]').forEach(function (shield) {
+            shield.addEventListener('click', function (event) {
+                event.preventDefault();
+                open('post');
+                shield.classList.add('is-on');
+                shield.closest('.p-thread-post').classList.add('is-moderated');
+            });
+        });
+    })();
+</script>

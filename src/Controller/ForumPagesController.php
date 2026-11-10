@@ -7,6 +7,9 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Entity\ReportToModerator;
+use App\Form\ModeratePostType;
+use App\Form\ModerateThreadType;
 use App\Model\ForumModel;
 use App\Model\ForumModerationModel;
 use App\Repository\ForumPostRepository;
@@ -88,9 +91,39 @@ class ForumPagesController extends AbstractController
         return $this->redirectToRoute('group_forum_pages', ['group_id' => Group::BEWELCOME, 'page_id' => $bwforumsPage], Response::HTTP_MOVED_PERMANENTLY);
     }
 
+    /**
+     * A post in its thread, on the page it is on; keeps the moderation panel's query (moderate, section, saved).
+     */
+    #[Route(path: '/forums/post/{postId}', name: 'forum_post', requirements: ['postId' => '\d+'], methods: ['GET'])]
+    public function post(Request $request, #[MapEntity(id: 'postId')] ForumPost $post): RedirectResponse
+    {
+        $thread = $post->getThread();
+        if (null === $thread) {
+            throw $this->createNotFoundException();
+        }
+        /** @var ForumPostRepository $postRepository */
+        $postRepository = $this->entityManager->getRepository(ForumPost::class);
+        $member = $this->getMember();
+        $page = $postRepository->findPageOf($post, $member, $this->isModerator(), $this->readsAscending($member), self::POSTS_PER_PAGE);
+
+        $query = array_filter([
+            'moderate' => $request->query->getInt('moderate') ?: null,
+            'section' => \in_array($request->query->get('section'), ['post', 'topic'], true) ? $request->query->get('section') : null,
+            'saved' => $request->query->getBoolean('saved') ? 1 : null,
+        ]);
+        $parameters = $thread->isAgora()
+            ? ['threadId' => $thread->getId()] + (1 < $page ? ['pageId' => $page] : [])
+            : ['group_id' => $thread->getGroup()?->getId(), 'thread' => $thread->getId()] + (1 < $page ? ['page_id' => $page] : []);
+        $route = $thread->isAgora()
+            ? (1 < $page ? 'forum_thread_pages' : 'forum_thread')
+            : (1 < $page ? 'group_forum_thread_pages' : 'group_forum_thread');
+
+        return $this->redirect($this->generateUrl($route, $parameters + $query) . '#post' . $post->getId());
+    }
+
     #[Route(path: '/group/{group_id}/forum', name: 'group_forum', requirements: ['group_id' => '\d+'], methods: ['GET'])]
     #[Route(path: '/group/{group_id}/forum/page{page_id}', name: 'group_forum_pages', requirements: ['group_id' => '\d+', 'page_id' => '\d+'], methods: ['GET'])]
-    public function groupForum(#[MapEntity(id: 'group_id')] Group $group, int $page_id = 1): Response
+    public function groupForum(Request $request, #[MapEntity(id: 'group_id')] Group $group, int $page_id = 1): Response
     {
         if (!$this->isGranted(GroupVoter::GROUP_VIEW, $group)) {
             return $this->redirectToRoute('groups_search');
@@ -98,15 +131,29 @@ class ForumPagesController extends AbstractController
         $member = $this->getMember();
         $canRead = $this->isGranted(GroupVoter::GROUP_VIEW_FORUM, $group);
 
+        // the forum moderators see all threads and can show only the reported or the hidden ones
+        $moderator = $this->isModerator();
+        $filter = $moderator && \in_array($request->query->get('filter'), ['reported', 'hidden'], true) ? (string) $request->query->get('filter') : 'all';
+        $threads = null;
+        if ($canRead) {
+            $queryBuilder = $this->getThreadRepository()->createLatestQueryBuilder($member, $moderator, $group);
+            if ($moderator) {
+                $this->getThreadRepository()->filterForModerators($queryBuilder, $filter);
+            }
+            $threads = $this->paginate($queryBuilder, $page_id, $this->getItemsPerPage($member));
+        }
+
         $parameters = [
             'group' => $group,
             'canRead' => $canRead,
             'ascending' => $this->readsAscending($member),
-            'threads' => $canRead ? $this->paginate(
-                $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), $group),
-                $page_id,
-                $this->getItemsPerPage($member),
-            ) : null,
+            'threads' => $threads,
+            'moderator' => $moderator,
+            'filter' => $filter,
+            'filterCounts' => $moderator && $canRead ? $this->getThreadRepository()->countForModerators($member, $group) : [],
+            'openReports' => $moderator && null !== $threads ? $this->moderationModel->countOpenReportsOfThreads(
+                array_map(static fn (ForumThread $thread): int => (int) $thread->getId(), iterator_to_array($threads->getCurrentPageResults(), false)),
+            ) : [],
         ];
         $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
 
@@ -185,6 +232,10 @@ class ForumPagesController extends AbstractController
             ->getArrayResult();
 
         $group = $thread->getGroup();
+        $moderator = $this->isModerator();
+        $reports = $moderator ? $this->moderationModel->findReportsOfPosts(
+            array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),
+        ) : [];
 
         $parameters = [
             'thread' => $thread,
@@ -196,16 +247,45 @@ class ForumPagesController extends AbstractController
             'subscribed' => $this->forumModel->isSubscribed($thread, $member),
             'people' => array_column($people, 'username'),
             'starter' => $starter,
-            // the moderators see the reports about each post
-            'reports' => $this->isModerator() ? $this->moderationModel->findReportsOfPosts(
-                array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),
-            ) : [],
+            // the moderators see the reports about each post and have the moderation panel
+            'reports' => $reports,
+            'panel' => $moderator ? $this->getPanel($request, $thread, $starter, $reports) : null,
         ];
         if (null !== $group) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
         }
 
         return $this->render('forum/thread.html.twig', $parameters);
+    }
+
+    /**
+     * The moderation panel of a thread: its forms for a post (?moderate={postId}; the first post if none) and for the
+     * thread, sent to forum_admin. Open when the page has ?moderate or ?section (post or topic, the part shown).
+     *
+     * @param array{id: int, author: ?int}|null   $starter
+     * @param array<int, list<ReportToModerator>> $reports the reports about the posts of the page
+     *
+     * @return array<string, mixed>|null
+     */
+    private function getPanel(Request $request, ForumThread $thread, ?array $starter, array $reports): ?array
+    {
+        $postId = $request->query->getInt('moderate') ?: (int) ($starter['id'] ?? 0);
+        $post = 0 === $postId ? null : $this->entityManager->getRepository(ForumPost::class)->find($postId);
+        if (!$post instanceof ForumPost || $post->getThread()?->getId() !== $thread->getId()) {
+            return null;
+        }
+        $section = 'topic' === $request->query->get('section') ? 'topic' : 'post';
+        $action = $this->generateUrl('forum_admin', ['postId' => $post->getId()]);
+
+        return [
+            'open' => $request->query->has('moderate') || $request->query->has('section'),
+            'section' => $section,
+            'saved' => $request->query->getBoolean('saved') ? $section : null,
+            'post' => $post,
+            'postForm' => $this->createForm(ModeratePostType::class, ModeratePostType::dataOf($post), ['action' => $action])->createView(),
+            'threadForm' => $this->createForm(ModerateThreadType::class, ModerateThreadType::dataOf($thread), ['action' => $action])->createView(),
+            'reports' => $reports[(int) $post->getId()] ?? $this->moderationModel->findReportsOfPosts([(int) $post->getId()])[(int) $post->getId()] ?? [],
+        ];
     }
 
     private function redirectToThread(ForumThread $thread, int $page, bool $reverse): RedirectResponse

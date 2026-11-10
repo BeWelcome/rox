@@ -6,6 +6,8 @@
   Subscribe), then the posts on a line (forum/_post.html.twig) with "Write a reply" under them and, on large
   screens, a side card (Reply, Subscribe, who is in it, the order). Reply opens in a side panel
   (assets/js/contact/drawer.js, loaded by bewelcome.js): forum/reply.html.twig ?embed=1.
+  The forum moderators get a notice above the posts when the thread is not for everyone, a Moderate button in the
+  side card and the moderation panel (forum/_moderation_panel.html.twig) in its place.
 #}
 
 {# The topic's title in the group's head, under the group's name (group/_head.html.twig) #}
@@ -52,9 +54,6 @@
 
     <div class="p-thread">
     <div class="p-thread__top">
-        {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
-            <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
-        {% endif %}
 
         {# Phones: who is in it, the numbers, the order and Subscribe on one line (the side card is not shown) #}
         <div class="p-thread__line">
@@ -72,8 +71,23 @@
         </div>
     </div>
 
-    <div class="p-thread__layout">
+    {% set _panelOpen = panel and panel.open %}
+    <div class="p-thread__layout{{ panel ? ' has-moderation' }}{{ _panelOpen ? ' has-panel' }}">
         <div class="p-thread__body">
+            {# Who sees the thread, when it is not every member #}
+            {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+                {% set _notice = 'forum.moderation.notice.deleted' %}
+            {% elseif thread.visibility == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
+                {% set _notice = 'forum.moderation.notice.moderators' %}
+            {% elseif thread.visibility == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') and not thread.agora %}
+                {% set _notice = 'forum.moderation.notice.group' %}
+            {% else %}
+                {% set _notice = null %}
+            {% endif %}
+            {% if _notice %}
+                <p class="p-mod-notice"><i class="fas fa-lock" aria-hidden="true"></i> {{ _notice|trans }}</p>
+            {% endif %}
+
             {% if posts.haveToPaginate %}
                 <div class="p-thread__pages">
                     {{ pagerfanta(posts, 'rounded_pagination', thread.agora
@@ -92,7 +106,7 @@
                         <p class="p-thread__day">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</p>
                     {% endif %}
                     {% set _previousDay = _postDay %}
-                    {% include 'forum/_post.html.twig' with {post: post, moderator: moderator, reports: reports[post.id] ?? [], replyUrl: canReply ? _replyUrl : null, replyTitle: _replyTitle, replies: posts.nbResults - 1} %}
+                    {% include 'forum/_post.html.twig' with {post: post, moderator: moderator, reports: reports[post.id] ?? [], replyUrl: canReply ? _replyUrl : null, replyTitle: _replyTitle, replies: posts.nbResults - 1, selected: _panelOpen and panel.post.id == post.id} %}
                 {% endfor %}
             </div>
 
@@ -147,8 +161,12 @@
                         <span class="is-active">{{ 'forum.thread.order.latest'|trans }}</span>
                     {% endif %}
                 </div>
+                {% if panel %}
+                    <a class="p-mod-btn p-mod-btn--outline" href="{{ app.request.baseUrl ~ app.request.pathInfo }}?section=topic" data-mod-open="topic"><i class="fas fa-shield-halved" aria-hidden="true"></i> {{ 'forum.moderation.moderate'|trans }}</a>
+                {% endif %}
             </div>
             <a class="p-thread__back" href="{{ _forumUrl }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'forum.thread.all.discussions'|trans }}</a>
+            {% if panel %}{% include 'forum/_moderation_panel.html.twig' %}{% endif %}
         </aside>
     </div>
     </div>

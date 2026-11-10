@@ -73,12 +73,16 @@ final class ForumFormerMembersTest extends WebTestCase
         // bwadmin has the ForumModerator right in the fixtures
         $this->client->loginUser($this->member('bwadmin'));
 
-        foreach (['/forums/modeditpost/' . $post->getId(), '/forums/reporttomod/' . $post->getId()] as $url) {
-            $crawler = $this->request($url);
+        // the moderation panel on the post and the report form
+        $this->request('/forums/modeditpost/' . $post->getId());
+        $this->client->followRedirect();
+        $crawler = $this->client->followRedirect();
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString($this->formerMember, $crawler->filter('.p-mod-preview__who')->text());
 
-            self::assertResponseIsSuccessful();
-            self::assertStringContainsString($this->formerMember, $crawler->filter('main p.small')->text(), $url);
-        }
+        $crawler = $this->request('/forums/reporttomod/' . $post->getId());
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString($this->formerMember, $crawler->filter('.p-report-quote__who')->text());
     }
 
     public function testEditingAPostOfAFormerMemberNotifiesNoOne(): void

@@ -1,0 +1,106 @@
+{% extends 'group/layout.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+{% import 'forum/_report_macros.html.twig' as reportParts %}
+
+{#
+  A member's report about a post, for the forum moderators: on the Reports tab of the post's group, the messages as
+  a conversation (the member's on the left, the moderators' on the right) with the answer and the status under
+  them; on the side the reported post (Moderate this post opens the thread's moderation panel on it) and the other
+  reports about it. An answer may be empty: then only the status changes.
+  post, report, others (the other reports about the post), form.
+#}
+{% block title %}{{ 'forum.reports.title'|trans }}{% endblock %}
+
+{% block group_content %}
+    {% set _thread = post.thread %}
+    {% set _deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+    <div class="p-report">
+        <a class="p-report__back" href="{{ path('group_reports', {group_id: group.id}) }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'forum.reports.tab'|trans }}</a>
+
+        <div class="p-report__layout">
+            <section class="p-report__card">
+                <header class="p-report__head">
+                    <img width="48" height="48" alt="" src="{{ path('avatar', {username: report.reporter.username, size: 72}) }}">
+                    <div class="p-report__who">
+                        <span>{{ 'forum.reports.report.by'|trans }}</span>
+                        <a href="{{ path('members_profile', {username: report.reporter.username}) }}">{{ report.reporter.username }}</a>
+                    </div>
+                    {{ reportParts.status(report) }}
+                </header>
+
+                <div id="report-messages">{{ reportParts.conversation(report) }}</div>
+
+                {{ form_start(form, {attr: {class: 'p-report__composer js-report-composer', novalidate: 'novalidate'}}) }}
+                    {% for _error in form.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+                    <label class="visually-hidden" for="{{ form.comment.vars.id }}">{{ form.comment.vars.label|trans }}</label>
+                    {{ form_widget(form.comment, {attr: {class: 'p-report__textarea', rows: 3, placeholder: 'forum.reports.answer.placeholder'|trans({reporter: report.reporter.username})}}) }}
+                    {% for _error in form.comment.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+                    <div class="p-report__composer-foot">
+                        <div class="p-forum-seg p-report__status" role="radiogroup" aria-label="{{ form.status.vars.label|trans }}">
+                            {% for choice in form.status %}
+                                <input type="radio" class="p-forum-seg__input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                                <label class="p-forum-seg__option" for="{{ choice.vars.id }}">{{ choice.vars.label|trans }}</label>
+                                {% do choice.setRendered %}
+                            {% endfor %}
+                        </div>
+                        {% do form.status.setRendered %}
+                        {% do form.send.setRendered %}
+                        <button type="submit" name="{{ form.send.vars.full_name }}" class="p-mod-btn p-mod-btn--primary js-report-send">
+                            <span class="js-report-send-text" hidden><i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'forum.report.send'|trans }}</span>
+                            <span class="js-report-send-status"><i class="fas fa-check" aria-hidden="true"></i> {{ 'forum.reports.save.status'|trans }}</span>
+                        </button>
+                    </div>
+                    {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </section>
+
+            <aside class="p-report__side">
+                <div class="p-report__side-card">
+                    <p class="p-mod-eyebrow">{{ 'forum.reports.reported.post'|trans }}</p>
+                    <div class="p-report__post-who">
+                        <img width="36" height="36" alt="" src="{{ post.author ? path('avatar', {username: post.author.username, size: 48}) : asset('images/empty_avatar_72_72.png') }}">
+                        <div>
+                            <strong>{{ forum.author(post) }}</strong>
+                            <span>{{ post.created|format_datetime('medium', 'short') }}</span>
+                        </div>
+                    </div>
+                    <div class="p-report__post-text{{ _deleted ? ' is-deleted' }}">{{ post.messageIn(app.request.locale).message|purify|forum_text }}</div>
+                    {% if _thread %}
+                        <p class="p-report__post-topic"><i class="fas fa-comments" aria-hidden="true"></i> {{ forum.thread_title(_thread, app.request.locale) }} · {{ group.name }}</p>
+                    {% endif %}
+                    <a class="p-mod-btn p-mod-btn--outline" href="{{ path('forum_post', {postId: post.id, moderate: post.id}) }}"><i class="fas fa-shield-halved" aria-hidden="true"></i> {{ 'forum.moderation.post.moderate'|trans }}</a>
+                    <a class="p-report__post-link" href="{{ path('forum_post', {postId: post.id}) }}">{{ 'forum.reports.see.in.topic'|trans }}</a>
+                </div>
+
+                {% if others is not empty %}
+                    <div class="p-report__side-card">
+                        <p class="p-mod-eyebrow">{{ 'forum.reports.other.reports'|trans }}</p>
+                        {% for other in others %}
+                            <a class="p-mod-report-row" href="{{ path('forum_report_member', {postId: post.id, memberId: other.reporter.id}) }}">
+                                <img width="32" height="32" alt="" loading="lazy" src="{{ path('avatar', {username: other.reporter.username, size: 48}) }}">
+                                <span class="p-mod-report-row__who"><strong>{{ other.reporter.username }}</strong><span>{{ reportParts.waiting(other) }}</span></span>
+                                {{ reportParts.status(other) }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+    <script>
+        (function () {
+            // Send with an answer; Save status without one (a moderator may change only the status)
+            var form = document.querySelector('.js-report-composer');
+            var text = form.querySelector('textarea');
+            var withText = form.querySelector('.js-report-send-text');
+            var withoutText = form.querySelector('.js-report-send-status');
+            var refresh = function () {
+                var filled = text.value.trim() !== '';
+                withText.hidden = !filled;
+                withoutText.hidden = filled;
+            };
+            text.addEventListener('input', refresh);
+            refresh();
+        })();
+    </script>
+{% endblock %}

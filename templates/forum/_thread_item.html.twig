@@ -4,10 +4,14 @@
   The whole row opens the thread at its top; only the group's name is a link of its own.
   showGroup: name the group (not on the group's own pages).
   Posts of members who aren't on BeWelcome any more have no author: the empty avatar and a former member.
+  moderator: the forum moderators' markers (openReports: the number of open reports, a link to the Reports tab;
+  pinned, who can see it, hidden after, deleted) and a shield that opens the moderation panel on the thread.
 #}
 {% import 'forum/_macros.html.twig' as forum %}
 {% set lastUrl = forum.thread_url(thread) %}
-<div class="c-home-item c-home-item--thread">
+{% set _mod = moderator ?? false %}
+{% set _deleted = thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+<div class="c-home-item c-home-item--thread{{ _mod and _deleted ? ' is-deleted' }}">
     {% if thread.firstPost.author %}
         <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
     {% else %}
@@ -28,10 +32,36 @@
             <span class="c-home-item__author">{{ forum.author(thread.lastPost, false) }}</span>
             · <span class="c-home-item__when">{{ thread.lastPost.updated.diffForHumans }}</span>
         </p>
+        {% if _mod %}
+            {% set _vis = thread.visibility %}
+            {% set _restricted = _vis in [constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY'), constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY')] %}
+            {% if openReports|default(0) > 0 or thread.stickyValue > 0 or _restricted or thread.expiryDate or _deleted %}
+                <p class="p-mod-tags">
+                    {% if openReports|default(0) > 0 %}
+                        <a class="p-mod-tag p-mod-tag--report" href="{{ path('group_reports', {group_id: thread.group.id}) }}"><i class="fas fa-flag" aria-hidden="true"></i> {{ 'forum.moderation.open.reports'|trans({count: openReports}) }}</a>
+                    {% endif %}
+                    {% if thread.stickyValue > 0 %}
+                        <span class="p-mod-tag"><i class="fas fa-thumbtack" aria-hidden="true"></i> {{ 'forum.moderation.pinned'|trans({value: thread.stickyValue}) }}</span>
+                    {% endif %}
+                    {% if _restricted %}
+                        <span class="p-mod-tag"><i class="fas fa-lock" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ _vis)|lower|trans }}</span>
+                    {% endif %}
+                    {% if thread.expiryDate %}
+                        <span class="p-mod-tag"><i class="fas fa-clock" aria-hidden="true"></i> {{ 'forum.moderation.hidden.after'|trans({date: thread.expiryDate|format_date('medium')}) }}</span>
+                    {% endif %}
+                    {% if _deleted %}
+                        <span class="p-mod-tag p-mod-tag--deleted"><i class="fas fa-trash" aria-hidden="true"></i> {{ 'forum.moderation.deleted.tag'|trans }}</span>
+                    {% endif %}
+                </p>
+            {% endif %}
+        {% endif %}
     </div>
     {% set replies = thread.replies|default(0) %}
     <span class="c-home-item__replies{% if replies > 0 %} has-replies{% endif %}" aria-label="{{ 'landing.thread.replies'|trans({ count: replies }) }}">
         <i class="far fa-comment" aria-hidden="true"></i>
         <span>{{ replies }}</span>
     </span>
+    {% if _mod %}
+        <a class="p-mod-shield" href="{{ lastUrl }}?section=topic" title="{{ 'forum.moderation.topic.moderate'|trans }}" aria-label="{{ 'forum.moderation.topic.moderate'|trans }}"><i class="fas fa-shield-halved" aria-hidden="true"></i></a>
+    {% endif %}
 </div>

@@ -9,6 +9,8 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
+use App\Entity\ReportToModerator;
+use App\Model\ForumModerationModel;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -74,6 +76,38 @@ class ForumThreadRepository extends EntityRepository
             ->setParameter('forAll', [ForumVisibilityType::NO_RESTRICTION, ForumVisibilityType::MEMBERS_ONLY, ''])
             ->setParameter('groupOnly', ForumVisibilityType::GROUP_ONLY)
             ->setParameter('beWelcome', Group::BEWELCOME);
+    }
+
+    /**
+     * The forum moderators' filters of a group's discussions: the threads with open reports (reported), or the ones
+     * not every member sees (hidden: only for the group or the moderators, hidden after a day, or deleted).
+     */
+    public function filterForModerators(QueryBuilder $queryBuilder, string $filter): QueryBuilder
+    {
+        return match ($filter) {
+            'reported' => $queryBuilder
+                ->andWhere('t.id IN (SELECT rr.thread FROM ' . ReportToModerator::class . ' rr WHERE rr.status IN (:openReports))')
+                ->setParameter('openReports', ForumModerationModel::OPEN_STATUSES),
+            'hidden' => $queryBuilder
+                ->andWhere('t.visibility IN (:restricted) OR t.expiryDate IS NOT NULL OR t.deleted = :deletedThread')
+                ->setParameter('restricted', [ForumVisibilityType::GROUP_ONLY, ForumVisibilityType::MODERATOR_ONLY])
+                ->setParameter('deletedThread', ForumDeleteStatusType::DELETED),
+            default => $queryBuilder,
+        };
+    }
+
+    /**
+     * @return array{reported: int, hidden: int} the number of the group's threads in each of the moderators' filters
+     */
+    public function countForModerators(Member $member, Group $group): array
+    {
+        $count = fn (string $filter): int => (int) $this->filterForModerators($this->createLatestQueryBuilder($member, true, $group), $filter)
+            ->select('COUNT(t.id)')
+            ->resetDQLPart('orderBy')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return ['reported' => $count('reported'), 'hidden' => $count('hidden')];
     }
 
     /**

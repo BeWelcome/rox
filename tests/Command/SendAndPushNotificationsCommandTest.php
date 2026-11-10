@@ -176,6 +176,51 @@ class SendAndPushNotificationsCommandTest extends TestCase
         self::assertSame('/forums/s456#post123', $queuedNotifications[0]->getUrl());
     }
 
+    public function testTheAuthorGetsTheMailOfTheirOwnPostButNoPush(): void
+    {
+        $postNotification = $this->forumPostNotification();
+        $postNotification->setReceiver($postNotification->getPost()->getAuthor());
+        $postNotificationRepository = $this->createStub(PostNotificationRepository::class);
+        $postNotificationRepository->method('getScheduledNotifications')->willReturn([$postNotification]);
+        $postNotificationRepository->method('getSentMessageIds')->willReturn([]);
+        $persisted = [];
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getRepository')->willReturnMap([
+            [PostNotification::class, $postNotificationRepository],
+            [BrowserPushSubscription::class, $this->createStub(EntityRepository::class)],
+        ]);
+        $entityManager->method('persist')->willReturnCallback(static function (object $entity) use (&$persisted): void {
+            $persisted[] = $entity;
+        });
+        $mailer = $this->createMock(Mailer::class);
+        $mailer->expects($this->once())->method('sendNotificationEmail')->willReturn(true);
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $urlGenerator->method('generate')->willReturn('/forums/s456#post123');
+
+        $command = new SendAndPushNotificationsCommand(
+            $entityManager,
+            $this->createStub(LoggerInterface::class),
+            $mailer,
+            new BrowserNotificationService(
+                $entityManager,
+                BrowserPushTestConfig::create(),
+                $this->createStub(PushGatewayInterface::class),
+                $this->createStub(TranslatorInterface::class),
+                new NullLogger(),
+                $this->preferenceService()
+            ),
+            $urlGenerator,
+            $this->createStub(BrowserPushNotificationProcessor::class),
+            new UriSigner('test-secret'),
+            10
+        );
+        $command->setTranslator(new Translator('en'));
+
+        self::assertSame(0, new CommandTester($command)->execute([]));
+        self::assertSame(NotificationStatusType::SENT, $postNotification->getStatus());
+        self::assertSame([], array_filter($persisted, static fn (object $entity): bool => $entity instanceof BrowserPushNotification));
+    }
+
     public function testBrowserPushQueueFailureDoesNotFailForumNotificationCommand(): void
     {
         $postNotificationRepository = $this->createMock(PostNotificationRepository::class);

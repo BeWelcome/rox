@@ -184,11 +184,12 @@ class SendAndPushNotificationsCommand extends Command
 
     private function sendBrowserNotification(PostNotification $notification): void
     {
-        if ('members_threads_subscribed' !== $notification->getTableSubscription()) {
+        $post = $notification->getPost();
+        // the author gets the mail of their own post (the whole thread in their mail program), but no push about it
+        if ('members_threads_subscribed' !== $notification->getTableSubscription() || $post->getAuthor() === $notification->getReceiver()) {
             return;
         }
 
-        $post = $notification->getPost();
         $this->browserNotificationService->queue(
             $notification->getReceiver(),
             BrowserNotificationPayload::forum($post->getAuthor(), $this->getForumPostUrl($post))

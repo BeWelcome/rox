@@ -259,8 +259,8 @@ class ForumModel
 
     /**
      * Queues a notification about the post for the group's members who want them and for the thread's subscribers,
-     * once per member and never for its author. Members who can't read the post (group-only posts, members-only
-     * groups) get none.
+     * once per member. The author gets their own post too, so the whole thread is in their mail program. Members who
+     * can't read the post (group-only posts, members-only groups) get none.
      */
     public function queueNotifications(ForumPost $post, string $type): void
     {
@@ -285,7 +285,7 @@ class ForumModel
             || ForumVisibilityType::GROUP_ONLY === $thread->getVisibility()
         );
 
-        $notified = [$post->getAuthor()->getId() => true];
+        $notified = [];
         foreach ($this->getQueuedReceiverIds($post) as $memberId) {
             $notified[$memberId] = true;
         }

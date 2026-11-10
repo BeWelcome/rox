@@ -466,7 +466,7 @@ final class GroupManagementTest extends WebTestCase
     private function countGroupLogs(string $like): int
     {
         return (int) $this->entityManager->getConnection()->fetchOne(
-            "SELECT COUNT(*) FROM logs WHERE Type = 'Group' AND Str LIKE ?",
+            "SELECT COUNT(*) FROM log WHERE type = 'Group' AND message LIKE ?",
             [$like],
         );
     }

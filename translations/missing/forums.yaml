@@ -8,9 +8,6 @@ forum.read.more:
     - '@comment.read.more'
 forum.show.less:
     - '@comment.show.less'
-forum.moderator.edit:
-    - 'Admin edit'
-    - Button on each post of a forum thread for forum moderators; opens the moderator's edit of the post
 forum.post.subscribe:
     - 'Notify me about replies'
     - Checkbox below a new forum thread or reply; subscribes the member to the thread
@@ -35,27 +32,18 @@ forum.agora.welcome.unsubscribe:
 forum.agora.notifications.off:
     - 'You won''t get mails about the BeWelcome forum any more. You can switch them on again in your forum subscriptions.'
     - Page after a member clicked the link in forum.agora.welcome.notice
-forum.moderation.sticky:
-    - 'Pinned (the higher, the further up)'
-    - Field on the forum moderator's page of a post; 0 for threads that aren't pinned
-forum.moderation.expiry:
-    - 'Closes on'
-    - Field on the forum moderator's page of a post; the date the thread closes, if any
 forum.moderation.owner.can.edit:
-    - 'The author can still edit the post'
-    - Checkbox on the forum moderator's page of a post
-forum.moderation.post:
-    - 'Post'
-    - Heading of the post's settings on the forum moderator's page of a post
+    - 'Author can still edit it'
+    - Switch in the forum moderators' panel of a post
 forum.moderation.save.thread:
-    - 'Save the thread'
-    - Button of the thread's settings on the forum moderator's page of a post
+    - 'Save topic'
+    - Button of the Topic part of the forum moderators' panel
 forum.moderation.save.post:
-    - 'Save the post'
-    - Button of the post's settings on the forum moderator's page of a post
+    - 'Save post'
+    - Button of the This post part of the forum moderators' panel
 forum.moderation.saved:
-    - 'Saved.'
-    - Message after a forum moderator changed a thread, a post or a report
+    - 'Saved'
+    - Next to the button after a forum moderator saved a post, a topic or a report
 forum.report.comment:
     - 'Your message to the moderators'
     - Field when a member reports a forum post to the moderators, or a moderator answers
@@ -79,22 +67,10 @@ forum.report.status.closed:
     - Status of a report about a forum post that is handled
 forum.reports.title:
     - 'Reports to the moderators'
-    - Heading of the forum moderators' list of reports
-forum.reports.allactivereports:
-    - 'All open reports'
-    - Filter of the forum moderators' list of reports
-forum.reports.myreportactive:
-    - 'My open reports'
-    - Filter of the forum moderators' list of reports; the ones the moderator answered
-forum.reports.allmyreport:
-    - 'All my reports'
-    - Filter of the forum moderators' list of reports; the ones the moderator answered
-forum.reports.view:
-    - 'View'
-    - Link to a report in the forum moderators' list of reports
+    - Title of the forum moderators' reports pages
 forum.reports.none:
-    - 'No reports.'
-    - The forum moderators' list of reports when it is empty
+    - 'No reports to answer.'
+    - Reports tab when the list is empty
 forum.search.term:
     - 'Search words'
     - Placeholder of the forum search field (forum overview, a group's forum, a member's forum posts)
@@ -176,3 +152,192 @@ forum.rules.before.reply:
 forum.rules.all:
     - 'All rules'
     - Link in the strip above the reply box to the Rules tab of the group
+forum.moderation.not.saved:
+    - 'Not saved: please check the fields and try again.'
+    - Message when a forum moderator's changes to a post or topic could not be saved
+forum.moderation.title:
+    - 'Moderation'
+    - Heading of the forum moderators' panel on a topic
+forum.moderation.this.post:
+    - 'This post'
+    - Forum moderators' panel, the part about the chosen post
+forum.moderation.topic:
+    - 'Topic'
+    - Forum moderators' panel, the part about the whole topic
+forum.moderation.moderate:
+    - 'Moderate'
+    - Button in the side card of a topic for forum moderators; opens the moderation panel
+forum.moderation.post.moderate:
+    - 'Moderate this post'
+    - Shield button on a post, and button on a report; opens the moderation panel on the post
+forum.moderation.topic.moderate:
+    - 'Moderate this topic'
+    - Shield button on a topic in a group's discussions, for forum moderators
+forum.moderation.post.visibility:
+    - 'Who can see this post'
+    - Field in the forum moderators' panel of a post
+forum.moderation.topic.visibility:
+    - 'Who can see this topic'
+    - Field in the forum moderators' panel of a topic
+forum.moderation.deleted:
+    - 'Deleted (only moderators see it)'
+    - Switch in the forum moderators' panel of a post or topic
+forum.moderation.group.help:
+    - 'Moves the topic with all its posts.'
+    - Help under the group field of the forum moderators' panel of a topic
+forum.moderation.pin:
+    - 'Pin'
+    - 'Field in the forum moderators'' panel of a topic: a number, 0 is not pinned'
+forum.moderation.hide.after:
+    - 'Hide after'
+    - 'Field in the forum moderators'' panel of a topic: the day after which the topic is hidden'
+forum.moderation.pin.help:
+    - '0 is not pinned; higher numbers stay above lower ones.'
+    - Help under Pin in the forum moderators' panel of a topic
+forum.moderation.edit:
+    - 'Edit'
+    - Link in the forum moderators' panel of a post; edits the post's text
+forum.moderation.translate:
+    - 'Translate'
+    - Link in the forum moderators' panel of a post; translates the post
+forum.moderation.reports.of.post:
+    - 'Reports about this post'
+    - Forum moderators' panel of a post, small heading above the reports about it
+forum.moderation.hint:
+    - 'You also see hidden and deleted topics.'
+    - A group's discussions, line for forum moderators above the topics
+forum.moderation.filter:
+    - 'Show topics'
+    - A group's discussions, label of the forum moderators' filter (for screen readers)
+forum.moderation.filter.all:
+    - 'All'
+    - 'A group''s discussions, forum moderators'' filter: all topics'
+forum.moderation.filter.reported:
+    - 'Reported'
+    - 'A group''s discussions, forum moderators'' filter: topics with open reports'
+forum.moderation.filter.hidden:
+    - 'Hidden or deleted'
+    - 'A group''s discussions, forum moderators'' filter: topics not every member sees'
+forum.moderation.open.reports:
+    - '{count, plural, one {# open report} other {# open reports}}'
+    - Tag on a topic for forum moderators; a link to the reports
+forum.moderation.pinned:
+    - 'Pinned · {value}'
+    - Tag on a topic for forum moderators; value is the pin number
+forum.moderation.hidden.after:
+    - 'Hidden after {date}'
+    - Tag on a topic for forum moderators
+forum.moderation.deleted.tag:
+    - 'Deleted'
+    - Tag on a deleted topic or post, for forum moderators
+forum.moderation.edit.locked:
+    - 'Editing locked'
+    - Tag on a post for forum moderators when its author can't edit it any more
+forum.moderation.reported.by:
+    - 'Reported by'
+    - Under a reported post, for forum moderators, before the names of the members who reported it
+forum.moderation.waiting:
+    - 'Waiting for a moderator'
+    - Hint on the orange dot of a report the member wrote last in
+forum.moderation.not.answered:
+    - 'Nobody has answered yet'
+    - State of a report no moderator answered
+forum.moderation.wrote.again:
+    - '{reporter} wrote again'
+    - State of a report the member added to after a moderator's answer
+forum.moderation.answered.by:
+    - 'Answered by {moderator}'
+    - State of a report a moderator answered last
+forum.moderation.closed.by:
+    - 'Closed by {moderator}'
+    - State of a closed report
+forum.moderation.moderator.name:
+    - '{name} · moderator'
+    - Name above a moderator's message in a report
+forum.moderation.notice.deleted:
+    - 'This topic is deleted. Only moderators see it.'
+    - Notice above the posts of a deleted topic
+forum.moderation.notice.moderators:
+    - 'Only moderators see this topic.'
+    - Notice above the posts of a topic only moderators see
+forum.moderation.notice.group:
+    - 'Only group members see this topic.'
+    - Notice above the posts of a topic only the group's members see
+forum.reports.tab:
+    - 'Reports'
+    - 'Tab of every group for forum moderators: the reports about posts'
+forum.reports.list.open:
+    - 'Open'
+    - Reports tab, list of all open reports
+forum.reports.list.mine.open:
+    - 'Mine, open'
+    - Reports tab, list of the open reports the moderator answered
+forum.reports.list.mine:
+    - 'All mine'
+    - Reports tab, list of all reports the moderator answered
+forum.reports.scope:
+    - 'Groups'
+    - Reports tab, label of the choice This group / All groups (for screen readers)
+forum.reports.scope.group:
+    - 'This group'
+    - Reports tab, reports about posts of this group
+forum.reports.scope.all:
+    - 'All groups'
+    - Reports tab, reports about posts of all groups
+forum.reports.reported.post.by:
+    - 'reported a post by'
+    - 'Reports tab, between the names: "anna reported a post by tom"'
+forum.reports.report.by:
+    - 'Report by'
+    - A report, small line above the name of the member who sent it
+forum.reports.answer.placeholder:
+    - 'Answer {reporter} (optional)'
+    - A report, grey text in the moderator's answer field
+forum.reports.save.status:
+    - 'Save status'
+    - 'A report, the button when the answer is empty: only the status changes'
+forum.reports.reported.post:
+    - 'Reported post'
+    - A report, heading of the side card with the post
+forum.reports.see.in.topic:
+    - 'See it in the topic'
+    - A report, link to the post in its topic
+forum.reports.other.reports:
+    - 'Other reports about it'
+    - A report, heading of the other members' reports about the same post
+forum.report.title:
+    - 'Report to moderators'
+    - Title of the page where a member reports a forum post
+forum.report.back:
+    - 'Back to the topic'
+    - Link on the page where a member reports a forum post
+forum.report.whats.wrong:
+    - 'What''s wrong with this post?'
+    - Field label when a member reports a forum post
+forum.report.add:
+    - 'Add to your report'
+    - Field label when a member already reported the post
+forum.report.send.button:
+    - 'Send report'
+    - Button when a member reports a forum post
+forum.report.add.button:
+    - 'Add'
+    - Button when a member adds to their report
+forum.report.yours:
+    - 'Your report'
+    - Heading above the messages of a member's report
+forum.report.answer.hint:
+    - 'A moderator will answer here. We''ll let you know by message.'
+    - Under the messages of a member's report
+forum.report.who.reads:
+    - 'Who reads this'
+    - Heading of the box next to the report form
+forum.report.who.reads.text:
+    - 'Only the forum moderators see your report. {author} doesn''t know who reported the post.'
+    - Box next to the report form; author is the post's author
+forum.report.moderators.can:
+    - 'Moderators can hide or delete posts that break the group''s rules.'
+    - Box next to the report form
+forum.report.read.rules:
+    - 'Read the rules'
+    - Link in the box next to the report form, to the group's rules

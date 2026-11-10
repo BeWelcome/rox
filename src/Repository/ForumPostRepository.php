@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
@@ -52,6 +53,29 @@ class ForumPostRepository extends EntityRepository
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * The page of the thread the post is on, for the member and their order of the posts.
+     */
+    public function findPageOf(ForumPost $post, Member $member, bool $moderator, bool $ascending, int $perPage): int
+    {
+        $thread = $post->getThread();
+        if (null === $thread) {
+            return 1;
+        }
+        $before = (int) $this->createThreadPostsQueryBuilder($thread, $member, $moderator, $ascending)
+            ->select('COUNT(fp.id)')
+            ->resetDQLPart('orderBy')
+            ->andWhere($ascending
+                ? 'fp.created < :created OR (fp.created = :created AND fp.id < :post)'
+                : 'fp.created > :created OR (fp.created = :created AND fp.id > :post)')
+            ->setParameter('created', $post->getCreated())
+            ->setParameter('post', $post->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return intdiv($before, max(1, $perPage)) + 1;
     }
 
     /**

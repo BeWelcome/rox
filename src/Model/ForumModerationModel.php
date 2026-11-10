@@ -12,7 +12,9 @@ use App\Entity\Member;
 use App\Entity\ReportToModerator;
 use App\Service\ForumSearchIndex;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Twig\Attribute\AsTwigFunction;
 
 /**
@@ -21,6 +23,9 @@ use Twig\Attribute\AsTwigFunction;
  */
 class ForumModerationModel
 {
+    /** The reports the moderators still have to answer. */
+    public const array OPEN_STATUSES = [ReportStatusType::OPEN, ReportStatusType::IN_DISCUSSION];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ForumSearchIndex $searchIndex,
@@ -117,30 +122,89 @@ class ForumModerationModel
 
     /**
      * @param list<string> $statuses none for all
+     * @param Group|null   $group    only the reports about posts in the group's threads
      *
      * @return list<ReportToModerator> oldest change first
      */
-    public function findReports(array $statuses, ?Member $moderator = null): array
+    public function findReports(array $statuses, ?Member $moderator = null, ?Group $group = null): array
     {
-        $criteria = [];
-        if ([] !== $statuses) {
-            $criteria['status'] = $statuses;
-        }
+        $queryBuilder = $this->createReportsQueryBuilder($statuses, $group)->orderBy('r.updated', 'ASC')->addOrderBy('r.id', 'ASC');
         if (null !== $moderator) {
-            $criteria['moderator'] = $moderator;
+            $queryBuilder->andWhere('r.moderator = :moderator')->setParameter('moderator', $moderator);
         }
 
-        return $this->entityManager->getRepository(ReportToModerator::class)->findBy($criteria, ['updated' => 'ASC']);
+        /** @var list<ReportToModerator> $reports */
+        $reports = $queryBuilder->getQuery()->getResult();
+
+        return $reports;
     }
 
     /**
-     * The reports the moderators still have to answer (the number on their tab of the forum pages).
+     * The reports the moderators still have to answer (the number on the Reports tab of the group's pages; without a
+     * group, of all groups).
      */
     #[AsTwigFunction('forum_open_reports')]
-    public function countOpenReports(): int
+    public function countOpenReports(?Group $group = null): int
     {
-        return $this->entityManager->getRepository(ReportToModerator::class)
-            ->count(['status' => [ReportStatusType::OPEN, ReportStatusType::IN_DISCUSSION]]);
+        return (int) $this->createReportsQueryBuilder(self::OPEN_STATUSES, $group)
+            ->select('COUNT(r.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param list<int> $threadIds
+     *
+     * @return array<int, int> the number of open reports about posts of each thread, by thread id
+     */
+    public function countOpenReportsOfThreads(array $threadIds): array
+    {
+        if ([] === $threadIds) {
+            return [];
+        }
+        $rows = $this->createReportsQueryBuilder(self::OPEN_STATUSES, null)
+            ->select('r.thread AS thread, COUNT(r.id) AS reports')
+            ->andWhere('r.thread IN (:threads)')
+            ->setParameter('threads', $threadIds)
+            ->groupBy('r.thread')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_map('intval', array_column($rows, 'reports', 'thread'));
+    }
+
+    /**
+     * The messages of a report, the oldest first. Both the messages written here and the legacy forum's are read;
+     * a message that is neither stays one message without time and author. Messages by others than the member who
+     * reported the post are the moderators'.
+     *
+     * @return list<ReportMessage>
+     */
+    #[AsTwigFunction('forum_report_messages')]
+    public function getMessages(ReportToModerator $report): array
+    {
+        $reporter = $report->getReporter()->getUsername();
+        $messages = [];
+        foreach (preg_split('~\s*<hr\s*/?>\s*~i', trim((string) $report->getPostComment())) ?: [] as $part) {
+            if ('' === trim($part)) {
+                continue;
+            }
+            $time = null;
+            $author = null;
+            $text = $part;
+            if (1 === preg_match('~^<p><small>(\d{4}-\d{2}-\d{2} \d{2}:\d{2}) (.+?):</small><br>(.*)</p>$~s', $part, $match)) {
+                $time = DateTimeImmutable::createFromFormat('!Y-m-d H:i', $match[1]) ?: null;
+                $author = html_entity_decode($match[2], \ENT_QUOTES | \ENT_HTML5);
+                $text = $match[3];
+            } elseif (1 === preg_match('~^On (\d{2}-\d{2}-\d{4} \d{2}:\d{2}) \(server time\) <a [^>]*>(.*?)</a> wrote:<br\s*/?>(.*)$~s', $part, $match)) {
+                $time = DateTimeImmutable::createFromFormat('!d-m-Y H:i', $match[1]) ?: null;
+                $author = html_entity_decode(strip_tags($match[2]), \ENT_QUOTES | \ENT_HTML5);
+                $text = $match[3];
+            }
+            $messages[] = new ReportMessage($time, $author, $text, null !== $author && $author !== $reporter);
+        }
+
+        return array_reverse($messages);
     }
 
     /**
@@ -159,6 +223,24 @@ class ForumModerationModel
         }
 
         return $reports;
+    }
+
+    /**
+     * @param list<string> $statuses none for all
+     */
+    private function createReportsQueryBuilder(array $statuses, ?Group $group): QueryBuilder
+    {
+        $queryBuilder = $this->entityManager->getRepository(ReportToModerator::class)->createQueryBuilder('r');
+        if ([] !== $statuses) {
+            $queryBuilder->andWhere('r.status IN (:statuses)')->setParameter('statuses', $statuses);
+        }
+        if (null !== $group) {
+            $queryBuilder
+                ->andWhere('r.thread IN (SELECT gt.id FROM ' . ForumThread::class . ' gt WHERE gt.group = :group)')
+                ->setParameter('group', $group);
+        }
+
+        return $queryBuilder;
     }
 
     private function addMessage(?string $messages, Member $author, string $comment): string

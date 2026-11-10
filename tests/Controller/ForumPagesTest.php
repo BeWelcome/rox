@@ -211,21 +211,33 @@ final class ForumPagesTest extends WebTestCase
         self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
     }
 
-    public function testTheModeratorsReachTheReportsFromTheAgorasMenu(): void
+    public function testTheModeratorsHaveAReportsTabInEveryGroup(): void
     {
         $post = $this->thread(self::AGORA_THREAD)->getFirstPost();
         static::getContainer()->get(ForumModerationModel::class)->report($post, $this->member('member-2'), 'Please have a look.');
+        $hiking = $this->thread(self::HIKING_THREAD)->getGroup()->getId();
 
         $crawler = $this->request('GET', '/group/0');
-        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head a[href^="/group/0/reports"]'));
+        $this->request('GET', '/group/0/reports');
+        self::assertResponseStatusCodeSame(403);
 
         $this->client->loginUser($this->member('member-3'));
         $crawler = $this->request('GET', '/group/0');
-        $reports = $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]');
-        self::assertCount(1, $reports);
+        // the last tab, with the number of the group's open reports; not in the "…" menu
+        $reports = $crawler->filter('.p-group-head .p-hero__tab')->last();
+        self::assertSame('/group/0/reports', $reports->attr('href'));
         self::assertSame('1', $reports->filter('.p-group-head__badge')->text());
-        $this->client->click($reports->link());
+        self::assertCount(0, $crawler->filter('.p-group-head__menu a[href^="/group/0/reports"]'));
+
+        $crawler = $this->request('GET', '/group/' . $hiking);
+        $reports = $crawler->filter('.p-group-head .p-hero__tab')->last();
+        self::assertSame('/group/' . $hiking . '/reports', $reports->attr('href'));
+        self::assertCount(0, $reports->filter('.p-group-head__badge'));
+
+        $this->client->click($crawler->filter('.p-group-head .p-hero__tab')->last()->link());
         self::assertResponseIsSuccessful();
+        self::assertSame('/group/' . $hiking . '/reports', $this->client->getCrawler()->filter('.p-hero__tab--active')->attr('href'));
     }
 
     public function testThePermalinkPointsAtThePostOnItsPage(): void

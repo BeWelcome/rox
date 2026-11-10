@@ -1,0 +1,49 @@
+{# The parts of a report to the forum moderators that the moderators' pages share. #}
+
+{# The status as a coloured tag: Open, In discussion, Closed #}
+{% macro status(report) %}
+    {%- set _key = report.status == 'OnDiscussion' ? 'discussion' : report.status|lower -%}
+    <span class="p-report-status p-report-status--{{ _key }}">{{ ('forum.report.status.' ~ _key)|trans }}</span>
+{%- endmacro %}
+
+{# Whether the report waits for a moderator: the member wrote last and it isn't closed #}
+{% macro is_waiting(report) %}
+    {{- report.lastWhoSpoke == constant('App\\Doctrine\\WhoSpokeLastType::MEMBER') and report.status != constant('App\\Doctrine\\ReportStatusType::CLOSED') ? '1' -}}
+{% endmacro %}
+
+{# Where the report stands: nobody answered yet, the member wrote again, answered or closed by a moderator #}
+{% macro waiting(report) %}
+    {%- set _moderator = report.moderator ? report.moderator.username : null -%}
+    {%- if report.status == constant('App\\Doctrine\\ReportStatusType::CLOSED') -%}
+        {{ _moderator ? 'forum.moderation.closed.by'|trans({moderator: _moderator}) : 'forum.report.status.closed'|trans }}
+    {%- elseif report.lastWhoSpoke == constant('App\\Doctrine\\WhoSpokeLastType::MODERATOR') -%}
+        {{ 'forum.moderation.answered.by'|trans({moderator: _moderator ?? '?'}) }}
+    {%- elseif forum_report_messages(report)|filter(message => message.moderator) is not empty -%}
+        {{ 'forum.moderation.wrote.again'|trans({reporter: report.reporter.username}) }}
+    {%- else -%}
+        {{ 'forum.moderation.not.answered'|trans }}
+    {%- endif -%}
+{%- endmacro %}
+
+{# The messages as a conversation: the member's on the left, the moderators' on the right, the oldest first #}
+{% macro conversation(report) %}
+    <div class="p-report-thread">
+        {% for message in forum_report_messages(report) %}
+            <div class="p-report-msg{{ message.moderator ? ' p-report-msg--mod' }}">
+                {% if message.author %}
+                    <img class="p-report-msg__photo" width="32" height="32" alt="" loading="lazy" src="{{ path('avatar', {username: message.author, size: 48}) }}">
+                {% else %}
+                    <img class="p-report-msg__photo" width="32" height="32" alt="" loading="lazy" src="{{ asset('images/empty_avatar_72_72.png') }}">
+                {% endif %}
+                <div class="p-report-msg__body">
+                    <p class="p-report-msg__meta">
+                        {%- if message.author %}<strong>{{ message.moderator ? 'forum.moderation.moderator.name'|trans({name: message.author}) : message.author }}</strong>{% endif -%}
+                        {%- if message.author and message.time %} · {% endif -%}
+                        {%- if message.time %}{{ message.time|format_datetime('medium', 'short') }}{% endif -%}
+                    </p>
+                    <div class="p-report-msg__bubble">{{ message.text|purify }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

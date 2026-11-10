@@ -1,10 +1,11 @@
 {#
   A list of threads, laid out like My groups on the home page.
   ascending: the member reads threads oldest post first.
+  moderator, openReports (by thread id): the forum moderators' markers and shield (forum/_thread_item.html.twig).
 #}
 <div class="c-home-list p-forum__list">
     {% for thread in threads %}
-        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending|default(false), showGroup: (showGroup ?? true) } %}
+        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending|default(false), showGroup: (showGroup ?? true), moderator: moderator ?? false, openReports: openReports[thread.id] ?? 0 } %}
     {% else %}
         <p class="c-home-list__empty">{{ 'found0threads'|trans }}</p>
     {% endfor %}

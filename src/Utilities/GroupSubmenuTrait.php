@@ -8,7 +8,8 @@ use App\Security\GroupVoter;
 
 /**
  * The menu of a group's pages: the tabs (overview, discussions, rules, wiki, members; the agora has no wiki and no
- * members tab), the entries of the head's "…" menu (menu: true) and join, the head's button for those not in it.
+ * members tab; the forum moderators' reports last), the entries of the head's "…" menu (menu: true) and join, the
+ * head's button for those not in it.
  */
 trait GroupSubmenuTrait
 {
@@ -31,6 +32,11 @@ trait GroupSubmenuTrait
             $items['members'] = ['key' => 'GroupMembers', 'url' => $url('group_members'), 'icon' => 'user-group', 'count' => 'members'];
         }
 
+        // the forum moderators' tab, the last one: the reports about posts of the group
+        if ($this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN)) {
+            $items['reports'] = ['key' => 'forum.reports.tab', 'url' => $url('group_reports'), 'icon' => 'flag', 'count' => 'reports'];
+        }
+
         $isMember = null !== $member && $group->isMember($member);
         if ($isMember) {
             $items['membersettings'] = ['key' => 'group.menu.settings', 'url' => $url('group_membersettings'), 'icon' => 'bell', 'menu' => true];
@@ -44,10 +50,6 @@ trait GroupSubmenuTrait
         if ($this->isGranted(GroupVoter::GROUP_ADMINISTER, $group)) {
             $items['memberadministration'] = ['key' => 'GroupsAdministrateMembers', 'url' => $url('group_memberadministration'), 'icon' => 'users-gear', 'menu' => true];
             $items['groupsettings'] = ['key' => 'group.menu.edit', 'url' => $url('group_groupsettings'), 'icon' => 'pen', 'menu' => true];
-        }
-        // the forum moderators reach the reports about posts from the agora
-        if ($agora && ($this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN))) {
-            $items['reports'] = ['key' => 'forum.reports.title', 'url' => $this->generateUrl('forum_reports', ['list' => 'AllActiveReports']), 'icon' => 'flag', 'menu' => true];
         }
         if ($isMember) {
             $items['leave'] = ['key' => 'groupsleavethegroup', 'url' => $url('group_leave'), 'icon' => 'right-from-bracket', 'menu' => true, 'danger' => true];

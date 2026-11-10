@@ -2,7 +2,8 @@
   The head of a group's pages, like a member's profile: a white band with the group's picture, name (the agora
   with its Official badge), a line with the place, categories, last activity and Joined (the agora: Open to every
   member), the button to start a topic or to join and a "…" menu (settings, related groups, the admins' tools,
-  leave and delete); under it the tabs (Overview, Discussions, Rules, Wiki, Members).
+  leave and delete); under it the tabs (Overview, Discussions, Rules, Wiki, Members; for the forum moderators
+  Reports, with the number of open reports as an orange badge).
   On phones the head is small on every tab but the overview, the tabs stick to the top and the button sits at the
   bottom of the screen.
   Needs group and submenu (items, active). group_head_topic (a topic's title): the group's name above it instead.
@@ -56,7 +57,6 @@
                 {% for name, item in _menu|filter(item => not (item.danger ?? false)) %}
                     <li><a class="dropdown-item p-hero__dropdown-item{{ submenu.active == name ? ' active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
                         <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i> {{ item.key|lower|trans }}
-                        {%- if name == 'reports' and forum_open_reports() > 0 %} <span class="p-group-head__badge">{{ forum_open_reports() }}</span>{% endif %}
                     </a></li>
                 {% endfor %}
                 {% if _resign %}
@@ -149,11 +149,11 @@
                 </button>
                 <nav class="p-hero__tabs" aria-label="{{ group.name }}">
                     {% for name, item in _tabs %}
-                        {% set _count = item.count is defined ? _numbers[item.count] : 0 %}
+                        {% set _count = item.count is defined ? (item.count == 'reports' ? forum_open_reports(group) : _numbers[item.count]) : 0 %}
                         <a class="p-hero__tab{{ submenu.active == name ? ' p-hero__tab--active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
                             <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i>
                             {{ item.key|lower|trans }}
-                            {% if _count > 0 %}<span class="p-hero__tab-count">{{ _count }}</span>{% endif %}
+                            {% if _count > 0 %}<span class="{{ item.count == 'reports' ? 'p-group-head__badge' : 'p-hero__tab-count' }}">{{ _count }}</span>{% endif %}
                         </a>
                     {% endfor %}
                 </nav>

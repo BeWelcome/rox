@@ -1,9 +1,10 @@
 rate_limiter:
     limiters:
-        # Logins from one address, so one address can't try many accounts.
+        # Logins from one address, so one address can't try many accounts. The per-address limits are env vars
+        # (defaults in .env), so a test run whose requests all come from one address can raise them on stage.
         login_ip:
             policy: sliding_window
-            limit: 25
+            limit: '%env(int:RATE_LIMIT_LOGIN_IP)%'
             interval: '1 minute'
         # Logins for one member from all addresses, so spreading guesses over many addresses doesn't help.
         # Kept loose because anyone can use it up and lock the member out for the interval.
@@ -14,7 +15,7 @@ rate_limiter:
         # Signup form submissions from one address.
         signup_ip:
             policy: sliding_window
-            limit: 10
+            limit: '%env(int:RATE_LIMIT_SIGNUP_IP)%'
             interval: '1 hour'
         # Resent confirmation mails for one member.
         confirmation_mail:

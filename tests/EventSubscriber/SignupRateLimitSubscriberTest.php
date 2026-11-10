@@ -13,7 +13,7 @@ use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 use Twig\Environment;
 
 /**
- * Submissions of the legacy sign-up's first step are limited per address (here to 2).
+ * Submissions of the legacy sign-up's first and last step are limited per address (here to 2).
  */
 class SignupRateLimitSubscriberTest extends TestCase
 {
@@ -43,11 +43,25 @@ class SignupRateLimitSubscriberTest extends TestCase
         self::assertNull($this->submit('signup', '10.0.6.2'), 'other addresses can still sign up');
     }
 
-    public function testOnlyFirstStepSubmissionsCount(): void
+    public function testTheLastStepCountsSoItCantBeSentAlone(): void
+    {
+        // the last step creates the account from all fields in its own submission
+        self::assertNull($this->submit('signup_4', '10.0.8.1'));
+        self::assertNull($this->submit('signup_4', '10.0.8.1'));
+
+        $response = $this->submit('signup_4', '10.0.8.1');
+
+        self::assertNotNull($response, 'the third submission is answered by the limit');
+        self::assertSame(Response::HTTP_TOO_MANY_REQUESTS, $response->getStatusCode());
+    }
+
+    public function testOnlyFirstAndLastStepSubmissionsCount(): void
     {
         for ($i = 1; $i <= 5; ++$i) {
             self::assertNull($this->submit('signup_1', '10.0.7.1', 'GET'), 'showing the form does not count');
-            self::assertNull($this->submit('signup_2', '10.0.7.1'), 'the later steps do not count');
+            self::assertNull($this->submit('signup_4', '10.0.7.1', 'GET'));
+            self::assertNull($this->submit('signup_2', '10.0.7.1'), 'the steps in between do not count');
+            self::assertNull($this->submit('signup_3', '10.0.7.1'));
             self::assertNull($this->submit('members_profile', '10.0.7.1'));
         }
 

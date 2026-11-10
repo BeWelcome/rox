@@ -12,12 +12,14 @@ use Twig\Environment;
 /**
  * Limits sign-ups per address. The legacy sign-up (build/signup) asks for username, email address and password on
  * its first step: every submission of that step counts, also invalid ones, so bots trying many names from one
- * address are stopped too. Once the limit is reached the step answers 429 instead of being processed.
+ * address are stopped too. The last step counts as well: it checks the fields of all steps in its own submission
+ * and creates the account, so a bot could otherwise skip the first step. Once the limit is reached these steps
+ * answer 429 instead of being processed.
  */
 class SignupRateLimitSubscriber implements EventSubscriberInterface
 {
-    /** The legacy routes of the first step (src/Routing/LegacyLoader.php). */
-    public const FIRST_STEP_ROUTES = ['signup', 'signup_1'];
+    /** The legacy routes of the first and the last step (src/Routing/LegacyLoader.php). */
+    public const COUNTED_ROUTES = ['signup', 'signup_1', 'signup_4'];
 
     public function __construct(
         private readonly RateLimiterFactory $signupIpLimiter,
@@ -37,7 +39,7 @@ class SignupRateLimitSubscriber implements EventSubscriberInterface
         if (!$event->isMainRequest() || !$request->isMethod('POST')) {
             return;
         }
-        if (!\in_array($request->attributes->get('_route'), self::FIRST_STEP_ROUTES, true)) {
+        if (!\in_array($request->attributes->get('_route'), self::COUNTED_ROUTES, true)) {
             return;
         }
 

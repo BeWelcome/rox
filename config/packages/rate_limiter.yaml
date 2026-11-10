@@ -12,7 +12,8 @@ framework:
             policy: sliding_window
             limit: 10
             interval: '15 minutes'
-        # Submissions of the sign-up's first step (username, email address, password) from one address.
+        # Submissions of the sign-up's first step (username, email address, password) and of its last step, which
+        # creates the account, from one address.
         signup_ip:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_SIGNUP_IP)%'

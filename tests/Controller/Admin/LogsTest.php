@@ -44,13 +44,19 @@ final class LogsTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/admin/logs?' . http_build_query(['log' => ['types' => ['Group', 'Login']]]));
         self::assertSame(['zztest logged in', 'zztest joined a group'], \array_slice($this->messages($crawler), 0, 2));
-        self::assertSame(['Group', 'Login'], $crawler->filter('.c-logs__chip.is-on')->each(static fn (Crawler $chip) => $chip->text()));
+        // several types can be chosen; they apply with Show logs, not on each click
+        self::assertSame(['Group', 'Login'], $crawler->filter('.c-logs__chip input:checked')->each(static fn (Crawler $box) => $box->attr('value')));
+        self::assertCount(0, $crawler->filter('.c-logs__chip input[onchange]'));
+        self::assertCount(1, $crawler->filter('form.c-logs__filters button[type="submit"].c-logs__show'));
         self::assertCount(1, $crawler->filter('.c-cadmin__clear[href="/admin/logs"]'));
 
         $crawler = $this->client->request('GET', '/admin/logs?' . http_build_query(['log' => ['types' => ['Login'], 'username' => 'member-2']]));
         self::assertSame('zztest logged in', $this->messages($crawler)[0]);
         self::assertSame('member-2', $crawler->filter('.c-logs__person')->first()->text());
         self::assertSame('member-2', $crawler->filter('input[name="log[username]"]')->attr('value'));
+        // the member filter suggests members; picking one filters by them
+        self::assertCount(1, $crawler->filter('input#c-logs-member[name="log[username]"][data-member-suggest="submit"][aria-controls="c-logs-member_list"]'));
+        self::assertCount(1, $crawler->filter('ul#c-logs-member_list.c-member-suggest'));
         foreach ($crawler->filter('.c-logs__row .c-tag')->each(static fn (Crawler $tag) => $tag->text()) as $type) {
             self::assertSame('Login', $type);
         }

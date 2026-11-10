@@ -22,19 +22,15 @@
     </div>
 {% endmacro %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('member/autocomplete') }}
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('member/autocomplete') }}
+    {{ encore_entry_script_tags('member/suggest-fields') }}
 {% endblock %}
 
 {% block group_content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% import _self as admin %}
+    {% import '_partials/member_suggest.html.twig' as member_suggest %}
     <h2 class="u:sr-only">{{ 'groupsadministratemembers'|trans }}</h2>
 
     <div class="p-gmembers">
@@ -90,7 +86,8 @@
                 <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="p-gmembers__invite">
                     <input type="hidden" name="_token" value="{{ csrf_token('group-invite-' ~ group.id) }}">
                     <label class="u:sr-only" for="p-gmembers-username">{{ 'group.admin.members.invite.username'|trans }}</label>
-                    <input type="text" class="o-input member-autocomplete-start" id="p-gmembers-username" name="username" placeholder="{{ 'group.admin.members.invite.username'|trans }}" autocomplete="off" required>
+                    {# picking a suggested member fills the field; Invite sends it #}
+                    {{ member_suggest.input('username', '', 'p-gmembers-username', {placeholder: 'group.admin.members.invite.username'|trans, required: true}) }}
                     <button type="submit" class="p-group-btn p-group-btn--primary">{{ 'groupsinvite'|trans }}</button>
                 </form>
                 <p class="p-gmembers__hint">{{ 'group.admin.members.invite.hint'|trans }}</p>

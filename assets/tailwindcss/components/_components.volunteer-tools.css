@@ -58,7 +58,7 @@ main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 
 /* Search bar and forms */
 .c-vtools-search { display: flex; gap: 0.75rem; }
-.c-vtools-search .o-input { flex: 1; }
+.c-vtools-search .o-input, .c-vtools-search .c-member-suggest-field { flex: 1; }
 .c-vtools-form { display: flex; flex-direction: column; gap: 1.25rem; }
 .c-vtools-form .o-form-group { margin: 0; }
 .c-vtools-form__date { max-width: 16rem; }
@@ -124,3 +124,13 @@ main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 .c-cadmin-btn.c-vtools-login__expire { min-height: 2.25rem; padding: 0.3rem 0.9rem; font-size: 0.8125rem; }
 /* the mass mail form's parts inside the tool's card, which has its own padding */
 .c-vtools__card .c-massmail-form { padding: 0; }
+
+/* Forum notifications: the member search with the buttons beside it, so the suggestions open over nothing to click */
+.c-vtools-notifications { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.75rem 1rem; }
+.c-vtools-notifications__field { flex: 1 1 16rem; margin-bottom: 0; }
+/* level with the field: the label's height above the buttons */
+.c-vtools-notifications__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-top: 1.85rem; }
+@media (max-width: 575.98px) {
+  /* the buttons wrap under the field: no room for the label above them */
+  .c-vtools-notifications__actions { padding-top: 0; }
+}

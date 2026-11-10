@@ -291,8 +291,9 @@ class RightsController extends AbstractController
      */
     private function filteredRight(Member $manager, Request $request): ?Right
     {
-        $id = $request->query->getInt('right');
-        $right = 0 < $id ? $this->rightRepository->find($id) : null;
+        // "All" sends right= (empty): getInt() refuses that with a 400
+        $value = $request->query->getString('right');
+        $right = ctype_digit($value) && 0 < (int) $value ? $this->rightRepository->find((int) $value) : null;
         if (null !== $right) {
             $this->denyUnlessManaged($manager, $right);
         }

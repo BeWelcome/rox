@@ -58,6 +58,9 @@ final class AdminRightsControllerTest extends WebTestCase
         ));
 
         $crawler = $client->request('GET', '/admin/rights');
+        // the member is searched with suggestions (member/suggest)
+        self::assertCount(1, $crawler->filter('input#right_assignment_username[data-member-suggest="fill"][aria-controls="right_assignment_username_list"]'));
+        self::assertCount(1, $crawler->filter('ul#right_assignment_username_list.c-member-suggest'));
         $token = $crawler->filter('input[name="right_assignment[_token]"]')->attr('value');
         $client->request('POST', '/admin/rights', [
             'right_assignment' => [
@@ -90,6 +93,9 @@ final class AdminRightsControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/rights/list/members', ['member' => 'member-2']);
         self::assertResponseIsSuccessful();
+        // the member filter suggests members; picking one filters by them
+        self::assertCount(1, $crawler->filter('input#c-radmin-member-filter[name="member"][value="member-2"][data-member-suggest="submit"]'));
+        self::assertCount(1, $crawler->filter('ul#c-radmin-member-filter_list.c-member-suggest'));
         // the tab keeps the chosen member
         self::assertSame('/admin/rights/list/member/member-2', $crawler->filter('.p-hero__tab--active')->attr('href'));
         $row = $crawler->filter('.c-cadmin-row.is-selected');
@@ -192,6 +198,13 @@ final class AdminRightsControllerTest extends WebTestCase
 
         // By right pages the assignments
         $crawler = $client->request('GET', '/admin/rights/list/rights', ['member' => 'member-empty']);
+        self::assertCount(1, $crawler->filter('input#c-radmin-member-filter[name="member"][value="member-empty"][data-member-suggest="submit"]'));
+        self::assertCount(1, $crawler->filter('ul#c-radmin-member-filter_list.c-member-suggest'));
+        // the filter form sends right= for all rights (and both history fields when it is checked)
+        $client->request('GET', '/admin/rights/list/rights', ['member' => 'member-empty', 'right' => '', 'history' => '0']);
+        self::assertResponseIsSuccessful();
+        $client->request('GET', '/admin/rights/list/members', ['member' => 'member-empty', 'right' => '']);
+        self::assertResponseIsSuccessful();
         self::assertResponseIsSuccessful();
         self::assertCount(5, $crawler->filter('.c-radmin-table__row:not(.c-radmin-table__row--head)'));
         $crawler = $client->request('GET', '/admin/rights/list/rights', ['member' => 'member-empty', 'page' => 2]);
@@ -294,6 +307,9 @@ final class AdminRightsControllerTest extends WebTestCase
         // an empty scope is All
         $crawler = $client->request('GET', '/admin/rights/assign/member-empty');
         self::assertSame('disabled', $crawler->filter('#right_assignment_username')->attr('disabled'));
+        // a fixed member: no suggestions
+        self::assertNull($crawler->filter('#right_assignment_username')->attr('data-member-suggest'));
+        self::assertCount(0, $crawler->filter('#right_assignment_username_list'));
         $client->submit($crawler->filter('form[name="right_assignment"]')->form([
             'right_assignment[right]' => (string) $groupId,
             'right_assignment[level]' => '3',

@@ -13,18 +13,16 @@ class ForumNotificationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // a search with suggestions in the template (member/suggest)
             ->add('username', TextType::class, [
                 'label' => 'label.username',
-                'attr' => ['class' => 'member-autocomplete-start'],
                 'constraints' => [new NotBlank()],
             ])
             ->add('enable', SubmitType::class, [
                 'label' => 'admin.subscriptions.enable',
-                'attr' => ['class' => 'btn-primary'],
             ])
             ->add('disable', SubmitType::class, [
                 'label' => 'admin.subscriptions.disable',
-                'attr' => ['class' => 'btn-outline-primary'],
             ])
         ;
     }

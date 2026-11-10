@@ -227,9 +227,11 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/members/member-2');
         self::assertCount(1, $crawler->filter('#volunteer_menu a[href$="/admin/newmembers"]'));
 
+        // the forum notifications are among the volunteer tools
         $this->client->loginUser($this->member('member-3'));
         $crawler = $this->client->request('GET', '/members/member-3');
-        self::assertCount(1, $crawler->filter('#volunteer_menu a[href$="/admin/subscriptions"]'));
+        self::assertCount(1, $crawler->filter('#volunteer_menu a[href$="/admin/tools"]'));
+        self::assertCount(0, $crawler->filter('#volunteer_menu a[href$="/admin/subscriptions"]'));
     }
 
     public function testTheForumNotificationsAreSwitchedOffAndOnAgain(): void
@@ -243,6 +245,10 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $this->client->submitForm('forum_notifications[disable]', ['forum_notifications[username]' => 'member-2']);
         $this->assertResponseRedirects('/admin/subscriptions');
         self::assertSame(0, $this->notifications($member->getId()));
+        // the notice in the page names the member
+        $notice = $this->client->followRedirect()->filter('.c-inline-flash__text');
+        $off = static::getContainer()->get(TranslatorInterface::class)->trans('admin.tools.forum_notifications.off', ['username' => 'member-2']);
+        self::assertSame($off, trim($notice->text()));
 
         $this->client->request('GET', '/admin/subscriptions');
         $this->client->submitForm('forum_notifications[enable]', ['forum_notifications[username]' => 'member-2']);
@@ -256,8 +262,37 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
 
         $crawler = $this->client->submitForm('forum_notifications[disable]', ['forum_notifications[username]' => 'nobody-here']);
 
+        // as in the other volunteer tools, a form with errors comes back as 422
+        $this->assertResponseStatusCodeSame(422);
+        self::assertGreaterThan(0, $crawler->filter('.c-massmail-form__errors li')->count());
+    }
+
+    public function testTheMemberIsSearchedWithSuggestions(): void
+    {
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->client->request('GET', '/admin/subscriptions');
+
         $this->assertResponseIsSuccessful();
-        self::assertGreaterThan(0, $crawler->filter('.invalid-feedback, .form-error-message')->count());
+        $field = $crawler->filter('input#forum_notifications_username[role="combobox"][aria-controls="forum_notifications_username_list"]');
+        self::assertCount(1, $field, 'the username is a search field with suggestions');
+        self::assertCount(1, $crawler->filter('ul#forum_notifications_username_list.c-member-suggest[role="listbox"][data-loading][data-empty]'));
+        self::assertCount(1, $crawler->filter('button[name="forum_notifications[enable]"].c-cadmin-btn'));
+        self::assertCount(1, $crawler->filter('button[name="forum_notifications[disable]"].c-cadmin-btn'));
+    }
+
+    public function testTheForumNotificationsAreAVolunteerTool(): void
+    {
+        $this->client->loginUser($this->member('member-3'));
+
+        // the volunteer tools open with the one tool the right gives
+        $this->client->request('GET', '/admin/tools');
+        $this->assertResponseRedirects('/admin/subscriptions');
+        $crawler = $this->client->followRedirect();
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.c-vtools__nav a.c-vtools__item.is-active[href$="/admin/subscriptions"]'));
+        self::assertCount(1, $crawler->filter('.c-vtools-form input#forum_notifications_username'));
     }
 
     public function testTheToolNeedsTheRight(): void

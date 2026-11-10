@@ -9216,50 +9216,6 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 
 /* Member suggestions under the "Find a member" field */
 .l-hello__member-form { position: relative; }
-.l-hello__suggest {
-  position: absolute;
-  top: calc(100% + 0.4rem);
-  right: 0;
-  left: 0;
-  z-index: 30;
-  max-height: 18rem;
-  margin: 0;
-  padding: 0.35rem;
-  overflow-y: auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  background: #fff;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
-  list-style: none;
-}
-.l-hello__suggest[hidden] { display: none; }
-.l-hello__suggest-item {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.45rem 0.6rem;
-  border-radius: 0.65rem;
-  color: #334155;
-  font-size: 0.9375rem;
-  cursor: pointer;
-}
-.l-hello__suggest-item img { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; object-fit: cover; }
-.l-hello__suggest-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.l-hello__suggest-name strong { color: #0f172a; font-weight: 700; }
-.l-hello__suggest-item[aria-selected="true"] { background: #fff7ed; color: #c2410c; }
-.l-hello__suggest-item[aria-selected="true"] strong { color: #c2410c; }
-.l-hello__suggest-status { display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.75rem; color: #64748b; font-size: 0.875rem; }
-.l-hello__spinner {
-  flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid #fde6d2;
-  border-top-color: #ea7a2e;
-  border-radius: 50%;
-  animation: l-hello-spin 0.7s linear infinite;
-}
-@keyframes l-hello-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .l-hello__spinner { animation-duration: 2s; } }
 @media (max-width: 399.98px) {
   /* very small phones: the pills lose their icon so the title stays on one line */
   .l-hello__mode svg, .l-hello__mode i { display: none; }

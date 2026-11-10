@@ -3,12 +3,15 @@
  * - the tabs scroll sideways on phones;
  * - a remove button (data-remove: the dialog's id) fills the remove dialog with its URL and question, then opens it;
  * - the filters (data-autosubmit) apply when a select or checkbox changes;
- * - the assign form shows the chosen right's description under it.
+ * - the assign form shows the chosen right's description under it;
+ * - the member field of the assign form suggests members (member/suggest).
  */
 import MicroModal from 'micromodal';
 import {initTabsScrollers} from '../tabs-scroller';
+import {initMemberSuggestFields} from '../member/suggest';
 
 initTabsScrollers();
+initMemberSuggestFields();
 MicroModal.init({ awaitCloseAnimation: true });
 
 document.querySelectorAll('[data-remove]').forEach((button) => {

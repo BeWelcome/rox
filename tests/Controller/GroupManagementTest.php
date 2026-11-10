@@ -108,6 +108,9 @@ final class GroupManagementTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->url('/memberadministration'));
 
         self::assertResponseIsSuccessful();
+        // inviting: the username suggests members, picking one only fills the field
+        self::assertCount(1, $crawler->filter('.p-gmembers__invite input#p-gmembers-username[name="username"][required][data-member-suggest="fill"]'));
+        self::assertCount(1, $crawler->filter('ul#p-gmembers-username_list.c-member-suggest'));
         $request = $crawler->filter('.p-gmembers__requests .p-gmembers__row');
         self::assertCount(1, $request);
         self::assertSame('member-5', $request->filter('.p-gmembers__name')->text());
@@ -127,7 +130,6 @@ final class GroupManagementTest extends WebTestCase
         );
 
         self::assertSame('member-3', $crawler->filter('#p-gmembers-invited')->closest('section')->filter('.p-gmembers__name')->text());
-        self::assertCount(1, $crawler->filter('.p-gmembers__invite input.member-autocomplete-start[name="username"]'));
     }
 
     public function testAnAdminKicksBansAndPromotesMembers(): void

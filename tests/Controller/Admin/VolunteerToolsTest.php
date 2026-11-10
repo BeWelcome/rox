@@ -138,6 +138,9 @@ final class VolunteerToolsTest extends WebTestCase
         $this->volunteer('SafetyTeam');
 
         $crawler = $this->client->request('GET', '/admin/tools/messages/member');
+        // the member is searched with suggestions; picking one looks them up
+        self::assertCount(1, $crawler->filter('input#form_username[data-member-suggest="submit"][aria-controls="form_username_list"]'));
+        self::assertCount(1, $crawler->filter('ul#form_username_list.c-member-suggest'));
         $crawler = $this->client->submit($crawler->filter('form[name="form"]')->form(['form[username]' => 'member-5']));
 
         self::assertResponseIsSuccessful();

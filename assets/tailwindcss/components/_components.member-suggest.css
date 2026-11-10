@@ -1,0 +1,60 @@
+/*
+ * Member suggestions under a username field (assets/js/member/suggest.js): the "Find a member" search of the home
+ * page and the volunteer pages that need a member. The field's wrapper is .c-member-suggest-field (or another
+ * positioned element): the list opens under it.
+ */
+.c-member-suggest-field { position: relative; }
+/* with a user icon in the field */
+.c-member-suggest-field__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  color: #94a3b8;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.c-member-suggest-field--icon .o-input { padding-left: 2.4rem; }
+.c-member-suggest {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+  z-index: 30;
+  max-height: 18rem;
+  margin: 0;
+  padding: 0.35rem;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
+  list-style: none;
+}
+.c-member-suggest[hidden] { display: none; }
+.c-member-suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.65rem;
+  color: #334155;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+.c-member-suggest__item img { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; object-fit: cover; }
+.c-member-suggest__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-member-suggest__name strong { color: #0f172a; font-weight: 700; }
+.c-member-suggest__item[aria-selected="true"] { background: #fff7ed; color: #c2410c; }
+.c-member-suggest__item[aria-selected="true"] strong { color: #c2410c; }
+.c-member-suggest__status { display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.75rem; color: #64748b; font-size: 0.875rem; }
+.c-member-suggest__spinner {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #fde6d2;
+  border-top-color: #ea7a2e;
+  border-radius: 50%;
+  animation: c-member-suggest-spin 0.7s linear infinite;
+}
+@keyframes c-member-suggest-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .c-member-suggest__spinner { animation-duration: 2s; } }

@@ -1,0 +1,62 @@
+{#
+  Username fields that suggest members while typing (assets/js/member/suggest.js, initMemberSuggestFields).
+  The page loads the script: the entry member/suggest-fields, or a script of its own that calls it.
+
+  field(field, options): a form's username field; a disabled one (a member fixed by the page) stays a plain input.
+  input(name, value, id, options): a plain input, e.g. of a filter form sent with GET.
+  options:
+    placeholder  the translated placeholder
+    label        the translated aria-label, for a field without a label of its own
+    submit       true: picking a member sends the form (a look-up, a filter); otherwise it only fills the field
+    icon         true: a user icon in the field
+    class        classes of the wrapper, e.g. to size it in a row of filters
+    required     input only: the field must be filled
+#}
+
+{% macro field(field, options = {}) %}
+  {% set _id = field.vars.id %}
+  {% set _attr = {class: 'o-input'} %}
+  {% if options.placeholder ?? false %}{% set _attr = _attr|merge({placeholder: options.placeholder}) %}{% endif %}
+  {% if options.label ?? false %}{% set _attr = _attr|merge({'aria-label': options.label}) %}{% endif %}
+  {{ _self._open(options) }}
+    {% if field.vars.disabled %}
+      {{ form_widget(field, {attr: _attr}) }}
+    {% else %}
+      {{ form_widget(field, {attr: _attr|merge({
+        autocomplete: 'off',
+        role: 'combobox',
+        'aria-autocomplete': 'list',
+        'aria-expanded': 'false',
+        'aria-controls': _id ~ '_list',
+        'data-member-suggest': (options.submit ?? false) ? 'submit' : 'fill',
+      })}) }}
+      {{ _self._list(_id) }}
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro input(name, value, id, options = {}) %}
+  {{ _self._open(options) }}
+    <input type="search" name="{{ name }}" id="{{ id }}" class="o-input" value="{{ value }}"
+      {%- if options.placeholder ?? false %} placeholder="{{ options.placeholder }}"{% endif %}
+      {%- if options.label ?? false %} aria-label="{{ options.label }}"{% endif %}
+      {%- if options.required ?? false %} required{% endif %}
+      autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="{{ id }}_list"
+      data-member-suggest="{{ (options.submit ?? false) ? 'submit' : 'fill' }}">
+    {{ _self._list(id) }}
+  </div>
+{% endmacro %}
+
+{# The wrapper (closed by the caller) with the optional icon #}
+{% macro _open(options) %}
+  {% set _icon = options.icon ?? false %}
+  <div class="c-member-suggest-field{{ _icon ? ' c-member-suggest-field--icon' }}{{ (options.class ?? false) ? ' ' ~ options.class }}">
+    {% if _icon %}<i class="fas fa-user c-member-suggest-field__icon" aria-hidden="true"></i>{% endif %}
+{% endmacro %}
+
+{# The list of suggestions under the field #}
+{% macro _list(id) %}
+  <ul class="c-member-suggest" id="{{ id }}_list" role="listbox" hidden
+      data-loading="{{ 'member.suggest.searching'|trans }}"
+      data-empty="{{ 'select.no.results'|trans }}"></ul>
+{% endmacro %}

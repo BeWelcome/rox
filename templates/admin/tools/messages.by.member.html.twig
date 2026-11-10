@@ -1,5 +1,6 @@
 {% extends 'admin/tools/_layout.html.twig' %}
 {% import 'admin/tools/_macros.html.twig' as vt %}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
 {#
   results: per correspondent the kinds (type: 1 message, 2 invitation, 4 stay request) and the direction (1 received,
   2 sent) with the last of each (Admin\VolunteerToolController::correspondents).
@@ -7,16 +8,13 @@
 {% set _kinds = {1: ['envelope', 'admin.tools.messages_by_member.message'], 4: ['house-user', 'admin.tools.messages_by_member.request'], 2: ['route', 'admin.tools.messages_by_member.invitation']} %}
 
 {% block javascripts %}
-  {{ encore_entry_script_tags('member/autocomplete') }}
+  {{ encore_entry_script_tags('member/suggest-fields') }}
 {% endblock javascripts %}
-
-{% block stylesheets %}
-  {{ encore_entry_link_tags('member/autocomplete') }}
-{% endblock stylesheets %}
 
 {% block tool %}
   {{ form_start(form, {attr: {class: 'c-vtools-search', novalidate: 'novalidate'}}) }}
-    {{ form_widget(form.username, {attr: form.username.vars.attr|merge({class: 'o-input member-autocomplete', 'aria-label': 'admin.tools.username'|trans, placeholder: 'admin.tools.username'|trans})}) }}
+    {# picking a member looks them up #}
+    {{ member_suggest.field(form.username, {label: 'admin.tools.username'|trans, placeholder: 'admin.tools.username'|trans, submit: true, icon: true}) }}
     <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.tools.messages_by_member.look.up'|trans }}</button>
   {{ form_end(form) }}
   {% for error in form.username.vars.errors %}<p class="c-massmail-form__errors">{{ error.message|trans }}</p>{% endfor %}

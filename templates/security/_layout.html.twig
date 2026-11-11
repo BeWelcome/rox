@@ -1,0 +1,83 @@
+{#
+  The pages to log in and to get a new password, in the front page's look: the visitors' top bar, the form on the
+  left with an eyebrow, title and subtitle, a photo of the front page on the right (hidden on small screens).
+  Blocks: title, eyebrow, heading, subtitle, messages (errors above the form), form, switch (the line under the form),
+  javascripts. The translators' previews show the page's main.
+#}
+<!doctype html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96"/>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
+    <meta name="apple-mobile-web-app-title" content="beWelcome"/>
+
+    <title>{% block title %}{% endblock %} | BeWelcome</title>
+
+    <meta name="description" content="{{ 'default_meta_description' | trans }}">
+    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
+    <meta name="robots" content="{{ 'robots' | trans }}">
+
+    {% include 'webpreview.html.twig' %}
+
+    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('tailwind') }}
+
+    <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
+            });
+        }
+    </script>
+  {% include '_canonical.html.twig' %}
+  {% include '_analytics.html.twig' %}
+</head>
+<body class="p-login__body">
+{% include 'home/_top.html.twig' %}
+
+{% block content %}
+<main role="main" class="p-login">
+    <div class="p-login__wrap">
+        <noscript>
+            <div class="p-login__message p-login__message--error">You need to activate Javascript for bewelcome.org. Without it some functions won't work.</div>
+        </noscript>
+
+        {# errors in red, the other notices in orange #}
+        {% for label, messages in app.flashes|filter((messages, label) => label != 'plausible_event') %}
+            {% for message in messages %}
+                <div class="p-login__message p-login__message--{{ label in ['error', 'danger'] ? 'error' : 'notice' }}" role="{{ label in ['error', 'danger'] ? 'alert' : 'status' }}">{{ message | trans }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="p-login__grid">
+            <div class="p-login__content">
+                <p class="p-login__eyebrow">{% block eyebrow %}{% endblock %}</p>
+                <h1 class="p-login__title">{% block heading %}{% endblock %}</h1>
+                <p class="p-login__subtitle">{% block subtitle %}{% endblock %}</p>
+
+                {% block messages %}{% endblock %}
+                {% block form %}{% endblock %}
+
+                <p class="p-login__switch">{% block switch %}{% endblock %}</p>
+            </div>
+            <img class="p-login__photo" src="{{ asset('images/homepicture-big-1.jpg') }}" alt="" loading="lazy">
+        </div>
+    </div>
+</main>
+{% endblock content %}
+
+{% include 'footer.html.twig' with {footer_on_mobile: true} %}
+
+{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('password/showhide') }}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

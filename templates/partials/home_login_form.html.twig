@@ -1,30 +1,38 @@
-<form class="home-login-form" method="post" action="{{ url('security_check') }}" id="home-login-form">
-    <div class="home-login-field">
-        <label class="home-login-field__label" for="home_login_username">{{ 'login.username.or.email' | trans }}</label>
-        <input class="home-login-field__input" type="text" id="home_login_username" name="_username"
-               autocomplete="username" required
-               inputmode="email"
-               placeholder="{{ 'username' | trans }}">
+{#
+  The login form of the front page's panel and of the login page (c-login-form), so both log in the same way.
+  Included with only:
+  form_id, prefix: the ids of the form and of its fields (prefix ~ 'username', ...)
+  last_username:   the username to fill in (after a failed login)
+  autofocus:       the username field gets the focus
+  placeholders:    show placeholders in the fields (the panel)
+#}
+{% set _form_id = form_id ?? 'home-login-form' %}
+{% set _prefix = prefix ?? 'home_login_' %}
+<form class="c-login-form" method="post" action="{{ url('security_check') }}" id="{{ _form_id }}">
+    <div class="c-login-form__field">
+        <label class="c-login-form__label" for="{{ _prefix }}username">{{ 'login.username.or.email' | trans }}</label>
+        <input class="c-login-form__input" type="text" id="{{ _prefix }}username" name="_username"
+               autocomplete="username" required inputmode="email"
+               value="{{ last_username ?? '' }}"
+               {%- if autofocus ?? false %} autofocus{% endif %}
+               {%- if placeholders ?? false %} placeholder="{{ 'username' | trans }}"{% endif %}>
     </div>
-    <div class="home-login-field home-login-field--password">
-        <label class="home-login-field__label" for="home_login_password">{{ 'password' | trans }}</label>
-        <div class="home-login-field__password-wrap">
-            <input class="home-login-field__input js-password-input" type="password" id="home_login_password" name="_password"
+    <div class="c-login-form__field">
+        <label class="c-login-form__label" for="{{ _prefix }}password">{{ 'password' | trans }}</label>
+        <div class="c-login-form__password">
+            <input class="c-login-form__input js-password-input" type="password" id="{{ _prefix }}password" name="_password"
                    autocomplete="current-password" required
-                   placeholder="{{ 'login.password' | trans }}">
-            <button type="button" class="home-login-field__toggle js-password-show-hide"
-                    aria-label="{{ 'password' | trans }}">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-            </button>
+                   {%- if placeholders ?? false %} placeholder="{{ 'login.password' | trans }}"{% endif %}>
+            {% include 'partials/_password_toggle.html.twig' %}
         </div>
     </div>
-    <div class="home-login-field home-login-field--row d-flex align-items-center">
-        <input type="checkbox" class="home-login-field__checkbox me-2" id="home_login_remember" name="_remember_me" value="1">
-        <label class="home-login-field__remember mb-0" for="home_login_remember">{{ 'stayloggedin' | trans }}</label>
+    <div class="c-login-form__row">
+        <label class="c-login-form__remember" for="{{ _prefix }}remember">
+            <input type="checkbox" class="c-login-form__checkbox" id="{{ _prefix }}remember" name="_remember_me" value="1">
+            {{ 'stayloggedin' | trans }}
+        </label>
+        <a class="c-login-form__forgot" href="{{ url('member_request_reset_password') }}">{{ 'login.forgot.password' | trans }}</a>
     </div>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    <button type="submit" class="btn home-login-form__submit">{{ 'indexpageloginsubmit' | trans }}</button>
+    <button type="submit" class="c-login-form__submit">{{ 'indexpageloginsubmit' | trans }}</button>
 </form>

@@ -28,6 +28,6 @@ class RateLimiterConfigTest extends TestCase
         $env = (new Dotenv())->parse((string) file_get_contents(\dirname(__DIR__, 2) . '/.env'));
 
         self::assertSame('25', $env['RATE_LIMIT_LOGIN_IP']);
-        self::assertSame('10', $env['RATE_LIMIT_SIGNUP_IP']);
+        self::assertSame('20', $env['RATE_LIMIT_SIGNUP_IP']);
     }
 }

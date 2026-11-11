@@ -10,6 +10,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
@@ -81,18 +82,23 @@ class SignupController extends AbstractController
      *
      * @return Response
      */
-    public function resendConfirmationEmail(Member $member, AuthenticationUtils $helper, Mailer $mailer)
-    {
+    public function resendConfirmationEmail(
+        Member $member,
+        AuthenticationUtils $helper,
+        Mailer $mailer,
+        RateLimiterFactory $confirmationMailLimiter
+    ) {
+        // The route loads the member by username (404 for unknown ones).
         $username = $member->getUsername();
         if ($helper->getLastUsername() !== $username) {
             throw $this->createAccessDeniedException();
         }
 
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
-        /** @var Member $member */
-        $member = $memberRepository->findOneBy(['username' => $username]);
-        if (!$member) {
-            throw $this->createAccessDeniedException();
+        // Each visit sends a mail: limit how many reach the member's inbox.
+        if (!$confirmationMailLimiter->create('member-' . $member->getId())->consume()->isAccepted()) {
+            $this->addFlash('error', $this->getTranslator()->trans('flash.signup.resend.too.many'));
+
+            return $this->redirectToRoute('members_profile', ['username' => $username]);
         }
 
         $subject = $this->getTranslator()->trans('signup.confirm.email');

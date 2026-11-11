@@ -1,0 +1,13 @@
+{% extends 'base-lite.html.twig' %}
+
+{% block title %}
+BeWelcome - {{ 'signup' | trans }}
+{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-lg-6 mb-3">
+            <div class="alert alert-danger" role="alert">{{ 'signup.error.too.many' | trans }}</div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,18 @@
+{#
+  The amounts of the donation pages. Money holds '', 'EUR', '€' (also garbled) or '$' for older donations: only
+  dollars are told apart, everything else is in euros.
+#}
+
+{% macro currency(donation) %}{{ donation.money in ['$', 'USD'] ? 'USD' : 'EUR' }}{% endmacro %}
+
+{# An amount of a donation, with cents #}
+{% macro amount(donation) %}{{ donation.amount|format_currency(_self.currency(donation)|trim) }}{% endmacro %}
+
+{# A sum in whole euros: campaign goals and totals #}
+{% macro euros(value) %}{{ (value ?? 0)|format_currency('EUR', {fraction_digit: 0}) }}{% endmacro %}
+
+{# The share of a goal in percent, 0 to 100 #}
+{% macro percent(value, goal) %}{{ goal > 0 ? min(100, ((value ?? 0) / goal * 100)|round) : 0 }}{% endmacro %}
+
+{# The country of a donation (in the language of the page: Gedmo translates the name), or — #}
+{% macro country(donation) %}{{ donation.country ? donation.country.name : '—' }}{% endmacro %}

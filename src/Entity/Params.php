@@ -60,7 +60,7 @@ class Params
     /**
      * @var string
      */
-    #[ORM\Column(name: 'MailToNotifyWhenMemberSignup', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'MailToNotifyWhenNewMemberSignup', type: 'text', length: 65535, nullable: false)]
     private $mailtonotifywhenMembersignup;
 
     /**

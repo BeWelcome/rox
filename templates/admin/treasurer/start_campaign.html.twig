@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'admin/massmail/_form_theme.html.twig' %}
+
+{% block title %}{{ 'admin.treasurer.campaign.start'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ 'admin.treasurer.campaign.start' | trans }}</h1>
+  <div class="c-donate c-treasurer c-treasurer--campaign">
+    <a class="c-page-head__back" href="{{ path('admin_treasurer_overview') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'admin.treasurer.overview'|trans }}</a>
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ 'admin.treasurer.overview'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.treasurer.campaign.start'|trans }}</h1>
+      </div>
+    </div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-primary">{{ 'button.start' | trans }}</button>
-    <a href="{{ path('admin_treasurer_overview') }}" class="btn btn-secondary">{{ 'button.cancel' | trans }}</a>
+    {{ form_start(form, {attr: {class: 'c-home-card', novalidate: 'novalidate'}}) }}
+      <div class="c-treasurer-form">
+        {{ form_errors(form) }}
+        {{ form_row(form.neededperyear, {attr: {class: 'o-input', min: 0}}) }}
+        {{ form_row(form.campaignstartdate, {attr: {class: 'o-input'}}) }}
+      </div>
+      <div class="c-donate-next c-treasurer-form__strip">
+        <p class="c-donate-next__text">{{ 'admin.treasurer.campaign.start.hint'|trans }}</p>
+        <div class="c-donate-next__actions">
+          <a class="o-button o-button--outline-gray" href="{{ path('admin_treasurer_overview') }}">{{ 'cancel'|trans }}</a>
+          <button type="submit" class="o-button"><i class="fas fa-play" aria-hidden="true"></i>{{ 'admin.treasurer.campaign.start.button'|trans }}</button>
+        </div>
+      </div>
     {{ form_end(form) }}
-{% endblock %}
+  </div>
+{% endblock content %}

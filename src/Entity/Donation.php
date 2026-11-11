@@ -1,106 +1,71 @@
 <?php
 
-/*
- * @codingStandardsIgnoreFile
- *
- * Auto generated file ignore for Code Sniffer
- */
-
 namespace App\Entity;
 
 use App\Repository\DonationRepository;
 use Carbon\Carbon;
 use DateTime;
+use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD.
- *
- * @SuppressWarnings("PHPMD")
+ * A donation: made through PayPal on the donation page, or added by the treasurer (bank transfers, HelloAsso, ...).
+ * The donor is a member, a name or unknown. Version20261111100000 filled the table from main's `donations`, the ids
+ * kept.
  */
-#[ORM\Table(name: 'donations')]
+#[ORM\Table(name: 'donation')]
+#[ORM\Index(name: 'donation_created_idx', columns: ['created'])]
 #[ORM\Entity(repositoryClass: DonationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Donation
 {
-    /**
-     * @var Member
-     */
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Member::class)]
-    private $donor;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'Email', type: 'text', length: 255, nullable: false)]
-    private $email;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'StatusPrivate', type: 'string', nullable: false)]
-    private $statusPrivate = 'showamountonly';
-
-    /**
-     * @var DateTime
-     */
-    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private $created;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'Amount', type: 'decimal', precision: 10, scale: 2, nullable: false)]
-    private $amount;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'Money', type: 'string', length: 10, nullable: false)]
-    private $money;
-
-    #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geoname_id')]
-    #[ORM\ManyToOne(targetEntity: Location::class)]
-    private ?Location $country = null;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'namegiven', type: 'text', length: 65535, nullable: false)]
-    private $nameGiven;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'referencepaypal', type: 'text', length: 65535, nullable: false)]
-    private $referencePaypal;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'membercomment', type: 'text', length: 65535, nullable: false)]
-    private $memberComment;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'SystemComment', type: 'text', length: 65535, nullable: false)]
-    private $systemComment;
-
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $id = null;
 
-    public function setDonor($donor): self
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Member $donor = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $email = '';
+
+    /** showamountonly: the public list shows the amount, not the donor */
+    #[ORM\Column(type: Types::STRING, length: 20)]
+    private string $statusPrivate = 'showamountonly';
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?DateTimeInterface $created = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $amount = null;
+
+    /** The currency as given: EUR, € or $ (older donations), or empty */
+    #[ORM\Column(type: Types::STRING, length: 10)]
+    private string $money = 'EUR';
+
+    #[ORM\ManyToOne(targetEntity: Location::class)]
+    #[ORM\JoinColumn(referencedColumnName: 'geoname_id')]
+    private ?Location $country = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $nameGiven = '';
+
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $referencePaypal = '';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $memberComment = '';
+
+    /** Shown in the public list of donations */
+    #[ORM\Column(type: Types::TEXT)]
+    private string $systemComment = '';
+
+    public function getId(): ?int
     {
-        $this->donor = $donor;
-
-        return $this;
+        return $this->id;
     }
 
     public function getDonor(): ?Member
@@ -108,9 +73,9 @@ class Donation
         return $this->donor;
     }
 
-    public function setEmail($email): self
+    public function setDonor(?Member $donor): self
     {
-        $this->email = $email;
+        $this->donor = $donor;
 
         return $this;
     }
@@ -120,9 +85,9 @@ class Donation
         return $this->email;
     }
 
-    public function setStatusPrivate($statusPrivate): self
+    public function setEmail(string $email): self
     {
-        $this->statusPrivate = $statusPrivate;
+        $this->email = $email;
 
         return $this;
     }
@@ -132,33 +97,33 @@ class Donation
         return $this->statusPrivate;
     }
 
-    public function setCreated($created): self
+    public function setStatusPrivate(string $statusPrivate): self
+    {
+        $this->statusPrivate = $statusPrivate;
+
+        return $this;
+    }
+
+    public function getCreated(): ?Carbon
+    {
+        return null === $this->created ? null : Carbon::instance($this->created);
+    }
+
+    public function setCreated(?DateTimeInterface $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getCreated(): Carbon
-    {
-        return Carbon::instance($this->created);
-    }
-
-    public function setAmount(string $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getAmount(): string
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setMoney(string $money): self
+    public function setAmount(?string $amount): self
     {
-        $this->money = $money;
+        $this->amount = $amount;
 
         return $this;
     }
@@ -168,9 +133,9 @@ class Donation
         return $this->money;
     }
 
-    public function setCountry($country): self
+    public function setMoney(string $money): self
     {
-        $this->country = $country;
+        $this->money = $money;
 
         return $this;
     }
@@ -180,9 +145,9 @@ class Donation
         return $this->country;
     }
 
-    public function setNameGiven($nameGiven): self
+    public function setCountry(?Location $country): self
     {
-        $this->nameGiven = $nameGiven;
+        $this->country = $country;
 
         return $this;
     }
@@ -192,9 +157,9 @@ class Donation
         return $this->nameGiven;
     }
 
-    public function setReferencePaypal($referencePaypal): self
+    public function setNameGiven(string $nameGiven): self
     {
-        $this->referencePaypal = $referencePaypal;
+        $this->nameGiven = $nameGiven;
 
         return $this;
     }
@@ -204,9 +169,9 @@ class Donation
         return $this->referencePaypal;
     }
 
-    public function setMemberComment($memberComment): self
+    public function setReferencePaypal(string $referencePaypal): self
     {
-        $this->memberComment = $memberComment;
+        $this->referencePaypal = $referencePaypal;
 
         return $this;
     }
@@ -216,9 +181,9 @@ class Donation
         return $this->memberComment;
     }
 
-    public function setSystemComment($systemComment): self
+    public function setMemberComment(string $memberComment): self
     {
-        $this->systemComment = $systemComment;
+        $this->memberComment = $memberComment;
 
         return $this;
     }
@@ -228,17 +193,19 @@ class Donation
         return $this->systemComment;
     }
 
-    public function getId(): ?int
+    public function setSystemComment(string $systemComment): self
     {
-        return $this->id;
+        $this->systemComment = $systemComment;
+
+        return $this;
     }
 
     /**
-     * Triggered on insert.
+     * A donation added by the treasurer keeps the day they entered; one through PayPal gets the time it came in.
      */
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created ??= new DateTime();
     }
 }

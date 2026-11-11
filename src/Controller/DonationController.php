@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Donation;
 use App\Entity\Member;
+use App\Entity\Params;
+use App\Model\DonateModel;
 use App\Model\DonationModel;
 use App\Repository\DonationRepository;
 use App\Utilities\TranslatedFlashTrait;
@@ -29,7 +31,7 @@ class DonationController extends AbstractController
     private const string DONATION_ANALYTICS = 'donation_analytics';
 
     #[Route(path: '/donations', name: 'donations')]
-    public function overview(Request $request): Response
+    public function overview(Request $request, EntityManagerInterface $entityManager, DonateModel $donateModel): Response
     {
         $nanoIdClient = new Client();
         $nanoId = $nanoIdClient->generateId();
@@ -40,7 +42,17 @@ class DonationController extends AbstractController
         }
         $session->set(self::PAYPAL_NONCE, $nanoId);
 
-        return $this->render('donation/overview.html.twig', ['nonce' => $nanoId]);
+        /** @var DonationRepository $donationRepository */
+        $donationRepository = $entityManager->getRepository(Donation::class);
+        $recentDonations = $donationRepository->getDonationListQuery()->setMaxResults(4)->getResult();
+
+        return $this->render('donation/overview.html.twig', [
+            'nonce' => $nanoId,
+            // the progress of the campaign, shown while the treasurer runs one
+            'params' => $entityManager->getRepository(Params::class)->findOneBy([]),
+            'stats' => $donateModel->getStatForDonations(),
+            'recent_donations' => $recentDonations,
+        ]);
     }
 
     #[Route(path: '/donation/finish', name: 'finish_donation', methods: ['POST'])]
@@ -106,16 +118,9 @@ class DonationController extends AbstractController
         $donations->setMaxPerPage(50);
         $donations->setCurrentPage($page);
 
-        $member = $this->getUser();
-        $isTreasurer = false;
-        if (null !== $member) {
-            $roles = $member->getRoles();
-            $isTreasurer = \in_array(Member::ROLE_ADMIN_TREASURER, $roles, true);
-        }
-
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
-            'isTreasurer' => $isTreasurer,
+            'isTreasurer' => $this->isGranted(Member::ROLE_ADMIN_TREASURER),
         ]);
     }
 

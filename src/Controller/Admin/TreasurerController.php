@@ -7,14 +7,23 @@ use App\Entity\Member;
 use App\Form\Admin\CampaignType;
 use App\Form\Admin\DonationType;
 use App\Model\Admin\TreasurerModel;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted(Member::ROLE_ADMIN_TREASURER)]
 class TreasurerController extends AbstractController
 {
+    use TranslatedFlashTrait;
+    use TranslatorTrait;
+
     public function __construct(
         private readonly TreasurerModel $treasurerModel,
         private readonly EntityManagerInterface $entityManager,
@@ -24,10 +33,6 @@ class TreasurerController extends AbstractController
     #[Route('/admin/treasurer', name: 'admin_treasurer_overview')]
     public function overview(Request $request): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-            throw $this->createAccessDeniedException('You need to have Treasurer right to access this.');
-        }
-
         $page = $request->query->getInt('page', 1);
         $donations = $this->treasurerModel->getRecentDonations($page);
         $stats = $this->treasurerModel->getStatForDonations();
@@ -44,12 +49,9 @@ class TreasurerController extends AbstractController
     #[Route('/admin/treasurer/add', name: 'admin_treasurer_donation_add')]
     public function editDonation(Request $request, ?Donation $donation = null): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-            throw $this->createAccessDeniedException();
-        }
-
         if (!$donation) {
             $donation = new Donation();
+            $donation->setCreated(new DateTime('today'));
         }
 
         $form = $this->createForm(DonationType::class, $donation);
@@ -59,7 +61,7 @@ class TreasurerController extends AbstractController
             $this->entityManager->persist($donation);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'Donation saved.');
+            $this->addTranslatedFlash('notice', 'admin.treasurer.donation.saved');
 
             return $this->redirectToRoute('admin_treasurer_overview');
         }
@@ -73,10 +75,6 @@ class TreasurerController extends AbstractController
     #[Route('/admin/treasurer/campaign/start', name: 'admin_treasurer_campaign_start')]
     public function startCampaign(Request $request): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-            throw $this->createAccessDeniedException();
-        }
-
         $params = $this->treasurerModel->getDonationCampaignValues();
         if (!$params) {
             throw $this->createNotFoundException('Params not found');
@@ -87,7 +85,7 @@ class TreasurerController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->treasurerModel->startDonationCampaign($params);
-            $this->addFlash('success', 'Campaign started.');
+            $this->addTranslatedFlash('notice', 'admin.treasurer.campaign.started');
 
             return $this->redirectToRoute('admin_treasurer_overview');
         }
@@ -97,15 +95,12 @@ class TreasurerController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/treasurer/campaign/stop', name: 'admin_treasurer_campaign_stop')]
+    #[Route('/admin/treasurer/campaign/stop', name: 'admin_treasurer_campaign_stop', methods: ['POST'])]
+    #[IsCsrfTokenValid('treasurer_campaign_stop')]
     public function stopCampaign(): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-            throw $this->createAccessDeniedException();
-        }
-
         $this->treasurerModel->stopDonationCampaign();
-        $this->addFlash('success', 'Campaign stopped.');
+        $this->addTranslatedFlash('notice', 'admin.treasurer.campaign.stopped');
 
         return $this->redirectToRoute('admin_treasurer_overview');
     }

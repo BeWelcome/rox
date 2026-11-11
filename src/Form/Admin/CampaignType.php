@@ -15,11 +15,13 @@ class CampaignType extends AbstractType
     {
         $builder
             ->add('neededperyear', IntegerType::class, [
-                'label' => 'Needed per year',
+                'label' => 'admin.treasurer.campaign.needed',
+                'help' => 'admin.treasurer.campaign.needed.help',
             ])
             ->add('campaignstartdate', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Start Date',
+                'label' => 'admin.treasurer.campaign.start.date',
+                'help' => 'admin.treasurer.campaign.start.date.help',
             ])
         ;
     }

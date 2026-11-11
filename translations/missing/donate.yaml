@@ -28,3 +28,51 @@ donations.recent.text:
     - We provide a list recent donations.
 donations.recent.link:
     - Recent donations
+donations.none:
+    - 'No donations yet.'
+    - Donation page and list of donations, when there are none
+donate.eyebrow:
+    - 'Support BeWelcome'
+    - Donation page, small orange title above the headline
+donate.lead:
+    - 'BeWelcome is free, has no ads and is run by volunteers. The costs for servers and the association are paid by donations from members like you.'
+    - Donation page, the text under the headline
+donate.campaign.since:
+    - 'Donated since {date}'
+    - Donation page, progress of the donation campaign; {date} is the day the campaign counts from
+donate.campaign.needed:
+    - 'of {amount} needed'
+    - Donation page, after the donated amount; {amount} is the goal of the year
+donate.campaign.monthly:
+    - 'We need about {amount} a month to keep BeWelcome running. Every amount helps.'
+    - Donation page, under the progress bar; {amount} is the monthly need
+donate.account.holder:
+    - 'Account holder'
+    - Donation page, bank transfer tab, label of the account holder
+donate.account.iban:
+    - 'IBAN'
+    - Donation page, bank transfer tab, label of the account number
+donate.account.bic:
+    - 'BIC'
+    - Donation page, bank transfer tab, label of the bank code
+donate.account.reference:
+    - 'Reference'
+    - Donation page, bank transfer tab, label of the text to give with the transfer
+donate.account.reference.value:
+    - 'Donation {username}'
+    - Donation page, bank transfer tab, the text to give with the transfer; {username} is the member's username
+donate.hello.asso.button:
+    - 'Donate with HelloAsso'
+    - Donation page, HelloAsso tab, button that opens HelloAsso
+donate.time.button:
+    - 'Get active'
+    - Donation page, volunteer tab, button that opens the page about volunteering
+donations.recent.all:
+    - 'See all'
+    - Donation page, link from the recent donations to the list of all donations
+donations.treasurer.only:
+    - 'Treasurer only'
+    - List of donations, heading of the column only the treasurer sees
+donations.list.showing:
+    - 'Showing {from}–{to} of {total}'
+    - List of donations, under the table; {from} and {to} are the first and last donation of the page, {total} all donations

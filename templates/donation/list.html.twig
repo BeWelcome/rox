@@ -1,45 +1,60 @@
 {% extends 'base.html.twig' %}
+{% import 'donation/_macros.html.twig' as money %}
 
-{% block title %}BeWelcome - Donate{% endblock %}
+{% block title %}{{ 'donations.recent'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ 'donations'|trans }}</h1>
-    <div class="row">
-        <div class="col-12">{{ 'donationpubliclistsummary'|trans }}</div>
-        <div class="col-12">
-        {% if donations.nbResults != 0 %}
-            {% if donations.haveToPaginate %}
-                {{ pagerfanta(donations, 'rounded_pagination_end') }}
-            {% endif %}
-            <table class="table table-striped table-responsive">
-            <tr>
-                <th>{{ 'datedonation'|trans }}</th>
-                <th>{{ 'amountdonation'|trans }}</th>
-                <th>{{ 'commentdonation'|trans }}</th>
-                <th>{{ 'placedonation'|trans }}</th>
-                {% if isTreasurer %}
-                    <th>For treasurer eyes only</th>
-                {% endif %}
-            </tr>
-            {% for donation in donations %}
-                <tr>
-                    <td>{{ donation.created|format_date('short') }}</td>
-                    <td>{{donation.money }} {{ donation.amount|format('%3.2f') }}</td>
-                    <td>{{ donation.systemComment }}</td>
-                    <td>{% if not donation.country is null %}{{ donation.country.name }}{% endif %}</td>
-                    {% if isTreasurer %}
-                        <td>{% if not donation.donor is null %}{{ donation.donor.username }}{% endif %}
-                            {% if not donation.referencePaypal is null %}{{ donation.referencePaypal }}{% endif %}</td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </table>
-            {% if donations.haveToPaginate %}
-                {{ pagerfanta(donations, 'rounded_pagination_end') }}
-            {% endif %}
-        {% else %}
-            {{ 'donations.none'|trans }}
-        {% endif %}
-        </div>
+  <div class="c-donate">
+    <a class="c-page-head__back" href="{{ path('donations') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'donations'|trans }}</a>
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <h1 class="c-page-head__title">{{ 'donations.recent'|trans }}</h1>
+        <p class="c-donate__lead">{{ 'donationpubliclistsummary'|trans }}</p>
+      </div>
     </div>
-{% endblock %}
+
+    <section class="c-home-card">
+      {% if donations.nbResults == 0 %}
+        <p class="c-donate-table__empty">{{ 'donations.none'|trans }}</p>
+      {% else %}
+        <div class="c-donate-table">
+          <div class="c-donate-table__rows c-donate-table__rows--public{% if isTreasurer %} c-donate-table__rows--treasurer{% endif %}">
+            <div class="c-donate-table__row c-donate-table__row--head">
+              <span>{{ 'datedonation'|trans }}</span>
+              <span class="c-donate-table__amount">{{ 'amountdonation'|trans }}</span>
+              <span>{{ 'commentdonation'|trans }}</span>
+              <span>{{ 'placedonation'|trans }}</span>
+              {% if isTreasurer %}
+                <span class="c-donate-table__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'donations.treasurer.only'|trans }}</span>
+              {% endif %}
+            </div>
+            {% for donation in donations %}
+              <div class="c-donate-table__row">
+                <span class="c-donate-table__date">{{ donation.created|format_date('medium') }}</span>
+                <span class="c-donate-table__amount">{{ money.amount(donation) }}</span>
+                <span class="c-donate-table__text">{{ donation.systemComment ?: '—' }}</span>
+                <span class="c-donate-table__text">{{ money.country(donation) }}</span>
+                {% if isTreasurer %}
+                  <span class="c-donate-table__donor">
+                    <span class="c-donate-table__name">{{ donation.donor ? donation.donor.username : (donation.nameGiven ?: '—') }}</span>
+                    {% if donation.referencePaypal %}<span class="c-donate-table__reference">{{ donation.referencePaypal }}</span>{% endif %}
+                  </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="c-donate-table__footer">
+          <span class="c-donate-table__count">{{ 'donations.list.showing'|trans({
+              from: donations.currentPageOffsetStart,
+              to: donations.currentPageOffsetEnd,
+              total: donations.nbResults,
+          }) }}</span>
+          {% if donations.haveToPaginate %}
+            {{ pagerfanta(donations, 'rounded_pagination_end') }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </section>
+  </div>
+{% endblock content %}

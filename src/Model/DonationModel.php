@@ -20,15 +20,15 @@ readonly class DonationModel
         $member = 0 !== $member ? $member : null;
 
         $donation = new Donation();
-        $donation->setAmount($parameters['amt'] ?? 0);
-        $donation->setMoney($parameters['cc'] ?? 'EUR');
-        $donation->setMemberComment($parameters['cm'] ?? '');
+        $donation->setAmount((string) ($parameters['amt'] ?? 0));
+        $donation->setMoney((string) ($parameters['cc'] ?? 'EUR'));
+        $donation->setMemberComment((string) ($parameters['cm'] ?? ''));
         $donation->setDonor($member);
 
         if (null === $member) {
             $donation->setNameGiven('paypal');
         } else {
-            $donation->setEmail($member->getEmail());
+            $donation->setEmail((string) $member->getEmail());
             $donation->setNameGiven($member->getUsername());
 
             /** @var LocationRepository $locationRepository */
@@ -41,7 +41,7 @@ readonly class DonationModel
             }
         }
         $donation->setSystemComment('paypal');
-        $donation->setReferencePaypal($parameters['tx'] ?? 'No transaction provided');
+        $donation->setReferencePaypal((string) ($parameters['tx'] ?? 'No transaction provided'));
         $donation->setStatusPrivate('showamountonly');
 
         $this->entityManager->persist($donation);

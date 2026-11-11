@@ -6,6 +6,7 @@ use App\Doctrine\DomainType;
 use App\Entity\Word;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
+use App\Utilities\MemoryLimit;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
@@ -219,14 +220,10 @@ class TranslationModel
             $this->filesystem->remove($file);
         }
 
-        $memoryLimit = \ini_get('memory_limit');
-        ini_set('memory_limit', '1G');
-
-        // Build them again
+        // Build them again; that needs up to 1 GB
         if ($this->translator instanceof WarmableInterface) {
-            $this->translator->warmUp($translationDir);
+            $translator = $this->translator;
+            MemoryLimit::atLeast('1G', static fn () => $translator->warmUp($translationDir));
         }
-
-        ini_set('memory_limit', $memoryLimit);
     }
 }

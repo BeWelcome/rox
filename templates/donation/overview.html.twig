@@ -1,142 +1,178 @@
 {% extends 'base.html.twig' %}
+{% import 'donation/_macros.html.twig' as money %}
 
-{% block title %}BeWelcome - Donate{% endblock %}
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('scrollingtabs') }}
-{% endblock %}
+{% block title %}{{ 'donations'|trans }}{% endblock %}
 
 {% block content %}
-    <h2>{{ 'donations'|trans }}</h2>
-    <div class="row">
-        {% set locale = app.request.locale %}
-        {% set helloAssoLocale = locale == 'fr' ? 'fr' : 'en' %}
-        {% set paypalLocale = locale in [{ fr:'fr', en:'en', it:'it', es:'es'}] ? locale|upper : 'US' %}
-        {% set helloAssoLink = 'https://www.helloasso.com/associations/bevolunteer/formulaires/1/' ~ helloAssoLocale %}
-
-        <div class="col-12 col-lg-6">
-            <div class="scroller scroller-left u:float-start mt-2"><i class="fa fa-caret-left"></i></div>
-            <div class="scroller scroller-right u:float-end mt-2"><i class="fa fa-caret-right"></i></div>
-            <div class="wrapper-nav">
-                <ul class="nav nav-tabs list" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link first-nav-link active" data-bs-toggle="tab" href="#bank" role="tab">{{ 'donate.bank'|trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#hello_asso" role="tab">{{ 'donate.hello.asso'|trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#paypal" role="tab">{{ 'donate.money'|trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link last-nav-link" data-bs-toggle="tab" href="#time" role="tab">{{ 'donate.time'|trans }}</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div class="tab-pane card active p-2" id="bank" role="tabpanel">
-                    <h3>{{ 'donate_account_legend'|trans }}</h3>
-                    <p>{{ 'donate_account2'|trans }}</p>
-                    <p class="alert-primary p-2">{{ 'donate_account'|trans|raw|nl2br }}</p>
-                </div>
-                <div class="tab-pane card p-2" id="hello_asso" role="tabpanel">
-                    <h3>{{ 'donate.hello.asso'|trans }}&nbsp;<i class="fa fa3x fa-coins ms-2"></i></h3>
-                    <p class="u:my-8">{{ 'donate.hello.asso.text'|trans }}</p>
-                    <a href="{{ helloAssoLink }}" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-coins me-1"></i>{{ 'donate.hello.asso'|trans }}</a>
-                </div>
-                <div class="tab-pane card p-2" id="paypal" role="tabpanel">
-                    <h3>{{ 'donate_paypal_legend'|trans }}</h3>
-
-                    <div id="donate-button-container" class="u:flex u:justify-center u:my-20">
-                        <div id="donate-button"></div>
-                        <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
-                        <script>
-                            PayPal.Donation.Button({
-                                env:'production',
-                                hosted_button_id:'58STYCEPBD79S',
-                                /* env:'sandbox',
-                                hosted_button_id:'PJMPYVCUJUH44', */
-                                image: {
-                                    src:'https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif',
-                                    alt:'Donate with PayPal button',
-                                    title:'PayPal - The safer, easier way to pay online!',
-                                },
-                                onComplete: function(param) {
-                                    // PayPal says check for param being an object, so let's do that
-                                    if (
-                                        typeof param === 'object' &&
-                                        !Array.isArray(param) &&
-                                        param !== null
-                                    ) {
-                                        param.nonce = '{{ nonce }}';
-                                        fetch('{{ url('finish_donation') }}', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Accept': 'application/json',
-                                                'Content-Type': 'application/json'
-                                            },
-                                            body: JSON.stringify(param)
-                                        })
-                                        .then(
-                                            (response) => response.json()
-                                        )
-                                        .then((details) => {
-                                            if (true === details.success) {
-                                                location.href="{{ url('donation_complete') }}";
-                                            } else {
-                                                location.href="{{ url('donation_error') }}";
-                                            }
-                                        })
-                                    }
-                                },
-                                onApprove: function() {
-                                    alert("onApprove");
-                                }
-                            }).render('#donate-button');
-                        </script>
-                    </div>
-
-                    <p>{{ 'donate.process'|trans|raw|nl2br }}</p>
-                </div>
-                <div class="tab-pane card p-2" id="time" role="tabpanel">
-                    {{ 'donation.donatetime'|trans|raw|nl2br }}
-                </div>
-            </div>
-
-            <div class="m7-2">
-                <h3>{{ 'donations.recent'|trans }}</h3>
-                <p>{{ 'donations.recent.text'|trans|raw|nl2br }}<br><br>
-                <a href="{{ url('donations_list') }}">{{ 'donations.recent.link'|trans }}</a>
-                </p>
-            </div>
-
-            <div class="my-2">
-                <h3>{{ 'donate_furtherinfo'|trans }}</h3>
-                <p>{{ 'donate_furtherinfotext'|trans|raw|nl2br }}</p>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <a id="why"></a>
-            <h3>{{ 'donate.why'|trans }}</h3>
-            <p>{{ 'donate_whytext'|trans|raw|nl2br }}</p>
-
-            <a id="transparency"></a>
-            <h3 class="mt-2">{{ 'donate_transparency'|trans }}</h3>
-            <p>{{ 'donate_transparencytext'|trans|raw|nl2br }}</p>
-
-        </div>
-
+  {% set locale = app.request.locale %}
+  {% set helloAssoLink = 'https://www.helloasso.com/associations/bevolunteer/formulaires/1/' ~ (locale == 'fr' ? 'fr' : 'en') %}
+  <div class="c-donate">
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ 'donate.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title c-donate__title">{{ 'donations'|trans }}</h1>
+        <p class="c-donate__lead">{{ 'donate.lead'|trans }}</p>
+      </div>
     </div>
-    <script type="text/javascript">
-        /* update the amount-field in the donation form when an option is selected/ an amount is entered */
-        function changeAmount (Amount) {
-            document.getElementById('amount').value = Amount+'.00';
-        }
-        function clearForm (Element) {
-            document.getElementById(Element).value = '';
-        }
-    </script>
-{% endblock %}
+
+    {% if params and params.toggledonatebar %}
+      {% set percent = money.percent(stats.YearDonation, stats.YearNeededAmount)|trim %}
+      <section class="c-donate-status">
+        <div class="c-donate-status__top">
+          <p class="c-donate-status__label">{{ 'donate.campaign.since'|trans({date: params.campaignstartdate|format_date('medium')}) }}</p>
+          <div class="c-donate-status__numbers">
+            <p class="c-donate-status__sum">
+              <span class="c-donate-status__value">{{ money.euros(stats.YearDonation) }}</span>
+              <span class="c-donate-status__goal">{{ 'donate.campaign.needed'|trans({amount: money.euros(stats.YearNeededAmount)|trim}) }}</span>
+            </p>
+            <span class="c-donate-status__percent">{{ percent }}%</span>
+          </div>
+          <div class="c-donate-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent }}">
+            <div class="c-donate-bar__fill" style="width: {{ percent }}%"></div>
+          </div>
+        </div>
+        <div class="c-donate-next">
+          <span class="c-donate-next__icon"><i class="fas fa-server" aria-hidden="true"></i></span>
+          <p class="c-donate-next__text">{{ 'donate.campaign.monthly'|trans({amount: money.euros(stats.MonthNeededAmount)|trim}) }}</p>
+        </div>
+      </section>
+    {% endif %}
+
+    <div class="c-donate-grid">
+      <div class="c-donate-grid__column">
+        <section class="c-home-card">
+          <ul class="nav c-home-tabs" role="tablist">
+            {% for tab, label in {bank: 'donate.bank', hello_asso: 'donate.hello.asso', paypal: 'donate.money', time: 'donate.time'} %}
+              <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link{% if loop.first %} active{% endif %}" id="{{ tab }}-tab" href="#{{ tab }}" data-bs-toggle="tab"
+                   role="tab" aria-controls="{{ tab }}" aria-selected="{{ loop.first ? 'true' : 'false' }}">{{ label|trans }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="tab-content c-donate-tabs__body">
+            <div class="tab-pane show active c-donate-panel" id="bank" role="tabpanel" aria-labelledby="bank-tab">
+              <h2 class="c-donate-panel__title">{{ 'donate_account_legend'|trans }}</h2>
+              <p class="c-donate-panel__text">{{ 'donate_account2'|trans }}</p>
+              {# The account of BeVolunteer; the labels are translated, the details are not #}
+              <dl class="c-donate-account">
+                <dt>{{ 'donate.account.holder'|trans }}</dt>
+                <dd>ASSOCIATION BEVOLUNTEER</dd>
+                <dt>{{ 'donate.account.iban'|trans }}</dt>
+                <dd>FR76 4255 9100 0008 0117 7451 302</dd>
+                <dt>{{ 'donate.account.bic'|trans }}</dt>
+                <dd>CCOPFRPPXXX</dd>
+                {% if app.user %}
+                  <dt>{{ 'donate.account.reference'|trans }}</dt>
+                  <dd>{{ 'donate.account.reference.value'|trans({username: app.user.username}) }}</dd>
+                {% endif %}
+              </dl>
+            </div>
+            <div class="tab-pane c-donate-panel" id="hello_asso" role="tabpanel" aria-labelledby="hello_asso-tab">
+              <h2 class="c-donate-panel__title">{{ 'donate.hello.asso'|trans }}</h2>
+              <p class="c-donate-panel__text">{{ 'donate.hello.asso.text'|trans }}</p>
+              <p class="c-donate-panel__actions">
+                <a href="{{ helloAssoLink }}" target="_blank" rel="noopener" class="o-button"><i class="fas fa-coins" aria-hidden="true"></i>{{ 'donate.hello.asso.button'|trans }}</a>
+              </p>
+            </div>
+            <div class="tab-pane c-donate-panel" id="paypal" role="tabpanel" aria-labelledby="paypal-tab">
+              <h2 class="c-donate-panel__title">{{ 'donate_paypal_legend'|trans }}</h2>
+              <div id="donate-button-container" class="c-donate-paypal">
+                <div id="donate-button"></div>
+                <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+                <script>
+                  PayPal.Donation.Button({
+                    env:'production',
+                    hosted_button_id:'58STYCEPBD79S',
+                    /* env:'sandbox',
+                    hosted_button_id:'PJMPYVCUJUH44', */
+                    image: {
+                      src:'https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif',
+                      alt:'Donate with PayPal button',
+                      title:'PayPal - The safer, easier way to pay online!',
+                    },
+                    onComplete: function(param) {
+                      // PayPal says check for param being an object, so let's do that
+                      if (
+                        typeof param === 'object' &&
+                        !Array.isArray(param) &&
+                        param !== null
+                      ) {
+                        param.nonce = '{{ nonce }}';
+                        fetch('{{ url('finish_donation') }}', {
+                          method: 'POST',
+                          headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify(param)
+                        })
+                        .then(
+                          (response) => response.json()
+                        )
+                        .then((details) => {
+                          if (true === details.success) {
+                            location.href="{{ url('donation_complete') }}";
+                          } else {
+                            location.href="{{ url('donation_error') }}";
+                          }
+                        })
+                      }
+                    },
+                    onApprove: function() {
+                      alert("onApprove");
+                    }
+                  }).render('#donate-button');
+                </script>
+              </div>
+              <div class="c-donate-panel__text">{{ 'donate.process'|trans|purify }}</div>
+            </div>
+            <div class="tab-pane c-donate-panel" id="time" role="tabpanel" aria-labelledby="time-tab">
+              <h2 class="c-donate-panel__title">{{ 'donate.time'|trans }}</h2>
+              <div class="c-donate-panel__text">{{ 'donation.donatetime'|trans|purify|nl2br }}</div>
+              <p class="c-donate-panel__actions">
+                <a href="{{ path('getactive') }}" class="o-button o-button--outline"><i class="fas fa-hand-holding-hand" aria-hidden="true"></i>{{ 'donate.time.button'|trans }}</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="c-home-card">
+          <div class="c-card-head">
+            <h2 class="c-card-head__title">{{ 'donations.recent'|trans }}</h2>
+            <a class="c-donate__more" href="{{ path('donations_list') }}">{{ 'donations.recent.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+          {% if recent_donations is empty %}
+            <p class="c-donate-table__empty">{{ 'donations.none'|trans }}</p>
+          {% else %}
+            <ul class="c-donate-recent">
+              {% for donation in recent_donations %}
+                <li class="c-donate-recent__item">
+                  <span class="c-donate-recent__where">
+                    <span class="c-donate-recent__country">{{ money.country(donation) }}</span>
+                    <span class="c-donate-recent__date">{{ donation.created|format_date('medium') }}</span>
+                  </span>
+                  <span class="c-donate-recent__amount">{{ money.amount(donation) }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </section>
+      </div>
+
+      <section class="c-home-card c-donate-info">
+        <div class="c-donate-info__section" id="why">
+          <h2 class="c-donate-info__title">{{ 'donate.why'|trans }}</h2>
+          <div class="c-donate-info__text">{{ 'donate_whytext'|trans|purify|nl2br }}</div>
+        </div>
+        <div class="c-donate-info__section" id="transparency">
+          <h2 class="c-donate-info__title">{{ 'donate_transparency'|trans }}</h2>
+          <div class="c-donate-info__text">{{ 'donate_transparencytext'|trans|purify|nl2br }}</div>
+        </div>
+        <div class="c-donate-info__section">
+          <h2 class="c-donate-info__title">{{ 'donate_furtherinfo'|trans }}</h2>
+          <div class="c-donate-info__text">{{ 'donate_furtherinfotext'|trans|purify|nl2br }}</div>
+        </div>
+      </section>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,11 +1,62 @@
 {% extends 'base.html.twig' %}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
+{% form_theme form 'admin/massmail/_form_theme.html.twig' %}
+
+{% set title = donation.id ? 'admin.treasurer.donation.edit' : 'admin.treasurer.donation.add' %}
+
+{% block title %}{{ title|trans }}{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/treasurer') }}
+{% endblock javascripts %}
 
 {% block content %}
-    <h1>{% if donation.id %}{{ 'admin.treasurer.donation.edit' | trans }}{% else %}{{ 'admin.treasurer.donation.create' | trans }}{% endif %}</h1>
+  {% set donorType = form.donorType.vars.value %}
+  <div class="c-donate c-treasurer c-treasurer--form">
+    <a class="c-page-head__back" href="{{ path('admin_treasurer_overview') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'admin.treasurer.overview'|trans }}</a>
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ 'admin.treasurer.overview'|trans }}</p>
+        <h1 class="c-page-head__title">{{ title|trans }}</h1>
+      </div>
+    </div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-primary">{{ 'button.save' | trans }}</button>
-    <a href="{{ path('admin_treasurer_overview') }}" class="btn btn-secondary">{{ 'button.cancel' | trans }}</a>
+    {{ form_start(form, {attr: {class: 'c-home-card js-treasurer-donation', novalidate: 'novalidate'}}) }}
+      <div class="c-treasurer-form">
+        {{ form_errors(form) }}
+        <fieldset class="c-treasurer-who">
+          <legend class="c-treasurer-who__legend">{{ form.donorType.vars.label|trans }}</legend>
+          <div class="c-home-radius__options">
+            {% for choice in form.donorType %}
+              <label class="c-home-radius__option c-treasurer-who__option">
+                <input type="radio" class="c-treasurer-who__input js-donor-type" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}"
+                       value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                {{ choice.vars.label|trans }}
+              </label>
+              {% do choice.setRendered %}
+            {% endfor %}
+          </div>
+        </fieldset>
+
+        <div class="o-form-group" data-donor-type="member"{% if donorType != 'member' %} hidden{% endif %}>
+          {{ form_label(form.donor) }}
+          {{ member_suggest.field(form.donor) }}
+          {{ form_help(form.donor) }}
+          {{ form_errors(form.donor) }}
+        </div>
+        {{ form_row(form.nameGiven, {attr: {class: 'o-input'}, row_attr: {'data-donor-type': 'other', hidden: donorType != 'other'}}) }}
+
+        <div class="c-treasurer-form__pair">
+          {{ form_row(form.amount, {attr: {class: 'o-input', min: 0, step: '0.01'}}) }}
+          {{ form_row(form.created, {attr: {class: 'o-input'}}) }}
+        </div>
+        {{ form_row(form.country, {attr: {class: 'o-input'}}) }}
+        {{ form_row(form.systemComment, {attr: {class: 'o-input'}}) }}
+      </div>
+      <div class="c-treasurer-form__footer">
+        <a class="o-button o-button--outline-gray" href="{{ path('admin_treasurer_overview') }}">{{ 'cancel'|trans }}</a>
+        <button type="submit" class="o-button"><i class="fas fa-check" aria-hidden="true"></i>{{ 'save'|trans }}</button>
+      </div>
     {{ form_end(form) }}
-{% endblock %}
+  </div>
+{% endblock content %}

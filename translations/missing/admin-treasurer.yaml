@@ -1,0 +1,153 @@
+admin.treasurer.overview:
+  - 'Treasurer'
+  - 'Treasurer tool: the title, and the back link and eyebrow of its forms.'
+admin.treasurer.eyebrow:
+  - 'Volunteer tools'
+  - 'Treasurer tool: the eyebrow above the title.'
+admin.treasurer.public.list:
+  - 'Public list'
+  - 'Treasurer tool: button that opens the public list of donations.'
+admin.treasurer.donation.add:
+  - 'Add donation'
+  - 'Treasurer tool: button and title of the form for a new donation.'
+admin.treasurer.donation.edit:
+  - 'Edit donation'
+  - 'Treasurer tool: title of the form of a donation, and the edit button of a donation in the list.'
+admin.treasurer.donation.saved:
+  - 'Donation saved.'
+  - 'Treasurer tool: notice after a donation was added or changed.'
+admin.treasurer.campaign:
+  - 'Campaign'
+  - 'Treasurer tool: label of the state of the donation campaign.'
+admin.treasurer.campaign.running:
+  - 'Running'
+  - 'Treasurer tool: the donation campaign is running (the donation bar is shown).'
+admin.treasurer.campaign.running.note:
+  - 'Since {date} · donation bar shown to members'
+  - 'Treasurer tool: under "Running"; {date} is the day the campaign counts from.'
+admin.treasurer.campaign.stopped.state:
+  - 'Not running'
+  - 'Treasurer tool: there is no donation campaign.'
+admin.treasurer.campaign.stopped.note:
+  - 'The donation bar is hidden'
+  - 'Treasurer tool: under "Not running".'
+admin.treasurer.this.year:
+  - 'This year'
+  - 'Treasurer tool: label of the donations since the start of the campaign.'
+admin.treasurer.this.quarter:
+  - 'This quarter'
+  - 'Treasurer tool: label of the donations of the current quarter.'
+admin.treasurer.of:
+  - 'of {amount}'
+  - 'Treasurer tool: after a donated sum; {amount} is the goal.'
+admin.treasurer.year.percent:
+  - '{percent}% of the yearly need'
+  - 'Treasurer tool: under the progress bar of the year.'
+admin.treasurer.quarter.percent:
+  - '{percent}% · {months}'
+  - 'Treasurer tool: under the progress bar of the quarter; {months} is its first and last month, e.g. "Oct – Dec".'
+admin.treasurer.campaign.running.hint:
+  - 'Members see the donation bar with the progress towards {amount}. Stopping hides it; donations still come in.'
+  - 'Treasurer tool: next to "Stop campaign"; {amount} is the goal of the year.'
+admin.treasurer.campaign.stopped.hint:
+  - 'Start a campaign to show the donation bar to members. You set the amount needed and the date it counts from.'
+  - 'Treasurer tool: next to "Start campaign".'
+admin.treasurer.campaign.start:
+  - 'Start campaign'
+  - 'Treasurer tool: button and title of the form that starts a donation campaign.'
+admin.treasurer.campaign.stop:
+  - 'Stop campaign'
+  - 'Treasurer tool: button that stops the donation campaign.'
+admin.treasurer.campaign.started:
+  - 'Campaign started.'
+  - 'Treasurer tool: notice after the donation campaign was started.'
+admin.treasurer.campaign.stopped:
+  - 'Campaign stopped.'
+  - 'Treasurer tool: notice after the donation campaign was stopped.'
+admin.treasurer.campaign.needed:
+  - 'Needed per year (EUR)'
+  - 'Treasurer tool, start campaign: label of the goal.'
+admin.treasurer.campaign.needed.help:
+  - 'The goal of the donation bar. A twelfth of it is shown as the monthly need.'
+  - 'Treasurer tool, start campaign: help under the goal.'
+admin.treasurer.campaign.start.date:
+  - 'Start date'
+  - 'Treasurer tool, start campaign: label of the day the campaign counts from.'
+admin.treasurer.campaign.start.date.help:
+  - 'Donations from this day on count towards the goal.'
+  - 'Treasurer tool, start campaign: help under the start date.'
+admin.treasurer.campaign.start.hint:
+  - 'Starting shows the donation bar to all members right away.'
+  - 'Treasurer tool, start campaign: next to the buttons.'
+admin.treasurer.campaign.start.button:
+  - 'Start'
+  - 'Treasurer tool, start campaign: the button that starts it.'
+admin.treasurer.donations:
+  - 'Donations'
+  - 'Treasurer tool: title of the list of donations.'
+admin.treasurer.donations.note:
+  - '{count} per page · newest first'
+  - 'Treasurer tool: next to the title of the list of donations.'
+admin.treasurer.no.donations:
+  - 'No donations yet.'
+  - 'Treasurer tool: the list of donations is empty.'
+admin.treasurer.donation.date:
+  - 'Date'
+  - 'Treasurer tool: column of the list of donations.'
+admin.treasurer.donation.donor:
+  - 'Donor'
+  - 'Treasurer tool: column of the list of donations.'
+admin.treasurer.donation.amount:
+  - 'Amount'
+  - 'Treasurer tool: column of the list of donations.'
+admin.treasurer.donation.country:
+  - 'Country'
+  - 'Treasurer tool: column of the list of donations.'
+admin.treasurer.donation.comment:
+  - 'Comment'
+  - 'Treasurer tool: column of the list of donations.'
+admin.treasurer.donor.type:
+  - 'Who donated?'
+  - 'Treasurer tool, donation form: label of the choice between member, not a member and unknown.'
+admin.treasurer.donor.type.member:
+  - 'Member'
+  - 'Treasurer tool, donation form: the donor is a member.'
+admin.treasurer.donor.type.other:
+  - 'Not a member'
+  - 'Treasurer tool, donation form: the donor is not a member; also the tag next to their name in the list.'
+admin.treasurer.donor.type.unknown:
+  - 'Unknown'
+  - 'Treasurer tool, donation form: the donor is not known; also shown in the list.'
+admin.treasurer.donor:
+  - 'Donor username'
+  - 'Treasurer tool, donation form: label of the username of a member.'
+admin.treasurer.donor.help:
+  - 'Optional. Their profile is linked in the list.'
+  - 'Treasurer tool, donation form: help under the username.'
+admin.treasurer.name.given:
+  - 'Donor name'
+  - 'Treasurer tool, donation form: label of the name of a donor who is not a member.'
+admin.treasurer.name.given.help:
+  - 'Optional. As given on the transfer or payment.'
+  - 'Treasurer tool, donation form: help under the name.'
+admin.treasurer.amount:
+  - 'Amount (EUR)'
+  - 'Treasurer tool, donation form: label of the amount.'
+admin.treasurer.donated.on:
+  - 'Donated on'
+  - 'Treasurer tool, donation form: label of the date of the donation.'
+admin.treasurer.country:
+  - 'Country'
+  - 'Treasurer tool, donation form: label of the country.'
+admin.treasurer.country.help:
+  - 'Optional. Leave empty if not known.'
+  - 'Treasurer tool, donation form: help under the country.'
+admin.treasurer.country.placeholder:
+  - 'Select a country'
+  - 'Treasurer tool, donation form: the empty choice of the country.'
+admin.treasurer.comment:
+  - 'Comment'
+  - 'Treasurer tool, donation form: label of the comment.'
+admin.treasurer.comment.help:
+  - 'Shown in the public list of donations.'
+  - 'Treasurer tool, donation form: help under the comment.'

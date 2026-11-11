@@ -19,57 +19,28 @@ readonly class DonateModel
         $campaignValue = $this->getCampaignValues();
         if ($campaignValue) {
             $requiredPerMonth = floor($campaignValue['neededperyear'] / 12);
-            $sql = "
-                SELECT
-                    COALESCE(SUM(amount),0) AS YearDonation,
-                    year(NOW()) AS yearnow,
-                    month(NOW()) AS month,
-                    quarter(NOW()) AS quarter
-                FROM
-                    donations
-                WHERE
-                    created > '" . $campaignValue['campaignstartdate']->format('Y-m-d H:i:s') . "'
-                ";
             $connection = $this->entityManager->getConnection();
-            $rowYear = $connection->executeQuery($sql)->fetchAssociative();
+            $yearDonation = $connection->fetchOne(
+                'SELECT COALESCE(SUM(amount), 0) FROM donation WHERE created > ?',
+                [$campaignValue['campaignstartdate']->format('Y-m-d H:i:s')],
+            );
 
-            $start = $end = '';
-            switch ($rowYear['quarter']) {
-                case 1:
-                    $start = $rowYear['yearnow'] . '-01-01';
-                    $end = $rowYear['yearnow'] . '-04-01';
-                    break;
-                case 2:
-                    $start = $rowYear['yearnow'] . '-04-01';
-                    $end = $rowYear['yearnow'] . '-07-01';
-                    break;
-                case 3:
-                    $start = $rowYear['yearnow'] . '-07-01';
-                    $end = $rowYear['yearnow'] . '-10-01';
-                    break;
-                case 4:
-                    $start = $rowYear['yearnow'] . '-10-01';
-                    $end = $rowYear['yearnow'] . '-12-31';
-                    break;
-            }
-            $query = "
-                SELECT
-                    SUM(ROUND(amount)) AS Total,
-                    year(now()) AS year
-                FROM
-                    donations
-                WHERE
-                    created >= '$start'
-                    AND
-                    created < '$end'
-                ";
-            $result = $connection->executeQuery($query);
-            $row = $result->fetchAssociative();
+            // the current quarter, from its first day to the first day of the next one
+            $now = Carbon::now();
+            $start = $now->copy()->firstOfQuarter()->startOfDay();
+            $end = $start->copy()->addMonths(3);
+            $row = [
+                'Total' => $connection->fetchOne(
+                    'SELECT SUM(ROUND(amount)) FROM donation WHERE created >= ? AND created < ?',
+                    [$start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')],
+                ),
+                'year' => $now->year,
+            ];
             $row['QuarterDonation'] = \sprintf('%d', $row['Total']);
             $row['MonthNeededAmount'] = $requiredPerMonth;
             $row['YearNeededAmount'] = $campaignValue['neededperyear'];
             $row['QuarterNeededAmount'] = $requiredPerMonth * 3;
-            $row['YearDonation'] = $rowYear['YearDonation'];
+            $row['YearDonation'] = $yearDonation;
             $row['year'] = Carbon::instance($campaignValue['campaignstartdate'])->year;
 
             return $row;

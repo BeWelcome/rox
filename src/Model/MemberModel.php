@@ -7,6 +7,7 @@ use App\Entity\MemberPhoto;
 use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Model\MemberDataExtractor\MyDataSections;
 use App\Model\MemberDataExtractor\ProfilePicture;
+use App\Utilities\MemoryLimit;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,9 +90,11 @@ class MemberModel
 
     private function preparePersonalData(Member $member, string $tempDir): void
     {
-        $memoryLimit = \ini_get('memory_limit');
-        ini_set('memory_limit', '512M');
+        MemoryLimit::atLeast('512M', fn () => $this->extractPersonalData($member, $tempDir));
+    }
 
+    private function extractPersonalData(Member $member, string $tempDir): void
+    {
         $this->copyAssets($this->params->get('kernel.project_dir'));
 
         $counts = [];
@@ -108,8 +111,6 @@ class MemberModel
             'counts' => $counts,
         ]);
         $this->addSidebars($member, $picture, $counts);
-
-        ini_set('memory_limit', $memoryLimit);
     }
 
     /**

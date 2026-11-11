@@ -2,7 +2,7 @@
 {#
   The profile page itself (one block per profile language, the language switch shows one):
   About me (with the spoken languages), the gallery, accommodation and comments in the
-  main column (after the facts: occupation, gender, age); where I live, interests, travels, groups and friends on the right. The edit page keeps profile/content.html.twig.
+  main column (after the facts: occupation, gender, age); where I live, interests, travels, groups and friends on the right.
 #}
 {% set address = member.activeAddress %}
 {% set profileTranslation = translated_fields[profile_language] ?? [] %}

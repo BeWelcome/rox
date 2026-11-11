@@ -7,3 +7,18 @@ login.username.or.email:
 login.too.many.attempts:
     - '{minutes, plural, one {Too many failed logins. Please try again in # minute.} other {Too many failed logins. Please try again in # minutes.}}'
     - Login page, after too many wrong passwords for one account or from one address. Keep {minutes} and #.
+login.title:
+    - 'Log in to BeWelcome'
+    - Login page, the headline
+login.subtitle:
+    - 'Your conversations, trips and hosts are waiting.'
+    - Login page, the text under the headline
+password.show:
+    - 'Show password'
+    - Login and password pages, label of the eye button in a password field while the password is hidden
+password.hide:
+    - 'Hide password'
+    - Login and password pages, label of the eye button in a password field while the password is shown
+'Invalid credentials.':
+    - 'Username or password is incorrect.'
+    - Login page, the first line of the error after a wrong username or password (the code is Symfony's message)

@@ -88,7 +88,7 @@ class MockupPreviewsTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         self::assertSame(
             static::getContainer()->get(TranslatorInterface::class)->trans('login.too.many.attempts', ['minutes' => 15]),
-            trim($crawler->filter('.p-tr-mockup__stage .p-login__error')->text()),
+            trim($crawler->filter('.p-tr-mockup__stage .p-login__error-title')->text()),
         );
     }
 

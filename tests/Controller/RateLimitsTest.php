@@ -55,7 +55,7 @@ final class RateLimitsTest extends WebTestCase
 
         self::assertTrue($this->failed(), 'the right password from a new address is refused too');
         $crawler = $this->client->followRedirect();
-        $error = $crawler->filter('.p-login__error')->text();
+        $error = $crawler->filter('.p-login__error-title')->text();
         $texts = array_map(fn (int $minutes): string => $this->trans('login.too.many.attempts', ['minutes' => $minutes]), range(1, 15));
         self::assertContains($error, $texts, 'the page asks to try again within the 15 minutes');
     }

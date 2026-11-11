@@ -19,7 +19,16 @@ const showHidePassword = (event) => {
             "                              <line class=\"\" x1=\"2\" x2=\"22\" y1=\"2\" y2=\"22\"></line>\n" +
             "                            </svg>";
     }
+    updateLabel(showHidePasswordButton, passwordField.type === 'text');
 }
+
+// buttons that name their action (data-label-show, data-label-hide) say what a click does next
+const updateLabel = (button, shown) => {
+    const label = shown ? button.dataset.labelHide : button.dataset.labelShow;
+    if (label) {
+        button.setAttribute('aria-label', label);
+    }
+};
 
 showHidePasswordButtons.forEach((element) => {
     element.addEventListener("click", showHidePassword);

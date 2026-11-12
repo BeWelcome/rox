@@ -35,7 +35,7 @@ It is a good idea to run `bun encore dev --watch` which will keep updating files
 
 ## Documentation
 
-Documentation is [in the doc tree](doc/book/).
+The architecture is described in [docs/architecture](docs/architecture/README.md).
 
 ## Procedure
 

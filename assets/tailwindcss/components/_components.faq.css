@@ -28,7 +28,12 @@ main.p-faq { padding: 2.5rem 0 4rem; background: #f0f0f0; }
 .p-faq .p-faq__help p { margin: 0; color: #475569; font-size: 0.9375rem; line-height: 1.55; }
 .p-faq__help a { text-decoration: none; }
 
-/* Questions */
+/* Questions (in the About pages' card) */
+.p-about__card.p-faq { padding: 1.75rem 2.25rem 2rem; }
+.p-faq .p-faq__answer { max-width: 46rem; }
+@media (max-width: 767.98px) {
+  .p-about__card.p-faq { padding: 1.4rem 1.15rem; }
+}
 .p-faq__main { display: flex; flex-direction: column; min-width: 0; }
 .p-faq__title { margin: 0 0 0.75rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
 .p-faq__item { border-top: 1px solid #e2e8f0; scroll-margin-top: 88px; }

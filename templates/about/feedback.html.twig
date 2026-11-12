@@ -1,61 +1,68 @@
 {% extends 'about/layout.html.twig' %}
+{#
+  Contact us (FeedbackController): what the form is for and where to look first on the left, the form on the right.
+  Choosing Safety and abuse shows a note under the topic (about/contact.js); coming from a message (messageId), a
+  dialog offers to report that message instead.
+#}
 
-{% block title %}
-	{{ 'contactus' | trans }}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block title %}{{ 'contactus' | trans }}{% endblock %}
 
 {% block javascripts %}
-    {# opens the report hint below when it is there (data-micromodal-open) #}
-    {{ encore_entry_script_tags('micromodal') }}
+    {{ encore_entry_script_tags('about/contact') }}
+    {% if messageId != null and form.vars.valid and no_modal == false %}
+        {# opens the dialog below (data-micromodal-open) #}
+        {{ encore_entry_script_tags('micromodal') }}
+    {% endif %}
 {% endblock javascripts %}
 
+{% block page_title %}{{ 'contactus' | trans }}{% endblock %}
+{% block page_lead %}{{ 'contactus.lead' | trans }}{% endblock %}
+
 {% block content %}
-    {# The hint for a safety report, opened on load by assets/js/micromodal.js (data-micromodal-open). Coming from a
-       message (messageId), it offers to report that message instead. #}
-    {% if form.vars.valid and form.IdCategory.vars.value == 2 and no_modal == false %}
+    {% if messageId != null and form.vars.valid and no_modal == false %}
         <div class="micromodal-slide p-about-hint" id="report-modal" aria-hidden="true" data-micromodal-open>
             <div class="modal__overlay p-about-hint__overlay" tabindex="-1" data-micromodal-close>
                 <div class="modal__container p-about-hint__box" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
                     <div class="p-about-hint__head">
-                        <span class="p-about-hint__icon" aria-hidden="true"><i class="fas fa-shield-alt"></i></span>
+                        <span class="p-about-hint__icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></span>
                         <h2 class="p-about-hint__title" id="report-modal-title">{{ 'feedback.profile.title'|trans }}</h2>
                     </div>
-                    <div class="p-about-hint__text">
-                        {{ (messageId != null ? 'feedback.profile.report.message' : 'feedback.profile.report.addinfo')|trans|purify|nl2br }}
-                    </div>
+                    <div class="p-about-hint__text">{{ 'feedback.profile.report.message'|trans|purify|nl2br }}</div>
                     <div class="p-about-hint__actions">
-                        {% if messageId != null %}
-                            <button type="button" class="p-about-hint__btn p-about-hint__btn--secondary" data-micromodal-close>{{ 'modal.continue'|trans }}</button>
-                            <a href="{{ url('conversation_report_spam', {'id': messageId}) }}" class="p-about-hint__btn p-about-hint__btn--primary">{{ 'conversation.report.message'|trans }}</a>
-                        {% else %}
-                            <button type="button" class="p-about-hint__btn p-about-hint__btn--primary" data-micromodal-close>{{ 'feedback.understood'|trans }}</button>
-                        {% endif %}
+                        <button type="button" class="p-about-hint__btn p-about-hint__btn--secondary" data-micromodal-close>{{ 'modal.continue'|trans }}</button>
+                        <a href="{{ url('conversation_report_spam', {'id': messageId}) }}" class="p-about-hint__btn p-about-hint__btn--primary">{{ 'conversation.report.message'|trans }}</a>
                     </div>
                 </div>
             </div>
         </div>
     {% endif %}
-    <div class="o-text">
-        <h1>{{ 'contactus' | trans }}</h1>
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
-                {# Special notice for profile reports #}
-            </div>
-            <div class="col-12 col-md-6">
-                {{ form_start(form) }}
-                {{ form_row(form.IdCategory) }}
-                {{ form_row(form.FeedbackQuestion) }}
-                {{ form_rest(form) }}
-                <div class="mb-3">
-                    <button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
-                </div>
-                {{ form_end(form) }}
-            </div>
+
+    {% set _topic = form.IdCategory.vars.value %}
+    <div class="p-contact">
+        <div class="p-contact__info">
+            <p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
+            <p class="p-contact__before">{{ 'contactus.before' | trans }}</p>
+            <a class="p-contact__link" href="{{ path('faqs_overview') }}"><i class="far fa-circle-question fa-fw" aria-hidden="true"></i>{{ 'contactus.faq' | trans }}</a>
+            <a class="p-contact__link" href="{{ path('safety') }}"><i class="fas fa-shield-halved fa-fw" aria-hidden="true"></i>{{ 'contactus.safety' | trans }}</a>
         </div>
+
+        {{ form_start(form, {attr: {class: 'p-contact__form js-contact-form'}}) }}
+            {{ form_errors(form) }}
+            <div class="o-form-group">
+                {{ form_label(form.IdCategory) }}
+                {{ form_widget(form.IdCategory, {attr: {class: 'o-input js-contact-topic', 'data-safety': safety_category, 'aria-describedby': 'contact-safety-note'}}) }}
+                {{ form_errors(form.IdCategory) }}
+                <p class="p-contact__note" id="contact-safety-note"{% if safety_category is null or _topic != safety_category ~ '' %} hidden{% endif %}>
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                    <span>{{ 'contactus.safety.note' | trans }}</span>
+                </p>
+            </div>
+            {{ form_row(form.FeedbackQuestion) }}
+            {{ form_row(form.FeedbackEmail) }}
+            {% if form.captcha is defined %}{{ form_row(form.captcha) }}{% endif %}
+            {{ form_row(form.no_reply_needed) }}
+            {{ form_rest(form) }}
+            <button type="submit" id="submit" name="submit" class="o-button">{{ 'contactus.send' | trans }}</button>
+        {{ form_end(form) }}
     </div>
 {% endblock content %}

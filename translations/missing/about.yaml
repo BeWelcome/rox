@@ -1,0 +1,84 @@
+about.lead:
+  - 'BeWelcome is a free hospitality exchange network run by volunteers. Members host travellers, stay with locals and meet up, without fees or ads.'
+  - 'About us: the sentence under the title.'
+about.more.people:
+  - 'Meet the people'
+  - 'About us: link under "The idea" to the page about the people behind BeWelcome.'
+about.more.board:
+  - 'Board of directors'
+  - 'About us: link under "How we are organised" to the board of directors of BeVolunteer.'
+about.more.getactive:
+  - 'Find a team'
+  - 'About us: link under "Get active" to the page with the volunteer teams.'
+about.more.contact:
+  - 'Contact us'
+  - 'About us: link under "Give feedback" to the contact form.'
+about.policies:
+  - 'Policies'
+  - 'Menu of the About pages: the terms of use, privacy policy and data rights.'
+thepeople.lead:
+  - 'BeWelcome is made by its members. Volunteers from all over the world keep it running.'
+  - 'The people: the sentence under the title.'
+getactive.filter:
+  - 'Show the teams of'
+  - 'Get active: label of the buttons that filter the teams (screen readers).'
+getactive.filter.all:
+  - 'All'
+  - 'Get active: button that shows all teams.'
+getactive.filter.tech:
+  - 'Tech and design'
+  - 'Get active: button that shows the development, testing, system administration and design teams.'
+getactive.filter.comm:
+  - 'Community'
+  - 'Get active: button that shows the translation, public relations, welcome, moderation and local teams.'
+getactive.filter.org:
+  - 'Support and funding'
+  - 'Get active: button that shows the support, donations and BeVolunteer teams.'
+getactive.coordinator:
+  - 'Team coordinator'
+  - 'Get active: under the username of the member to contact about a team.'
+getactive.message:
+  - 'Message'
+  - 'Get active: button that writes a message to the coordinator of a team.'
+pressinfo.lead:
+  - 'For journalists, bloggers and researchers writing about BeWelcome.'
+  - 'Press information: the sentence under the title.'
+pressinfo.contact:
+  - 'Write to the press team'
+  - 'Press information: button that opens the contact form with the topic Media.'
+commentguidelines.lead:
+  - 'How to write a fair comment about another member.'
+  - 'Comment guidelines: the sentence under the title.'
+imprint.lead:
+  - 'Who is responsible for bewelcome.org.'
+  - 'Legal notice: the sentence under the title.'
+contactus.lead:
+  - 'Write to the volunteers who run BeWelcome.'
+  - 'Contact us: the sentence under the title.'
+contactus.before:
+  - 'Before you write'
+  - 'Contact us: heading above the links to the FAQ and the safety information.'
+contactus.faq:
+  - 'Check the FAQ'
+  - 'Contact us: link to the FAQ.'
+contactus.safety:
+  - 'Read the safety information'
+  - 'Contact us: link to the safety pages.'
+contactus.safety.note:
+  - 'About a member? Report from their profile or the conversation so the safety team sees the context.'
+  - 'Contact us: note under the topic when Safety and abuse is chosen.'
+contactus.send:
+  - 'Send'
+  - 'Contact us: the button that sends the message.'
+contactus.sent.title:
+  - 'Thank you, your message is on its way'
+  - 'Contact us: title after the message was sent.'
+contactus.sent.text:
+  - 'The volunteers of the team will read it and answer if you asked for a reply. That can take a few days.'
+  - 'Contact us: text after the message was sent.'
+faq.lead:
+  - 'Answers to the questions members ask most. Pick a topic.'
+  - 'FAQ: the sentence under the title.'
+faq.categories:
+  - 'Topics'
+  - 'FAQ: label of the buttons for the categories (screen readers).'

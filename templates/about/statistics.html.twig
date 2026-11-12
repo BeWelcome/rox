@@ -1,265 +1,65 @@
 {% extends 'about/layout.html.twig' %}
-{% set statistics = {
-    'members': {
-        'headline': 'members',
-        'route': 'stats_members'
-    },
-    'sent_messages': {
-        'headline': 'sent_messages',
-        'route': 'stats_messages_sent',
-    },
-    'read_messages': {
-        'headline': 'read_messages',
-        'route': 'stats_messages_read'
-    },
-    'sent_requests': {
-        'headline': 'sent_requests',
-        'route': 'stats_requests_sent',
-    },
-    'accepted_requests': {
-        'headline': 'accepted_requests',
-        'route': 'stats_requests_accepted',
-    },
-    'created_legs': {
-        'headline': 'statistics.legs.created',
-        'route': 'stats_legs_created',
-    },
-    'sent_invitations': {
-        'headline': 'statistics.invitations.sent',
-        'route': 'stats_invitations_sent',
-    },
-    'accepted_invitations': {
-        'headline': 'statistics.invitations.accepted',
-        'route': 'stats_invitations_accepted',
-    }
+{#
+  The statistics (StatisticsController): a card per figure with its latest value and an area chart, by week or by day
+  (the switch above them, both loaded at once); then how long ago members logged in, where they live and their
+  languages as bar lists. about/statistics.js loads the data from the stats_* routes and draws them.
+#}
+{% set metrics = {
+    members: {headline: 'members', route: 'stats_members', unit: 'statistics.unit.active'},
+    sent_messages: {headline: 'sent_messages', route: 'stats_messages_sent'},
+    read_messages: {headline: 'read_messages', route: 'stats_messages_read'},
+    sent_requests: {headline: 'sent_requests', route: 'stats_requests_sent'},
+    accepted_requests: {headline: 'accepted_requests', route: 'stats_requests_accepted'},
+    created_legs: {headline: 'statistics.legs.created', route: 'stats_legs_created'},
+    sent_invitations: {headline: 'statistics.invitations.sent', route: 'stats_invitations_sent'},
+    accepted_invitations: {headline: 'statistics.invitations.accepted', route: 'stats_invitations_accepted'},
+} %}
+{% set lists = {
+    logins: {headline: 'statslastlogin', url: '/stats/members/logins'},
+    countries: {headline: 'statsmembercountry', url: '/stats/members/countries'},
+    languages: {headline: 'statslanguages', url: '/stats/languages/spoken'},
+    preferred: {headline: 'statspreferredlanguages', url: '/stats/languages/preferred'},
 } %}
 
-{% block title %}
-    {{ 'statistics.title' | trans }}
-{% endblock %}
-
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block title %}{{ 'statistics.title' | trans }}{% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('chartjs') }}
-    <script type="application/javascript">
-        document.addEventListener("DOMContentLoaded", async function() {
-            function createLineChart(data, key, period) {
-                let ctx = document.getElementById(key + "-" + period).getContext('2d');
-                let barChartData = {
-                    labels: data.labels,
-                    datasets: [{
-                        label: 'Data',
-                        backgroundColor: '#999',
-                        borderColor: '#888',
-                        pointRadius: .5,
-                        data: data.numbers
-                    }]
-                };
-                new Chart(ctx, {
-                    type: 'line',
-                    data: barChartData,
-                    options: {
-                        title: {
-                            display: false,
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-            }
-
-            function createLanguageChart(data) {
-                let labels = [];
-                let counts = [];
-                let i = 0;
-                Object.keys(data).forEach(
-                    function (key) {
-                        labels[i] = key;
-                        counts[i] = data[key];
-                        i++;
-                    }
-                );
-                let ctx = document.getElementById('languages').getContext('2d');
-                let barChartData = {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Languages',
-                        backgroundColor: ["#BCE02E", "#E0642E", "#E0D62E", "#2E97E0", "#B02EE0", "#E02E75", "#5CE02E", "#E0B02E", "#FF3179", "#374AF9"],
-                        data: counts
-                    }]
-                };
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: barChartData,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: false,
-                            },
-                            legend: {
-                                display: false,
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-
-            function createPieChart(data, canvas) {
-                let labels = [];
-                let counts = [];
-                let i = 0;
-                Object.keys(data).forEach(
-                    function (key) {
-                        labels[i] = key;
-                        counts[i] = data[key];
-                        i++;
-                    }
-                );
-                let ctx = document.getElementById(canvas).getContext('2d');
-                let pieChartData = {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Data',
-                        backgroundColor: ["#BCE02E", "#E0642E", "#E0D62E", "#2E97E0", "#B02EE0", "#E02E75", "#5CE02E", "#E0B02E", "#FF3179", "#374AF9",
-                            "#E105A7", "#58A29E", "#4ADB83", "#916184", "#0EB109"],
-                        data: counts
-                    }]
-                };
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: pieChartData,
-                    options: {
-                        responsive: true,
-                        title: {
-                            display: false,
-                        },
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        }
-                    }
-                });
-            }
-
-            {% for key,current in statistics %}
-            await fetch('{{ url(current.route, {'period': 'weekly'}) }}')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createLineChart(data, '{{ key }}', 'weekly');
-                });
-            await fetch('{{ url(current.route, {'period': 'daily'}) }}')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createLineChart(data, '{{ key }}', 'daily');
-                });
-            {% endfor %}
-            await fetch('/stats/members/logins')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createPieChart(data, 'logins');
-                });
-            await fetch('/stats/members/countries')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createPieChart(data, 'countries');
-                });
-            await fetch('/stats/languages/spoken')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createLanguageChart(data);
-                });
-            await fetch('/stats/languages/preferred')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    return response.json();
-                })
-                .then((data) => {
-                    createPieChart(data, 'preferred');
-                });
-        });
-    </script>
+    {{ encore_entry_script_tags('about/statistics') }}
 {% endblock javascripts %}
 
-{% block content %}
-    <div class="o-text">
-        <h1>{{ 'bw statistics'|trans }}</h1>
-        <p>{{ 'statshead' | trans }}</p>
-        <div class="u:grid u:grid-cols-1 u:md:grid-cols-2 u:gap-16">
-            {% for key,current in statistics %}
-                <div class="u:col-span-1 u:md:col-span-2 u:mt-16">
-                    <h3><i class="fa fa-signal u:me-8"></i>{{ current.headline|trans }}</h3>
-                </div>
-                <div class="o-card">
-                    <h3>{{ 'statsheadcol1'|trans }}</h3>
-                    <canvas id="{{ key }}-weekly"></canvas>
-                </div>
-                <div class="o-card">
-                    <h3>{{ 'statsheadcol2'|trans }}</h3>
-                    <canvas id="{{ key }}-daily"></canvas>
-                </div>
-                {% if key == "members" %}
-                <div class="u:col-span-1 u:md:col-span-2 u:mt-16">
-                    {{ 'statistics.members.info'|trans }}
-                </div>
-                {% endif %}
+{% block page_title %}{{ 'bw statistics' | trans }}{% endblock %}
+{% block page_lead %}{{ 'statshead' | trans }}{% endblock %}
+
+{% block about_body %}
+    <div class="p-stats js-stats" data-locale="{{ app.request.locale }}">
+        <div class="p-stats__bar">
+            <div class="c-home-radius__options" role="group" aria-label="{{ 'statistics.period' | trans }}">
+                <button type="button" class="c-home-radius__option is-active" data-period="weekly" aria-pressed="true">{{ 'statistics.period.weekly' | trans }}</button>
+                <button type="button" class="c-home-radius__option" data-period="daily" aria-pressed="false">{{ 'statistics.period.daily' | trans }}</button>
+            </div>
+            <span class="p-stats__updated">{{ 'statistics.updated' | trans }}</span>
+        </div>
+
+        <div class="p-stats__cards">
+            {% for key, metric in metrics %}
+                <section class="p-stats__card js-stats-metric"
+                         data-weekly="{{ path(metric.route, {period: 'weekly'}) }}" data-daily="{{ path(metric.route, {period: 'daily'}) }}">
+                    <h2>{{ metric.headline | trans }}</h2>
+                    <p class="p-stats__value"><span class="js-stats-value">–</span> <span class="p-stats__unit">{{ (metric.unit ?? 'statistics.unit.day') | trans }}</span></p>
+                    <div class="p-stats__chart"><canvas class="js-stats-chart" aria-label="{{ metric.headline | trans }}" role="img"></canvas></div>
+                    <div class="p-stats__range"><span class="js-stats-from"></span><span class="js-stats-to"></span></div>
+                    {% if key == 'members' %}
+                        <p class="p-stats__note">{{ 'statistics.members.info' | trans }}</p>
+                    {% endif %}
+                </section>
             {% endfor %}
-            <div class="o-card">
-                <h3>{{ 'statslastlogin'|trans }}</h3>
-                <canvas id="logins" width="100" height="130"></canvas>
-            </div>
-            <div class="o-card">
-                <h3>{{ 'statsmembercountry'|trans }}</h3>
-                <canvas id="countries" width="100" height="130"></canvas>
-            </div>
-            <div class="o-card">
-                <h3>{{ 'statslanguages'|trans }}</h3>
-                <canvas id="languages" width="100" height="130"></canvas>
-            </div>
-            <div class="o-card">
-                <h3>{{ 'statspreferredlanguages'|trans }}</h3>
-                <canvas id="preferred" width="100" height="130"></canvas>
-            </div>
+
+            {% for key, list in lists %}
+                <section class="p-stats__card js-stats-list" data-url="{{ list.url }}">
+                    <h2>{{ list.headline | trans }}</h2>
+                    <ul class="p-stats__list js-stats-rows"><li class="p-stats__loading">{{ 'statistics.loading' | trans }}</li></ul>
+                </section>
+            {% endfor %}
         </div>
     </div>
-{% endblock content %}
+{% endblock about_body %}

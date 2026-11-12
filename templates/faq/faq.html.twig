@@ -1,9 +1,9 @@
 {% extends 'about/layout.html.twig' %}
 {#
-  The FAQ (FaqController) in the About pages' frame, the categories in the About menu: the questions of one category,
-  each opening its answer (a <details>, so it works without JavaScript); a link to #question12 opens that one. The
-  questions and answers are translations (faqq_… and faqa_…) with their own paragraphs. A box at the end leads to the
-  contact form. Expects submenu, faqCategory and faqs.
+  The FAQ (FaqController) in the About pages' frame, the categories as pills above the card: the questions of one
+  category, each opening its answer (a <details>, so it works without JavaScript); a link to #question12 opens that
+  one. The questions and answers are translations (faqq_… and faqa_…) with their own paragraphs. A box at the end
+  leads to the contact form. Expects submenu, faqCategories, faqCategory and faqs.
 #}
 
 {% block title %}{{ 'aboutfaq'|trans }}{% endblock %}
@@ -12,9 +12,20 @@
     {{ encore_entry_script_tags('faq') }}
 {% endblock javascripts %}
 
-{% block content %}
-    <div class="p-faq">
-        <h1>{{ 'aboutfaq'|trans }}</h1>
+{% block page_title %}{{ 'aboutfaq'|trans }}{% endblock %}
+{% block page_lead %}{{ 'faq.lead'|trans }}{% endblock %}
+
+{% block page_head %}
+    <nav class="p-about__pills" aria-label="{{ 'faq.categories'|trans }}">
+        {% for category in faqCategories %}
+            {% set _active = category.id == faqCategory.id %}
+            <a class="c-pill{{ _active ? ' is-active' }}" href="{{ path('faqs_overview', {category: category.id}) }}"{% if _active %} aria-current="page"{% endif %}>{{ category.description|lower|trans }}</a>
+        {% endfor %}
+    </nav>
+{% endblock page_head %}
+
+{% block about_body %}
+    <article class="p-about__card p-faq">
         <h2 class="p-faq__title">{{ faqCategory.description|lower|trans }}</h2>
         {% for faq in faqs %}
             <details class="p-faq__item" id="question{{ faq.id }}">
@@ -33,7 +44,7 @@
                 <h2>{{ 'faq.more.title'|trans }}</h2>
                 <p>{{ 'faq.more.text'|trans }}</p>
             </div>
-            <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('contactus') }}"><i class="fas fa-envelope" aria-hidden="true"></i>{{ 'contactus'|trans }}</a>
+            <a class="o-button o-button--outline" href="{{ path('contactus') }}"><i class="fas fa-envelope" aria-hidden="true"></i>{{ 'contactus'|trans }}</a>
         </section>
-    </div>
-{% endblock content %}
+    </article>
+{% endblock about_body %}

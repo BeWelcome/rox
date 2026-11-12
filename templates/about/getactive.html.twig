@@ -1,172 +1,56 @@
 {% extends 'about/layout.html.twig' %}
-{% import _self as getactive %}
+{#
+  Get active: a tile per team (App\Model\About\VolunteerTeams) with its tags (links), its text and the member to
+  contact (a TeamCoordinator, set in the volunteer tools). The pills filter the tiles by group (about/getactive.js);
+  without JavaScript all tiles show.
+#}
 
-{% macro inline_trans(key) %}
-	{{- key | trans | purify | striptags('<a>') | trim | raw -}}
-{% endmacro %}
+{% block title %}{{ 'getactive' | trans }}{% endblock %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('about/getactive') }}
+{% endblock javascripts %}
 
-{% block title %}
-	{{ 'getactive' | trans }}
-{% endblock %}
+{% block page_title %}{{ 'getactive' | trans }}{% endblock %}
+{% block page_lead %}{{ 'getactiveintro' | trans | purify }}{% endblock %}
 
-{% block content %}
-<div class="o-text">
-	<div class="row">
-		<div class="col-12">
-	        <h1>{{ 'aboutuspage' | trans }}</h1>
-			<h2>{{ 'getactive' | trans }}</h2>
-			<p>{{ 'getactiveintro' | trans | purify }}</p>
-		</div>
+{% block about_body %}
+    <div class="p-getactive js-getactive">
+        <div class="p-about__pills" role="group" aria-label="{{ 'getactive.filter' | trans }}">
+            <button type="button" class="c-pill is-active" data-group="" aria-pressed="true">{{ 'getactive.filter.all' | trans }}</button>
+            {% for group in groups %}
+                <button type="button" class="c-pill" data-group="{{ group }}" aria-pressed="false">{{ ('getactive.filter.' ~ group) | trans }}</button>
+            {% endfor %}
+        </div>
 
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-code" aria-hidden="true"></i>
-						{{ 'getactivedevtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedevtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedevcontact') }}</p>
-					<p class="card-text">{{ 'getactivedevtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-flask" aria-hidden="true"></i>
-						{{ 'getactivetestingtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcometestingtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivetestingcontact') }}</p>
-					<p class="card-text">{{ 'getactivetestingtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-server" aria-hidden="true"></i>
-						{{ 'getactivesysadmintitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpsysadmintags') }}<br>{{ getactive.inline_trans('helpsysadmincontact') }}: {{ getactive.inline_trans('getactivesysadmincontact') }}</p>
-					<p class="card-text">{{ 'getactivesysadmintext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-paint-brush" aria-hidden="true"></i>
-						{{ 'getactivedesigntitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedesigntags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedesigncontact') }}</p>
-					<p class="card-text">{{ 'getactivedesigntext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="far fa-question-circle" aria-hidden="true"></i>
-						{{ 'getactivesupporttitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomesupporttags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivesupportcontact') }}</p>
-					<p class="card-text">{{ 'getactivesupporttext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-language" aria-hidden="true"></i>
-						{{ 'getactivetranslatetitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcometranslatetags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivetranslatecontact') }}</p>
-					<p class="card-text">{{ 'getactivetranslatetext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-bullhorn" aria-hidden="true"></i>
-						{{ 'getactiveprtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomeprtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactiveprcontact') }}</p>
-					<p class="card-text">{{ 'getactiveprtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="far fa-handshake" aria-hidden="true"></i>
-						{{ 'getactivenmbwtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomenmbwtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivenmbwcontact') }}</p>
-					<p class="card-text">{{ 'getactivenmbwtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-user-circle" aria-hidden="true"></i>
-						{{ 'getactivemodtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomemodtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivemodcontact') }}</p>
-					<p class="card-text">{{ 'getactivemodtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-map-marker-alt" aria-hidden="true"></i>
-						{{ 'getactivelocaltitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomelocaltags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivelocalcontact') }}</p>
-					<p class="card-text">{{ 'getactivelocaltext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-euro-sign" aria-hidden="true"></i>
-						{{ 'getactivedonationtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedonationtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedonationcontact') }}</p>
-					<p class="card-text">{{ 'getactivedonationtext' | trans | purify }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-md-6 mb-3">
-			<div class="card o-card h-100">
-				<div class="card-body">
-					<h3 class="card-title">
-						<i class="fa fa-heart" aria-hidden="true"></i>
-						{{ 'getactivebvtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomebvtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivebvcontact') }}</p>
-					<p class="card-text">{{ 'getactivebvtext' | trans | purify }}</p>
-
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-{% endblock content %}
+        <div class="p-getactive__tiles">
+            {% for team, definition in volunteer_teams %}
+                {% set _coordinator = coordinators[team] ?? null %}
+                {% set _tags = (definition.tags | trans | purify | striptags('<a>') | replace({'&#124;': '|'})) | split('|') | map(tag => tag | trim) | filter(tag => tag != '') %}
+                <section class="p-getactive__tile" data-group="{{ definition.group }}" aria-labelledby="getactive-{{ team }}">
+                    <div class="p-getactive__tile-head">
+                        <span class="p-about__icon" aria-hidden="true"><i class="{{ definition.icon }}"></i></span>
+                        <h2 id="getactive-{{ team }}">{{ ('getactive' ~ team ~ 'title') | trans }}</h2>
+                    </div>
+                    {% if _tags is not empty %}
+                        <div class="p-getactive__tags">
+                            {% for tag in _tags %}<span class="c-tag">{{ tag | raw }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="p-getactive__text">{{ ('getactive' ~ team ~ 'text') | trans | purify }}</div>
+                    {% if _coordinator %}
+                        {% set _member = _coordinator.member %}
+                        <div class="p-getactive__contact">
+                            <img class="p-getactive__avatar" src="{{ path('avatar', {username: _member.username, size: 48}) }}" alt="" width="32" height="32" loading="lazy">
+                            <div class="p-getactive__who">
+                                <a class="p-getactive__name" href="{{ path('members_profile', {username: _member.username}) }}">{{ _member.username }}</a>
+                                <span class="p-getactive__role">{{ 'getactive.coordinator' | trans }}</span>
+                            </div>
+                            <a class="c-pill" href="{{ path('message_new', {username: _member.username}) }}"><i class="fas fa-envelope" aria-hidden="true"></i>{{ 'getactive.message' | trans }}</a>
+                        </div>
+                    {% endif %}
+                </section>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock about_body %}

@@ -44,10 +44,10 @@ class FeedbackTest extends WebTestCase
     }
 
     /**
-     * The hint to report a member opens by itself through the micromodal script (assets/js/micromodal.js), not
-     * through an inline script that called a MicroModal the page doesn't have; a plain visit has no hint.
+     * A safety report shows the note under the topic instead of a dialog (it shows for that topic only, about/contact.js
+     * keeps it in step with the choice); coming from a message, a dialog offers to report that message.
      */
-    public function testTheReportHintOpensOnlyWhenThereIsOne(): void
+    public function testASafetyReportShowsTheNoteAndAMessageTheDialog(): void
     {
         $client = static::createClient();
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
@@ -57,11 +57,19 @@ class FeedbackTest extends WebTestCase
         $crawler = $client->request('GET', '/feedback');
         $this->assertResponseIsSuccessful();
         self::assertCount(0, $crawler->filter('[data-micromodal-open]'));
-        self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
+        self::assertCount(1, $crawler->filter('#contact-safety-note[hidden]'));
+        self::assertSame((string) $safety->getId(), $crawler->filter('select.js-contact-topic')->attr('data-safety'));
+        // members find their address filled in
+        self::assertNotSame('', (string) $crawler->filter('input[name="FeedbackEmail"]')->attr('value'));
 
         $crawler = $client->request('GET', '/feedback?IdCategory=' . $safety->getId() . '&username=member-3');
         $this->assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('#report-modal[data-micromodal-open]'));
+        self::assertCount(0, $crawler->filter('[data-micromodal-open]'));
+        self::assertCount(1, $crawler->filter('#contact-safety-note:not([hidden])'));
+
+        $crawler = $client->request('GET', '/feedback?IdCategory=' . $safety->getId() . '&username=member-3&messageId=1');
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('#report-modal[data-micromodal-open] a[href$="/1/report"]'));
         self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
     }
 

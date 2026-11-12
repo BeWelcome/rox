@@ -286,3 +286,21 @@ admin.tools.change_username.error.invalid:
 admin.tools.change_username.error.same:
     - 'The new username must differ from the current one.'
     - 'Volunteer tool Change username: error when both names are the same.'
+admin.tools.team_coordinators.title:
+  - 'Team coordinators'
+  - 'Volunteer tools: the tool that sets the member to contact for each team of the Get active page.'
+admin.tools.team_coordinators.description:
+  - 'The member to contact about each team on the Get active page. Leave a team empty if nobody coordinates it.'
+  - 'Volunteer tools, team coordinators: the description under the title.'
+admin.tools.team_coordinators.saved:
+  - 'The coordinators are saved.'
+  - 'Volunteer tools, team coordinators: notice after saving.'
+admin.tools.team_coordinators.unknown:
+  - 'There is no member with this username.'
+  - 'Volunteer tools, team coordinators: error under a team whose username does not exist.'
+admin.tools.team_coordinators.none:
+  - 'Nobody'
+  - 'Volunteer tools, team coordinators: placeholder of an empty username.'
+admin.tools.team_coordinators.page:
+  - 'Show the page'
+  - 'Volunteer tools, team coordinators: button that opens the Get active page.'

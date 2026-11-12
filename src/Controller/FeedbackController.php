@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\FeedbackCategory;
+use App\Entity\Member;
 use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -48,6 +50,7 @@ class FeedbackController extends AboutBaseController
             [
                 'IdCategory' => $category,
                 'FeedbackQuestion' => $feedbackQuestion,
+                'FeedbackEmail' => $member instanceof Member ? $member->getEmail() : null,
             ],
             [
                 'categories' => $categories,
@@ -102,6 +105,7 @@ class FeedbackController extends AboutBaseController
             'form' => $form->createView(),
             'no_modal' => $noModal,
             'messageId' => $messageId,
+            'safety_category' => $this->categoryId($categories, 'safety_and_abuse'),
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',
@@ -118,5 +122,20 @@ class FeedbackController extends AboutBaseController
                 'active' => 'about_feedback',
             ],
         ]);
+    }
+
+    /**
+     * @param array<int, FeedbackCategory> $categories
+     */
+    private function categoryId(array $categories, string $name): ?int
+    {
+        foreach ($categories as $id => $category) {
+            // the names are capitalised on some databases (Safety_and_abuse)
+            if (0 === strcasecmp($name, (string) $category->getName())) {
+                return $id;
+            }
+        }
+
+        return null;
     }
 }

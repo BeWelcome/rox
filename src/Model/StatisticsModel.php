@@ -27,6 +27,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class StatisticsModel
 {
+    /** The rows of a list of the statistics page (languages, countries): the last one adds up the others */
+    private const int LIST_ROWS = 8;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $entityManager,
@@ -287,7 +290,7 @@ class StatisticsModel
                 cnt DESC
         ');
 
-        $resultSet = $this->reduceResultSet(10, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
 
         return $this->translateLanguages($resultSet);
     }
@@ -309,7 +312,7 @@ class StatisticsModel
                 cnt DESC
         ');
 
-        $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
 
         return $this->translateLanguages($resultSet);
     }
@@ -336,7 +339,7 @@ class StatisticsModel
                 cnt DESC
         ');
 
-        $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
 
         return $this->translateCountries($resultSet);
     }
@@ -408,9 +411,16 @@ class StatisticsModel
         return $translatedResult;
     }
 
-    private function reduceResultSet(int $count, array $resultSet): array
+    /**
+     * The first rows of a list, the others added up as one more row "Other (n)": at most $rows rows.
+     */
+    private function reduceResultSet(int $rows, array $resultSet): array
     {
-        $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count + 1]);
+        if (\count($resultSet) <= $rows) {
+            return $resultSet;
+        }
+        $count = $rows - 1;
+        $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count]);
         $result = \array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
         $keyCount = \count($keys);

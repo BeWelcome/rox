@@ -1,32 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {#
-  The About pages (and the FAQ): the page in a white card, its menu (submenu.items, groups split by
-  separators) in a card on the left. On phones the menu is a row of pills above the page.
+  The About pages (and the FAQ and the policies): the menu in a card on the left (submenu.items, groups split by
+  separators; on phones a row of pills), the page next to it with its head (eyebrow, title, lead) above it.
+  Blocks:
+    about_nav    the menu (the policies show their contents instead)
+    page_title   the title of the page; empty: no title in the head (the policies have theirs in the card)
+    page_lead    the sentence under the title, optional
+    page_head    more of the head under the lead (the FAQ's categories, the policies' tabs)
+    about_body   the page: by default a white card with block content; pages of several cards replace it
 #}
 {% block main %}
   <main role="main" class="p-about">
     <div class="container-lg p-about__wrap">
-      {% if submenu is defined %}
-        <nav class="p-about__nav" aria-label="{{ 'aboutuspage'|trans }}">
-          <div class="p-about__group">
-            {% for name, item in submenu.items %}
-              {% if 'separator' in name %}
-                </div>
-                <div class="p-about__group">
-                {% if item.key is defined %}<p class="p-about__heading">{{ item.key|lower|trans }}</p>{% endif %}
-              {% else %}
-                <a class="p-about__link{{ submenu.active == name ? ' is-active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
-                  {{- item.key|lower|trans -}}
-                </a>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </nav>
-      {% endif %}
-      <article class="p-about__body">
-        {% block content %}{% endblock %}
-      </article>
+      {% block about_nav %}
+        {% if submenu is defined %}
+          <nav class="p-about__nav" aria-label="{{ 'aboutuspage'|trans }}">
+            <div class="p-about__group">
+              {% for name, item in submenu.items %}
+                {% if 'separator' in name %}
+                  </div>
+                  <div class="p-about__group">
+                  {% if item.key is defined %}<p class="p-about__heading">{{ item.key|lower|trans }}</p>{% endif %}
+                {% else %}
+                  <a class="p-about__link{{ submenu.active == name ? ' is-active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
+                    {{- item.key|lower|trans -}}
+                    {%- if item.external ?? false %}<i class="fas fa-arrow-up-right-from-square p-about__external" aria-hidden="true"></i>{% endif -%}
+                  </a>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </nav>
+        {% endif %}
+      {% endblock about_nav %}
+
+      <div class="p-about__main">
+        {% set _title = block('page_title') is defined ? block('page_title')|trim : '' %}
+        {% set _lead = block('page_lead') is defined ? block('page_lead')|trim : '' %}
+        <header class="p-about__head">
+          <p class="c-page-head__eyebrow">{{ 'aboutuspage'|trans }}</p>
+          {% if _title != '' %}<h1 class="p-about__title">{{ _title|raw }}</h1>{% endif %}
+          {% if _lead != '' %}<div class="p-about__lead">{{ _lead|raw }}</div>{% endif %}
+          {% block page_head %}{% endblock %}
+        </header>
+
+        {% block about_body %}
+          <article class="p-about__card p-about__text">
+            {% block content %}{% endblock %}
+          </article>
+        {% endblock about_body %}
+      </div>
     </div>
   </main>
 {% endblock main %}

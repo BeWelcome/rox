@@ -8,7 +8,6 @@ use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,7 +34,7 @@ class FeedbackFormType extends AbstractType
                 },
                 'required' => false,
                 'attr' => [
-                    'class' => 'select2',
+                    'class' => 'o-input',
                 ],
                 'constraints' => [
                     new NotNull(message: 'feedback.select.category'),
@@ -49,21 +48,17 @@ class FeedbackFormType extends AbstractType
                 ],
             ])
         ;
-        $member = $options['member'];
-        if (null === $member) {
-            $builder->add('FeedbackEmail', TextType::class, [
-                'label' => 'feedbackemail',
-                'required' => false,
-                'constraints' => [
-                    new Email(),
-                ],
-            ])
-                ->add('captcha', CaptchaType::class)
-            ;
-        } else {
-            $builder->add('FeedbackEmail', HiddenType::class, [
-                'attr' => ['value' => $member->getEmail()],
-            ]);
+        // members find their address filled in (FeedbackController), visitors prove they are human
+        $builder->add('FeedbackEmail', TextType::class, [
+            'label' => 'feedbackemail',
+            'required' => false,
+            'attr' => ['class' => 'o-input', 'autocomplete' => 'email'],
+            'constraints' => [
+                new Email(),
+            ],
+        ]);
+        if (null === $options['member']) {
+            $builder->add('captcha', CaptchaType::class);
         }
         $builder
             ->add('no_reply_needed', CheckboxType::class, [

@@ -134,3 +134,11 @@ main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
   /* the buttons wrap under the field: no room for the label above them */
   .c-vtools-notifications__actions { padding-top: 0; }
 }
+
+/* Team coordinators of Get active: a row per team, its name and the member */
+.c-vtools-coordinators { display: flex; flex-direction: column; }
+.c-vtools-coordinators__row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.75rem 0; border-top: 1px solid #f1f5f9; }
+.c-vtools-coordinators__row:first-child { padding-top: 0; border-top: 0; }
+.c-vtools-coordinators__team { display: flex; flex: 0 0 15rem; align-items: center; gap: 0.75rem; margin: 0; color: #0f172a; font-weight: 700; }
+.c-vtools-coordinators__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; background: #fff1e6; color: #c2410c; font-size: 0.9rem; }
+.c-vtools-coordinators__field { flex: 1 1 16rem; min-width: 0; }

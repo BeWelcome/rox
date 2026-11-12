@@ -1,0 +1,39 @@
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import '_partials/member_suggest.html.twig' as member_suggest %}
+{#
+  The member to contact about each team of the Get active page (right Admin): a username per team with suggestions,
+  empty for none. The page shows the member's picture and a link to write to them.
+#}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('member/suggest-fields') }}
+{% endblock javascripts %}
+
+{% block tool %}
+  {{ form_start(form, {attr: {class: 'c-vtools-form', novalidate: 'novalidate'}}) }}
+    {{ form_errors(form) }}
+    <div class="c-vtools-coordinators">
+      {% for team, definition in volunteer_teams %}
+        {% set _field = form[team] %}
+        <div class="c-vtools-coordinators__row">
+          <label class="c-vtools-coordinators__team" for="{{ _field.vars.id }}">
+            <span class="c-vtools-coordinators__icon" aria-hidden="true"><i class="{{ definition.icon }}"></i></span>
+            {{ _field.vars.label|trans }}
+          </label>
+          <div class="c-vtools-coordinators__field">
+            {{ member_suggest.field(_field, {placeholder: 'admin.tools.team_coordinators.none'|trans, icon: true}) }}
+            {% if _field.vars.errors|length > 0 %}
+              <ul class="c-massmail-form__errors">
+                {% for error in _field.vars.errors %}<li>{{ error.message }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="c-massmail-form__actions">
+      <button type="submit" class="o-button">{{ 'save'|trans }}</button>
+      <a class="o-button o-button--outline-gray" href="{{ path('getactive') }}">{{ 'admin.tools.team_coordinators.page'|trans }}</a>
+    </div>
+  {{ form_end(form) }}
+{% endblock tool %}

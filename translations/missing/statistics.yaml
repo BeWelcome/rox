@@ -37,3 +37,24 @@ statistics.other:
 statistics.members.info:
     - From time to time we cleanup our members database which is visible as a (stern) drop in the statistics.
     - Info text on the statistics page below the first row which shows the current member count.
+statistics.period:
+  - 'Period'
+  - 'Statistics: label of the switch between weekly and daily figures (screen readers).'
+statistics.period.weekly:
+  - 'Weekly'
+  - 'Statistics: show the figures by week, since the start.'
+statistics.period.daily:
+  - 'Daily, last 2 months'
+  - 'Statistics: show the figures by day of the last two months.'
+statistics.updated:
+  - 'Updated every night'
+  - 'Statistics: next to the switch between weekly and daily.'
+statistics.unit.active:
+  - 'active'
+  - 'Statistics: after the number of members (members who are active).'
+statistics.unit.day:
+  - 'per day'
+  - 'Statistics: after a figure such as the messages sent (by week: the busiest day of the week).'
+statistics.loading:
+  - 'Loading…'
+  - 'Statistics: shown in a list (countries, languages) while its figures load.'

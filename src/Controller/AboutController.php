@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\FeedbackCategory;
+use App\Model\About\VolunteerTeams;
+use App\Repository\TeamCoordinatorRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,9 +46,12 @@ class AboutController extends AboutBaseController
      */
     #[Route(path: '/about/getactive', name: 'getactive')]
     #[Route(path: '/volunteer', name: 'volunteer')]
-    public function showAboutGetActive(Request $request)
+    public function showAboutGetActive(Request $request, TeamCoordinatorRepository $coordinators)
     {
         return $this->render('about/getactive.html.twig', [
+            'volunteer_teams' => VolunteerTeams::TEAMS,
+            'groups' => VolunteerTeams::GROUPS,
+            'coordinators' => $coordinators->byTeam(),
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'getactive',
@@ -55,25 +62,15 @@ class AboutController extends AboutBaseController
     /**
      * @return Response
      */
-    #[Route(path: '/about', name: 'about_theidea')]
-    public function showAboutTheIdea(Request $request)
-    {
-        return $this->render('about/about.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems($request->getLocale()),
-                'active' => 'about_theidea',
-            ],
-        ]);
-    }
-
-    /**
-     * @return Response
-     */
     #[Route(path: '/press-information', name: 'about_press')]
     #[Route(path: '/media', name: 'media')]
-    public function showAboutPressInfo(Request $request)
+    public function showAboutPressInfo(Request $request, EntityManagerInterface $entityManager)
     {
+        // "Write to the press team" opens the contact form on Media
+        $media = $entityManager->getRepository(FeedbackCategory::class)->findOneBy(['name' => 'media']);
+
         return $this->render('about/pressinfo.html.twig', [
+            'media_category' => $media?->getId(),
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_press',
@@ -136,7 +133,7 @@ class AboutController extends AboutBaseController
         return $this->render('about/impressum.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
-                'active' => 'about',
+                'active' => 'imprint',
             ],
         ]);
     }

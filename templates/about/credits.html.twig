@@ -1,8 +1,9 @@
 {% extends 'about/layout.html.twig' %}
 
-{% block title %}
-    {{ 'credits.title' | trans }}
-{% endblock %}
+{% block title %}{{ 'credits.title' | trans }}{% endblock %}
+
+{% block page_title %}{{ 'credits.headline' | trans }}{% endblock %}
+{% block page_lead %}{{ 'credits.abstract' | trans }}{% endblock %}
 
 {% block matomo %}
     <script type="application/javascript">
@@ -20,32 +21,26 @@
     </script>
 {% endblock matomo %}
 
-{% block content %}
-    <h1>{{ 'credits.headline' | trans }}</h1>
-    <p>{{ 'credits.abstract' | trans }}</p>
-    <dl>
-        <dt><a id="geonames" href="https://geonames.org">Geonames</a></dt>
-        <dd>{{ 'credits.geonames'|trans }}</dd>
-        <dt><a id="OSM"></a><a href="https://openstreetmap.org">Open Street Map</a></dt>
-        <dd>{{ 'credits.osm'|trans }}</dd>
-        <dt><a id="Jetbrains"></a><a href="https://www.jetbrains.com/?from=bewelcome"><img src="{{ asset('images/phpstorm-text.svg') }}" height="24" alt="PHPStorm logo" title="PHPStorm"></a></dt>
-        <dd>{{ 'credits.jetbrains'|trans|purify }}</dd>
-        <dt><a id="Browserstack"></a><a href="https://browserstack.com"><img src="{{ asset('images/Browserstack-logo.svg') }}" height="24" alt="Browserstack logo" title="Browserstack"></a></dt>
-        <dd>{{ 'credits.browserstack'|trans }}</dd>
-        <dt><a id="Symfony"></a><a href="https://symfony.com"><img src="{{ asset('images/symfony_black_02.png') }}" height="24" alt="symfony logo" title="symfony"></a></dt>
-        <dd>{{ 'credits.symfony'|trans }}</dd>
-        <dt><a id="ckeditor"></a><a href="https://ckeditor.com/ckeditor-5/">CKEditor 5</a></dt>
-        <dd>{{ 'credits.ckeditor'|trans }}</dd>
-        <dt><a href="https://htmlpurifier.org/"><img
-                    src="{{ asset('images/html_purifier_powered.png') }}"
-                    alt="Powered by HTML Purifier"></a></dt>
-        <dd>{{ 'credits.htmlpurifier'|trans }}</dd>
-        <dt><a href="https://meet.jitsi.org"><img
-                    src="https://jitsi.org/wp-content/themes/jitsi/images/logo-web-2020.png" height="24"></a></dt>
-        <dd>{{ 'credits.jitsi.meet'|trans }}</dd>
-        <dt><a href="https://framasoft.org">Framasoft</a></dt>
-        <dd>{{ 'credits.framasoft'|trans }}</dd>
-        <dt><a id="znuny"></a><a href="https://www.znuny.org/">Znuny</a></dt>
-        <dd>{{ 'credits.znuny'|trans }}</dd>
-    </dl>
-{% endblock content %}
+{% block about_body %}
+    {# a row per project; the ids are linked to (map.js links to #OSM) #}
+    {% set _credits = [
+        {id: 'geonames', name: 'Geonames', url: 'https://geonames.org', text: 'credits.geonames'},
+        {id: 'OSM', name: 'OpenStreetMap', url: 'https://openstreetmap.org', text: 'credits.osm'},
+        {id: 'Jetbrains', name: 'PhpStorm', url: 'https://www.jetbrains.com/?from=bewelcome', text: 'credits.jetbrains'},
+        {id: 'Browserstack', name: 'BrowserStack', url: 'https://browserstack.com', text: 'credits.browserstack'},
+        {id: 'Symfony', name: 'Symfony', url: 'https://symfony.com', text: 'credits.symfony'},
+        {id: 'ckeditor', name: 'CKEditor 5', url: 'https://ckeditor.com/ckeditor-5/', text: 'credits.ckeditor'},
+        {id: 'htmlpurifier', name: 'HTML Purifier', url: 'https://htmlpurifier.org/', text: 'credits.htmlpurifier'},
+        {id: 'jitsi', name: 'Jitsi Meet', url: 'https://meet.jitsi.org', text: 'credits.jitsi.meet'},
+        {id: 'framasoft', name: 'Framasoft', url: 'https://framasoft.org', text: 'credits.framasoft'},
+        {id: 'znuny', name: 'Znuny', url: 'https://www.znuny.org/', text: 'credits.znuny'},
+    ] %}
+    <div class="p-about__card p-about__text p-credits">
+        {% for credit in _credits %}
+            <div class="p-credits__row" id="{{ credit.id }}">
+                <a class="p-credits__name" href="{{ credit.url }}">{{ credit.name }}</a>
+                <div class="p-credits__text">{{ credit.text | trans | purify }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock about_body %}

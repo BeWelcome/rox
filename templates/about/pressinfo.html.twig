@@ -1,10 +1,13 @@
 {% extends 'about/layout.html.twig' %}
 
-{% block title %}
-    {{ 'pressinfo.title' | trans }}
-{% endblock %}
+{% block title %}{{ 'pressinfo.title' | trans }}{% endblock %}
+
+{% block page_title %}{{ 'pressinfo.headline' | trans }}{% endblock %}
+{% block page_lead %}{{ 'pressinfo.lead' | trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ 'pressinfo.headline' | trans }}</h1>
     {{ 'pressinfo.text' | trans | purify }}
+    <p class="p-about__actions">
+        <a class="o-button" href="{{ path('contactus', media_category ? {IdCategory: media_category} : {}) }}"><i class="fas fa-envelope" aria-hidden="true"></i>{{ 'pressinfo.contact' | trans }}</a>
+    </p>
 {% endblock content %}

@@ -4,15 +4,15 @@ namespace App\Controller;
 
 use App\Entity\FaqCategory;
 use App\Model\FaqModel;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * The FAQ (templates/faq/faq.html.twig) in the About pages' frame, with the categories in the About menu: the active
+ * The FAQ (templates/faq/faq.html.twig) in the About pages' frame, the categories as pills above it: the active
  * questions of one category, each opening its answer; /faq/1#question12 opens that question.
  */
-class FaqController extends AbstractController
+class FaqController extends AboutBaseController
 {
     public function __construct(private readonly FaqModel $faqModel)
     {
@@ -29,38 +29,16 @@ class FaqController extends AbstractController
     }
 
     #[Route(path: '/faq/{category}', name: 'faqs_overview', requirements: ['category' => '\d+'], defaults: ['category' => '1'])]
-    public function showOverview(FaqCategory $category): Response
+    public function showOverview(Request $request, FaqCategory $category): Response
     {
         return $this->render('faq/faq.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => $category->getId(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
+                'active' => 'about_faq',
             ],
+            'faqCategories' => $this->faqModel->getFaqCategories(),
             'faqCategory' => $category,
             'faqs' => $this->faqModel->getFaqsForCategory($category),
         ]);
-    }
-
-    /**
-     * The About menu (about/layout.html.twig) with the FAQ categories as its own group.
-     *
-     * @return array<int|string, array{key: string, url: string}>
-     */
-    private function getSubMenuItems(): array
-    {
-        $subMenu = [
-            'about' => ['key' => 'AboutUsSubmenu', 'url' => $this->generateUrl('about')],
-            'about_faq' => ['key' => 'Faq', 'url' => $this->generateUrl('faqs_overview')],
-            'about_feedback' => ['key' => 'ContactUs', 'url' => $this->generateUrl('contactus')],
-            'separator' => ['key' => 'Faq', 'url' => ''],
-        ];
-        foreach ($this->faqModel->getFaqCategories() as $category) {
-            $subMenu[$category->getId()] = [
-                'key' => $category->getDescription(),
-                'url' => $this->generateUrl('faqs_overview', ['category' => $category->getId()]),
-            ];
-        }
-
-        return $subMenu;
     }
 }

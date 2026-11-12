@@ -8,12 +8,15 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\UploadedImage;
 use App\Form\Admin\ForumNotificationsType;
+use App\Form\Admin\TeamCoordinatorsType;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
 use App\Form\FindUserFormType;
 use App\Form\LoginMessageType;
 use App\Logger\Logger;
+use App\Model\About\TeamCoordinators;
+use App\Model\About\VolunteerTeams;
 use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
@@ -76,6 +79,8 @@ class VolunteerToolController extends AbstractController
         'uploaded_images' => ['route' => 'admin_tools_uploaded_images', 'icon' => 'images', 'group' => 'site',
             'rights' => [Member::ROLE_ADMIN_ADMIN]],
         'login_messages' => ['route' => 'admin_tools_login_messages_show', 'icon' => 'bullhorn', 'group' => 'site',
+            'rights' => [Member::ROLE_ADMIN_ADMIN]],
+        'team_coordinators' => ['route' => 'admin_tools_team_coordinators', 'icon' => 'people-group', 'group' => 'site',
             'rights' => [Member::ROLE_ADMIN_ADMIN]],
     ];
 
@@ -161,6 +166,34 @@ class VolunteerToolController extends AbstractController
 
         return $this->tool('forum_notifications', 'admin/tools/forum.notifications.html.twig', [
             'form' => $form,
+        ], $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
+    }
+
+    /**
+     * The member to contact about each team of the Get active page.
+     */
+    #[Route(path: '/admin/tools/coordinators', name: 'admin_tools_team_coordinators', methods: ['GET', 'POST'])]
+    public function teamCoordinators(Request $request, TeamCoordinators $coordinators): Response
+    {
+        $this->denyUnlessAllowed('team_coordinators');
+
+        $form = $this->createForm(TeamCoordinatorsType::class, $coordinators->usernames());
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $unknown = $coordinators->save($form->getData());
+            foreach ($unknown as $team) {
+                $form->get($team)->addError(new FormError($this->getTranslator()->trans('admin.tools.team_coordinators.unknown')));
+            }
+            if ([] === $unknown) {
+                $this->addFlash('notice', $this->getTranslator()->trans('admin.tools.team_coordinators.saved'));
+
+                return $this->redirectToRoute('admin_tools_team_coordinators');
+            }
+        }
+
+        return $this->tool('team_coordinators', 'admin/tools/team.coordinators.html.twig', [
+            'form' => $form,
+            'volunteer_teams' => VolunteerTeams::TEAMS,
         ], $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
     }
 

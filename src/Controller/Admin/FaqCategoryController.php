@@ -73,7 +73,8 @@ class FaqCategoryController extends FaqBaseController
                 $this->entityManager->flush();
 
                 $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
-                $this->translationModel->refreshTranslationsCache();
+                // the English name is every language's fallback: add it to all cached catalogues
+                $this->translationModel->updateCachedText($word->getCode(), 'en');
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
             }
@@ -104,10 +105,8 @@ class FaqCategoryController extends FaqBaseController
             $this->entityManager->persist($description);
             $this->entityManager->flush();
 
-            $this->translationModel->refreshTranslationsCacheForLocale('en');
-            if ('en' !== $request->getLocale()) {
-                $this->translationModel->refreshTranslationsCacheForLocale($request->getLocale());
-            }
+            // the English name is every language's fallback: update it in all cached catalogues
+            $this->translationModel->updateCachedText($description->getCode(), 'en');
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }

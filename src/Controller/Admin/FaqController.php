@@ -130,7 +130,9 @@ class FaqController extends FaqBaseController
                 $this->entityManager->flush();
 
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
-                $this->translationModel->refreshTranslationsCache();
+                // the English texts are every language's fallback: add them to all cached catalogues
+                $this->translationModel->updateCachedText($question->getCode(), 'en');
+                $this->translationModel->updateCachedText($answer->getCode(), 'en');
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $category->getId()]);
             }
@@ -201,9 +203,11 @@ class FaqController extends FaqBaseController
                 ->setSentence($data->answer)
                 ->setMajorUpdate(new DateTime());
             $this->entityManager->flush();
+            // the English texts are every language's fallback: update them in all cached catalogues
+            $this->translationModel->updateCachedText('faqq_' . $faq->getQAndA(), 'en');
+            $this->translationModel->updateCachedText('faqa_' . $faq->getQAndA(), 'en');
 
             $this->addFlash('notice', 'Update FAQ ' . $faq->getQAndA());
-            // $this->translationModel->refreshTranslationsCache();
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faq->getCategory()->getId()]);
         }

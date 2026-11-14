@@ -298,3 +298,6 @@ frontpage.support.ways:
 frontpage.support.together:
     - 'Kept free and independent by the people who use it.'
     - 'Front page for visitors, block at the end about donations: title of the side with the button'
+frontpage.support.lead.short:
+    - 'Run by volunteers, owned by BeVolunteer, a non-profit. Member donations pay for everything.'
+    - 'Front page for visitors, block at the end about donations: shorter text under the title, on phones'

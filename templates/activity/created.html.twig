@@ -6,13 +6,17 @@
   {{ 'activity.created' | trans }}
 {% endblock %}
 
+{% block embed_icon %}fas fa-circle-check{% endblock %}
+
 {% block content %}
+  {# In the side panel (?embed=1), the pages it links to and the forms stay in it #}
+  {% set _embed = app.request.query.getBoolean('embed') ? { embed: 1 } : {} %}
   <section class="p-activities-panel p-activities-prose">
     <h2 class="p-activities-panel__title">{{ activity.title }}</h2>
     {{ 'activity.creation.checklist'|trans|raw }}
     <div class="p-activities-form__actions">
-      <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
-      <a class="p-activities-btn p-activities-btn--primary" href="{{ path('activities_show', { id: activity.id }) }}">{{ 'activities.created.show'|trans }}</a>
+      <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }|merge(_embed)) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
+      <a class="p-activities-btn p-activities-btn--primary" href="{{ path('activities_show', { id: activity.id }|merge(_embed)) }}">{{ 'activities.created.show'|trans }}</a>
     </div>
   </section>
 {% endblock content %}

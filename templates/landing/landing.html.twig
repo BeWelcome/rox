@@ -165,7 +165,8 @@
         <header class="c-home-dash__head">
             <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
             <h2 class="c-home-dash__title" id="home_trips_title">
-                <a href="{{ url('visitors') }}">{{ homeCity ? 'landing.dash.coming.to'|trans({ city: homeCity }) : 'landing.tab.visitors'|trans }}</a>
+                {# Phones: just "Visitors", the long title doesn't fit next to the count and the radius #}
+                <a href="{{ url('visitors') }}">{% if homeCity %}<span class="c-home-dash__title-long">{{ 'landing.dash.coming.to'|trans({ city: homeCity }) }}</span><span class="c-home-dash__title-short">{{ 'landing.tab.visitors'|trans }}</span>{% else %}{{ 'landing.tab.visitors'|trans }}{% endif %}</a>
             </h2>
             <span class="c-home-dash__count js-home-trips-position" hidden></span>
             <label class="c-home-dash__radius">
@@ -192,7 +193,7 @@
             <span class="c-home-dash__icon" aria-hidden="true"><i class="far fa-calendar"></i></span>
             <h2 class="c-home-dash__title" id="home_activities_title">{{ 'landing.dash.activities'|trans }}</h2>
             {% if activityCount %}<span class="c-home-dash__count">{{ activityCount }}</span>{% endif %}
-            <a class="c-home-dash__add" href="{{ path('activities_create') }}" aria-label="{{ 'landing.activities.create'|trans }}"><i class="fas fa-plus" aria-hidden="true"></i></a>
+            <a class="c-home-dash__add js-contact-open" href="{{ path('activities_create') }}" data-title="{{ 'activitiescreate'|trans }}" aria-label="{{ 'landing.activities.create'|trans }}"><i class="fas fa-plus" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
@@ -232,27 +233,61 @@
 <section class="c-home-section c-home-section--divided">
     <h2 class="c-home-section__title">{{ 'landing.beinvolved.title'|trans }}</h2>
     <div class="c-home-involved">
-        <div class="c-home-box">
-            <div class="c-home-box__head">
+        {#
+          Donate: what was raised this year against the goal (a marker on the bar once it is
+          passed), and Donate opens the PayPal window over the page (landing.js); the donation is
+          recorded like on the donations page, and a thank you replaces the box.
+        #}
+        {% set _donated = campaign.yearDonated %}
+        {% set _needed = campaign.yearNeeded %}
+        {% set _percent = _needed > 0 ? (_donated / _needed * 100)|round : 0 %}
+        {% set _money = { fraction_digit: 0 } %}
+        <div class="c-home-box c-home-donate js-home-donate">
+            <div class="c-home-donate__head">
                 <h3 class="c-home-box__title">{{ 'landing.beinvolved.donate'|trans }}</h3>
-                <p class="c-home-box__aside">{{ 'landing.beinvolved.goalfor'|trans }} {{ campaign.year }} - {{ campaign.year + 1 }}: <strong>€{{ campaign.yearNeeded }}</strong></p>
+                {% if goalReached %}
+                    <span class="c-home-donate__badge"><i class="fas fa-circle-check" aria-hidden="true"></i> {{ 'landing.donate.reached'|trans }}</span>
+                {% endif %}
             </div>
-            {% if goalReached %}
-                {% set goalShare = campaign.yearDonated > 0 ? (campaign.yearNeeded / campaign.yearDonated) * 100 : 100 %}
-                <div class="c-home-progress" role="progressbar" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}">
-                    <span class="c-home-progress__bar" style="width: {{ goalShare }}%;" title="{{ 'donation.needed'|trans }}"></span>
-                    <span class="c-home-progress__bar c-home-progress__bar--extra" style="width: {{ 100 - goalShare }}%;" title="{{ 'donation.additional'|trans }}"></span>
-                </div>
-            {% else %}
-                <div class="c-home-progress" role="progressbar" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}">
-                    <span class="c-home-progress__bar" style="width: {{ campaign.yearNeeded > 0 ? (campaign.yearDonated / campaign.yearNeeded) * 100 : 0 }}%;"></span>
-                </div>
-            {% endif %}
-            <p class="c-home-box__amount{% if goalReached %} is-reached{% endif %}"><strong>€ {{ campaign.yearDonated }}</strong> {{ 'dashboard.donation.received'|trans }}</p>
-            {% if goalReached %}
-                <div class="c-home-box__text">{{ 'donation.thank.you'|trans({ amount: '€' ~ campaign.yearNeeded })|raw }}</div>
-            {% endif %}
-            <a class="c-home-button{% if goalReached %} c-home-button--outline{% endif %}" href="{{ url('donations') }}"><i class="fa fa-euro-sign" aria-hidden="true"></i> {{ 'landing.beinvolved.pleasedonate'|trans }}</a>
+            <div class="c-home-donate__body js-home-donate-body">
+                <p class="c-home-donate__amount">{{ _donated|format_currency('EUR', _money) }}</p>
+                <p class="c-home-donate__sub">
+                    {{ 'landing.donate.raised'|trans({ years: campaign.year ~ '–' ~ (campaign.year + 1) }) }} ·
+                    <strong class="{{ goalReached ? 'is-reached' }}">{{ 'landing.donate.share'|trans({ percent: _percent }) }}</strong>
+                </p>
+                {% if goalReached %}
+                    {% set _mark = _donated > 0 ? (_needed / _donated * 100) : 100 %}
+                    <div class="c-home-donate__bar is-reached" role="progressbar" aria-valuenow="{{ _donated }}" aria-valuemin="0" aria-valuemax="{{ _needed }}">
+                        <span class="c-home-donate__fill" style="width: 100%;"></span>
+                        <span class="c-home-donate__mark" style="left: {{ _mark }}%;"></span>
+                    </div>
+                    <p class="c-home-donate__legend">
+                        <span>{{ 'landing.donate.goal'|trans({ amount: _needed|format_currency('EUR', _money) }) }}</span>
+                        <strong>+{{ (_donated - _needed)|format_currency('EUR', _money) }}</strong>
+                    </p>
+                    <div class="c-home-donate__text">{{ 'donation.thank.you'|trans({ amount: '€' ~ _needed })|raw }}</div>
+                {% else %}
+                    <div class="c-home-donate__bar" role="progressbar" aria-valuenow="{{ _donated }}" aria-valuemin="0" aria-valuemax="{{ _needed }}">
+                        <span class="c-home-donate__fill" style="width: {{ min(_percent, 100) }}%;"></span>
+                    </div>
+                    <p class="c-home-donate__legend">
+                        <span>{{ 'landing.donate.togo'|trans({ amount: (_needed - _donated)|format_currency('EUR', _money) }) }}</span>
+                        <span>{{ 'landing.donate.goal'|trans({ amount: _needed|format_currency('EUR', _money) }) }}</span>
+                    </p>
+                    <p class="c-home-donate__text">{{ 'landing.donate.text'|trans }}</p>
+                {% endif %}
+                <button type="button" class="c-home-donate__btn js-home-donate-open" data-nonce="{{ donationNonce }}" data-finish="{{ path('finish_donation') }}" data-fallback="{{ path('donations') }}">
+                    <i class="fas fa-heart" aria-hidden="true"></i> {{ 'landing.donate.button'|trans }}
+                </button>
+                <a class="c-home-donate__other" href="{{ url('donations') }}">{{ 'landing.donate.other'|trans }}</a>
+                {#- PayPal's own button, hidden: Donate clicks it, so PayPal opens its window -#}
+                <div id="home-donate-paypal" class="c-home-donate__paypal" aria-hidden="true"></div>
+            </div>
+            <div class="c-home-donate__thanks js-home-donate-thanks" role="status" hidden>
+                <span class="c-home-donate__heart" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                <p class="c-home-donate__thanks-title">{{ 'landing.donate.thanks'|trans }}</p>
+                <p class="c-home-donate__text">{{ 'landing.donate.thanks.text'|trans }}</p>
+            </div>
         </div>
 
         <div class="c-home-box">
@@ -310,7 +345,7 @@
         <h2 class="c-home-section__title">{{ 'landing.bwnews.title'|trans }} <span class="c-home-section__subtitle">{{ 'landing.bwnews.subtitle'|trans }}</span></h2>
         <a class="c-home-link" href="{{ url('communitynews') }}"><i class="far fa-newspaper" aria-hidden="true"></i> {{ 'landing.bwnews.allnews'|trans }}</a>
     </div>
-    <div class="c-home-news">
+    <div class="c-home-news js-home-news">
         {% for news in communityNews %}
             <article class="c-home-box c-home-news__item">
                 <h3 class="c-home-news__title"><a href="{{ url('communitynews_show', { id: news.id }) }}">{{ news.title }}</a></h3>
@@ -323,8 +358,18 @@
             </article>
         {% endfor %}
     </div>
+    {#- Phones: the news scroll sideways, with these buttons (landing.js) -#}
+    {% if communityNews|length > 1 %}
+        <div class="c-home-news__nav">
+            <button type="button" class="c-home-news__btn js-home-news-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+            <button type="button" class="c-home-news__btn js-home-news-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+    {% endif %}
 </section>
 
 {# Visitors: writing to a traveller or inviting them opens in a side panel #}
 {% include 'conversations/_contact_drawer.html.twig' %}
+{# A traveller's preview, opened from their face or name in the Members coming card (search/preview.js, loaded by bewelcome.js) #}
+<div class="js-places-preview" hidden></div>
+{{ include('search/_preview_drawer.html.twig') }}
 {% endblock content %}

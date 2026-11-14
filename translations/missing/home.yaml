@@ -262,3 +262,42 @@ frontpage.stay.talk:
 frontpage.stay.subject:
     - 'Three nights in Berlin?'
     - Front page, subject of the drawn stay request from Tomás to Lena
+frontpage.support.eyebrow:
+    - 'Supported by members'
+    - 'Front page for visitors, block at the end about donations: small line above the title'
+frontpage.support.headline:
+    - 'No ads, no investors, no fees.'
+    - 'Front page for visitors, block at the end about donations: title, followed by the orange end of it'
+frontpage.support.title.us:
+    - 'Just us.'
+    - 'Front page for visitors, block at the end about donations: orange end of the title'
+frontpage.support.lead:
+    - 'BeWelcome is run by volunteers and belongs to BeVolunteer, a non-profit association. Donations from members pay for the servers and everything else.'
+    - 'Front page for visitors, block at the end about donations: text under the title'
+frontpage.support.free:
+    - 'Free for everyone'
+    - 'Front page for visitors, block at the end about donations: first small label'
+frontpage.support.data:
+    - 'Your data is never sold'
+    - 'Front page for visitors, block at the end about donations: second small label'
+frontpage.support.volunteers:
+    - 'Run by volunteers'
+    - 'Front page for visitors, block at the end about donations: third small label'
+frontpage.support.raised:
+    - '{amount} given this year'
+    - 'Front page for visitors, block at the end about donations: the donations of the year'
+frontpage.support.first:
+    - 'Be the first to give this year'
+    - 'Front page for visitors, block at the end about donations: shown while nobody gave this year'
+frontpage.support.button:
+    - 'Support BeWelcome'
+    - 'Front page for visitors, block at the end about donations: button to the donations page'
+frontpage.support.ways:
+    - 'No account needed · Bank transfer, PayPal or card'
+    - 'Front page for visitors, block at the end about donations: small line under the button'
+frontpage.support.together:
+    - 'Kept free and independent by the people who use it.'
+    - 'Front page for visitors, block at the end about donations: title of the side with the button'
+frontpage.support.lead.short:
+    - 'Run by volunteers, owned by BeVolunteer, a non-profit. Member donations pay for everything.'
+    - 'Front page for visitors, block at the end about donations: shorter text under the title, on phones'

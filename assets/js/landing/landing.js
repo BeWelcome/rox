@@ -39,10 +39,12 @@ window.addEventListener('message', (event) => {
     }
 });
 
-// The side panel closed: an answer may have been sent there, so the messages and the
-// "requests to answer" line under the banner are loaded again
+// The side panel closed: an answer may have been sent there, so the messages, the activities
+// and the "requests to answer" line under the banner are loaded again
 window.addEventListener('bw-contact-closed', () => {
     Home.updateMessages();
+    // An activity created or answered there
+    Home.updateActivities();
     const alert = document.querySelector('.js-home-alert');
     if (alert) {
         fetch('/widget/requests-alert', { credentials: 'same-origin' })
@@ -525,4 +527,97 @@ function initTripsSlider(list) {
     }, { passive: true });
     window.addEventListener('resize', update);
     update();
+}
+
+// BeWelcome News on phones: the cards scroll sideways, < and > move by one card
+const news = document.querySelector('.js-home-news');
+const newsPrev = document.querySelector('.js-home-news-prev');
+const newsNext = document.querySelector('.js-home-news-next');
+if (news && newsPrev && newsNext) {
+    const step = () => {
+        const card = news.firstElementChild;
+        return card ? card.getBoundingClientRect().width + parseFloat(getComputedStyle(news).columnGap || '0') : news.clientWidth;
+    };
+    const updateNewsButtons = () => {
+        newsPrev.disabled = news.scrollLeft <= 2;
+        newsNext.disabled = news.scrollLeft + news.clientWidth >= news.scrollWidth - 2;
+    };
+    newsPrev.addEventListener('click', () => news.scrollBy({left: -step(), behavior: 'smooth'}));
+    newsNext.addEventListener('click', () => news.scrollBy({left: step(), behavior: 'smooth'}));
+    news.addEventListener('scroll', updateNewsButtons, {passive: true});
+    window.addEventListener('resize', updateNewsButtons);
+    updateNewsButtons();
+}
+
+// Donate box: Donate opens PayPal's window over the page (its Donate SDK, the same button as
+// on the donations page, rendered hidden and clicked for the member). Once PayPal says it is
+// done, the donation is recorded (/donation/finish) and a thank you replaces the box.
+const donateBox = document.querySelector('.js-home-donate');
+if (donateBox) {
+    const open = donateBox.querySelector('.js-home-donate-open');
+    let sdk = null;
+    const loadSdk = () => {
+        if (!sdk) {
+            sdk = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://www.paypalobjects.com/donate/sdk/donate-sdk.js';
+                script.charset = 'UTF-8';
+                script.onload = () => {
+                    window.PayPal.Donation.Button({
+                        env: 'production',
+                        hosted_button_id: '58STYCEPBD79S',
+                        image: {
+                            src: 'https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif',
+                            alt: 'Donate with PayPal',
+                        },
+                        onComplete: finishDonation,
+                    }).render('#home-donate-paypal');
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+        return sdk;
+    };
+    const finishDonation = (param) => {
+        // PayPal says to check that it is an object
+        if (typeof param !== 'object' || Array.isArray(param) || param === null) {
+            return;
+        }
+        param.nonce = open.dataset.nonce;
+        fetch(open.dataset.finish, {
+            method: 'POST',
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+            body: JSON.stringify(param),
+        })
+            .then((response) => response.json())
+            .then((details) => {
+                if (details.success !== true) {
+                    throw new Error('not recorded');
+                }
+                // Plausible revenue goal "Donation" (#540), as the donations page does
+                const amount = parseFloat(param.amt || 0);
+                if (window.plausible && amount > 0) {
+                    window.plausible('Donation', {revenue: {currency: String(param.cc || 'EUR').toUpperCase(), amount}});
+                }
+                donateBox.querySelector('.js-home-donate-body').hidden = true;
+                donateBox.querySelector('.js-home-donate-thanks').hidden = false;
+                donateBox.classList.add('is-thanked');
+            })
+            .catch(() => {
+                window.location.href = open.dataset.fallback;
+            });
+    };
+    // Loaded early (on hover or focus) so the click itself can open PayPal's window
+    ['pointerenter', 'focus', 'touchstart'].forEach((type) => open.addEventListener(type, () => { loadSdk().catch(() => {}); }, {once: true, passive: true}));
+    open.addEventListener('click', () => {
+        const paypalButton = donateBox.querySelector('#home-donate-paypal img, #home-donate-paypal button, #home-donate-paypal a');
+        if (paypalButton) {
+            paypalButton.click();
+            return;
+        }
+        // Not ready (or blocked): the donations page
+        window.location.href = open.dataset.fallback;
+    });
 }

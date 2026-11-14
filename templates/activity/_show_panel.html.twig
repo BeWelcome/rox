@@ -1,0 +1,279 @@
+{#
+  One activity in the side panel of the home page (?embed=1): when, where and who organises it in one
+  card, the organiser's buttons, the description (Read more), who answered, and the member's answer in
+  a bar at the bottom (Going, Maybe, Can't, and a note for the organiser).
+#}
+{% set _embed = { embed: 1 } %}
+{% set member = app.user %}
+{% set sameDay = activity.starts|date('Y-m-d') == activity.ends|date('Y-m-d') %}
+{% set _organizer = attendees.organizers|first %}
+{% set _can_edit = is_granted('ACTIVITY_EDIT', activity) %}
+{% set _can_cancel = is_granted('ACTIVITY_CANCEL', activity) %}
+{% set _can_leave = attendee and not activity.organizer(member) %}
+{#- The organiser's buttons under the facts; for the others, Share and ⋯ alone go to the end -#}
+{% set _actions %}
+<div class="p-act-actions{{ _can_edit ? '' : ' p-act-actions--end' }}">
+    {% if _can_edit %}
+        <a class="p-act-btn p-act-btn--wide" href="{{ path('activities_edit', { id: activity.id }|merge(_embed)) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activities.panel.edit'|trans }}</a>
+    {% endif %}
+    <button type="button" class="p-act-btn p-act-btn--round js-act-share" data-url="{{ url('activities_show', { id: activity.id }) }}" data-title="{{ activity.title }}" aria-label="{{ 'activities.panel.share'|trans }}">
+        <i class="fas fa-share-nodes" aria-hidden="true"></i>
+    </button>
+    <span class="p-act-share-done js-act-share-done" role="status" hidden>{{ 'activities.panel.copied'|trans }}</span>
+    {% if (_can_cancel) or _can_leave %}
+        <div class="p-act-menu">
+            <button type="button" class="p-act-btn p-act-btn--round js-act-menu" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'activities.panel.more'|trans }}">
+                <i class="fas fa-ellipsis" aria-hidden="true"></i>
+            </button>
+            <div class="p-act-menu__list" hidden>
+                {% if _can_cancel %}
+                    {% if activity.cancelled %}
+                        <form method="post" action="{{ path('activity_reactivate', { id: activity.id }|merge(_embed)) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('activity_reactivate') }}">
+                            <button type="submit" class="p-act-menu__item"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{ 'activityuncancel'|trans }}</button>
+                        </form>
+                    {% else %}
+                        <button type="button" class="p-act-menu__item p-act-menu__item--danger" data-micromodal-trigger="cancelActivity"><i class="fas fa-ban" aria-hidden="true"></i> {{ 'activitycancel'|trans }}</button>
+                    {% endif %}
+                {% endif %}
+                {% if _can_leave %}
+                    <form method="post" action="{{ path('activity_leave', { id: activity.id }|merge(_embed)) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('activity_leave') }}">
+                        <button type="submit" class="p-act-menu__item p-act-menu__item--danger"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> {{ 'activityleave'|trans }}</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endset %}
+
+
+{% if activity.cancelled %}
+    <div class="p-activities-flash p-activities-flash--error" role="status">
+        <i class="fas fa-ban" aria-hidden="true"></i> {{ 'activityhasbeencancelled'|trans }}
+    </div>
+{% endif %}
+
+<section class="p-act-facts">
+    <div class="p-act-facts__row">
+        <span class="p-act-facts__icon" aria-hidden="true"><i class="far fa-clock"></i></span>
+        <div class="p-act-facts__text">
+            {#- Over several days: both days on the first line, both times under -#}
+            {% if sameDay %}
+                <strong>{{ activity.starts|format_date(pattern='EEEE, d MMMM') }}</strong>
+            {% else %}
+                <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} <i class="fas fa-arrow-right p-act-facts__to" aria-hidden="true"></i> {{ activity.ends|format_date(pattern='EEE d MMM') }}</strong>
+            {% endif %}
+            <small>
+                {{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}
+                {% if activity.over %} · {{ 'activities.over'|trans }}{% endif %}
+            </small>
+        </div>
+        {% if not activity.cancelled %}
+            {#- Google and Outlook open the event already filled in; Apple and the others take the .ics file -#}
+            {% set _cal_start = activity.starts|date('Ymd\\THis\\Z', 'UTC') %}
+            {% set _cal_end = activity.ends|date('Ymd\\THis\\Z', 'UTC') %}
+            {% set _cal_place = activity.online ? 'landing.dash.online'|trans : ((activity.address ? activity.address ~ ', ' : '') ~ activity.location.fullname) %}
+            {% set _cal_details = url('activities_show', { id: activity.id }) %}
+            <div class="p-act-menu">
+                <button type="button" class="p-act-chip js-act-menu" aria-haspopup="true" aria-expanded="false"><i class="fas fa-calendar-plus" aria-hidden="true"></i> {{ 'activities.panel.calendar'|trans }}</button>
+                <div class="p-act-menu__list" hidden>
+                    <a class="p-act-menu__item" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text={{ activity.title|url_encode }}&amp;dates={{ _cal_start }}/{{ _cal_end }}&amp;details={{ _cal_details|url_encode }}&amp;location={{ _cal_place|url_encode }}"><i class="fab fa-google" aria-hidden="true"></i> Google Calendar</a>
+                    <a class="p-act-menu__item" target="_blank" rel="noopener" href="https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&amp;rru=addevent&amp;subject={{ activity.title|url_encode }}&amp;startdt={{ activity.starts|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}&amp;enddt={{ activity.ends|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}&amp;body={{ _cal_details|url_encode }}&amp;location={{ _cal_place|url_encode }}"><i class="fab fa-microsoft" aria-hidden="true"></i> Outlook</a>
+                    <a class="p-act-menu__item" href="{{ path('activity_download', { id: activity.id }) }}"><i class="fab fa-apple" aria-hidden="true"></i> {{ 'activities.panel.calendar.ics'|trans }}</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="p-act-facts__row">
+        {% if activity.online %}
+            <span class="p-act-facts__icon" aria-hidden="true"><i class="fas fa-video"></i></span>
+            <div class="p-act-facts__text">
+                <strong>{{ 'landing.dash.online'|trans }}</strong>
+                {% if activity.address %}<small>{{ activity.address }}</small>{% endif %}
+            </div>
+        {% else %}
+            <span class="p-act-facts__icon" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
+            <div class="p-act-facts__text">
+                <strong>{{ activity.address ?: activity.location.name }}</strong>
+                <small>
+                    {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" aria-hidden="true"></i>{% endif %}
+                    {{ activity.location.fullname }}
+                </small>
+            </div>
+            {% if activity.location.latitude is not null %}
+                {% set _lat = activity.location.latitude %}
+                {% set _lng = activity.location.longitude %}
+                <a class="p-act-chip" href="https://www.openstreetmap.org/?mlat={{ _lat }}&amp;mlon={{ _lng }}#map=15/{{ _lat }}/{{ _lng }}" target="_blank" rel="noopener"><i class="far fa-map" aria-hidden="true"></i> {{ 'activities.panel.map'|trans }}</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if _organizer %}
+        {% set _org_name = _organizer.attendee.username %}
+        <div class="p-act-facts__row">
+            <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}" tabindex="-1" aria-hidden="true"><img class="p-act-facts__avatar" src="{{ path('avatar', { username: _org_name, size: 72 }) }}" alt="" width="36" height="36" loading="lazy"></a>
+            <div class="p-act-facts__text">
+                <small>{{ 'activities.panel.organised'|trans }}</small>
+                <strong>
+                    <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}">{{ _org_name }}</a>
+                    {% if member and _org_name == member.username %}<span class="p-act-you">{{ 'activities.panel.you'|trans }}</span>{% endif %}
+                    {% if attendees.organizers|length > 1 %}<span class="p-act-more">+{{ attendees.organizers|length - 1 }}</span>{% endif %}
+                </strong>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% if _can_edit %}{{ _actions }}{% endif %}
+
+<section class="p-act-section">
+    <h2 class="p-act-section__title">{{ 'activities.panel.about'|trans }}</h2>
+    <div class="p-act-about is-open">
+        <div class="p-act-about__text">{{ activity.description|purify }}</div>
+    </div>
+</section>
+
+<section class="p-act-section">
+    <div class="p-act-section__head">
+        <h2 class="p-act-section__title">{{ 'activities.panel.coming'|trans }}</h2>
+        <span class="p-act-section__count">{{ 'activities.panel.going.count'|trans({ count: attendees.yes|length }) }}</span>
+    </div>
+    {% set _groups = { yes: 'going', maybe: 'maybe', no: 'cant' } %}
+    {% set _nobody = true %}
+    <ul class="p-act-people">
+        {% for group, state in _groups %}
+            {% for person in attendees[group] %}
+                {% set _nobody = false %}
+                {% set username = person.attendee.username %}
+                <li class="p-act-people__row">
+                    <a class="js-act-member" href="{{ path('members_profile', { username: username }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: username }) }}" tabindex="-1" aria-hidden="true"><img src="{{ path('avatar', { username: username, size: 72 }) }}" alt="" width="40" height="40" loading="lazy"></a>
+                    <div class="p-act-people__text">
+                        <a class="js-act-member" href="{{ path('members_profile', { username: username }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: username }) }}">{{ username }}</a>
+                        {% if person.comment %}<q>{{ person.comment }}</q>{% endif %}
+                    </div>
+                    <span class="p-act-state p-act-state--{{ state }}">
+                        {% if state == 'going' %}<i class="fas fa-check" aria-hidden="true"></i>{% elseif state == 'maybe' %}<i class="fas fa-question" aria-hidden="true"></i>{% else %}<i class="fas fa-xmark" aria-hidden="true"></i>{% endif %}
+                        {{ ('activities.panel.state.' ~ state)|trans }}
+                    </span>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% if _nobody %}
+        <p class="p-activities-muted">{{ 'activities.attendees.none'|trans }}</p>
+    {% endif %}
+</section>
+
+{% if not _can_edit %}{{ _actions }}{% endif %}
+
+{% if answerForm %}
+    {% form_theme answerForm 'activity/_form_theme.html.twig' %}
+    {% set _current = attendee ? attendee.status : null %}
+    {% set _short = { 1: 'going', 2: 'maybe', 3: 'cant' } %}
+    {{ form_start(answerForm, { attr: { class: 'p-act-answer js-act-answer' } }) }}
+        <p class="p-act-answer__title">{{ 'activities.panel.answer'|trans }}</p>
+        <div class="p-act-answer__choices">
+            {% for choice in answerForm.status %}
+                {% set _state = _short[choice.vars.value] ?? 'going' %}
+                <button type="submit" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}" class="p-act-answer__choice{{ _current is not null and _current == choice.vars.value ? ' is-picked' ~ (app.request.query.getBoolean('answered') ? ' is-just-picked') }}">
+                    {% if _state == 'going' %}<i class="fas fa-check" aria-hidden="true"></i>{% elseif _state == 'maybe' %}<i class="fas fa-question" aria-hidden="true"></i>{% else %}<i class="fas fa-xmark" aria-hidden="true"></i>{% endif %}
+                    {{ ('activities.panel.state.' ~ _state)|trans }}
+                </button>
+                {% do choice.setRendered %}
+            {% endfor %}
+        </div>
+        {% set _has_note = answerForm.comment.vars.value is not empty %}
+        <button type="button" class="p-act-answer__note-toggle js-act-note-toggle"{% if _has_note %} hidden{% endif %}>
+            <i class="far fa-comment" aria-hidden="true"></i> {{ 'activities.panel.note'|trans }}
+        </button>
+        <div class="p-act-answer__note js-act-note"{% if not _has_note %} hidden{% endif %}>
+            {{ form_widget(answerForm.comment, { attr: { class: 'p-act-answer__input', placeholder: 'activities.panel.note'|trans } }) }}
+            {% if _current is not null %}
+                <button type="submit" name="{{ answerForm.status.vars.full_name }}" value="{{ _current }}" class="p-act-answer__save js-act-note-save">{{ 'activities.panel.note.save'|trans }}</button>
+            {% endif %}
+        </div>
+    {{ form_end(answerForm) }}
+{% endif %}
+
+<script>
+  (function () {
+    // Shown once: a reload doesn't play the answer animation again
+    if (window.location.search.indexOf('answered=') !== -1 && window.history.replaceState) {
+      var cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('answered');
+      window.history.replaceState(null, '', cleanUrl.toString());
+    }
+
+    // A member (organiser, who comes): their preview opens over the panel, in the home page
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('.js-act-member');
+      if (!link || window.parent === window || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      window.parent.postMessage({ type: 'bw-member-preview', url: link.dataset.preview }, window.location.origin);
+    });
+
+    var share = document.querySelector('.js-act-share');
+    var done = document.querySelector('.js-act-share-done');
+    if (share) {
+      share.addEventListener('click', function () {
+        var url = share.dataset.url;
+        if (navigator.share) {
+          navigator.share({ title: share.dataset.title, url: url }).catch(function () {});
+          return;
+        }
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(function () {
+            done.hidden = false;
+            setTimeout(function () { done.hidden = true; }, 2000);
+          });
+        }
+      });
+    }
+
+    // The small menus (Add to calendar, ⋯): one open at a time, a click elsewhere closes it
+    var menus = document.querySelectorAll('.js-act-menu');
+    function closeMenus(except) {
+      menus.forEach(function (btn) {
+        if (btn !== except) {
+          btn.nextElementSibling.hidden = true;
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+    menus.forEach(function (menuBtn) {
+      var list = menuBtn.nextElementSibling;
+      menuBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        closeMenus(menuBtn);
+        list.hidden = !list.hidden;
+        menuBtn.setAttribute('aria-expanded', String(!list.hidden));
+      });
+    });
+    document.addEventListener('click', function (event) {
+      if (!event.target.closest('.p-act-menu__list') || event.target.closest('a')) {
+        closeMenus(null);
+      }
+    });
+
+    var toggle = document.querySelector('.js-act-note-toggle');
+    var note = document.querySelector('.js-act-note');
+    if (toggle && note) {
+      toggle.addEventListener('click', function () {
+        toggle.hidden = true;
+        note.hidden = false;
+        var input = note.querySelector('input');
+        if (input) { input.focus(); }
+      });
+      // Enter in the note keeps the answer (the first button of the form would say Going)
+      note.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter') { return; }
+        event.preventDefault();
+        var save = note.querySelector('.js-act-note-save') || document.querySelector('.p-act-answer__choice.is-picked');
+        if (save) { save.click(); }
+      });
+    }
+  })();
+</script>

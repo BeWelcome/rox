@@ -1,0 +1,10 @@
+{#
+  A date as a small calendar card: the month on an orange band, the day, the weekday. Used in the head
+  of an activity in the side panel and in the Upcoming activities card of the home page.
+  date: the date to show; size: 'lg' for the bigger one; weekday: false to leave the weekday out.
+#}
+<span class="c-date-tile{{ size is defined and size ? ' c-date-tile--' ~ size }}" aria-hidden="true">
+    <span class="c-date-tile__month">{{ date|format_date(pattern='MMM') }}</span>
+    <span class="c-date-tile__day">{{ date|format_date(pattern='d') }}</span>
+    {% if weekday ?? true %}<span class="c-date-tile__wd">{{ date|format_date(pattern='EEE') }}</span>{% endif %}
+</span>

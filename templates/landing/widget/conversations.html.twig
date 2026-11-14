@@ -25,7 +25,7 @@
            data-title="{{ message.sender ? (message.sender.shortNameOrUsername ?? message.sender.username) : 'BeWelcome' }}">
             {% if message.sender %}
                 <span class="c-home-item__avatar-wrap">
-                    <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">
+                    <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 96 }) }}" alt="" loading="lazy">
                     {% if request %}{% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'kind' } only %}{% endif %}
                 </span>
             {% else %}

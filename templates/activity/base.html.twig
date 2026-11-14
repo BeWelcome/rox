@@ -15,8 +15,28 @@
 {% endblock %}
 
 {% block main %}
-  <main role="main" class="p-activities">
+  {#
+    ?embed=1: in the side panel of the home page. The page has its own head like the trip panel
+    (icon, title, one line under it, X) instead of the page head and tabs; the panel's head is hidden.
+  #}
+  {% set activities_embedded = app.request.query.getBoolean('embed') %}
+  <main role="main" class="p-activities{{ activities_embedded ? ' p-activities--embed p-ped' }}">
     <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
+    {% if activities_embedded %}
+    {% block embed_head %}
+    <header class="p-ped-head">
+      <span class="p-trips-embed__icon" aria-hidden="true"><i class="{% block embed_icon %}fas fa-calendar-day{% endblock %}"></i></span>
+      <div class="p-ped-head__text">
+        <h1 class="p-ped-head__title">{{ block('title')|trim|raw }}</h1>
+        {% set _embed_sub %}{% block embed_sub %}{% endblock %}{% endset %}
+        {% if _embed_sub|trim %}<p class="p-trips-embed__sub">{{ _embed_sub|trim|raw }}</p>{% endif %}
+      </div>
+      <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </header>
+    {% endblock embed_head %}
+    {% else %}
     <header class="p-activities__head">
       <div class="p-activities__top">
         <a class="p-activities__back" href="{{ path('landingpage') }}">
@@ -38,6 +58,7 @@
         {% endfor %}
       </nav>
     </header>
+    {% endif %}
 
     {% for label, messages in app.flashes %}
       {% for message in messages %}
@@ -48,4 +69,25 @@
     {% block content %}{% endblock %}
   </main>
   {% block modals %}{% endblock %}
+  {% if activities_embedded %}
+  <script>
+    (function () {
+      var parentWindow = window.parent !== window ? window.parent : null;
+      // The panel's own head is hidden: this page has its own
+      if (parentWindow) {
+        parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
+      }
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('.js-ped-close')) {
+          event.preventDefault();
+          if (parentWindow) {
+            parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
+          } else {
+            window.location.href = '{{ path('landingpage') }}';
+          }
+        }
+      });
+    })();
+  </script>
+  {% endif %}
 {% endblock main %}

@@ -26,6 +26,19 @@ class EmbedFrameListenerTest extends TestCase
         self::assertSame('/conversation/112?embed=1#last', $response->getTargetUrl());
     }
 
+    public function testRedirectToAnActivityStaysInThePanel(): void
+    {
+        foreach (['/activities/7' => '/activities/7?embed=1', '/activity/7/created' => '/activity/7/created?embed=1'] as $target => $expected) {
+            $event = $this->redirect($target);
+
+            (new EmbedFrameListener())($event);
+
+            $response = $event->getResponse();
+            self::assertInstanceOf(RedirectResponse::class, $response);
+            self::assertSame($expected, $response->getTargetUrl());
+        }
+    }
+
     public function testRedirectElsewhereLeavesThePanel(): void
     {
         $event = $this->redirect('/members/member-6');

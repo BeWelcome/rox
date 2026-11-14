@@ -173,7 +173,8 @@ export function initMemberPreview(options = {}) {
         return {openPreviewUrl};
     }
     previewBody = preview.querySelector('.js-search-preview-body');
-    previewBackdrop = document.querySelector('.p-search-preview__backdrop');
+    // Its own backdrop: a page with the contact drawer too (the home page) has a second one
+    previewBackdrop = document.querySelector('.js-search-preview-backdrop') || document.querySelector('.p-search-preview__backdrop');
     phone = options.phone || window.matchMedia('(max-width: 767.98px)');
     onHide = options.onHide || onHide;
     onOpen = options.onOpen || onOpen;
@@ -200,6 +201,21 @@ export function initMemberPreview(options = {}) {
         if (username) {
             onOpen(username);
         }
+    });
+
+    // A member clicked in a page of the side panel (an activity: its organiser, who comes): their
+    // preview opens over the panel
+    window.addEventListener('message', (event) => {
+        if (event.origin !== window.location.origin || !event.data || event.data.type !== 'bw-member-preview') {
+            return;
+        }
+        const url = String(event.data.url || '');
+        if (!/^\/search\/members\/[^/]+\/preview$/.test(url)) {
+            return;
+        }
+        preview.classList.add('is-over-drawer');
+        previewBackdrop.classList.add('is-over-drawer');
+        openPreviewUrl(url, null);
     });
 
     window.addEventListener('popstate', (event) => {

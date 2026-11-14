@@ -76,3 +76,18 @@ donations.treasurer.only:
 donations.list.showing:
     - 'Showing {from}–{to} of {total}'
     - List of donations, under the table; {from} and {to} are the first and last donation of the page, {total} all donations
+donate.account.title:
+    - 'Bank account'
+    - 'Donation page, bank transfer tab, title of the box with the account details'
+donate.account.copy:
+    - 'Copy'
+    - 'Donation page, bank transfer tab, button that copies one account detail'
+donate.account.copy.all:
+    - 'Copy all'
+    - 'Donation page, bank transfer tab, button that copies all the account details at once'
+donate.account.copied:
+    - 'Copied'
+    - 'Donation page, bank transfer tab, shown on the button once a detail was copied'
+donate.account.reference.hint:
+    - 'Add the reference to your transfer so we know it comes from you.'
+    - 'Donation page, bank transfer tab, under the account details'

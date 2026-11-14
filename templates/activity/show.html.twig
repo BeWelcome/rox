@@ -21,7 +21,16 @@
   {{ encore_entry_script_tags('activities_map') }}
 {% endblock %}
 
+{% block embed_head %}
+  {{ include('activity/_show_panel_head.html.twig') }}
+{% endblock %}
+
 {% block content %}
+  {# In the side panel (?embed=1): its own layout, and the pages it links to and the forms stay in it #}
+  {% if app.request.query.getBoolean('embed') %}
+    {{ include('activity/_show_panel.html.twig') }}
+  {% else %}
+  {% set _embed = {} %}
   {% set member = app.user %}
   {% set sameDay = activity.starts|date('Y-m-d') == activity.ends|date('Y-m-d') %}
 
@@ -70,11 +79,11 @@
     </div>
     <div class="p-activity-hero__actions">
       {% if is_granted('ACTIVITY_EDIT', activity) %}
-        <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
+        <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }|merge(_embed)) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
       {% endif %}
       {% if is_granted('ACTIVITY_CANCEL', activity) %}
         {% if activity.cancelled %}
-          <form method="post" action="{{ path('activity_reactivate', { id: activity.id }) }}">
+          <form method="post" action="{{ path('activity_reactivate', { id: activity.id }|merge(_embed)) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('activity_reactivate') }}">
             <button class="p-activities-btn" type="submit"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{ 'activityuncancel'|trans }}</button>
           </form>
@@ -120,7 +129,7 @@
             <button class="p-activities-btn p-activities-btn--primary" type="submit">{{ attendee ? 'activity.update'|trans : 'activityjointhefun'|trans }}</button>
           {{ form_end(answerForm) }}
           {% if attendee and not activity.organizer(member) %}
-            <form method="post" action="{{ path('activity_leave', { id: activity.id }) }}" class="p-activity-answer__leave">
+            <form method="post" action="{{ path('activity_leave', { id: activity.id }|merge(_embed)) }}" class="p-activity-answer__leave">
               <input type="hidden" name="_token" value="{{ csrf_token('activity_leave') }}">
               <button class="p-activities-link" type="submit">{{ 'activityleave'|trans }}</button>
             </form>
@@ -161,9 +170,11 @@
       {{ activity_macros.map_data([activity]) }}
     </section>
   {% endif %}
+  {% endif %}
 {% endblock content %}
 
 {% block modals %}
+  {% set _embed = app.request.query.getBoolean('embed') ? { embed: 1 } : {} %}
   {% if is_granted('ACTIVITY_CANCEL', activity) and not activity.cancelled %}
     <div class="micromodal-slide p-activities-confirm" id="cancelActivity" aria-hidden="true">
       <div class="modal__overlay p-activities-confirm__overlay" tabindex="-1" data-micromodal-close>
@@ -171,7 +182,7 @@
           <span class="p-activities-confirm__icon" aria-hidden="true"><i class="fas fa-ban"></i></span>
           <h2 class="p-activities-confirm__title" id="cancelActivity-title">{{ activity.title }}</h2>
           <p class="p-activities-confirm__text">{{ 'activities.cancel.confirm'|trans }}</p>
-          <form method="post" action="{{ path('activity_cancel', { id: activity.id }) }}" class="p-activities-confirm__actions">
+          <form method="post" action="{{ path('activity_cancel', { id: activity.id }|merge(_embed)) }}" class="p-activities-confirm__actions">
             <input type="hidden" name="_token" value="{{ csrf_token('activity_cancel') }}">
             <button type="button" class="p-activities-btn" data-micromodal-close>{{ 'activities.cancel.keep'|trans }}</button>
             <button type="submit" class="p-activities-btn p-activities-btn--danger"><i class="fas fa-ban" aria-hidden="true"></i> {{ 'activitycancel'|trans }}</button>

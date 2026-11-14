@@ -358,3 +358,47 @@ body:has(.fp) { background: #fffaf4; }
   .fp-stay { padding: 3rem 0; }
   .fp-stay__art { margin: 0 -0.25rem; padding: 1rem; border-radius: 1.25rem; }
 }
+
+/* Supported by members: the last block, about donations. Text and three labels on the left, a
+   cream side with the button to the donations page and this year's line */
+.fp-support { padding: 0 0 4.5rem; }
+.fp-support__card { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); overflow: hidden; border-radius: 2rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 18px 48px rgba(15, 23, 42, 0.06); }
+.fp-support__text { padding: 3rem 3.5rem; }
+.fp .fp-support__title { max-width: 32rem; margin: 0.4rem 0 0; color: #0f172a; font-size: 2.6rem; font-weight: 700; line-height: 1.1; }
+.fp-support__lead { max-width: 37rem; margin: 1.25rem 0 0; color: #475569; font-size: 1.0625rem; line-height: 1.7; }
+.fp-support__pills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.75rem 0 0; padding: 0; list-style: none; }
+.fp-support__pills li { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.6rem 1.1rem; border-radius: 999px; background: #f8fafc; color: #1e293b; font-size: 0.9375rem; font-weight: 600; }
+.fp-support__pills i, .fp-support__pills svg { width: 1rem; height: 1rem; color: #f37000; }
+.fp-support__give { display: flex; flex-direction: column; justify-content: center; padding: 2.75rem 3rem; background: linear-gradient(160deg, #fff6ec 0%, #fde8d4 100%); }
+.fp-support__icon { display: inline-flex; align-items: center; justify-content: center; width: 3.75rem; height: 3.75rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 4px 14px rgba(243, 112, 0, 0.12); color: #f37000; }
+.fp-support__icon i, .fp-support__icon svg { width: 1.6rem; height: 1.6rem; }
+.fp .fp-support__ask { max-width: 22rem; margin: 1.5rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+.fp-support__btn, .fp-support__btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3.75rem; margin-top: 1.1rem; padding: 0 1.5rem; border-radius: 999px; background: #ea7a2e; box-shadow: 0 10px 24px rgba(234, 122, 46, 0.28); color: #fff; font-size: 1.15rem; font-weight: 700; text-decoration: none; }
+.fp-support__btn:hover { background: #c2410c; }
+.fp-support__btn i, .fp-support__btn svg { width: 1.1rem; height: 1.1rem; }
+.fp-support__note { margin: 1rem 0 0; color: #64748b; font-size: 0.875rem; text-align: center; }
+.fp-support__year { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 1rem 0 0; padding-top: 1rem; border-top: 1px dashed #f0c9a4; color: #c2410c; font-size: 0.9375rem; font-weight: 700; text-align: center; }
+.fp-support__year i, .fp-support__year svg { width: 1rem; height: 1rem; }
+@media (max-width: 991.98px) {
+  .fp-support__card { grid-template-columns: 1fr; }
+  .fp-support__text { padding: 2.25rem 2rem; }
+  .fp-support__give { padding: 2rem; }
+}
+.fp-support__lead--short { display: none; }
+@media (max-width: 575.98px) {
+  /* Phones: shorter text, two labels as a list, the button side without its icon and title */
+  .fp-support { padding-bottom: 3rem; }
+  .fp-support__card { border-radius: 1.5rem; }
+  .fp-support__text { padding: 1.75rem 1.5rem 1.4rem; }
+  .fp .fp-support__title { font-size: 1.85rem; line-height: 1.12; }
+  .fp-support__lead { display: none; }
+  .fp-support__lead--short { display: block; margin-top: 0.9rem; font-size: 1rem; line-height: 1.6; }
+  .fp-support__pills { flex-direction: column; gap: 0.55rem; margin-top: 1.1rem; }
+  .fp-support__pills li { padding: 0; background: none; font-size: 0.9375rem; }
+  .fp-support__pills li:nth-child(n+3) { display: none; }
+  .fp-support__give { padding: 1.25rem 1.5rem 1.4rem; }
+  .fp-support__icon, .fp .fp-support__ask { display: none; }
+  .fp-support__btn, .fp-support__btn:hover { margin-top: 0; min-height: 3.5rem; font-size: 1.1rem; }
+  .fp-support__note { margin-top: 0.9rem; font-size: 0.8125rem; }
+  .fp-support__year { margin-top: 0.6rem; padding-top: 0; border-top: 0; font-size: 0.875rem; }
+}

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Location;
+use App\Model\DonateModel;
 use App\Model\StatisticsModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ class HomeController extends AbstractController
     }
 
     #[Route(path: '/', name: 'homepage')]
-    public function show(Request $request, StatisticsModel $statisticsModel, EntityManagerInterface $entityManager, array $locales): Response
+    public function show(Request $request, StatisticsModel $statisticsModel, DonateModel $donateModel, EntityManagerInterface $entityManager, array $locales): Response
     {
         $locationRepository = $entityManager->getRepository(Location::class);
         $city = $locationRepository->find(2797114);
@@ -49,6 +50,8 @@ class HomeController extends AbstractController
             'locale' => $request->getPreferredLanguage($locales),
             'title' => 'BeWelcome',
             'stats' => $statistics,
+            // The Supported by members block at the end: what was given this year
+            'campaign' => $donateModel->getStatForDonations(),
         ]);
     }
 

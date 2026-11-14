@@ -267,6 +267,46 @@
             </div>
         </div>
     </section>
+
+    {#
+      Supported by members: BeWelcome is free because its members pay for it. Told plainly at the
+      end, with a button to the donations page (open without an account) and this year's
+      donations under it.
+    #}
+    {% set _donated = campaign.YearDonation ?? 0 %}
+    {% set _needed = campaign.YearNeededAmount ?? 0 %}
+    {% set _percent = _needed > 0 ? (_donated / _needed * 100)|round : 0 %}
+    <section class="fp-support">
+        <div class="fp-wrap">
+            <div class="fp-support__card">
+                <div class="fp-support__text">
+                    <p class="fp-eyebrow">{{ 'frontpage.support.eyebrow'|trans }}</p>
+                    <h2 class="fp-support__title">{{ 'frontpage.support.headline'|trans }} <span class="fp-orange">{{ 'frontpage.support.title.us'|trans }}</span></h2>
+                    <p class="fp-support__lead">{{ 'frontpage.support.lead'|trans }}</p>
+                    <p class="fp-support__lead fp-support__lead--short">{{ 'frontpage.support.lead.short'|trans }}</p>
+                    <ul class="fp-support__pills">
+                        <li><i class="fas fa-hand-holding-heart" aria-hidden="true"></i> {{ 'frontpage.support.free'|trans }}</li>
+                        <li><i class="fas fa-shield-halved" aria-hidden="true"></i> {{ 'frontpage.support.data'|trans }}</li>
+                        <li><i class="fas fa-people-group" aria-hidden="true"></i> {{ 'frontpage.support.volunteers'|trans }}</li>
+                    </ul>
+                </div>
+                <div class="fp-support__give">
+                    <span class="fp-support__icon" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                    <h3 class="fp-support__ask">{{ 'frontpage.support.together'|trans }}</h3>
+                    <a class="fp-support__btn" href="{{ url('donations') }}"><i class="fas fa-heart" aria-hidden="true"></i> {{ 'frontpage.support.button'|trans }}</a>
+                    <p class="fp-support__note">{{ 'frontpage.support.ways'|trans }}</p>
+                    <p class="fp-support__year">
+                        <i class="fas fa-seedling" aria-hidden="true"></i>
+                        {% if _donated > 0 %}
+                            {{ 'frontpage.support.raised'|trans({ amount: _donated|format_currency('EUR', { fraction_digit: 0 }) }) }}{% if _needed > 0 %} · {{ 'landing.donate.share'|trans({ percent: _percent }) }}{% endif %}
+                        {% else %}
+                            {{ 'frontpage.support.first'|trans }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 {% include 'footer.html.twig' with {footer_on_mobile: true} %}

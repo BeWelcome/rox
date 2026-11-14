@@ -53,19 +53,81 @@
             <div class="tab-pane show active c-donate-panel" id="bank" role="tabpanel" aria-labelledby="bank-tab">
               <h2 class="c-donate-panel__title">{{ 'donate_account_legend'|trans }}</h2>
               <p class="c-donate-panel__text">{{ 'donate_account2'|trans }}</p>
-              {# The account of BeVolunteer; the labels are translated, the details are not #}
-              <dl class="c-donate-account">
-                <dt>{{ 'donate.account.holder'|trans }}</dt>
-                <dd>ASSOCIATION BEVOLUNTEER</dd>
-                <dt>{{ 'donate.account.iban'|trans }}</dt>
-                <dd>FR76 4255 9100 0008 0117 7451 302</dd>
-                <dt>{{ 'donate.account.bic'|trans }}</dt>
-                <dd>CCOPFRPPXXX</dd>
+              {#
+                The account of BeVolunteer, one row per detail with a Copy button (the IBAN is copied
+                without its spaces) and Copy all for the whole block; the labels are translated,
+                the details are not.
+              #}
+              {% set _account = [
+                { label: 'donate.account.holder'|trans, value: 'ASSOCIATION BEVOLUNTEER', copy: 'ASSOCIATION BEVOLUNTEER' },
+                { label: 'donate.account.iban'|trans, value: 'FR76 4255 9100 0008 0117 7451 302', copy: 'FR7642559100000801177451302', mono: true },
+                { label: 'donate.account.bic'|trans, value: 'CCOPFRPPXXX', copy: 'CCOPFRPPXXX', mono: true },
+              ] %}
+              {% if app.user %}
+                {% set _reference = 'donate.account.reference.value'|trans({username: app.user.username}) %}
+                {% set _account = _account|merge([{ label: 'donate.account.reference'|trans, value: _reference, copy: _reference }]) %}
+              {% endif %}
+              {% set _all = _account|map(row => row.label ~ ': ' ~ row.value)|join("\n") %}
+              <div class="c-donate-account js-donate-account">
+                <div class="c-donate-account__head">
+                  <span class="c-donate-account__title"><i class="fas fa-building-columns" aria-hidden="true"></i> {{ 'donate.account.title'|trans }}</span>
+                  <button type="button" class="c-donate-copy c-donate-copy--all js-donate-copy" data-copy="{{ _all }}">
+                    <i class="far fa-copy" aria-hidden="true"></i><span class="js-donate-copy-label">{{ 'donate.account.copy.all'|trans }}</span>
+                  </button>
+                </div>
+                <ul class="c-donate-account__rows">
+                  {% for row in _account %}
+                    <li class="c-donate-account__row">
+                      <span class="c-donate-account__text">
+                        <span class="c-donate-account__label">{{ row.label }}</span>
+                        <span class="c-donate-account__value{{ row.mono ?? false ? ' is-mono' }}">{{ row.value }}</span>
+                      </span>
+                      <button type="button" class="c-donate-copy js-donate-copy" data-copy="{{ row.copy }}" aria-label="{{ 'donate.account.copy'|trans }} {{ row.label }}">
+                        <i class="far fa-copy" aria-hidden="true"></i><span class="js-donate-copy-label">{{ 'donate.account.copy'|trans }}</span>
+                      </button>
+                    </li>
+                  {% endfor %}
+                </ul>
                 {% if app.user %}
-                  <dt>{{ 'donate.account.reference'|trans }}</dt>
-                  <dd>{{ 'donate.account.reference.value'|trans({username: app.user.username}) }}</dd>
+                  <p class="c-donate-account__hint"><i class="fas fa-circle-info" aria-hidden="true"></i> {{ 'donate.account.reference.hint'|trans }}</p>
                 {% endif %}
-              </dl>
+                <span class="c-donate-account__copied js-donate-copied" data-text="{{ 'donate.account.copied'|trans }}" role="status"></span>
+              </div>
+              <script>
+                (function () {
+                  var copied = document.querySelector('.js-donate-copied');
+                  function fallbackCopy(text) {
+                    var area = document.createElement('textarea');
+                    area.value = text;
+                    area.setAttribute('readonly', '');
+                    area.style.position = 'fixed';
+                    area.style.opacity = '0';
+                    document.body.appendChild(area);
+                    area.select();
+                    try { document.execCommand('copy'); } catch (e) {}
+                    document.body.removeChild(area);
+                    return Promise.resolve();
+                  }
+                  document.querySelectorAll('.js-donate-copy').forEach(function (button) {
+                    var label = button.querySelector('.js-donate-copy-label');
+                    var original = label.textContent;
+                    button.addEventListener('click', function () {
+                      var text = button.dataset.copy;
+                      var done = navigator.clipboard ? navigator.clipboard.writeText(text).catch(function () { return fallbackCopy(text); }) : fallbackCopy(text);
+                      done.then(function () {
+                        button.classList.add('is-copied');
+                        label.textContent = copied.dataset.text;
+                        copied.textContent = copied.dataset.text;
+                        setTimeout(function () {
+                          button.classList.remove('is-copied');
+                          label.textContent = original;
+                          copied.textContent = '';
+                        }, 1800);
+                      });
+                    });
+                  });
+                })();
+              </script>
             </div>
             <div class="tab-pane c-donate-panel" id="hello_asso" role="tabpanel" aria-labelledby="hello_asso-tab">
               <h2 class="c-donate-panel__title">{{ 'donate.hello.asso'|trans }}</h2>

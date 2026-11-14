@@ -193,3 +193,66 @@ activities.when.previous.month:
 activities.when.next.month:
   - 'Next month'
   - 'Create or edit an activity: calendar arrow to the month after'
+activities.embed.hint:
+    - 'Say what, when and where, and members nearby can join.'
+    - 'Side panel of the home page: line under the title of the activity form'
+activities.embed.created.text:
+    - 'Members nearby can see it now and say if they come.'
+    - 'Side panel of the home page: text under the title once an activity was created'
+activities.panel.going:
+    - '{count, plural, =0 {Nobody going yet} other {going}}'
+    - 'Activity in the side panel of the home page: under the title, after the number of members who go'
+activities.panel.going.count:
+    - '{count, plural, one {# going} other {# going}}'
+    - 'Activity in the side panel of the home page: next to the heading of who comes'
+activities.panel.calendar:
+    - 'Add to calendar'
+    - 'Activity in the side panel of the home page: button that downloads the calendar entry'
+activities.panel.map:
+    - 'Map'
+    - 'Activity in the side panel of the home page: button that opens the place on a map'
+activities.panel.organised:
+    - 'Organised by'
+    - 'Activity in the side panel of the home page: small line above the name of the organiser'
+activities.panel.you:
+    - 'You'
+    - 'Activity in the side panel of the home page: small label next to your own name'
+activities.panel.edit:
+    - 'Edit activity'
+    - 'Activity in the side panel of the home page: button for the organiser'
+activities.panel.share:
+    - 'Share'
+    - 'Activity in the side panel of the home page: round button that shares the link'
+activities.panel.copied:
+    - 'Link copied'
+    - 'Activity in the side panel of the home page: shown once the link was copied'
+activities.panel.more:
+    - 'More'
+    - 'Activity in the side panel of the home page: round button that opens more actions'
+activities.panel.about:
+    - 'About'
+    - 'Activity in the side panel of the home page: heading of the description'
+activities.panel.coming:
+    - 'Who''s coming'
+    - 'Activity in the side panel of the home page: heading of the members who answered'
+activities.panel.answer:
+    - 'Your answer'
+    - 'Activity in the side panel of the home page: heading of the answer bar at the bottom'
+activities.panel.state.going:
+    - 'Going'
+    - 'Activity in the side panel of the home page: answer button, and the label of a member who comes'
+activities.panel.state.maybe:
+    - 'Maybe'
+    - 'Activity in the side panel of the home page: answer button, and the label of a member who might come'
+activities.panel.state.cant:
+    - 'Can''t'
+    - 'Activity in the side panel of the home page: answer button, and the label of a member who can not come'
+activities.panel.note:
+    - 'Add a note for the organiser'
+    - 'Activity in the side panel of the home page: link under the answer buttons'
+activities.panel.note.save:
+    - 'Save'
+    - 'Activity in the side panel of the home page: saves the note and keeps the answer'
+activities.panel.calendar.ics:
+    - 'Apple, other (.ics)'
+    - 'Activity in the side panel of the home page, Add to calendar menu: downloads the calendar file'

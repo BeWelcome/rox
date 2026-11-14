@@ -22,6 +22,7 @@ use App\Repository\LegRepository;
 use App\Repository\RequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Hidehalo\Nanoid\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -181,6 +182,11 @@ class LandingController extends AbstractController
         $member = $this->getUser();
         $campaignDetails = $donateModel->getStatForDonations();
 
+        // The Donate box opens the PayPal window here; the donation is recorded like on the
+        // donations page (DonationController::finishDonation checks this nonce)
+        $donationNonce = new Client()->generateId();
+        $request->getSession()->set(DonationController::PAYPAL_NONCE, $donationNonce);
+
         $latestNews = $communityNewsModel->getLatest();
 
         // Prepare search form for home location link
@@ -213,6 +219,7 @@ class LandingController extends AbstractController
                 'yearNeeded' => $campaignDetails['YearNeededAmount'],
                 'yearDonated' => $campaignDetails['YearDonation'],
             ],
+            'donationNonce' => $donationNonce,
             'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
             'countries' => $placesModel->getCountriesByContinent($request->getLocale()),

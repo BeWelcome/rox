@@ -1,0 +1,24 @@
+{#
+  Head of an activity in the side panel of the home page: the date card, the title, who goes (a few
+  faces and the count) and the X.
+#}
+{% set _going = attendees.yes %}
+<header class="p-ped-head p-act-head">
+    {{ include('activity/_date_tile.html.twig', { date: activity.starts, size: 'lg' }) }}
+    <div class="p-ped-head__text">
+        <h1 class="p-ped-head__title p-act-head__title">{{ activity.title }}</h1>
+        <p class="p-act-head__going">
+            {% if _going|length > 0 %}
+                <span class="p-act-head__faces" aria-hidden="true">
+                    {% for person in _going|slice(0, 3) %}
+                        <img src="{{ path('avatar', { username: person.attendee.username, size: 48 }) }}" alt="" width="24" height="24" loading="lazy">
+                    {% endfor %}
+                </span>
+            {% endif %}
+            <span>{% if _going|length > 0 %}<strong>{{ _going|length }}</strong> {% endif %}{{ 'activities.panel.going'|trans({ count: _going|length }) }}</span>
+        </p>
+    </div>
+    <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
+        <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+</header>

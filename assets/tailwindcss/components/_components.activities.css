@@ -242,3 +242,150 @@
 @media (max-width: 767px) {
   .p-when__row .p-when__item:not(.p-when__item--date):not(.p-when__item--end-date) .p-when__chevron { display: none; }
 }
+
+/* In the side panel of the home page (?embed=1): no page head, less room around */
+.p-activities--embed { margin: 1rem auto 1.5rem; }
+
+/* Panel (?embed=1): white page with the trip panel's head; the sections flat, one under the
+   other with a line between, and room on both sides (the .p-ped padding) */
+.p-activities.p-activities--embed { max-width: none; margin: 0; background: #fff; }
+.p-activities--embed .p-ped-head { align-items: center; }
+.p-activities--embed .p-activities-panel { margin: 0; padding: 1.4rem 0; border-radius: 0; box-shadow: none; border-bottom: 1px solid #eef2f6; }
+.p-activities--embed .p-activities-panel:last-of-type { border-bottom: 0; }
+.p-activities--embed .p-activities-flash { margin: 1rem 0 0; }
+.p-activities--embed .p-ped-foot__cancel { display: inline-flex; align-items: center; text-decoration: none; }
+@media (max-width: 575.98px) {
+  .p-activities--embed .p-ped-head__close { display: inline-flex; }
+}
+
+/* Panel: room on both sides and under the fixed buttons (wins over ".is-embedded main { padding: 0 !important }") */
+.is-embedded main.p-activities.p-activities--embed { padding: 0 1.5rem 6.5rem !important; }
+@media (max-width: 575.98px) {
+  .is-embedded main.p-activities.p-activities--embed { padding: 0 1rem 6rem !important; }
+  .p-activities--embed .p-ped-head { margin: 0 -1rem; padding: 1rem 1rem 0.8rem; }
+}
+
+/* ── One activity in the side panel (activity/_show_panel): head with the date card, one card of
+   facts, the organiser's buttons, About, Who's coming, and the answer in a bar at the bottom ── */
+.p-activities--embed .p-ped-head.p-act-head { align-items: flex-start; gap: 0.9rem; border-bottom: 0; background: linear-gradient(180deg, #fff3e8 0%, #fffaf5 70%, #fff 100%); }
+.p-act-head .p-ped-head__text { padding-top: 0.15rem; }
+.p-ped .p-act-head__title { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.p-act-head__going { display: flex; align-items: center; gap: 0.4rem; margin: 0.4rem 0 0; color: #334155; font-size: 0.875rem; font-weight: 600; }
+.p-act-head__faces { display: inline-flex; }
+.p-act-head__faces img { width: 1.5rem; height: 1.5rem; margin-left: -0.4rem; border: 2px solid #fff; border-radius: 999px; object-fit: cover; }
+.p-act-head__faces img:first-child { margin-left: 0; }
+.p-act-head .p-ped-head__close { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 2.4rem; height: 2.4rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; }
+
+.p-act-facts { margin: 0.4rem 0 0; padding: 0.25rem 1rem; border-radius: 1rem; background: #f6f8fb; }
+.p-act-facts__row { display: flex; align-items: center; gap: 0.85rem; padding: 0.8rem 0; }
+.p-act-facts__row + .p-act-facts__row { border-top: 1px solid #e8edf3; }
+.p-act-facts__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; background: #fff; color: #ea7a2e; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
+.p-act-facts__icon i, .p-act-facts__icon svg { width: 0.95rem; height: 0.95rem; }
+.p-act-facts__avatar { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 999px; object-fit: cover; }
+.p-act-facts__text { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 0.1rem; }
+.p-act-facts__text strong { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; color: #0f172a; font-size: 0.9375rem; font-weight: 700; line-height: 1.3; }
+.p-act-facts__text strong a { color: inherit; text-decoration: none; }
+.p-act-facts__text strong a:hover { color: #c2410c; }
+.p-act-facts__text small { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; color: #64748b; font-size: 0.8125rem; line-height: 1.35; }
+.p-act-facts__text small .o-flag { width: 0.95rem; height: 0.95rem; }
+.p-act-you, .p-act-more { padding: 0.05rem 0.4rem; border-radius: 0.35rem; background: #e8edf3; color: #475569; font-size: 0.6875rem; font-weight: 700; }
+.p-act-chip, .p-act-chip:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; padding: 0.4rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.8125rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.p-act-chip:hover { border-color: #cbd5e1; }
+.p-act-chip i, .p-act-chip svg { width: 0.75rem; height: 0.75rem; }
+
+.p-act-actions { position: relative; display: flex; align-items: center; gap: 0.5rem; margin: 1.1rem 0 0.4rem; }
+.p-act-btn, .p-act-btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.6rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-decoration: none; cursor: pointer; }
+.p-act-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-act-btn--wide { flex: 1; padding: 0 1.2rem; }
+.p-act-btn--round { flex-shrink: 0; width: 2.6rem; padding: 0; }
+.p-act-btn i, .p-act-btn svg { width: 0.85rem; height: 0.85rem; }
+.p-act-share-done { color: #166534; font-size: 0.8125rem; font-weight: 700; }
+.p-act-menu { position: relative; }
+.p-act-menu__list { position: absolute; top: calc(100% + 0.4rem); right: 0; z-index: 5; min-width: 13rem; padding: 0.35rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #fff; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14); }
+.p-act-menu__list form { margin: 0; }
+.p-act-menu__item { display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.6rem 0.75rem; border: 0; border-radius: 0.6rem; background: none; color: #0f172a; font-size: 0.9rem; font-weight: 600; text-align: left; cursor: pointer; }
+.p-act-menu__item:hover { background: #f8fafc; }
+.p-act-menu__item--danger { color: #b91c1c; }
+.p-act-menu__item--danger:hover { background: #fef2f2; }
+
+.p-act-section { padding: 1rem 0 0.4rem; }
+.p-act-section__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.p-ped .p-act-section__title { margin: 0 0 0.6rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.1rem; font-weight: 700; }
+.p-act-section__count { color: #64748b; font-size: 0.8125rem; }
+.p-act-about { position: relative; max-height: 9.6em; overflow: hidden; color: #1e293b; font-size: 0.9375rem; line-height: 1.6; }
+.p-act-about::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 2.2em; background: linear-gradient(rgba(255, 255, 255, 0), #fff); pointer-events: none; }
+.p-act-about.is-open { max-height: none; }
+.p-act-about.is-open::after { display: none; }
+.p-act-about__text p { margin: 0 0 0.6em; }
+.p-act-more-btn { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; padding: 0; border: 0; background: none; color: #c2410c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.p-act-more-btn i, .p-act-more-btn svg { width: 0.65rem; height: 0.65rem; }
+
+.p-act-people { margin: 0; padding: 0; list-style: none; }
+.p-act-people__row { display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0; }
+.p-act-people__row img { flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 999px; object-fit: cover; }
+.p-act-people__text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.p-act-people__text a { color: #0f172a; font-size: 0.9rem; font-weight: 700; text-decoration: none; }
+.p-act-people__text a:hover { color: #c2410c; }
+.p-act-people__text q { overflow: hidden; color: #475569; font-size: 0.8125rem; font-style: italic; text-overflow: ellipsis; white-space: nowrap; }
+.p-act-state { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; }
+.p-act-state i, .p-act-state svg { width: 0.65rem; height: 0.65rem; }
+.p-act-state--going { background: #e8f6ec; color: #166534; }
+.p-act-state--maybe { background: #fef3c7; color: #92400e; }
+.p-act-state--cant { background: #f1f5f9; color: #64748b; }
+
+/* The answer: a bar fixed at the bottom of the panel */
+.p-act-answer { position: fixed; right: 0; bottom: 0; left: 0; z-index: 3; margin: 0; padding: 0.9rem 1.5rem 0.9rem; border-top: 1px solid #eef2f6; background: #fff; box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.05); }
+.p-act-answer__title { margin: 0 0 0.6rem; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
+.p-act-answer__choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.p-act-answer__choice { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; height: 2.75rem; padding: 0 0.5rem; border: 1.5px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.9375rem; font-weight: 700; cursor: pointer; }
+.p-act-answer__choice:hover { border-color: #f3b98d; }
+.p-act-answer__choice i, .p-act-answer__choice svg { width: 0.75rem; height: 0.75rem; }
+.p-act-answer__choice.is-picked, .p-act-answer__choice.is-picked:hover { border-color: #ea7a2e; background: #ea7a2e; color: #fff; }
+.p-act-answer__note-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem; padding: 0; border: 0; background: none; color: #475569; font-size: 0.8125rem; font-weight: 600; cursor: pointer; }
+.p-act-answer__note-toggle:hover { color: #c2410c; }
+.p-act-answer__note-toggle i, .p-act-answer__note-toggle svg { width: 0.75rem; height: 0.75rem; }
+.p-act-answer__note { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.p-act-answer__note[hidden] { display: none; }
+.p-act-answer .p-act-answer__input { flex: 1; min-width: 0; height: 2.5rem; padding: 0 0.9rem; border: 1px solid #e2e8f0; border-radius: 999px; font-size: 0.875rem; }
+.p-act-answer .p-act-answer__input:focus { border-color: #ea7a2e; outline: 0; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.15); }
+.p-act-answer__save { flex-shrink: 0; height: 2.5rem; padding: 0 1rem; border: 0; border-radius: 999px; background: #0f172a; color: #fff; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.is-embedded main.p-activities.p-activities--embed:has(.p-act-answer) { padding-bottom: 9.5rem !important; }
+.is-embedded main.p-activities.p-activities--embed:has(.p-act-facts):not(:has(.p-act-answer)) { padding-bottom: 2rem !important; }
+
+@media (max-width: 575.98px) {
+  .p-act-head .p-ped-head__close { display: inline-flex; }
+  .p-ped .p-act-head__title { font-size: 1.3rem; }
+  .p-act-facts { padding: 0.15rem 0.85rem; }
+  .p-act-answer { padding: 0.8rem 1rem; }
+  .p-act-answer__choice { font-size: 0.875rem; }
+}
+
+/* Just answered (?answered=1): the picked button pops and a check ring fades out, no message */
+.p-act-answer__choice.is-just-picked { position: relative; animation: p-act-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.p-act-answer__choice.is-just-picked::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; box-shadow: 0 0 0 0 rgba(234, 122, 46, 0.55); animation: p-act-ring 0.9s ease-out 0.1s; pointer-events: none; }
+@keyframes p-act-pop { 0% { transform: scale(0.92); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes p-act-ring { from { box-shadow: 0 0 0 0 rgba(234, 122, 46, 0.55); } to { box-shadow: 0 0 0 12px rgba(234, 122, 46, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  .p-act-answer__choice.is-just-picked, .p-act-answer__choice.is-just-picked::after { animation: none; }
+}
+.p-act-facts .p-act-menu { flex-shrink: 0; }
+.p-act-facts button.p-act-chip { cursor: pointer; }
+.p-act-menu__item, .p-act-menu__item:hover { text-decoration: none; }
+.p-act-menu__item i, .p-act-menu__item svg { width: 0.95rem; color: #64748b; }
+.p-act-menu__item--danger i, .p-act-menu__item--danger svg { color: inherit; }
+.p-act-people__row > a { flex-shrink: 0; line-height: 0; }
+.p-act-facts .p-act-facts__to { width: 0.7rem; height: 0.7rem; color: #94a3b8; }
+.p-act-facts__text small .o-flag { box-shadow: none; border: 0; filter: none; }
+/* The ⋯ menu opens to the right when nothing is before it (no Edit), over what follows */
+.p-act-actions { z-index: 4; }
+.p-act-actions .p-act-menu__list { right: auto; left: 0; }
+.p-act-actions .p-act-btn--wide ~ .p-act-menu .p-act-menu__list { right: 0; left: auto; }
+.p-act-facts { position: relative; z-index: 5; }
+/* The head stays over everything when the panel scrolls (the facts card and the buttons have their
+   own layer for their menus) */
+.p-activities--embed .p-ped-head.p-act-head { z-index: 10; }
+/* Not the organiser: Share and ⋯ at the end of the page, the ⋯ menu opens upwards */
+.p-act-actions--end { margin: 1rem 0 0.5rem; padding-top: 1rem; border-top: 1px solid #eef2f6; }
+.p-act-actions--end .p-act-menu__list { top: auto; bottom: calc(100% + 0.4rem); }
+/* The answer bar stays over the page when it scrolls under it */
+.p-ped .p-act-answer { z-index: 12; }

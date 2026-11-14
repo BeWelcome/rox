@@ -14,7 +14,7 @@
     <div class="p-pro-note__text js-note-clamp">{{ note.comment|purify }}</div>
     <a class="p-pro-note__more js-note-more js-contact-open" href="{{ path('view_note', {username: member.username}) }}" data-title="{{ _noteTitle }}" hidden>{{ 'profile.note.read.more'|trans }}</a>
     <div class="p-pro-note__foot">
-      {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
+      {% for name in note.categoryNames %}<span class="p-pro-note__category">{{ name }}</span>{% endfor %}
       {% set _noteDate = note.updated ?: note.created %}
       {% if _noteDate %}<span class="p-pro-note__date">{{ _noteDate|format_date('medium') }}</span>{% endif %}
       <a class="p-pro-note__edit-link js-contact-open" href="{{ path('edit_note', {username: member.username}) }}" data-title="{{ _noteTitle }}">

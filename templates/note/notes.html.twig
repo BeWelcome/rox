@@ -61,7 +61,7 @@
                     <div class="p-notes-card__body">
                         <p class="p-notes-card__meta">
                             <a class="p-notes-card__name" href="{{ path('members_profile', {username: noted.username}) }}">{{ noted.username }}</a>
-                            {% if note.category %}<span class="p-notes-card__category">{{ note.category }}</span>{% endif %}
+                            {% for name in note.categoryNames %}<span class="p-notes-card__category">{{ name }}</span>{% endfor %}
                             {% if noteDate %}<span class="p-notes-card__date">{{ noteDate|format_date('medium') }}</span>{% endif %}
                         </p>
                         <div class="p-notes-card__text js-notes-text">{{ note.comment|purify }}</div>

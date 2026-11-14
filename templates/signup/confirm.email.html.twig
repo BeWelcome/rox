@@ -1,23 +1,61 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('signup/finalize') }}
 {% endblock stylesheets %}
 
-{% block page_content %}
-<div class="signup-finalize">
-<div class="signup-finalize__inner">
+{#
+  Confirm the email address with the registration key from the mail (its link fills it in): after the signup
+  (SignupController::confirmEmailAddress, resend: true, with the box that sends the mail again) and after a change of
+  the address (AccountController). The look of the finish setup page.
+  Expects member, confirm_email; resend (optional).
+#}
+{% block content %}
+{% import 'signup/_macros.html.twig' as sf %}
+{% set _resend = resend ?? false %}
+<div class="p-pe p-sf">
+  <header class="p-pe-head">
+    <div class="p-pe-head__wrap container-lg">
+      <div class="p-pe-head__top">
+        <span class="p-pe-head__avatar">
+          <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
+        </span>
+        <div class="p-pe-head__identity">
+          {% if _resend %}
+            <p class="p-pe-head__eyebrow"><i class="fas fa-check" aria-hidden="true"></i> {{ 'signup.finalize.eyebrow'|trans }}</p>
+          {% endif %}
+          <h1 class="p-pe-head__name">{{ 'members.confirm.email'|trans }}</h1>
+          <p class="p-sf-head__blurb">{{ 'members.confirm.email.blurb'|trans|striptags }}</p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<h1 class="signup-finalize__heading">{{ 'members.confirm.email'|trans }}</h1>
-    <p class="signup-finalize__subheading">{{ 'members.confirm.email.blurb'|trans|striptags }}</p>
-    {{ form_start(confirm_email, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
-    {{ form_row(confirm_email.registration_key) }}
+  <div class="p-pe__body p-sf__body container-lg">
+    {{ form_start(confirm_email, {attr: {autocomplete: 'off', class: 'p-sf-form', novalidate: 'novalidate'}}) }}
+    {{ form_errors(confirm_email) }}
 
-    <div class="signup-finalize__actions">
-        <input type="submit" class="o-button signup-layout__submit" value="{{ 'members.confirm.email.button'|trans }}">
+    <section class="p-pe-card">
+      <div class="p-sf-field">
+        {{ sf.label(confirm_email.registration_key) }}
+        {{ sf.input(confirm_email.registration_key, 'key') }}
+        {{ form_errors(confirm_email.registration_key) }}
+        {{ sf.help(confirm_email.registration_key) }}
+        {% if _resend %}
+          {# The mail got lost: send it again (its form is below this one) #}
+          {% include 'signup/_resend_button.html.twig' %}
+        {% endif %}
+      </div>
+    </section>
+
+    <div class="p-sf-actions">
+      <button type="submit" class="p-sf-actions__submit"><i class="fas fa-check" aria-hidden="true"></i> {{ 'members.confirm.email.button'|trans }}</button>
     </div>
 
     {{ form_end(confirm_email) }}
+    {% if _resend %}
+      {% include 'signup/_resend_form.html.twig' %}
+    {% endif %}
+  </div>
 </div>
-</div>
-{% endblock page_content %}
+{% endblock content %}

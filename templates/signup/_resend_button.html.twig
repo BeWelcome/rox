@@ -1,0 +1,14 @@
+{#
+  The mail with the confirmation link got lost: a box with a button that sends it again (with
+  signup/_resend_form.html.twig). Expects member.
+#}
+<div class="signup-resend" role="note">
+    <span class="signup-resend__icon" aria-hidden="true"><i class="fas fa-envelope-open-text"></i></span>
+    <div class="signup-resend__body">
+        <p class="signup-resend__title">{{ 'members.confirm.email.resend.title'|trans }}</p>
+        <p class="signup-resend__text">{{ 'members.confirm.email.resend.blurb'|trans({email: member.email}) }}</p>
+        <button type="submit" form="resend-confirmation" class="o-button signup-resend__button">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'members.confirm.email.resend'|trans }}
+        </button>
+    </div>
+</div>

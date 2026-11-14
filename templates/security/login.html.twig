@@ -21,9 +21,6 @@
                     <a href="{{ url('member_request_reset_password') }}">{{ 'login.password.getnew' | trans }}</a></p>
                 <p>{{ 'login.forgot.username' | trans }}</p>
             {% endif %}
-            {% if error.messageKey == 'login.mail.not_confirmed' %}
-                <p><a href="{{ url('resend_confirmation_email', {'username': last_username}) }}">{{ 'login.resend.confirmation' | trans }}</a></p>
-            {% endif %}
             {% if error.messageKey == 'member_banned' %}
                 <p>{{ 'login.account.banned' | trans }}</p>
             {% endif %}

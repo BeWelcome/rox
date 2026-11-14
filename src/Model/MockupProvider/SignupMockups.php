@@ -39,11 +39,6 @@ class SignupMockups implements MockupProviderInterface
             'template' => 'signup/finalize.html.twig',
             'description' => 'Successful signup.',
         ],
-        'Signup Email Resent' => [
-            'type' => 'page',
-            'template' => 'signup/resent.html.twig',
-            'description' => 'Email with confirmation links has been resent.',
-        ],
     ];
 
     public function __construct(private readonly FormFactoryInterface $formFactory)

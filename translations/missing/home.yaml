@@ -265,18 +265,42 @@ frontpage.stay.subject:
 frontpage.support.eyebrow:
     - 'Supported by members'
     - 'Front page for visitors, block at the end about donations: small line above the title'
-frontpage.support.title:
-    - 'No ads, no investors, no fees. Just us.'
-    - 'Front page for visitors, block at the end about donations: title'
-frontpage.support.text:
-    - 'BeWelcome is run by volunteers and belongs to BeVolunteer, a non-profit association. The servers and everything else are paid for by donations from members, so the site stays free for everyone and your data is never sold. If you like what we do, you can help, even before you join.'
+frontpage.support.headline:
+    - 'No ads, no investors, no fees.'
+    - 'Front page for visitors, block at the end about donations: title, followed by the orange end of it'
+frontpage.support.title.us:
+    - 'Just us.'
+    - 'Front page for visitors, block at the end about donations: orange end of the title'
+frontpage.support.lead:
+    - 'BeWelcome is run by volunteers and belongs to BeVolunteer, a non-profit association. Donations from members pay for the servers and everything else.'
     - 'Front page for visitors, block at the end about donations: text under the title'
+frontpage.support.free:
+    - 'Free for everyone'
+    - 'Front page for visitors, block at the end about donations: first small label'
+frontpage.support.data:
+    - 'Your data is never sold'
+    - 'Front page for visitors, block at the end about donations: second small label'
+frontpage.support.volunteers:
+    - 'Run by volunteers'
+    - 'Front page for visitors, block at the end about donations: third small label'
+frontpage.support.ask:
+    - 'Like what we do? Help, even before you join.'
+    - 'Front page for visitors, block at the end about donations: title above the amounts'
+frontpage.support.amount:
+    - 'Amount'
+    - 'Front page for visitors, block at the end about donations: name of the group of amounts, for screen readers'
+frontpage.support.other:
+    - 'Other'
+    - 'Front page for visitors, block at the end about donations: amount chosen on the donations page'
 frontpage.support.raised:
     - '{amount} given this year'
-    - 'Front page for visitors, block at the end about donations: under the bar, the donations of the year'
+    - 'Front page for visitors, block at the end about donations: the donations of the year'
+frontpage.support.first:
+    - 'Be the first to give this year'
+    - 'Front page for visitors, block at the end about donations: shown while nobody gave this year'
 frontpage.support.button:
     - 'Support BeWelcome'
     - 'Front page for visitors, block at the end about donations: button to the donations page'
-frontpage.support.note:
-    - 'No account needed. Bank transfer, PayPal or card.'
+frontpage.support.ways:
+    - 'No account needed · Bank transfer, PayPal or card'
     - 'Front page for visitors, block at the end about donations: small line under the button'

@@ -67,6 +67,11 @@
                 {% set _reference = 'donate.account.reference.value'|trans({username: app.user.username}) %}
                 {% set _account = _account|merge([{ label: 'donate.account.reference'|trans, value: _reference, copy: _reference }]) %}
               {% endif %}
+              {#- The amount picked on the front page (?amount=10) comes along -#}
+              {% set _amount = app.request.query.getInt('amount') %}
+              {% if _amount > 0 and _amount <= 100000 %}
+                {% set _account = [{ label: 'donate.account.amount'|trans, value: _amount|format_currency('EUR', { fraction_digit: 0 }), copy: _amount ~ '' }]|merge(_account) %}
+              {% endif %}
               {% set _all = _account|map(row => row.label ~ ': ' ~ row.value)|join("\n") %}
               <div class="c-donate-account js-donate-account">
                 <div class="c-donate-account__head">

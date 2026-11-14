@@ -125,39 +125,31 @@
     </div>
 {% endmacro %}
 
+{#
+  Below a field of a profile translation: the same field in the member's language (else English) to translate
+  from, in a light card headed by that language's own name. Nothing when it is the language being edited or the
+  field has no text there yet.
+#}
 {% macro field_ui_language(uiLanguage, language, field, translations) %}
   {% if uiLanguage not in translations|keys %}
     {% set uiLanguage = 'en' %}
   {% endif %}
-  {% if language != uiLanguage %}
-    <div class="u:relative u:border u:border-gray-500 u:p-4 u:pt-8 u:w-[40%] u:flex-1">
-      <span class="u:absolute u:-top-14 u:left-8 u:bg-white u:px-2 u:text-12">
-        {{ ('lang_' ~ uiLanguage)|lower|trans({}, "messages", language) }}
-      </span>
-      <div class="u:text-sm u:w-full">
-        <small class="form-text text-muted">
-          {% if translations[uiLanguage][field] is defined %}
-            {{ translations[uiLanguage][field]|purify }}
-            {% else %}
-               &nbsp;
-          {% endif %}
-        </small>
-      </div>
-    </div>
+  {% set text = translations[uiLanguage][field] ?? '' %}
+  {% if language != uiLanguage and text|striptags|trim is not empty %}
+    <aside class="o-field-reference" lang="{{ uiLanguage }}">
+      <p class="o-field-reference__head"><i class="fas fa-globe" aria-hidden="true"></i> {{ language_name(uiLanguage) }}</p>
+      <div class="o-field-reference__text">{{ text|purify }}</div>
+    </aside>
   {% endif %}
 {% endmacro %}
 
+{# A field of a profile translation, the same field in the member's language below it (field_ui_language) #}
 {% macro field_translation(form, uiLanguage, language, field, username, translations) %}
-  {% import _self as macros %}
-  <div class="u:mb-16 o-field-translation">
+  <div class="o-field-translation">
     <label class="o-field-translation__label" for="{{ form.vars.id }}">{{ form.vars.label|trans({}, 'messages', language) }}</label>
-    <div class="u:flex u:flex-col u:md:flex-row u:gap-16 u:items-stretch">
-      {% set attr = form.vars.attr|merge({'data-language': language}) %}
-      {% set attr = attr|merge({'data-field': field}) %}
-      {% set attr = attr|merge({'data-username': username}) %}
-      {{ form_widget(form, {attr: attr}) }}
-      {{ _self.field_ui_language(uiLanguage, language, field, translations) }}
-    </div>
+    {% set attr = form.vars.attr|merge({'data-language': language, 'data-field': field, 'data-username': username}) %}
+    {{ form_widget(form, {attr: attr}) }}
+    {{ _self.field_ui_language(uiLanguage, language, field, translations) }}
   </div>
 {% endmacro %}
 

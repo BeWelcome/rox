@@ -1749,6 +1749,14 @@ main:has(.p-hero) {
   margin-top: 1.25rem;
 }
 
+/* The same field in the member's language (else English) below it, to translate from (macros.field_ui_language) */
+.o-field-translation { margin-bottom: 1rem; }
+.o-field-reference { margin-top: 0.6rem; padding: 0.75rem 0.9rem; border-radius: 0.9rem; background: #f8fafc; border: 1px solid #e2e8f0; }
+.o-field-reference__head { display: flex; align-items: center; gap: 0.4rem; margin: 0 0 0.35rem; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+.o-field-reference__head i { color: #94a3b8; }
+.o-field-reference__text { max-height: 9rem; overflow-y: auto; color: #475569; font-size: 0.875rem; line-height: 1.5; overflow-wrap: anywhere; }
+.o-field-reference__text > :last-child { margin-bottom: 0; }
+
 /* ── Profile edit textareas (plain, no rich editor) ── */
 .p-edit-subpage__card textarea.o-input,
 .p-edit-subpage__card input.o-input {
@@ -11371,8 +11379,9 @@ a.p-pe-tile:hover { border-color: #fbc99f; }
 .p-ped .p-ped-text textarea.o-input { display: block; min-height: 12rem; padding: 0.85rem 1rem 2rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #f8fafc; color: #0f172a; font-size: 0.95rem; line-height: 1.55; resize: vertical; }
 .p-ped .p-ped-text textarea.o-input::placeholder { color: #94a3b8; }
 .p-ped .p-ped-text textarea.o-input:focus { border-color: #f6a364; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
-.p-ped-text__count { position: absolute; right: 1rem; bottom: 0.65rem; color: #94a3b8; font-size: 0.75rem; pointer-events: none; }
-.p-ped-text__count.is-over { color: #c2410c; }
+/* The count stays readable in the corner: an opaque pill over the text when the text scrolls under it */
+.p-ped-text__count { position: absolute; right: 1.1rem; bottom: 0.55rem; z-index: 1; padding: 0.1rem 0.5rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #475569; font-size: 0.75rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.4; pointer-events: none; }
+.p-ped-text__count.is-over { border-color: #fdba74; background: #fff7ed; color: #9a3412; }
 
 /* Choices: pills with an icon (cards with a box to tick on phones) */
 .p-ped .p-pill-option__label { gap: 0.55rem; min-height: 2.9rem; padding: 0.4rem 1.1rem 0.4rem 0.45rem; border: 1px solid #e2e8f0; background: #fff; color: #334155; font-size: 0.95rem; }

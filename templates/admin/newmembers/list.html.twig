@@ -2,10 +2,11 @@
 {#
   The new members (Admin\NewMembersController): who signed up in the last 90 days. The greeting team sees the members
   who still wait for a greeting, the safety team and the checkers (all) everybody and change a status. The volunteer's
-  countries (saved for them) and the profile filter narrow the list; members can be selected for one standard greeting
-  (the dialog, a message to each of them).
-  Expects members (pager), all, can_change_status, statuses, chosen and addable ({id, name, count}), profile,
-  profile_counts (by profile), waiting and bulk_limit.
+  countries and languages (saved for them; a member must match both) and the profile filter narrow the list; members
+  can be selected for one standard greeting (the dialog, a message to each of them).
+  Expects members (pager), all, can_change_status, statuses, chosen and addable ({id, name, count}), chosen_languages
+  and addable_languages ({code, name, count}, counted in the chosen countries), profile, profile_counts (by profile),
+  waiting and bulk_limit.
 #}
 {% set token = csrf_token(constant('App\\Controller\\Admin\\NewMembersController::TOKEN')) %}
 {% set page = members.currentPage %}
@@ -57,6 +58,35 @@
                         <span class="c-newmembers__hint">{{ (chosen is empty ? 'admin.newmembers.countries.all' : 'admin.newmembers.countries.saved')|trans }}</span>
                     </div>
                 </div>
+                <div class="c-newmembers__filter" role="group" aria-labelledby="c-newmembers-languages">
+                    <span class="c-newmembers__label" id="c-newmembers-languages">{{ 'admin.newmembers.languages'|trans }}</span>
+                    <div class="c-newmembers__pills">
+                        {% for language in chosen_languages %}
+                            <form class="c-newmembers__pill" method="post" action="{{ path('newmembers_languages') }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="remove" value="{{ language.code }}">
+                                <input type="hidden" name="profile" value="{{ profile }}">
+                                <span>{{ language.name }} ({{ language.count }})</span>
+                                <button type="submit" aria-label="{{ 'admin.newmembers.languages.remove'|trans({language: language.name}) }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                            </form>
+                        {% endfor %}
+                        {% if addable_languages is not empty %}
+                            <form class="c-newmembers__add" method="post" action="{{ path('newmembers_languages') }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="profile" value="{{ profile }}">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <select name="add" class="js-newmembers-add" aria-label="{{ 'admin.newmembers.languages.add'|trans }}">
+                                    <option value="">{{ 'admin.newmembers.languages.add'|trans }}</option>
+                                    {% for language in addable_languages %}
+                                        <option value="{{ language.code }}">{{ language.name }} ({{ language.count }})</option>
+                                    {% endfor %}
+                                </select>
+                                <noscript><button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet">{{ 'admin.newmembers.countries.add.button'|trans }}</button></noscript>
+                            </form>
+                        {% endif %}
+                        <span class="c-newmembers__hint">{{ (chosen_languages is empty ? 'admin.newmembers.languages.all' : 'admin.newmembers.languages.saved')|trans }}</span>
+                    </div>
+                </div>
                 <div class="c-newmembers__filter" role="group" aria-labelledby="c-newmembers-profile">
                     <span class="c-newmembers__label" id="c-newmembers-profile">{{ 'admin.newmembers.profile'|trans }}</span>
                     <nav class="c-newmembers__segments">
@@ -73,7 +103,7 @@
             {% if members.nbResults == 0 %}
                 <div class="c-cnews-empty">
                     <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-user-plus"></i></span>
-                    {% set _empty = chosen is empty ? 'none' : 'countries' %}
+                    {% set _empty = chosen is empty ? (chosen_languages is empty ? 'none' : 'languages') : (chosen_languages is empty ? 'countries' : 'filters') %}
                     <p class="c-cnews-empty__title">{{ ('admin.newmembers.empty.' ~ _empty ~ '.title')|trans }}</p>
                     <p class="c-cnews-empty__text">{{ ('admin.newmembers.empty.' ~ _empty ~ '.text')|trans }}</p>
                 </div>
@@ -200,8 +230,8 @@
                 </label>
                 <label class="c-newmembers-dialog__field">
                     <span class="c-newmembers-dialog__label">{{ 'admin.newmembers.dialog.message'|trans }}</span>
-                    <textarea class="o-input" name="text" rows="8" required>{{ 'admin.newmembers.dialog.message.default'|trans({volunteer: app.user.username}) }}</textarea>
-                    <span class="c-newmembers__hint">{{ 'admin.newmembers.dialog.message.hint'|trans }}</span>
+                    <textarea class="o-input" name="text" rows="8" required>{{ 'admin.newmembers.dialog.greeting.default'|trans({volunteer: app.user.username}) }}</textarea>
+                    <span class="c-newmembers__hint">{{ 'admin.newmembers.dialog.greeting.hint'|trans }}</span>
                 </label>
                 <p class="c-newmembers-dialog__info"><i class="fas fa-circle-info" aria-hidden="true"></i>{{ 'admin.newmembers.dialog.info'|trans }}</p>
                 <div class="c-newmembers-dialog__actions">

@@ -27,6 +27,9 @@ class NewMembersModel
     public const string PROFILE_EMPTY = 'empty';
     public const array PROFILES = [self::PROFILE_ALL, self::PROFILE_FULL, self::PROFILE_EMPTY];
 
+    /** The levels at which a member speaks a language of the language filter: a greeting in it can be understood */
+    public const array LANGUAGE_LEVELS = ['mother.tongue', 'expert', 'fluent', 'intermediate'];
+
     private const int DAYS = 90;
     /** neither a profile picture nor a text about them */
     private const string EMPTY_PROFILE = "NOT EXISTS (SELECT 1 FROM member_photo p WHERE p.member_id = m.id) AND TRIM(COALESCE(m.AboutMe, '')) = ''";
@@ -43,16 +46,17 @@ class NewMembersModel
 
     /**
      * With $all (the safety team and checkers) the unfinished signups and the members greeted twice as well,
-     * oldest first; else the newest first. Only from the countries (geoname ids; none: everywhere) and with the
-     * profile (PROFILES).
+     * oldest first; else the newest first. Only from the countries (geoname ids; none: everywhere), speaking one of
+     * the languages (codes, at one of LANGUAGE_LEVELS; none: any) and with the profile (PROFILES).
      *
-     * @param list<int> $countries
+     * @param list<int>    $countries
+     * @param list<string> $languages
      */
-    public function getPager(bool $all, string $locale, int $page, int $perPage, array $countries = [], string $profile = self::PROFILE_ALL): Pagerfanta
+    public function getPager(bool $all, string $locale, int $page, int $perPage, array $countries = [], string $profile = self::PROFILE_ALL, array $languages = []): Pagerfanta
     {
         $pager = new Pagerfanta(new CallbackAdapter(
-            fn (): int => (int) $this->connection->fetchOne('SELECT COUNT(*) FROM ' . self::FROM . ' WHERE ' . $this->where($all, $countries, $profile), $this->parameters($all, $countries), $this->types()),
-            fn (int $offset, int $length): array => $this->members($all, $locale, $offset, $length, $countries, $profile),
+            fn (): int => (int) $this->connection->fetchOne('SELECT COUNT(*) FROM ' . self::FROM . ' WHERE ' . $this->where($all, $countries, $profile, $languages), $this->parameters($all, $countries, $languages), $this->types()),
+            fn (int $offset, int $length): array => $this->members($all, $locale, $offset, $length, $countries, $profile, $languages),
         ));
         $pager->setMaxPerPage($perPage);
         $pager->setCurrentPage(max(1, min($page, $pager->getNbPages())));
@@ -81,17 +85,41 @@ class NewMembersModel
     }
 
     /**
-     * How many members each profile filter shows (in the countries).
+     * The languages the members of the list speak at one of LANGUAGE_LEVELS, with how many each, in the countries
+     * (the two filters go together) and whatever the language filter.
      *
      * @param list<int> $countries
      *
+     * @return array<string, int> members by language code
+     */
+    public function getLanguages(bool $all, array $countries, string $profile = self::PROFILE_ALL): array
+    {
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT l.language AS code, COUNT(DISTINCT m.id) AS count
+            FROM ' . self::FROM . '
+            JOIN member_language_level l ON l.member_id = m.id AND l.level IN (:levels)
+            WHERE ' . $this->where($all, $countries, $profile) . '
+            GROUP BY l.language',
+            $this->parameters($all, $countries) + ['levels' => self::LANGUAGE_LEVELS],
+            $this->types(),
+        );
+
+        return array_column(array_map(static fn (array $row): array => ['code' => (string) $row['code'], 'count' => (int) $row['count']], $rows), 'count', 'code');
+    }
+
+    /**
+     * How many members each profile filter shows (in the countries, speaking the languages).
+     *
+     * @param list<int>    $countries
+     * @param list<string> $languages
+     *
      * @return array<string, int> by PROFILES
      */
-    public function getProfileCounts(bool $all, array $countries): array
+    public function getProfileCounts(bool $all, array $countries, array $languages = []): array
     {
         $row = $this->connection->fetchAssociative(
-            'SELECT COUNT(*) AS total, SUM(' . self::EMPTY_PROFILE . ') AS empty FROM ' . self::FROM . ' WHERE ' . $this->where($all, $countries, self::PROFILE_ALL),
-            $this->parameters($all, $countries),
+            'SELECT COUNT(*) AS total, SUM(' . self::EMPTY_PROFILE . ') AS empty FROM ' . self::FROM . ' WHERE ' . $this->where($all, $countries, self::PROFILE_ALL, $languages),
+            $this->parameters($all, $countries, $languages),
             $this->types(),
         ) ?: ['total' => 0, 'empty' => 0];
 
@@ -122,19 +150,20 @@ class NewMembersModel
      * @return list<array<string, mixed>>
      */
     /**
-     * @param list<int> $countries
+     * @param list<int>    $countries
+     * @param list<string> $languages
      */
-    private function members(bool $all, string $locale, int $offset, int $length, array $countries, string $profile): array
+    private function members(bool $all, string $locale, int $offset, int $length, array $countries, string $profile, array $languages): array
     {
         $rows = $this->connection->fetchAllAssociative(
             'SELECT m.id, m.Username AS username, m.created, m.Status AS status, m.Email AS email,
                 m.bewelcomed, m.AboutMe AS about_me, ' . $this->placeName('g') . ' AS place, ' . $this->placeName('c') . ' AS country,
                 EXISTS (SELECT 1 FROM member_photo p WHERE p.member_id = m.id) AS has_photo
             FROM ' . self::FROM . '
-            WHERE ' . $this->where($all, $countries, $profile) . '
+            WHERE ' . $this->where($all, $countries, $profile, $languages) . '
             ORDER BY m.created ' . ($all ? 'ASC' : 'DESC') . '
             LIMIT ' . $length . ' OFFSET ' . $offset,
-            $this->parameters($all, $countries) + ['locale' => $locale],
+            $this->parameters($all, $countries, $languages) + ['locale' => $locale],
             $this->types(),
         );
 
@@ -186,13 +215,15 @@ class NewMembersModel
     }
 
     /**
-     * @param list<int> $countries
+     * @param list<int>    $countries
+     * @param list<string> $languages
      */
-    private function where(bool $all, array $countries = [], string $profile = self::PROFILE_ALL): string
+    private function where(bool $all, array $countries = [], string $profile = self::PROFILE_ALL, array $languages = []): string
     {
         return 'm.Status IN (:statuses) AND m.created > NOW() - INTERVAL ' . self::DAYS . ' DAY'
             . ($all ? '' : ' AND m.bewelcomed < ' . (self::LOCAL_GREETING | self::GLOBAL_GREETING))
             . ([] === $countries ? '' : ' AND c.geoname_id IN (:countries)')
+            . ([] === $languages ? '' : ' AND EXISTS (SELECT 1 FROM member_language_level fl WHERE fl.member_id = m.id AND fl.language IN (:languages) AND fl.level IN (:levels))')
             . match ($profile) {
                 self::PROFILE_EMPTY => ' AND ' . self::EMPTY_PROFILE,
                 self::PROFILE_FULL => ' AND NOT (' . self::EMPTY_PROFILE . ')',
@@ -201,15 +232,18 @@ class NewMembersModel
     }
 
     /**
-     * @param list<int> $countries
+     * @param list<int>    $countries
+     * @param list<string> $languages
      *
      * @return array<string, mixed>
      */
-    private function parameters(bool $all, array $countries = []): array
+    private function parameters(bool $all, array $countries = [], array $languages = []): array
     {
         return ['statuses' => $all
             ? [MemberStatusType::ACTIVE, ...MemberStatusType::SIGNUP_UNFINISHED]
-            : [MemberStatusType::ACTIVE]] + ([] === $countries ? [] : ['countries' => $countries]);
+            : [MemberStatusType::ACTIVE]]
+            + ([] === $countries ? [] : ['countries' => $countries])
+            + ([] === $languages ? [] : ['languages' => $languages, 'levels' => self::LANGUAGE_LEVELS]);
     }
 
     /**
@@ -217,7 +251,12 @@ class NewMembersModel
      */
     private function types(): array
     {
-        return ['statuses' => ArrayParameterType::STRING, 'countries' => ArrayParameterType::INTEGER];
+        return [
+            'statuses' => ArrayParameterType::STRING,
+            'countries' => ArrayParameterType::INTEGER,
+            'languages' => ArrayParameterType::STRING,
+            'levels' => ArrayParameterType::STRING,
+        ];
     }
 
     private function summary(string $aboutMe): string

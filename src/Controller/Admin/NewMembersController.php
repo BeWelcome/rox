@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Doctrine\MemberStatusType;
+use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Logger\Logger;
@@ -74,22 +75,27 @@ class NewMembersController extends AbstractController
         $locale = $request->getLocale();
         $profile = $this->profile($request);
         $countries = $this->countries($volunteer);
+        $languages = $this->languages($volunteer);
         $options = $this->model->getCountries($all, $locale, $profile);
         $chosen = [];
         foreach ($countries as $id) {
             $option = array_values(array_filter($options, static fn (array $country): bool => $country['id'] === $id))[0] ?? null;
             $chosen[] = $option ?? ['id' => $id, 'name' => $this->countryName($id, $locale), 'count' => 0];
         }
+        // the languages' counts are those in the chosen countries: the two filters go together
+        $languageCounts = $this->model->getLanguages($all, $countries, $profile);
 
         return $this->render('admin/newmembers/list.html.twig', [
-            'members' => $this->model->getPager($all, $locale, $page, $this->getItemsPerPage($volunteer), $countries, $profile),
+            'members' => $this->model->getPager($all, $locale, $page, $this->getItemsPerPage($volunteer), $countries, $profile, $languages),
             'all' => $all,
             'can_change_status' => $this->canChangeStatus(),
             'statuses' => self::STATUSES,
             'chosen' => $chosen,
             'addable' => array_values(array_filter($options, static fn (array $country): bool => !\in_array($country['id'], $countries, true))),
+            'chosen_languages' => $this->languageOptions(array_fill_keys($languages, 0), $languageCounts),
+            'addable_languages' => $this->languageOptions(array_diff_key($languageCounts, array_flip($languages)), $languageCounts),
             'profile' => $profile,
-            'profile_counts' => $this->model->getProfileCounts($all, $countries),
+            'profile_counts' => $this->model->getProfileCounts($all, $countries, $languages),
             'waiting' => $this->model->countWaiting(),
             'bulk_limit' => self::BULK_LIMIT,
         ]);
@@ -113,7 +119,34 @@ class NewMembersController extends AbstractController
             $countries[] = $add;
         }
         $countries = array_values(array_filter($countries, static fn (int $id): bool => $id !== $remove));
-        $this->saveCountries($volunteer, $countries);
+        $this->saveFilter($volunteer, Preference::NEW_MEMBERS_COUNTRIES, $countries);
+
+        return $this->redirectToRoute('newmembers', $this->listParameters($request, 1));
+    }
+
+    /**
+     * Adds a language to the volunteer's languages or removes one; kept for their next visits.
+     */
+    #[Route(path: '/admin/newmembers/languages', name: 'newmembers_languages', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function languagesChange(Request $request): RedirectResponse
+    {
+        $this->denyUnlessAnyGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME]);
+        /** @var Member $volunteer */
+        $volunteer = $this->getUser();
+
+        $languages = $this->languages($volunteer);
+        $add = $request->request->getString('add');
+        $remove = $request->request->getString('remove');
+        if (
+            '' !== $add
+            && !\in_array($add, $languages, true)
+            && null !== $this->entityManager->getRepository(Language::class)->findOneBy(['shortCode' => $add])
+        ) {
+            $languages[] = $add;
+        }
+        $languages = array_values(array_filter($languages, static fn (string $code): bool => $code !== $remove));
+        $this->saveFilter($volunteer, Preference::NEW_MEMBERS_LANGUAGES, $languages);
 
         return $this->redirectToRoute('newmembers', $this->listParameters($request, 1));
     }
@@ -146,8 +179,10 @@ class NewMembersController extends AbstractController
 
         $members = $this->entityManager->getRepository(Member::class)->findBy(['username' => $usernames]);
         foreach ($members as $member) {
-            $body = str_replace('%username%', $member->getUsername(), nl2br(htmlspecialchars($text), false));
-            $this->messageSender->send($volunteer, $member, null, str_replace('%username%', $member->getUsername(), $subject), $body);
+            // {username} (the greeting's placeholder, a translation's parameter style), %username% as it was before
+            $names = ['{username}' => $member->getUsername(), '%username%' => $member->getUsername()];
+            $body = strtr(nl2br(htmlspecialchars($text), false), $names);
+            $this->messageSender->send($volunteer, $member, null, strtr($subject, $names), $body);
             $this->model->markGreetingSent($member, self::GREETINGS[$greeting]);
         }
         $this->logger->write(\sprintf(
@@ -234,26 +269,61 @@ class NewMembersController extends AbstractController
      */
     private function countries(Member $volunteer): array
     {
-        $value = $volunteer->getMemberPreferenceValue($this->countriesPreference());
-
-        return array_values(array_unique(array_filter(array_map('intval', explode(',', $value)))));
+        return array_values(array_unique(array_filter(array_map('intval', $this->savedFilter($volunteer, Preference::NEW_MEMBERS_COUNTRIES)))));
     }
 
     /**
-     * @param list<int> $countries
+     * @return list<string> the codes of the volunteer's languages (Preference::NEW_MEMBERS_LANGUAGES)
      */
-    private function saveCountries(Member $volunteer, array $countries): void
+    private function languages(Member $volunteer): array
     {
-        $memberPreference = $volunteer->getMemberPreference($this->countriesPreference());
-        $memberPreference->setValue(implode(',', $countries));
+        return array_values(array_unique($this->savedFilter($volunteer, Preference::NEW_MEMBERS_LANGUAGES)));
+    }
+
+    /**
+     * The languages with their names in the page's language and their counts, by name.
+     *
+     * @param array<string, int> $languages codes as keys
+     * @param array<string, int> $counts    members by code
+     *
+     * @return list<array{code: string, name: string, count: int}>
+     */
+    private function languageOptions(array $languages, array $counts): array
+    {
+        $options = [];
+        foreach (array_keys($languages) as $code) {
+            $options[] = ['code' => (string) $code, 'name' => $this->translator->trans('lang_' . $code), 'count' => $counts[$code] ?? 0];
+        }
+        usort($options, static fn (array $a, array $b): int => strcasecmp($a['name'], $b['name']));
+
+        return $options;
+    }
+
+    /**
+     * A filter the volunteer keeps for their next visits: a hidden preference with comma separated values.
+     *
+     * @return list<string>
+     */
+    private function savedFilter(Member $volunteer, string $codename): array
+    {
+        return array_values(array_filter(explode(',', $volunteer->getMemberPreferenceValue($this->preference($codename))), static fn (string $value): bool => '' !== $value));
+    }
+
+    /**
+     * @param list<int|string> $values
+     */
+    private function saveFilter(Member $volunteer, string $codename, array $values): void
+    {
+        $memberPreference = $volunteer->getMemberPreference($this->preference($codename));
+        $memberPreference->setValue(implode(',', $values));
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
     }
 
-    private function countriesPreference(): Preference
+    private function preference(string $codename): Preference
     {
         /** @var Preference $preference */
-        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy(['codename' => Preference::NEW_MEMBERS_COUNTRIES]);
+        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy(['codename' => $codename]);
 
         return $preference;
     }

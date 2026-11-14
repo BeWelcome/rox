@@ -1,17 +1,114 @@
 /*
- * The new members (templates/admin/newmembers/list.html.twig): an added country filters at once, members are selected
- * for the standard greeting (the dialog lists them and posts to the local or the global greeting), a single greeting
- * opens the message in a new tab and shows as sent here, and a status's Save is enabled once the status changed.
+ * The new members (templates/admin/newmembers/list.html.twig): an added country or language filters at once, members
+ * are selected for the standard greeting (the dialog lists them and posts to the local or the global greeting), a
+ * single greeting opens the message in a new tab and shows as sent here, and a status's Save is enabled once the
+ * status changed.
  */
 const LIMIT = 50;
 
-document.querySelectorAll('.js-newmembers-add').forEach((select) => {
-    select.addEventListener('change', () => {
-        if (select.value !== '') {
-            select.form.requestSubmit();
+const escapeHtml = (value) => String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+/*
+ * "Add a country" and "Add a language": the select stays in the form (and works without JavaScript), a search field
+ * with a list in the site's look takes its place, like the languages of the profile editor. The list shows all
+ * choices on focus (they are few); typing keeps those that start with the text, then those that contain it. A pick
+ * sets the select and sends the form.
+ */
+const searchSelect = (select) => {
+    const form = select.form;
+    const choices = Array.from(select.options)
+        .filter((option) => option.value !== '')
+        .map((option) => ({ value: option.value, label: option.textContent.trim() }));
+    const placeholder = select.options[0] ? select.options[0].textContent.trim() : '';
+    const listId = `${select.name}-${Math.random().toString(36).slice(2)}-list`;
+
+    form.classList.add('is-enhanced');
+    select.hidden = true;
+    select.tabIndex = -1;
+    form.insertAdjacentHTML('beforeend', `
+        <div class="c-newmembers__search">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <input type="text" class="c-newmembers__search-input" placeholder="${escapeHtml(placeholder)}"
+                   aria-label="${escapeHtml(select.getAttribute('aria-label') || placeholder)}" autocomplete="off"
+                   role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${listId}">
+        </div>
+        <ul class="c-newmembers__results" id="${listId}" role="listbox" hidden></ul>`);
+    const input = form.querySelector('.c-newmembers__search-input');
+    const results = form.querySelector('.c-newmembers__results');
+
+    let matches = [];
+    let active = 0;
+    const show = () => {
+        results.innerHTML = matches.map((item, position) => `
+            <li role="option" class="c-newmembers__result${position === active ? ' is-active' : ''}" data-value="${escapeHtml(item.value)}" aria-selected="${position === active}">
+                ${escapeHtml(item.label)}
+            </li>`).join('');
+        results.hidden = matches.length === 0;
+        input.setAttribute('aria-expanded', String(!results.hidden));
+        const current = results.querySelector('.is-active');
+        if (current) {
+            current.scrollIntoView({ block: 'nearest' });
+        }
+    };
+    const find = () => {
+        const text = input.value.trim().toLowerCase();
+        const starts = choices.filter((item) => item.label.toLowerCase().startsWith(text));
+        const contains = choices.filter((item) => !item.label.toLowerCase().startsWith(text) && item.label.toLowerCase().includes(text));
+        matches = starts.concat(contains);
+        active = 0;
+        show();
+    };
+    const close = () => {
+        matches = [];
+        show();
+    };
+    const pick = (value) => {
+        select.value = value;
+        input.value = choices.find((item) => item.value === value)?.label ?? input.value;
+        close();
+        form.requestSubmit();
+    };
+
+    input.addEventListener('focus', find);
+    input.addEventListener('input', find);
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            if (results.hidden) {
+                find();
+            } else if (matches.length) {
+                active = (active + 1) % matches.length;
+                show();
+            }
+        } else if (event.key === 'ArrowUp' && matches.length) {
+            event.preventDefault();
+            active = (active - 1 + matches.length) % matches.length;
+            show();
+        } else if (event.key === 'Enter') {
+            // only a choice sends the form
+            event.preventDefault();
+            if (matches[active]) {
+                pick(matches[active].value);
+            }
+        } else if (event.key === 'Escape') {
+            close();
         }
     });
-});
+    results.addEventListener('mousedown', (event) => {
+        const item = event.target.closest('[data-value]');
+        if (item) {
+            event.preventDefault();
+            pick(item.dataset.value);
+        }
+    });
+    input.addEventListener('blur', close);
+};
+
+document.querySelectorAll('.js-newmembers-add').forEach(searchSelect);
 
 document.querySelectorAll('.js-newmembers-greeting').forEach((form) => {
     form.addEventListener('submit', () => {

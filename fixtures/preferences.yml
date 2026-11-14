@@ -242,3 +242,12 @@ App\Entity\Preference:
         DefaultValue: ''
         PossibleValues: ''
         Status: 'Inactive'
+    NEW_MEMBERS_LANGUAGES:
+        position: 201
+        codename: 'NewMembersLanguages'
+        codeDescription: 'admin.newmembers.languages'
+        description: 'The languages of the new members a volunteer greets (language codes, comma separated)'
+        created: <DateTime()>
+        DefaultValue: ''
+        PossibleValues: ''
+        Status: 'Inactive'

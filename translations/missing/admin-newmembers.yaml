@@ -40,6 +40,21 @@ admin.newmembers.countries.saved:
 admin.newmembers.countries.all:
   - 'Showing all countries'
   - 'New members: next to the country filter when no country is chosen.'
+admin.newmembers.languages:
+  - 'My languages'
+  - 'New members: the label of the language filter (members who speak one of them at least at intermediate level).'
+admin.newmembers.languages.add:
+  - 'Add a language'
+  - 'New members: the first entry of the list of languages that can be added to the filter.'
+admin.newmembers.languages.remove:
+  - 'Remove {language}'
+  - 'New members: the label of the button that removes a language from the filter.'
+admin.newmembers.languages.saved:
+  - 'Saved for you · spoken at least at intermediate level'
+  - 'New members: next to the chosen languages, which are kept for the next visit; members must speak one of them at least at intermediate level.'
+admin.newmembers.languages.all:
+  - 'Showing all languages'
+  - 'New members: next to the language filter when no language is chosen.'
 admin.newmembers.profile:
   - 'Profile'
   - 'New members: the label of the profile filter.'
@@ -115,12 +130,12 @@ admin.newmembers.dialog.subject.default:
 admin.newmembers.dialog.message:
   - 'Message'
   - 'New members: the label of the text of the standard greeting.'
-admin.newmembers.dialog.message.default:
-  - "Hi %username%,\n\nwelcome to BeWelcome! I'm a volunteer from the welcome team.\n\nMembers find hosts and guests much more easily when they can see who you are. Adding a photo and a few lines about yourself on your profile makes a big difference.\n\nIf you have questions, just reply to this message.\n\nHappy travels,\n{volunteer}"
-  - 'New members: the default text of the standard greeting, which the volunteer can change before sending. Keep %username% (each member''s username) and {volunteer} (the volunteer''s username). Avoid e-mail addresses and the words support, system and verification: messages with them are held as spam.'
-admin.newmembers.dialog.message.hint:
-  - '%username% becomes each member''s username.'
-  - 'New members: the hint under the text of the standard greeting. Keep %username%.'
+admin.newmembers.dialog.greeting.default:
+  - "Hi {username},\n\nwelcome to BeWelcome! I'm a volunteer from the welcome team.\n\nMembers find hosts and guests much more easily when they can see who you are. Adding a photo and a few lines about yourself on your profile makes a big difference.\n\nIf you have questions, just reply to this message.\n\nHappy travels,\n{volunteer}"
+  - 'New members: the default text of the standard greeting, which the volunteer can change before sending. Keep {username} (each member''s username, filled in when the greeting is sent) and {volunteer} (the volunteer''s username). Avoid e-mail addresses and the words support, system and verification: messages with them are held as spam.'
+admin.newmembers.dialog.greeting.hint:
+  - '{username} becomes each member''s username.'
+  - 'New members: the hint under the text of the standard greeting. Keep {username}.'
 admin.newmembers.dialog.info:
   - 'Each member gets this as their own message from you, so nobody sees who else got it and replies come back to you one by one. The greeting is marked as sent for all of them.'
   - 'New members: the explanation in the standard greeting dialog.'
@@ -145,6 +160,18 @@ admin.newmembers.empty.countries.title:
 admin.newmembers.empty.countries.text:
   - 'Add another country or change the profile filter.'
   - 'New members: the list is empty with countries chosen.'
+admin.newmembers.empty.languages.title:
+  - 'Nobody to greet in your languages'
+  - 'New members: the list is empty with languages chosen.'
+admin.newmembers.empty.languages.text:
+  - 'Add another language or change the profile filter.'
+  - 'New members: the list is empty with languages chosen.'
+admin.newmembers.empty.filters.title:
+  - 'Nobody to greet in your countries and languages'
+  - 'New members: the list is empty with countries and languages chosen.'
+admin.newmembers.empty.filters.text:
+  - 'Add another country or language, or change the profile filter.'
+  - 'New members: the list is empty with countries and languages chosen.'
 admin.newmembers.empty.none.title:
   - 'Everyone has been greeted'
   - 'New members: the list is empty without countries chosen.'

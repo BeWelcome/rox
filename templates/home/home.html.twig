@@ -270,8 +270,8 @@
 
     {#
       Supported by members: BeWelcome is free because its members pay for it. Told plainly at the
-      end, with an amount to pick and a button to the donations page (open without an account;
-      the amount comes along for the bank transfer), and this year's donations under it.
+      end, with a button to the donations page (open without an account) and this year's
+      donations under it.
     #}
     {% set _donated = campaign.YearDonation ?? 0 %}
     {% set _needed = campaign.YearNeededAmount ?? 0 %}
@@ -289,16 +289,10 @@
                         <li><i class="fas fa-people-group" aria-hidden="true"></i> {{ 'frontpage.support.volunteers'|trans }}</li>
                     </ul>
                 </div>
-                <div class="fp-support__give js-fp-support">
+                <div class="fp-support__give">
                     <span class="fp-support__icon" aria-hidden="true"><i class="fas fa-heart"></i></span>
-                    <h3 class="fp-support__ask">{{ 'frontpage.support.ask'|trans }}</h3>
-                    <div class="fp-support__amounts" role="radiogroup" aria-label="{{ 'frontpage.support.amount'|trans }}">
-                        {% for _amount in [5, 10, 25] %}
-                            <button type="button" class="fp-support__amount{{ _amount == 10 ? ' is-picked' }}" role="radio" aria-checked="{{ _amount == 10 ? 'true' : 'false' }}" data-amount="{{ _amount }}">€{{ _amount }}</button>
-                        {% endfor %}
-                        <button type="button" class="fp-support__amount" role="radio" aria-checked="false" data-amount="">{{ 'frontpage.support.other'|trans }}</button>
-                    </div>
-                    <a class="fp-support__btn js-fp-support-go" href="{{ url('donations', { amount: 10 }) }}" data-base="{{ url('donations') }}"><i class="fas fa-heart" aria-hidden="true"></i> {{ 'frontpage.support.button'|trans }}</a>
+                    <h3 class="fp-support__ask">{{ 'frontpage.support.together'|trans }}</h3>
+                    <a class="fp-support__btn" href="{{ url('donations') }}"><i class="fas fa-heart" aria-hidden="true"></i> {{ 'frontpage.support.button'|trans }}</a>
                     <p class="fp-support__note">{{ 'frontpage.support.ways'|trans }}</p>
                     <p class="fp-support__year">
                         <i class="fas fa-seedling" aria-hidden="true"></i>
@@ -312,22 +306,6 @@
             </div>
         </div>
     </section>
-    <script>
-      (function () {
-        var box = document.querySelector('.js-fp-support');
-        if (!box) { return; }
-        var go = box.querySelector('.js-fp-support-go');
-        box.querySelectorAll('.fp-support__amount').forEach(function (chip) {
-          chip.addEventListener('click', function () {
-            box.querySelectorAll('.fp-support__amount').forEach(function (other) {
-              other.classList.toggle('is-picked', other === chip);
-              other.setAttribute('aria-checked', other === chip ? 'true' : 'false');
-            });
-            go.href = go.dataset.base + (chip.dataset.amount ? '?amount=' + chip.dataset.amount : '');
-          });
-        });
-      })();
-    </script>
 </main>
 
 {% include 'footer.html.twig' with {footer_on_mobile: true} %}

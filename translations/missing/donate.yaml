@@ -91,6 +91,3 @@ donate.account.copied:
 donate.account.reference.hint:
     - 'Add the reference to your transfer so we know it comes from you.'
     - 'Donation page, bank transfer tab, under the account details'
-donate.account.amount:
-    - 'Amount'
-    - 'Donation page, bank transfer tab, the amount picked on the front page'

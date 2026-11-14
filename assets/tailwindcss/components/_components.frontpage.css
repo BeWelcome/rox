@@ -360,7 +360,7 @@ body:has(.fp) { background: #fffaf4; }
 }
 
 /* Supported by members: the last block, about donations. Text and three labels on the left, a
-   cream side with an amount to pick, the button to the donations page and this year's line */
+   cream side with the button to the donations page and this year's line */
 .fp-support { padding: 0 0 4.5rem; }
 .fp-support__card { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); overflow: hidden; border-radius: 2rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 18px 48px rgba(15, 23, 42, 0.06); }
 .fp-support__text { padding: 3rem 3.5rem; }
@@ -373,10 +373,6 @@ body:has(.fp) { background: #fffaf4; }
 .fp-support__icon { display: inline-flex; align-items: center; justify-content: center; width: 3.75rem; height: 3.75rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 4px 14px rgba(243, 112, 0, 0.12); color: #f37000; }
 .fp-support__icon i, .fp-support__icon svg { width: 1.6rem; height: 1.6rem; }
 .fp .fp-support__ask { max-width: 22rem; margin: 1.5rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
-.fp-support__amounts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; margin-top: 1.25rem; }
-.fp-support__amount { height: 3.1rem; padding: 0 0.5rem; border: 1.5px solid #f3c49b; border-radius: 999px; background: #fff; color: #0f172a; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-.fp-support__amount:hover { border-color: #f37000; }
-.fp-support__amount.is-picked { border-color: #0f172a; background: #0f172a; color: #fff; }
 .fp-support__btn, .fp-support__btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3.75rem; margin-top: 1.1rem; padding: 0 1.5rem; border-radius: 999px; background: #ea7a2e; box-shadow: 0 10px 24px rgba(234, 122, 46, 0.28); color: #fff; font-size: 1.15rem; font-weight: 700; text-decoration: none; }
 .fp-support__btn:hover { background: #c2410c; }
 .fp-support__btn i, .fp-support__btn svg { width: 1.1rem; height: 1.1rem; }
@@ -396,5 +392,4 @@ body:has(.fp) { background: #fffaf4; }
   .fp-support__lead { font-size: 1rem; }
   .fp-support__give { padding: 1.75rem 1.25rem; }
   .fp .fp-support__ask { font-size: 1.3rem; }
-  .fp-support__amounts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+  }

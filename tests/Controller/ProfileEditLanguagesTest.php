@@ -3,12 +3,15 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Member;
+use App\Service\LanguageNames;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * A member who opens the languages edit page of another member is sent to their own, in the same language.
+ * The languages edit page: another member's is sent to the own one, in the same language; the languages show their
+ * own names, found also by the name in the member's language, spoken languages first (as on the finish setup page).
  */
 #[Group('integration')]
 class ProfileEditLanguagesTest extends WebTestCase
@@ -23,5 +26,34 @@ class ProfileEditLanguagesTest extends WebTestCase
         $client->request('GET', '/members/member-5/edit/de/languages');
 
         $this->assertResponseRedirects('/members/member-2/edit/de/languages');
+    }
+
+    public function testTheLanguagesHaveTheirOwnNames(): void
+    {
+        $client = static::createClient();
+        $member = static::getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
+        $client->loginUser($member);
+
+        $crawler = $client->request('GET', '/members/member-2/edit/en/languages');
+
+        $this->assertResponseIsSuccessful();
+        $names = static::getContainer()->get(LanguageNames::class);
+        $translator = static::getContainer()->get(TranslatorInterface::class);
+        $languages = json_decode((string) $crawler->filter('.js-lang-add')->attr('data-languages'), true);
+        self::assertTrue(array_is_list($languages));
+        $french = array_column($languages, null, 'code')['fr'];
+        self::assertSame(['code' => 'fr', 'name' => $names->native('fr'), 'alt' => $translator->trans('lang_fr'), 'group' => 'spoken'], $french);
+        $groups = array_column($languages, 'group');
+        self::assertSame($groups, array_merge(
+            array_filter($groups, static fn ($group) => 'spoken' === $group),
+            array_filter($groups, static fn ($group) => 'signed' === $group),
+        ));
+        self::assertSame(['spoken', 'signed'], array_keys(json_decode((string) $crawler->filter('.js-lang-add')->attr('data-groups'), true)));
+        self::assertSame($names->native('fr'), trim($crawler->filter('.js-lang-common[data-code=fr]')->text()));
+        // the member's languages: the own name on each card
+        $crawler->filter('.js-lang-list .js-lang-card')->each(static function ($card) use ($names) {
+            self::assertSame($names->native($card->attr('data-language')), trim($card->filter('.js-lang-card-name')->text()));
+        });
     }
 }

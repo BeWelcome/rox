@@ -102,24 +102,9 @@
         one, as in "Spoken languages". They fill the hidden list of the form.
       #}
       {% set tongue = finalize.mother_tongue %}
-      {% set choices = [] %}
-      {% for group in tongue.vars.choices %}
-        {# the groups of the form (LanguageChoiceLoader): languages.spoken, languages.signed #}
-        {% set _group = group.choices is defined and group.label == 'languages.signed' ? 'signed' : 'spoken' %}
-        {% for choice in (group.choices is defined ? group.choices : [group]) %}
-          {# the language's own name (intl, language_name), found by the search also by its name in the member's
-             language (lang_xx); not language.Name, some of which are still HTML entities from the old site #}
-          {% set choices = choices|merge([{code: choice.value, name: language_name(choice.value), alt: ('lang_' ~ choice.value)|lower|trans, group: _group}]) %}
-        {% endfor %}
-      {% endfor %}
-      {# spoken languages first, then sign languages, each by name; a list again (sort keeps the keys, json_encode
-         would make an object of it) #}
-      {% set sorted = [] %}
-      {% for choice in choices|sort((a, b) => [a.group == 'signed', a.name] <=> [b.group == 'signed', b.name]) %}
-        {% set sorted = sorted|merge([choice]) %}
-      {% endfor %}
-      {% set choices = sorted %}
-      {% set groups = {spoken: 'languages.spoken'|trans|striptags, signed: 'languages.signed'|trans|striptags} %}
+      {# own names, the member's language for the search, spoken then sign languages (LanguageChoices) #}
+      {% set choices = language_choices(tongue.vars.choices) %}
+      {% set groups = language_groups() %}
       {% set picked = tongue.vars.value is iterable ? tongue.vars.value : [] %}
       <div class="p-sf-field js-sf-tongues{{ tongue.vars.valid ? '' : ' is-invalid' }}" data-languages="{{ choices|json_encode }}" data-groups="{{ groups|json_encode }}"
            data-remove="{{ 'profile.edit.language.remove'|trans }}">

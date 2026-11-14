@@ -2,6 +2,7 @@ import L from 'leaflet';
 import { initializeSingleAutoComplete } from '../suggest/locations';
 import { initializeCalendar } from '../calendar';
 import { addPositronLayer } from '../map/positron';
+import { escapeHtml, findLanguages, languageResults } from '../languages/search';
 
 /*
  * Finish the account (templates/signup/finalize.html.twig): the birth date calendar, the
@@ -108,12 +109,6 @@ if (tongues) {
     const groups = JSON.parse(tongues.dataset.groups || '{}');
     const removeLabel = tongues.dataset.remove || '';
 
-    const escapeHtml = (text) => String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-
     const picked = () => new Set(Array.from(select.selectedOptions).map((option) => option.value));
 
     const render = () => {
@@ -148,36 +143,16 @@ if (tongues) {
     });
     commons.forEach((chip) => chip.addEventListener('click', () => setPicked(chip.dataset.code, true)));
 
-    // The search: the first languages whose name starts with, then contains, what is typed
+    // The search (languages/search.js): by either name, grouped
     let matches = [];
     let active = 0;
     const showResults = () => {
-        // a heading above the spoken and above the sign languages
-        results.innerHTML = matches.map((item, position) => `
-            ${position === 0 || matches[position - 1].group !== item.group
-                ? `<li class="p-lang-add__group" role="presentation">${escapeHtml(groups[item.group] || '')}</li>`
-                : ''}
-            <li role="option" class="p-lang-add__result${position === active ? ' is-active' : ''}" data-code="${escapeHtml(item.code)}" lang="${escapeHtml(item.code)}" aria-selected="${position === active}">
-                ${escapeHtml(item.name)}
-            </li>`).join('');
+        results.innerHTML = languageResults(matches, active, groups);
         results.hidden = matches.length === 0;
     };
     const find = () => {
-        const text = search.value.trim().toLowerCase();
-        const codes = picked();
         active = 0;
-        if (!text) {
-            matches = [];
-        } else {
-            // by the language's own name or by its name in the member's language (alt)
-            const names = (item) => [item.name, item.alt || ''].map((name) => name.toLowerCase());
-            const free = languages.filter((item) => !codes.has(item.code));
-            const starts = free.filter((item) => names(item).some((name) => name.startsWith(text)));
-            const contains = free.filter((item) => !starts.includes(item) && names(item).some((name) => name.includes(text)));
-            // up to 6 of each group, the spoken languages first
-            const found = starts.concat(contains);
-            matches = ['spoken', 'signed'].flatMap((group) => found.filter((item) => item.group === group).slice(0, 6));
-        }
+        matches = findLanguages(languages, search.value, picked());
         showResults();
     };
     const pick = (code) => {

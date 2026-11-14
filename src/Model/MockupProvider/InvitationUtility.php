@@ -5,11 +5,11 @@ namespace App\Model\MockupProvider;
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
@@ -23,7 +23,7 @@ class InvitationUtility
      *
      * @return list<Message>
      */
-    public function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
+    public function getThread(Member $host, Member $guest, Leg $leg, int $status, int $replies): array
     {
         $subject = new Subject()->setSubject('Subject');
         $request = self::withId(new HostingRequest(), 1)
@@ -59,7 +59,7 @@ class InvitationUtility
             ->setParent($parent);
     }
 
-    public function getLeg(Member $host): Subtrip
+    public function getLeg(Member $host): Leg
     {
         $trip = self::withId(new Trip(), 1)
             ->setCreator($host)
@@ -71,7 +71,7 @@ class InvitationUtility
         $location = new Location();
         $location->setName('Mock');
 
-        return self::withId(new Subtrip(), 1)
+        return self::withId(new Leg(), 1)
             ->setArrival(new Carbon('2021-02-22'))
             ->setDeparture(new Carbon('2021-02-24'))
             ->setOptions([LegOptionsType::MEET_LOCALS])

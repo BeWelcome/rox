@@ -63,8 +63,8 @@ class HostingRequest
     private int $status = self::REQUEST_OPEN;
 
     #[ORM\JoinColumn(name: 'invite_for_leg', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Subtrip::class, inversedBy: 'invitations')]
-    private ?SubTrip $inviteForLeg = null;
+    #[ORM\ManyToOne(targetEntity: Leg::class, inversedBy: 'invitations')]
+    private ?Leg $inviteForLeg = null;
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'request')]
     private Collection $messages;
@@ -156,12 +156,12 @@ class HostingRequest
         return $this->status;
     }
 
-    public function getInviteForLeg(): ?Subtrip
+    public function getInviteForLeg(): ?Leg
     {
         return $this->inviteForLeg;
     }
 
-    public function setInviteForLeg(?Subtrip $inviteForLeg): self
+    public function setInviteForLeg(?Leg $inviteForLeg): self
     {
         $this->inviteForLeg = $inviteForLeg;
 

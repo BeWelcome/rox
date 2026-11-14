@@ -3,8 +3,8 @@
 namespace App\Tests\Security;
 
 use App\Doctrine\LegOptionsType;
+use App\Entity\Leg;
 use App\Entity\Member;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Security\TripVoter;
 use DateTime;
@@ -25,7 +25,7 @@ class TripVoterTest extends TestCase
             'getUser' => $member,
         ]);
         $tomorrow = new DateTime('+1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($tomorrow);
 
         $trip = new Trip();
@@ -45,7 +45,7 @@ class TripVoterTest extends TestCase
             'getUser' => $member,
         ]);
         $yesterday = new DateTime('-1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($yesterday);
 
         $trip = new Trip();
@@ -65,7 +65,7 @@ class TripVoterTest extends TestCase
             'getUser' => $member,
         ]);
         $yesterday = new DateTime('-1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($yesterday);
 
         $trip = new Trip();
@@ -85,7 +85,7 @@ class TripVoterTest extends TestCase
             'getUser' => $member,
         ]);
         $yesterday = new DateTime('-1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($yesterday);
 
         $creator = Mockery::mock(Member::class);
@@ -106,7 +106,7 @@ class TripVoterTest extends TestCase
             'getUser' => $creator,
         ]);
         $tomorrow = new DateTime('+1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($tomorrow);
         $leg->setOptions([LegOptionsType::PRIVATE]);
 
@@ -127,7 +127,7 @@ class TripVoterTest extends TestCase
             'getUser' => $member,
         ]);
         $yesterday = new DateTime('+1day');
-        $leg = new Subtrip();
+        $leg = new Leg();
         $leg->setDeparture($yesterday);
         $leg->setOptions([LegOptionsType::PRIVATE]);
 

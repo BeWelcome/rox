@@ -19,14 +19,14 @@ use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Trip.
+ * A member's trip: its legs (App\Entity\Leg), each a stay at a place.
+ *
+ * The table is `trip`, filled from main's `trips` (App\Entity\Trips) by Version20261114100000, the ids kept.
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-#[ORM\Table(name: 'trips')]
-#[ORM\Index(name: 'memberId_idx', columns: ['created_by'])]
-#[ORM\UniqueConstraint(name: 'id_UNIQUE', columns: ['id'])]
+#[ORM\Table(name: 'trip')]
 #[ORM\Entity(repositoryClass: TripRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Trip
@@ -37,7 +37,7 @@ class Trip
     #[ORM\Column(name: 'description', type: 'string', length: 4096, nullable: false)]
     private string $description;
 
-    #[ORM\Column(name: 'countOfTravellers', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'count_of_travellers', type: 'integer', nullable: false)]
     private int $countOfTravellers = 1;
 
     #[ORM\Column(name: 'invitation_radius', type: 'integer', nullable: false)]
@@ -52,7 +52,7 @@ class Trip
     #[ORM\Column(name: 'deleted', type: 'datetime', nullable: true)]
     private ?DateTime $deleted = null;
 
-    #[ORM\Column(name: 'additionalInfo', type: 'trip_additional_info', nullable: false)]
+    #[ORM\Column(name: 'additional_info', type: 'trip_additional_info', nullable: false)]
     private string $additionalInfo = TripAdditionalInfoType::NONE;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -61,14 +61,14 @@ class Trip
     private int $id;
 
     /**
-     * @var Collection<Subtrip>
+     * @var Collection<int, Leg>
      */
     #[Assert\Count(min: 1)]
-    #[ORM\OneToMany(targetEntity: Subtrip::class, mappedBy: 'trip', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Leg::class, mappedBy: 'trip', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['arrival' => 'ASC'])]
     private Collection $legs;
 
-    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'creator_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private Member $creator;
 
@@ -182,9 +182,14 @@ class Trip
         return $this->creator;
     }
 
+    /**
+     * The trip's legs, in the order of their arrival; legs taken off the trip (removed) are left out.
+     *
+     * @return Collection<int, Leg>
+     */
     public function getLegs(): Collection
     {
-        return $this->legs;
+        return $this->legs->filter(static fn (Leg $leg): bool => !$leg->isRemoved());
     }
 
     public function setLegs(Collection $legs): self
@@ -194,7 +199,7 @@ class Trip
         return $this;
     }
 
-    public function addLeg(Subtrip $leg): self
+    public function addLeg(Leg $leg): self
     {
         $this->legs->add($leg);
         $leg->setTrip($this);
@@ -202,14 +207,24 @@ class Trip
         return $this;
     }
 
-    public function removeLeg(Subtrip $leg): void
+    /**
+     * Takes the leg off the trip. A leg with invitations stays, marked removed: the invitations keep showing what
+     * they were about. Others are deleted (orphan removal).
+     */
+    public function removeLeg(Leg $leg): void
     {
         if (!$this->legs->contains($leg)) {
             return;
         }
 
+        if (!$leg->getInvitations()->isEmpty()) {
+            $leg->markRemoved();
+
+            return;
+        }
+
+        // orphan removal deletes it (it keeps its trip until then: a leg always has one)
         $this->legs->removeElement($leg);
-        $leg->setTrip(null);
     }
 
     public function isExpired(): bool
@@ -223,7 +238,7 @@ class Trip
         $expired = true;
         $now = new Carbon();
 
-        /** @var Subtrip $leg */
+        /** @var Leg $leg */
         foreach ($legs->getIterator() as $leg) {
             $departure = $leg->getDeparture();
             $expired = $expired && ($departure < $now);

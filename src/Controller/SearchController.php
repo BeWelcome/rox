@@ -8,9 +8,9 @@ use App\Doctrine\LegOptionsType;
 use App\Entity\Comment;
 use App\Entity\GalleryImage;
 use App\Entity\Group;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
@@ -224,8 +224,8 @@ class SearchController extends AbstractController
         $embed = $request->query->getBoolean('embed');
         $leg = null;
         if ($embed && $request->query->getInt('leg') > 0) {
-            $leg = $this->entityManager->getRepository(Subtrip::class)->find($request->query->getInt('leg'));
-            if (null !== $leg && ($leg->getTrip()->getCreator() !== $member || \in_array(LegOptionsType::PRIVATE, $leg->getOptions(), true))) {
+            $leg = $this->entityManager->getRepository(Leg::class)->find($request->query->getInt('leg'));
+            if (null !== $leg && ($leg->isRemoved() || $leg->getTrip()->getCreator() !== $member || \in_array(LegOptionsType::PRIVATE, $leg->getOptions(), true))) {
                 $leg = null;
             }
         }

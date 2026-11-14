@@ -5,13 +5,13 @@ namespace App\Model;
 use App\Entity\Activity;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Repository\ActivityRepository;
+use App\Repository\LegRepository;
 use App\Repository\MessageRepository;
-use App\Repository\SubtripRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
@@ -124,8 +124,8 @@ class LandingModel
 
     public function getTravellersInAreaOfMember(Member $member, int $radius): array
     {
-        /** @var SubtripRepository $legRepository */
-        $legRepository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Leg::class);
 
         return $legRepository->getLegsInAreaMaxGuests($member, $radius);
     }

@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Statistic;
 use App\Repository\StatisticsRepository;
 use DatePeriod;
@@ -598,26 +599,13 @@ class StatisticsModel
         string $next,
         Statistic $statistics,
     ): void {
-        // Number of requests created from one member to another during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(s.id) AS cnt
-                    FROM
-                      sub_trips s
-                    JOIN
-                        trips t ON s.trip_id = t.id
-                    WHERE
-                      t.created >= :current
-                      AND t.created < :next
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
+        // Number of legs of the trips created during the current date
+        $count = $this->entityManager->createQuery(
+            'SELECT COUNT(l.id) FROM ' . Leg::class . ' l JOIN l.trip t WHERE t.created >= :current AND t.created < :next'
         )
-            ->fetchOne();
-        $statistics->setLegsCreated($count);
+            ->setParameters(['current' => $current, 'next' => $next])
+            ->getSingleScalarResult();
+        $statistics->setLegsCreated((int) $count);
     }
 
     private function setInvitationsSentAndAccepted(

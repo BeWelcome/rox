@@ -5,9 +5,9 @@ namespace App\Service;
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Friend;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\Newsletter;
-use App\Entity\Subtrip;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -247,7 +247,7 @@ class Mailer
         );
     }
 
-    public function sendTripNotificationEmail(Member $receiver, Subtrip $leg): bool
+    public function sendTripNotificationEmail(Member $receiver, Leg $leg): bool
     {
         $trip = $leg->getTrip();
         $sender = $trip->getCreator();

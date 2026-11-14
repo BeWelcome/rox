@@ -14,6 +14,7 @@ use App\Entity\Donation;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Log;
 use App\Entity\Member;
@@ -22,7 +23,6 @@ use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
 use App\Entity\RightVolunteer;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Model\MemberDataExtractor\MyDataSections;
 use Carbon\Carbon;
@@ -409,7 +409,7 @@ class MyDataMockups implements MockupProviderInterface
         $country = new Location()->setGeonameId(2)->setName('Mocking Republic');
         $location = new Location()->setGeonameId(1)->setName('Mock')->setCountry($country);
         $trip->addLeg(
-            self::withId(new Subtrip(), 1)
+            self::withId(new Leg(), 1)
                 ->setArrival(new Carbon('2021-02-22'))
                 ->setDeparture(new Carbon('2021-02-24'))
                 ->setOptions([LegOptionsType::MEET_LOCALS])

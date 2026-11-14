@@ -2,11 +2,11 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
-use App\Repository\SubtripRepository;
+use App\Repository\LegRepository;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 #[Group('integration')]
-class SubtripRepositoryTest extends KernelTestCase
+class LegRepositoryTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;
     private Connection $connection;
@@ -42,8 +42,8 @@ class SubtripRepositoryTest extends KernelTestCase
             SQL);
         self::assertNotNull($travellerId, 'the test fixtures contain two active members with an address');
 
-        /** @var SubtripRepository $repository */
-        $repository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $repository */
+        $repository = $this->entityManager->getRepository(Leg::class);
         $host = $this->entityManager->find(Member::class, $hostId);
         $traveller = $this->entityManager->find(Member::class, $travellerId);
         $address = $host->getActiveAddress();
@@ -90,8 +90,8 @@ class SubtripRepositoryTest extends KernelTestCase
                 FROM address a JOIN location l ON l.geoname_id = a.location WHERE a.member_id = ? AND a.active = 1
             SQL, [$hostId]);
 
-        /** @var SubtripRepository $repository */
-        $repository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $repository */
+        $repository = $this->entityManager->getRepository(Leg::class);
         $traveller = $this->entityManager->find(Member::class, $travellerId);
 
         // invitation radius 20 km: a leg 10 km north of the host's town reaches the host, one 22 km north doesn't
@@ -102,9 +102,28 @@ class SubtripRepositoryTest extends KernelTestCase
         ], 20);
         [$near, $far] = $trip->getLegs()->getValues();
 
-        $notified = static fn (Subtrip $leg): array => array_map(static fn (Member $host): int => $host->getId(), $repository->getMembersToNotifyAboutLeg($leg));
+        $notified = static fn (Leg $leg): array => array_map(static fn (Member $host): int => $host->getId(), $repository->getMembersToNotifyAboutLeg($leg));
         self::assertContains($hostId, $notified($near));
         self::assertNotContains($hostId, $notified($far));
+    }
+
+    /**
+     * A host can host many legs: the host of one leg can be the host of the next (the leg's host was a one-to-one
+     * mapping, and the second accepted invitation of a host failed on a unique index).
+     */
+    public function testAHostCanHostSeveralLegs(): void
+    {
+        [$hostId, $travellerId] = $this->connection->fetchFirstColumn("SELECT id FROM member WHERE Status = 'Active' ORDER BY id LIMIT 2");
+        $host = $this->entityManager->find(Member::class, $hostId);
+        $trip = $this->createTrip($this->entityManager->find(Member::class, $travellerId), [[48.1, 11.6], [52.5, 13.4]]);
+
+        foreach ($trip->getLegs() as $leg) {
+            $leg->setInvitedBy($host);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        self::assertSame(2, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM leg WHERE trip_id = ? AND invited_by_id = ?', [$trip->getId(), $hostId]));
     }
 
     /**
@@ -130,7 +149,7 @@ class SubtripRepositoryTest extends KernelTestCase
                 [$geonameId, \sprintf('POINT(%F %F)', $longitude, $latitude)]
             );
 
-            $leg = new Subtrip();
+            $leg = new Leg();
             $leg
                 ->setLocation($this->entityManager->find(Location::class, $geonameId))
                 ->setArrival(new DateTime('+1 week'))

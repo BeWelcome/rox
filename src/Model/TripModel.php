@@ -3,14 +3,14 @@
 namespace App\Model;
 
 use App\Dto\TripDto;
+use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\MemberLegHidden;
 use App\Entity\MemberLegNotificationSent;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
-use App\Repository\SubtripRepository;
+use App\Repository\LegRepository;
 use App\Repository\TripRepository;
 use App\Service\Mailer;
 use DateTime;
@@ -155,7 +155,7 @@ class TripModel
             $leg = null !== $legDto->id ? ($existingLegs[$legDto->id] ?? null) : null;
 
             if (null === $leg) {
-                $leg = new Subtrip();
+                $leg = new Leg();
                 $trip->addLeg($leg);
             } else {
                 $keptIds[] = $legDto->id;
@@ -186,7 +186,7 @@ class TripModel
         $this->entityManager->flush();
     }
 
-    public function markLegAsHidden(Member $member, Subtrip $leg): void
+    public function markLegAsHidden(Member $member, Leg $leg): void
     {
         $repository = $this->entityManager->getRepository(MemberLegHidden::class);
         $hidden = $repository->findOneBy(['member' => $member, 'leg' => $leg]);
@@ -204,7 +204,7 @@ class TripModel
         }
     }
 
-    public function notifyHostsAboutVisitors(Subtrip $leg): int
+    public function notifyHostsAboutVisitors(Leg $leg): int
     {
         return $this->sendLegNotifications($leg, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
     }
@@ -266,10 +266,10 @@ class TripModel
         return $newTrip;
     }
 
-    private function sendLegNotifications(Subtrip $leg, array $notificationValues): int
+    private function sendLegNotifications(Leg $leg, array $notificationValues): int
     {
-        /** @var SubtripRepository $repository */
-        $repository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $repository */
+        $repository = $this->entityManager->getRepository(Leg::class);
         $hosts = $repository->getMembersToNotifyAboutLeg($leg, $notificationValues);
 
         if ([] === $hosts) {
@@ -311,7 +311,7 @@ class TripModel
         return $sentCount;
     }
 
-    private function acquireLegNotificationLock(Member $member, Subtrip $leg): ?string
+    private function acquireLegNotificationLock(Member $member, Leg $leg): ?string
     {
         $lockName = \sprintf('member-leg-notification-sent:%d:%d', $member->getId(), $leg->getId());
         $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);

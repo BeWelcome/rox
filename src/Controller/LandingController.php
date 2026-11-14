@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Form\TripRadiusType;
@@ -18,8 +18,8 @@ use App\Model\LandingModel;
 use App\Model\PlacesModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
+use App\Repository\LegRepository;
 use App\Repository\RequestRepository;
-use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -242,10 +242,10 @@ class LandingController extends AbstractController
     {
         $radius = $tripModel->getTripsRadius($member);
 
-        /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Leg::class);
 
-        $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
+        $visitorsCount = $legRepository->getVisitorsCount($member, $radius);
 
         return $visitorsCount;
     }

@@ -2,9 +2,13 @@
 
 namespace App\Command;
 
+use App\Entity\Activity;
+use App\Entity\Address;
+use App\Entity\Leg;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +34,7 @@ class GeonamesUpdateDailyCommand extends Command
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private readonly Connection $connection,
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -176,11 +181,12 @@ class GeonamesUpdateDailyCommand extends Command
         if (false === $this->connection->fetchOne('SELECT 1 FROM location WHERE geoname_id = ?', [$to])) {
             return;
         }
-        foreach (['address' => 'location', 'activities' => 'locationId', 'sub_trips' => 'location'] as $table => $column) {
-            $this->connection->executeStatement(
-                "UPDATE {$table} SET {$column} = :to WHERE {$column} = :from",
-                ['to' => $to, 'from' => $from]
-            );
+        // the places of addresses, activities and trip legs
+        foreach ([Address::class, Activity::class, Leg::class] as $entity) {
+            $this->entityManager
+                ->createQuery("UPDATE {$entity} e SET e.location = :to WHERE e.location = :from")
+                ->setParameters(['to' => $to, 'from' => $from])
+                ->execute();
         }
     }
 

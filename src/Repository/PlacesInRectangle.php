@@ -44,7 +44,7 @@ final class PlacesInRectangle
      */
     public function withLegs(float $latitude, float $longitude, float $distance): array
     {
-        return $this->find('INNER JOIN sub_trips s ON s.location = l.geoname_id', $latitude, $longitude, $distance);
+        return $this->find('INNER JOIN leg lg ON lg.location_id = l.geoname_id', $latitude, $longitude, $distance);
     }
 
     /**

@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-use App\Repository\SubtripRepository;
+use App\Repository\LegRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,16 +17,21 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SubTrip.
+ * A leg of a trip: a stay at a place, with the host who invited the traveller once they accepted (invitedBy).
+ *
+ * A leg with invitations isn't deleted when it's taken off its trip: it is marked removed, so it shows nowhere any
+ * more but the invitations still show what they were about (Trip::removeLeg()).
+ *
+ * The table is `leg`, filled from main's `sub_trips` (App\Entity\Subtrips) by Version20261114100000, the ids kept.
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-#[ORM\Table(name: 'sub_trips')]
-#[ORM\Entity(repositoryClass: SubtripRepository::class)]
-class Subtrip
+#[ORM\Table(name: 'leg')]
+#[ORM\Entity(repositoryClass: LegRepository::class)]
+class Leg
 {
-    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geoname_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'geoname_id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private Location $location;
 
@@ -39,17 +44,22 @@ class Subtrip
     #[ORM\Column(name: 'options', type: 'leg_options', nullable: true)]
     private ?string $options = null;
 
+    #[ORM\Column(name: 'removed', type: 'datetime', nullable: true)]
+    private ?DateTime $removed = null;
+
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\JoinColumn(name: 'invited_by', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: Member::class)]
+    // a host can host many legs: ManyToOne (a OneToOne made the column unique, and a host's second leg failed)
+    #[ORM\JoinColumn(name: 'invited_by_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private ?Member $invitedBy = null;
 
     #[ORM\JoinColumn(name: 'trip_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist', 'remove'], inversedBy: 'legs')]
+    // no cascaded remove: deleting a leg deleted its whole trip, with the other legs
+    #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist'], inversedBy: 'legs')]
     private Trip $trip;
 
     /**
@@ -130,6 +140,18 @@ class Subtrip
     public function getTrip(): ?Trip
     {
         return $this->trip;
+    }
+
+    public function isRemoved(): bool
+    {
+        return null !== $this->removed;
+    }
+
+    public function markRemoved(): self
+    {
+        $this->removed = new DateTime();
+
+        return $this;
     }
 
     public function getInvitedBy(): ?Member

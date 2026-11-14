@@ -14,7 +14,7 @@ App\Entity\Trip:
         additionalInfo: 'single'
         creator: '@member_3'
 
-App\Entity\Subtrip:
+App\Entity\Leg:
     leg_member_2_berlin:
         trip: '@trip_member_2'
         location: '@NewBerlin'

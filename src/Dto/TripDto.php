@@ -28,6 +28,8 @@ class TripDto
 
     public ?Member $creator = null;
 
+    /** a trip has at least one leg */
+    #[Assert\Count(min: 1, minMessage: 'trip.error.no.legs')]
     public Collection $legs;
 
     public ?DateTime $created = null;

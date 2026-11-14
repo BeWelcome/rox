@@ -4,6 +4,7 @@ namespace App\Tests\Command;
 
 use App\Command\GeonamesUpdateDailyCommand;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -38,6 +39,16 @@ class GeonamesUpdateDailyCommandTest extends KernelTestCase
         $this->addPlace(self::DUPLICATE, 'Village (duplicate)', 'P', 'PPL', '01');
         $this->addPlace(self::USED, 'Used Place', 'P', 'PPL', '01');
         $this->connection->executeStatement('INSERT INTO address (location) VALUES (?), (?)', [self::DUPLICATE, self::USED]);
+        // a trip with a leg to the duplicate
+        $member = (int) $this->connection->fetchOne('SELECT MIN(id) FROM member');
+        $this->connection->executeStatement(
+            "INSERT INTO trip (summary, description, count_of_travellers, invitation_radius, created, additional_info, creator_id) VALUES ('Geonames test', '', 1, 20, NOW(), 'none', ?)",
+            [$member]
+        );
+        $this->connection->executeStatement(
+            'INSERT INTO leg (trip_id, location_id, arrival, departure) VALUES (?, ?, CURDATE(), CURDATE())',
+            [(int) $this->connection->lastInsertId(), self::DUPLICATE]
+        );
         $this->connection->executeStatement(
             "INSERT INTO location_translation (locale, field, content, object_id) VALUES ('de', 'name', 'Altes Dorf', ?), ('fr', 'name', 'Vieux village', ?)",
             [self::VILLAGE, self::VILLAGE]
@@ -72,6 +83,7 @@ class GeonamesUpdateDailyCommandTest extends KernelTestCase
 
         self::assertFalse($this->location(self::DUPLICATE));
         self::assertSame(1, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM address WHERE location = ?', [self::VILLAGE]));
+        self::assertSame(1, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM leg WHERE location_id = ?', [self::VILLAGE]), 'the leg is moved too');
         // Still used by an address, so it stays
         self::assertNotFalse($this->location(self::USED));
         self::assertStringContainsString('Place ' . self::USED . ' is deleted by geonames but still used here', $tester->getDisplay());
@@ -106,7 +118,7 @@ class GeonamesUpdateDailyCommandTest extends KernelTestCase
 
     public function testRejectsAnInvalidDate(): void
     {
-        $tester = new CommandTester(new GeonamesUpdateDailyCommand(new MockHttpClient([]), $this->connection));
+        $tester = new CommandTester(new GeonamesUpdateDailyCommand(new MockHttpClient([]), $this->connection, static::getContainer()->get(EntityManagerInterface::class)));
 
         self::assertSame(2, $tester->execute(['--date' => ['yesterday']]));
     }
@@ -134,7 +146,7 @@ class GeonamesUpdateDailyCommandTest extends KernelTestCase
             return new MockResponse(implode("\n", array_map(static fn (array $row): string => implode("\t", $row), $rows)) . "\n");
         });
 
-        $tester = new CommandTester(new GeonamesUpdateDailyCommand($httpClient, $this->connection));
+        $tester = new CommandTester(new GeonamesUpdateDailyCommand($httpClient, $this->connection, static::getContainer()->get(EntityManagerInterface::class)));
         self::assertSame(0, $tester->execute(['--date' => [self::DATE]]));
 
         return $tester;

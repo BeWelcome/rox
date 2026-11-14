@@ -2,7 +2,7 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Entity\Subtrip;
+use App\Entity\Leg;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -22,15 +22,15 @@ class LegTransformer implements DataTransformerInterface
         return $value->getId();
     }
 
-    public function reverseTransform($value): ?Subtrip
+    public function reverseTransform($value): ?Leg
     {
         if (null === $value) {
             return null;
         }
 
-        /** @var Subtrip $leg */
+        /** @var Leg $leg */
         $leg = $this->entityManager
-            ->getRepository(Subtrip::class)
+            ->getRepository(Leg::class)
             ->findOneBy(['id' => $value]);
 
         if (null === $leg) {

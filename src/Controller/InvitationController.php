@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Entity\Subtrip;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
@@ -67,9 +67,13 @@ class InvitationController extends BaseRequestAndInvitationController
     #[Route(path: '/new/invitation/{leg}', name: 'hosting_invitation')]
     public function newInvitation(
         Request $request,
-        Subtrip $leg,
+        Leg $leg,
         AllowContactCheck $allowContactCheck,
     ): Response {
+        // a leg taken off its trip takes no more invitations
+        if ($leg->isRemoved()) {
+            throw $this->createNotFoundException();
+        }
         /** @var Member $host */
         $host = $this->getUser();
         $guest = $leg->getTrip()->getCreator();
@@ -400,7 +404,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Message $request,
         string $subject,
         bool $requestChanged,
-        Subtrip $leg,
+        Leg $leg,
     ): void {
         $this->sendInvitationNotification(
             $guest,
@@ -420,7 +424,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Message $request,
         string $subject,
         bool $requestChanged,
-        Subtrip $leg,
+        Leg $leg,
     ): void {
         $this->sendInvitationNotification(
             $host,
@@ -439,7 +443,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        Subtrip $leg,
+        Leg $leg,
     ): void {
         $this->sendInvitationNotification(
             $guest,
@@ -464,7 +468,7 @@ class InvitationController extends BaseRequestAndInvitationController
         $subject,
         string $template,
         bool $requestChanged,
-        ?Subtrip $leg,
+        ?Leg $leg,
     ): bool {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
@@ -487,7 +491,7 @@ class InvitationController extends BaseRequestAndInvitationController
     }
 
     private function handleAcceptOfInvitation(
-        ?Subtrip $leg,
+        ?Leg $leg,
         Member $host,
         Message $finalInvitation,
     ): void {
@@ -508,7 +512,7 @@ class InvitationController extends BaseRequestAndInvitationController
         }
     }
 
-    private function handleDeclineOfInvitation(?Subtrip $leg, Member $host): void
+    private function handleDeclineOfInvitation(?Leg $leg, Member $host): void
     {
         if ($leg->getInvitedBy() === $host) {
             $leg->setInvitedBy(null);

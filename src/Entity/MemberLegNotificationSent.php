@@ -5,8 +5,8 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'member_subtrip_notification_sent')]
-#[ORM\UniqueConstraint(name: 'member_subtrip_notification_sent_unique', columns: ['member_id', 'subtrip_id'])]
+#[ORM\Table(name: 'member_leg_notification_sent')]
+#[ORM\UniqueConstraint(name: 'member_leg_notification_sent_unique', columns: ['member_id', 'leg_id'])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class MemberLegNotificationSent
@@ -15,9 +15,9 @@ class MemberLegNotificationSent
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $member;
 
-    #[ORM\JoinColumn(name: 'subtrip_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\ManyToOne(targetEntity: Subtrip::class)]
-    private Subtrip $leg;
+    #[ORM\JoinColumn(name: 'leg_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Leg::class)]
+    private Leg $leg;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
@@ -27,10 +27,10 @@ class MemberLegNotificationSent
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    public function __construct(Member $member, Subtrip $subtrip)
+    public function __construct(Member $member, Leg $leg)
     {
         $this->member = $member;
-        $this->leg = $subtrip;
+        $this->leg = $leg;
     }
 
     public function getMember(): Member
@@ -38,7 +38,7 @@ class MemberLegNotificationSent
         return $this->member;
     }
 
-    public function getLeg(): Subtrip
+    public function getLeg(): Leg
     {
         return $this->leg;
     }

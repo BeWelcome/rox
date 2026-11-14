@@ -34,10 +34,10 @@
             <span class="c-home-item__body">
                 <span class="c-home-item__top">
                     <span class="c-home-item__name">{{ message.sender ? message.sender.username : 'BeWelcome' }}</span>
-                    {% if toAnswer %}<span class="c-home-msg__waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{ 'landing.dash.waiting.you'|trans }}</span>{% endif %}
                     <span class="c-home-item__time">{{ message.created.diffForHumans }}{% if unread %}<span class="c-home-item__dot" aria-hidden="true"></span>{% endif %}</span>
                 </span>
-                <span class="c-home-msg__line">
+                <span class="c-home-msg__line{% if toAnswer %} c-home-msg__line--wait{% endif %}">
+                    {%- if toAnswer %}<span class="c-home-msg__line-text">{% endif -%}
                     {%- if request -%}
                         {%- set _from = request.arrival -%}
                         {%- set _to = request.departure -%}
@@ -51,6 +51,11 @@
                         {%- endif -%}
                     {%- else -%}
                         {{ message.message|striptags|truncate(90) }}
+                    {%- endif -%}
+                    {%- if toAnswer -%}
+                        </span>
+                        {# Still to answer: a small label after the dates, the name keeps the room above #}
+                        <span class="c-home-msg__waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{ 'landing.dash.waiting.you'|trans }}</span>
                     {%- endif -%}
                 </span>
                 {# A request: the start of its message too #}

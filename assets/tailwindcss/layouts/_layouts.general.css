@@ -13382,3 +13382,7 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-home-msg__waiting { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #fff1e3; color: #c2410c; font-size: 0.75rem; font-weight: 700; line-height: 1.4; white-space: nowrap; align-self: center; }
 .c-home-msg__waiting i, .c-home-msg__waiting svg { font-size: 0.65rem; }
 .c-home-dash .c-home-item.is-unread .c-home-msg__waiting { background: #fff; box-shadow: inset 0 0 0 1px #f7cfa6; }
+
+/* "Waiting for you" now on the request line, after the dates (the name keeps the top line) */
+.c-home-msg .c-home-msg__line--wait { display: flex; align-items: center; gap: 0.5rem; }
+.c-home-msg__line-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

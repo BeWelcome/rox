@@ -30,6 +30,7 @@ class Preference
     public const ITEMS_PER_PAGE = 'ItemsPerPage';
     /** The greeting team's countries on the new members page (geoname ids, comma separated); not on the preferences page */
     public const NEW_MEMBERS_COUNTRIES = 'NewMembersCountries';
+    public const NEW_MEMBERS_LANGUAGES = 'NewMembersLanguages';
     public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
     public const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
     public const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';

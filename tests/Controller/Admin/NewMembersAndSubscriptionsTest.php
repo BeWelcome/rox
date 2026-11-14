@@ -146,6 +146,88 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $this->assertResponseStatusCodeSame(403);
     }
 
+    public function testTheVolunteersLanguagesAreSavedAndFilterTheList(): void
+    {
+        $this->speaks('eo', 'fluent');
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'eo']);
+        $this->assertResponseRedirects('/admin/newmembers');
+        self::assertSame('eo', $this->savedLanguages());
+
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(1, $crawler->filter('.c-newmembers__pill input[name="remove"][value="eo"]'));
+        $this->row($crawler, 'member-6');
+
+        // another language only: member-6 isn't shown
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'remove' => 'eo']);
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'sw']);
+        self::assertSame('sw', $this->savedLanguages());
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'));
+
+        // a code that is no language isn't saved
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'zz-nope']);
+        self::assertSame('sw', $this->savedLanguages());
+
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => 'wrong', 'remove' => 'sw']);
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testAMemberMustMatchTheCountriesAndTheLanguages(): void
+    {
+        $this->speaks('eo', 'fluent');
+        $country = $this->countryOfTheNewMember();
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $country]);
+
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'sw']);
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'), 'in the country, but not speaking the language');
+
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'eo']);
+        $this->row($this->client->request('GET', '/admin/newmembers'), 'member-6');
+
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'remove' => $country]);
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $this->anotherCountry($country)]);
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'), 'speaking the language, but in another country');
+    }
+
+    public function testOnlyIntermediateAndBetterCount(): void
+    {
+        $this->speaks('eo', 'beginner');
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+        $this->client->request('POST', '/admin/newmembers/languages', ['_token' => $token, 'add' => 'eo']);
+
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'));
+
+        $this->speaks('eo', 'intermediate');
+        $this->row($this->client->request('GET', '/admin/newmembers'), 'member-6');
+    }
+
+    public function testTheLanguagesAreCountedInTheChosenCountries(): void
+    {
+        $this->speaks('eo', 'fluent');
+        $country = $this->countryOfTheNewMember();
+        $this->client->loginUser($this->member('member-2'));
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        $token = $this->token($crawler);
+        self::assertStringContainsString('(1)', $crawler->filter('select[name="add"] option[value="eo"]')->text());
+
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $this->anotherCountry($country)]);
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('option[value="eo"]'), 'nobody in the chosen country speaks it');
+
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $country]);
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertStringContainsString('(1)', $crawler->filter('option[value="eo"]')->text());
+    }
+
     public function testTheProfileFilterShowsMembersWithoutPhotoAndText(): void
     {
         $this->connection()->executeStatement("UPDATE member SET AboutMe = '' WHERE id = ?", [$this->newMember]);
@@ -169,8 +251,9 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $this->client->request('POST', '/admin/newmembers/greeting/global', [
             '_token' => $token,
             'usernames' => ['member-6'],
+            // {username} is the placeholder; %username%, as it was before, still works
             'subject' => 'Welcome, %username%!',
-            'text' => "Hi %username%,\n\nwelcome <b>here</b>.",
+            'text' => "Hi {username},\n\nwelcome <b>here</b>.",
         ]);
 
         $this->assertResponseRedirects('/admin/newmembers');
@@ -337,6 +420,26 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
     {
         return (string) $this->connection()->fetchOne(
             "SELECT mp.Value FROM memberspreferences mp JOIN preferences p ON p.id = mp.IdPreference WHERE p.codeName = 'NewMembersCountries' AND mp.IdMember = ?",
+            [$this->member('member-2')->getId()],
+        );
+    }
+
+    /**
+     * member-6 speaks the language at the level, and is the only one who does.
+     */
+    private function speaks(string $language, string $level): void
+    {
+        $this->connection()->executeStatement('DELETE FROM member_language_level WHERE language = ?', [$language]);
+        $this->connection()->executeStatement(
+            'INSERT INTO member_language_level (member_id, language, level) VALUES (?, ?, ?)',
+            [$this->newMember, $language, $level],
+        );
+    }
+
+    private function savedLanguages(): string
+    {
+        return (string) $this->connection()->fetchOne(
+            "SELECT mp.Value FROM memberspreferences mp JOIN preferences p ON p.id = mp.IdPreference WHERE p.codeName = 'NewMembersLanguages' AND mp.IdMember = ?",
             [$this->member('member-2')->getId()],
         );
     }

@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import {addPositronLayer} from '../map/positron';
 
 // Map of the activities on the page (templates/activity/_macros.html.twig, map_data): one marker per
 // .js-activity-marker, the map framed around them. The map stays hidden when no activity has a place.
@@ -10,10 +11,8 @@ if (markers.length > 0) {
     container.hidden = false;
 
     const map = L.map('activity-map', { scrollWheelZoom: false });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
-        subdomains: ['a', 'b', 'c'],
-    }).addTo(map);
+    // The site's base map, as on the profile and search pages
+    addPositronLayer(map);
 
     const icon = L.icon({
         iconUrl: '/images/marker.png',

@@ -221,18 +221,21 @@ class LandingController extends AbstractController
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
             'groupsTodayCount' => $this->landingModel->getGroupThreadsWithPostsTodayCount($member),
-            'requestsToAnswerCount' => $this->getRequestsToAnswerCount($member),
-        ]);
+        ] + $this->getRequestAlert($member));
 
         return $content;
     }
 
-    protected function getRequestsToAnswerCount(Member $member): int
+    /**
+     * The alert under the welcome banner again, after something was answered in the side panel.
+     */
+    #[Route(path: '/widget/requests-alert', name: '/widget/requests-alert')]
+    public function getRequestsAlert(): Response
     {
-        /** @var RequestRepository $requestRepository */
-        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+        /** @var Member $member */
+        $member = $this->getUser();
 
-        return $requestRepository->getRequestsToAnswerCount($member);
+        return $this->render('landing/widget/request_alert.html.twig', $this->getRequestAlert($member));
     }
 
     protected function getVisitorsCount(TripModel $tripModel, Member $member): int
@@ -245,6 +248,24 @@ class LandingController extends AbstractController
         $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
 
         return $visitorsCount;
+    }
+
+    /**
+     * Stay requests waiting for the member's answer. With one, the alert opens it in the side
+     * panel (its last message received); with several, it goes to the requests list.
+     *
+     * @return array{requestsToAnswerCount: int, requestToAnswerMessageId: ?int}
+     */
+    private function getRequestAlert(Member $member): array
+    {
+        /** @var RequestRepository $requestRepository */
+        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+        $count = $requestRepository->getRequestsToAnswerCount($member);
+
+        return [
+            'requestsToAnswerCount' => $count,
+            'requestToAnswerMessageId' => 1 === $count ? $requestRepository->getLastMessageIdOfRequestToAnswer($member) : null,
+        ];
     }
 
     private function getUpcomingAroundLocationCount(Member $member, bool $showOnlineActivities): int

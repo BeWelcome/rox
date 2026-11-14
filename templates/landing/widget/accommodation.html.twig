@@ -29,5 +29,9 @@
         <span class="l-hosting-switch__label">{{ 'landing.hosting.switch'|trans }}</span>
         <span class="l-hosting-switch__track" aria-hidden="true"><span class="l-hosting-switch__thumb"></span></span>
     </a>
+    {# Phones only: plan a public trip, under the switch in the panel that folds (CSS) #}
+    <a class="l-hosting-plan js-contact-open" href="{{ path('new_trip') }}" data-title="{{ 'landing.stats.trip'|trans }}">
+        <i class="fas fa-plus" aria-hidden="true"></i> {{ 'landing.plan.public.trip'|trans }}
+    </a>
   </div>
 </div>

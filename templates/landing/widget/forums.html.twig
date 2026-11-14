@@ -1,10 +1,27 @@
 {#
-  The latest threads in the member's groups on the home page (My groups tab), the BeWelcome
-  group's agora included.
+  The latest discussions in the member's groups, in the Group discussions card of the home page (the
+  BeWelcome group's agora included): the starter's avatar, the title, then the group, who wrote last
+  and when, and the replies on the right. The row opens the thread.
 #}
+{% import 'forum/_macros.html.twig' as forum %}
 <div id="groupsdisplay" class="c-home-list">
     {% for thread in threads %}
-        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending } %}
+        {% set replies = thread.replies|default(0) %}
+        <a class="c-home-item c-home-talk" href="{{ forum.thread_url(thread) }}">
+            {% if thread.firstPost.author %}
+                <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
+            {% else %}
+                <img class="c-home-item__avatar" src="{{ asset('images/empty_avatar_72_72.png') }}" alt="" loading="lazy">
+            {% endif %}
+            <span class="c-home-item__body">
+                <span class="c-home-talk__title">{{ forum.thread_title(thread, app.request.locale) }}</span>
+                <span class="c-home-talk__meta">
+                    {%- if not thread.agora %}{{ thread.group.name }} · {% endif -%}
+                    {{ thread.lastPost.author ? thread.lastPost.author.username : 'forum.former.member'|trans }} · {{ thread.lastPost.updated.diffForHumans }}
+                </span>
+            </span>
+            <span class="c-home-talk__replies" aria-label="{{ 'landing.thread.replies'|trans({ count: replies }) }}"><i class="far fa-comment" aria-hidden="true"></i> {{ replies }}</span>
+        </a>
     {% else %}
         <p class="c-home-list__empty">{{ 'landing.groups.empty'|trans }}</p>
     {% endfor %}

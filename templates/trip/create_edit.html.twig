@@ -112,9 +112,10 @@
     #}
     <div class="p-ped p-trips-embed">
       <header class="p-ped-head">
+        <span class="p-trips-embed__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
         <div class="p-ped-head__text">
-          <p class="p-ped-head__eyebrow"><i class="fas fa-suitcase" aria-hidden="true"></i> {{ 'trip'|trans }}</p>
           <h1 class="p-ped-head__title">{{ 'landing.stats.trip'|trans }}</h1>
+          <p class="p-trips-embed__sub">{{ 'trip.details.hint'|trans }}</p>
         </div>
         <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
           <i class="fas fa-times" aria-hidden="true"></i>
@@ -123,7 +124,8 @@
     {% endif %}
     {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-trips-form' } }) }}
         <section class="p-trips-card">
-            <div class="p-trips-card__head">
+            {# In the panel, the panel's head already says it: no second title #}
+            <div class="p-trips-card__head{{ embedded ? ' visually-hidden' }}">
                 <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
                 <div>
                     <h2 class="p-trips-card__title">{{ 'trip.details'|trans }}</h2>

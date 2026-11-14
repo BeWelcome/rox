@@ -13141,3 +13141,248 @@ body:has(.l-hello) main { background: #fffaf4; }
   #member_menu.dropdown-menu.show .member-menu__logout:hover { background: rgba(239, 68, 68, 0.22); }
   #member_menu.dropdown-menu.show .member-menu__logout .member-menu__logout-icon { width: auto; }
 }
+
+/* ==========================================================================
+   Dashboard cards (landing.html.twig): Messages, trips coming to the area,
+   upcoming activities and group discussions, each with its own head.
+   ========================================================================== */
+.c-home-dash .c-home-dash__head { display: flex; align-items: center; gap: 0.7rem; min-width: 0; padding: 1.25rem 1.5rem 0.6rem; }
+.c-home-dash__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.4rem; height: 2.4rem; border-radius: 0.75rem; background: #fff1e6; color: #ea7a2e; font-size: 1rem; }
+.c-home-dash .c-home-dash__title { min-width: 0; margin: 0; overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.3rem; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-dash .c-home-dash__title a { color: inherit; text-decoration: none; }
+.c-home-dash .c-home-dash__title a:hover { color: #c2410c; }
+.c-home-dash__count { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; min-width: 1.5rem; height: 1.5rem; padding: 0 0.45rem; border-radius: 999px; background: #eef2f6; color: #334155; font-size: 0.75rem; font-weight: 700; }
+.c-home-dash__count[hidden] { display: none; }
+.c-home-dash__count--hot { background: #ea7a2e; color: #fff; }
+.c-home-dash__radius { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; margin: 0 0 0 auto; padding: 0.35rem 0.75rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.c-home-dash__radius:hover { background: #e9eef4; }
+.c-home-dash__radius > i, .c-home-dash__radius > svg { color: #ea7a2e; font-size: 0.75rem; }
+.c-home-dash__radius select { padding: 0; border: 0; outline: none; background: transparent; color: inherit; font: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; }
+.c-home-dash__radius:focus-within { box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.2); }
+.c-home-dash__add, .c-home-dash__add:hover { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; margin-left: auto; border-radius: 999px; background: #fff1e6; color: #ea7a2e; font-size: 0.95rem; text-decoration: none; transition: background-color 0.15s, color 0.15s; }
+.c-home-dash__add:hover { background: #ea7a2e; color: #fff; }
+
+.c-home-dash .c-home-dash__body { display: flex; flex: 1; flex-direction: column; padding: 0; }
+.c-home-dash .c-home-dash__body > .c-home-list { flex: 1; }
+.c-home-dash .c-home-list__empty { padding: 1.75rem 1.5rem; }
+.c-home-dash .c-home-pane__footer--more { margin-top: auto; padding: 0 0 0.85rem; border-top: 1px solid #f1f5f9; }
+.c-home-dash .c-home-more { padding-top: 0.85rem; }
+
+/* Rows: full width, light orange when unread */
+.c-home-dash .c-home-list > .c-home-item { align-items: center; gap: 0.85rem; margin: 0; padding: 0.7rem 1.5rem; border-radius: 0; }
+.c-home-dash .c-home-list > a.c-home-item:hover { background: #f8fafc; }
+.c-home-dash .c-home-list > .c-home-item.is-unread { margin: 0; padding: 0.7rem 1.5rem; border-radius: 0; background: #fff8f1; }
+.c-home-dash .c-home-item__avatar { width: 2.9rem; height: 2.9rem; }
+.c-home-dash .c-home-item__body { gap: 0.15rem; padding-top: 0; }
+.c-home-dash .c-home-item__top { align-items: flex-start; }
+.c-home-dash .c-home-item__name { font-size: 0.9375rem; font-weight: 700; }
+.c-home-msg__line,
+.c-home-talk__meta,
+.c-home-activity__meta { display: block; min-width: 0; overflow: hidden; color: #64748b; font-size: 0.875rem; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-dash .c-home-item.is-unread .c-home-msg__line { color: #334155; }
+.c-home-dash .c-home-item.is-unread .c-home-item__time { color: #94a3b8; font-weight: 400; }
+.c-home-talk__title,
+.c-home-activity__title { display: block; min-width: 0; overflow: hidden; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-dash a.c-home-item:hover .c-home-talk__title,
+.c-home-dash a.c-home-item:hover .c-home-activity__title { color: #c2410c; }
+.c-home-talk__replies { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 700; }
+.c-home-talk__replies i, .c-home-talk__replies svg { color: #475569; font-size: 0.75rem; }
+.c-home-activity__coming { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; padding: 0.25rem 0.6rem; border-radius: 999px; background: #e8f6ec; color: #15803d; font-size: 0.8125rem; font-weight: 700; }
+.c-home-activity__coming i, .c-home-activity__coming svg { font-size: 0.75rem; }
+
+/* Trips: one at a time, scrolled sideways, arrows and dots under it */
+.c-home-trips { display: flex; flex-direction: column; }
+.c-home-trips__track { display: flex; flex: 1; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.c-home-trips__track::-webkit-scrollbar { display: none; }
+.c-home-trips__track:focus { outline: none; }
+.c-home-trip { display: flex; flex: 0 0 100%; flex-direction: column; min-width: 0; padding: 0.4rem 1.5rem 1rem; scroll-snap-align: start; }
+.c-home-trip__who { display: flex; align-items: center; gap: 0.8rem; min-width: 0; }
+.c-home-trip__avatar { flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06); }
+.c-home-trip__person { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.c-home-trip__name { overflow: hidden; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-trip__people { color: #64748b; font-size: 0.8125rem; }
+.c-home-trip__dates { flex-shrink: 0; color: #0f172a; font-size: 1.05rem; font-weight: 800; white-space: nowrap; }
+.c-home-trip__dates.is-soon { color: #c2410c; }
+.c-home-trip__title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.55rem; margin: 0.8rem 0 0.25rem; }
+.c-home-trip__summary { min-width: 0; color: #0f172a; font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.c-home-trip__nights { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
+.c-home-trip__nights i, .c-home-trip__nights svg { font-size: 0.65rem; }
+.c-home-trip__text { display: -webkit-box; margin: 0; overflow: hidden; color: #64748b; font-size: 0.875rem; line-height: 1.5; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.c-home-trip__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: auto; padding-top: 0.85rem; }
+.c-home-trip__tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem; border-radius: 999px; background: #e8f6ec; color: #15803d; font-size: 0.8125rem; font-weight: 700; }
+.c-home-trip__tag i, .c-home-trip__tag svg { font-size: 0.7rem; }
+.c-home-trip__tag--plain { background: #f1f5f9; color: #334155; }
+.c-home-trip__tag--done { background: #dcfce7; color: #166534; }
+.c-home-trip__see, .c-home-trip__see:hover { display: inline-flex; align-items: center; gap: 0.35rem; margin-left: auto; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.c-home-trip__see:hover { color: #9a3412; }
+.c-home-trip__see i, .c-home-trip__see svg { font-size: 0.75rem; }
+.c-home-trip.is-active { background: #fff8f1; }
+.c-home-trips__nav { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1.25rem 0.75rem; border-top: 1px solid #f1f5f9; }
+.c-home-trips__dots { display: flex; gap: 0.35rem; }
+.c-home-trips__btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; border: 0; border-radius: 999px; background: transparent; color: #334155; font-size: 0.85rem; cursor: pointer; }
+.c-home-trips__btn:hover:not(:disabled) { background: #f1f5f9; }
+.c-home-trips__btn:disabled { color: #cbd5e1; cursor: default; }
+
+@media (max-width: 767px) {
+  .c-home-dash .c-home-dash__head { padding: 1.1rem 1.1rem 0.5rem; }
+  .c-home-dash .c-home-dash__title { font-size: 1.15rem; }
+  .c-home-dash .c-home-list > .c-home-item,
+  .c-home-dash .c-home-list > .c-home-item.is-unread { padding-right: 1.1rem; padding-left: 1.1rem; }
+  .c-home-trip { padding-right: 1.1rem; padding-left: 1.1rem; }
+  .c-home-dash .c-home-list__empty { padding-right: 1.1rem; padding-left: 1.1rem; }
+}
+
+/* Dashboard: nobody coming, no trips card (the groups move up next to the messages); no
+   activities, a thin strip across the bottom with a link to create one */
+.c-home-dash__card[hidden] { display: none; }
+.c-home-dash__card--messages { order: 1; }
+.c-home-dash__card--trips { order: 2; }
+.c-home-dash__card--activities { order: 3; }
+.c-home-dash__card--groups { order: 4; }
+.c-home-dash:has(.c-home-dash__card--trips[hidden]) .c-home-dash__card--groups { order: 2; }
+.c-home-dash .c-home-dash__card--activities.is-empty { grid-column: 1 / -1; order: 5; }
+.c-home-dash__card--activities.is-empty .c-home-dash__head { padding-bottom: 0.25rem; }
+.c-home-dash__card--activities.is-empty .c-home-list { min-height: 0; }
+.c-home-dash__card--activities.is-empty .c-home-pane__footer { display: none; }
+.c-home-dash__card--activities.is-empty .c-home-dash__count { display: none; }
+.c-home-dash__empty { margin: 0; padding: 0 1.5rem 1.2rem; color: #64748b; font-size: 0.9375rem; }
+.c-home-dash__empty a { color: #c2410c; font-weight: 700; text-decoration: none; }
+.c-home-dash__empty a:hover { color: #9a3412; }
+@media (max-width: 767px) {
+  .c-home-dash__empty { padding-right: 1.1rem; padding-left: 1.1rem; }
+}
+/* A request in the Messages card: its kind and dates, then the start of its message in grey */
+.c-home-msg__line--text { color: #94a3b8; font-size: 0.8125rem; }
+.c-home-dash .c-home-item.is-unread .c-home-msg__line--text { color: #64748b; }
+/* Unread in the Messages card: the orange dot by the time, a clearer background with an orange edge */
+.c-home-dash .c-home-list > .c-home-item.is-unread { background: #fff1e3; box-shadow: inset 3px 0 0 #ea7a2e; }
+.c-home-dash .c-home-item.is-unread .c-home-item__time { color: #c2410c; font-weight: 600; }
+.c-home-dash .c-home-item.is-unread .c-home-msg__line:not(.c-home-msg__line--text) { color: #0f172a; font-weight: 600; }
+
+/* Welcome banner: the place search with "Plan a trip" next to it; on phones a shorter
+   placeholder (landing.js) so both fit on one line */
+.l-hello__go { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.l-hello__go > form { flex: 1; min-width: 0; }
+.l-hello__plan,
+.l-hello__plan:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.5rem; padding: 0.75rem 1.35rem; border: 2px solid #ea7a2e; border-radius: 999px; background: #fff; color: #c2410c; font-size: 1rem; font-weight: 700; line-height: 1.2; white-space: nowrap; text-decoration: none; transition: background-color 0.15s, color 0.15s; }
+.l-hello__plan:hover { background: #fff7ed; color: #9a3412; }
+.l-hello__plan i, .l-hello__plan svg { font-size: 0.8rem; }
+@media (max-width: 575.98px) {
+  .l-hello__go { gap: 0.5rem; }
+  .l-hello__plan, .l-hello__plan:hover { gap: 0.4rem; padding: 0.6rem 0.9rem; font-size: 0.875rem; }
+}
+
+/* A request to answer: a thin cream line under the banner, all of it a link */
+.l-hello-alert,
+.l-hello-alert:hover { display: flex; align-items: center; gap: 0.9rem; margin: 0 0 1.5rem; padding: 0.6rem 1.25rem 0.6rem 0.75rem; border: 1px solid #f6dcc4; border-radius: 1rem; background: #fff8f1; color: #334155; font-size: 1.05rem; text-decoration: none; }
+.l-hello-alert:hover { border-color: #f3c9a3; background: #fff3e6; }
+.l-hello-alert__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 0.7rem; background: #ea7a2e; color: #fff; font-size: 1.05rem; }
+.l-hello-alert__text { flex: 1; min-width: 0; line-height: 1.35; }
+.l-hello-alert__text strong { color: #0f172a; font-weight: 700; }
+.l-hello-alert__go { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.45rem; color: #c2410c; font-weight: 700; }
+.l-hello-alert__go i, .l-hello-alert__go svg { font-size: 0.75rem; }
+@media (max-width: 575.98px) {
+  .l-hello-alert, .l-hello-alert:hover { gap: 0.7rem; margin-bottom: 1rem; padding: 0.55rem 0.9rem 0.55rem 0.6rem; font-size: 0.9375rem; }
+  .l-hello-alert__icon { width: 2.4rem; height: 2.4rem; font-size: 0.95rem; }
+}
+.l-hello__go-search { flex: 1; min-width: 0; }
+.l-hello__go-search[hidden] { display: none; }
+/* The request line: a warmer orange than the page so it stands out */
+.l-hello-alert, .l-hello-alert:hover { border-color: #f7cfa6; background: #ffeedd; box-shadow: 0 1px 2px rgba(194, 65, 12, 0.06); }
+.l-hello-alert:hover { border-color: #f3b882; background: #ffe5cc; }
+
+/* Welcome banner search: Place / Member, the field and Search in one box, and a line under it
+   (plan a public trip, or how to find a member). Phones: the switch on its own row. */
+.l-hello .l-hello__box { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem; border: 1.5px solid #f0b98a; border-radius: 999px; background: #fff; box-shadow: 0 0 0 5px #fdf3ea; }
+.l-hello .l-hello__box:focus-within { border-color: #ea7a2e; box-shadow: 0 0 0 5px #fde6d2; }
+.l-hello .l-hello__box .l-hello__modes { display: flex; flex-shrink: 0; gap: 0.15rem; padding: 0.25rem; border: 0; border-radius: 999px; background: #f1f2f4; }
+.l-hello .l-hello__box .l-hello__mode,
+.l-hello .l-hello__box .l-hello__mode:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; margin: 0; padding: 0.45rem 0.9rem; border: 0; border-radius: 999px; background: transparent; box-shadow: none; color: #64748b; font-size: 0.9375rem; font-weight: 700; }
+.l-hello .l-hello__box .l-hello__mode:hover { color: #0f172a; }
+.l-hello .l-hello__box .l-hello__mode.active { background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.14); color: #0f172a; }
+.l-hello .l-hello__box .l-hello__mode i,
+.l-hello .l-hello__box .l-hello__mode svg { display: inline-block; color: #94a3b8; font-size: 0.85rem; }
+.l-hello .l-hello__box .l-hello__mode.active i,
+.l-hello .l-hello__box .l-hello__mode.active svg { color: #ea7a2e; }
+.l-hello .l-hello__box .l-hello__go-search { flex: 1; min-width: 0; }
+.l-hello .l-hello__box .l-hello__go-search[hidden] { display: none; }
+.l-hello .l-hello__box .l-hello__bar,
+.l-hello .l-hello__box .l-hello__bar:focus-within { min-height: 0; padding: 0 0 0 0.6rem; border: 0; border-radius: 999px; background: transparent; box-shadow: none; }
+.l-hello .l-hello__box .l-hello__bar-icon { display: inline-block; color: #ea7a2e; }
+.l-hello .l-hello__box .l-hello__submit { padding: 0.7rem 1.3rem; }
+.l-hello .l-hello__box .l-hello__submit-arrow { display: none !important; }
+.l-hello .l-hello__box .l-hello__submit-loupe { display: inline-block !important; }
+.l-hello .l-hello__under { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; margin: 0.9rem 0 0 0.75rem; color: #475569; font-size: 0.9375rem; }
+.l-hello .l-hello__under[hidden] { display: none; }
+.l-hello__under-icon { color: #94a3b8; }
+.l-hello__under strong { color: #0f172a; font-weight: 700; }
+.l-hello__under-plan,
+.l-hello__under-plan:hover { display: inline-flex; align-items: center; gap: 0.35rem; color: #c2410c; font-weight: 700; text-decoration: none; }
+.l-hello__under-plan:hover { color: #9a3412; }
+.l-hello__under-plan i, .l-hello__under-plan svg { font-size: 0.8rem; }
+.l-hello__under-hint { color: #94a3b8; }
+@media (max-width: 575.98px) {
+  .l-hello .l-hello__box,
+  .l-hello .l-hello__box:focus-within { flex-direction: column; align-items: stretch; gap: 0.85rem; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+  .l-hello .l-hello__box .l-hello__modes { display: grid; grid-template-columns: 1fr 1fr; padding: 0.3rem; }
+  .l-hello .l-hello__box .l-hello__mode,
+  .l-hello .l-hello__box .l-hello__mode:hover { padding: 0.6rem; font-size: 0.9375rem; }
+  .l-hello .l-hello__box .l-hello__bar,
+  .l-hello .l-hello__box .l-hello__bar:focus-within { padding: 0.3rem 0.3rem 0.3rem 1rem; border: 1.5px solid #f0b98a; background: #fff; }
+  .l-hello .l-hello__box .l-hello__bar:focus-within { border-color: #ea7a2e; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.12); }
+  .l-hello .l-hello__box .l-hello__submit { padding: 0; }
+  .l-hello .l-hello__under { justify-content: center; margin: 0.85rem 0 0; }
+  .l-hello .l-hello__under-text, .l-hello .l-hello__under-hint, .l-hello .js-hello-mode-place .l-hello__under-icon { display: none; }
+  .l-hello .js-hello-mode-member.l-hello__under .l-hello__under-text { display: inline; }
+}
+
+/* The request line: shorter words and an Answer button on phones */
+.l-hello-alert__short { display: none; }
+@media (max-width: 575.98px) {
+  .l-hello-alert__long { display: none; }
+  .l-hello-alert__short { display: inline; }
+  .l-hello-alert__go { padding: 0.5rem 1rem; border-radius: 999px; background: #ea7a2e; color: #fff; }
+  .l-hello-alert__go i, .l-hello-alert__go svg { display: none; }
+}
+.l-hello .l-hello__box .l-hello__submit-loupe { order: -1; }
+/* Trips card: previous and next in a round outlined button */
+.c-home-trips__btn { width: 2.25rem; height: 2.25rem; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); color: #0f172a; }
+.c-home-trips__btn:hover:not(:disabled) { border-color: #ea7a2e; background: #fff7ed; color: #c2410c; }
+.c-home-trips__btn:disabled { border-color: #f1f5f9; background: #fff; box-shadow: none; color: #cbd5e1; }
+
+/* Trip panel (?embed=1): one head, icon tile + title + one line under it */
+.p-trips-embed .p-ped-head { align-items: center; }
+.p-trips-embed__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border-radius: 0.8rem; background: #fff4eb; color: #ea7a2e; font-size: 1.05rem; }
+.p-trips-embed__icon i, .p-trips-embed__icon svg { width: 1.05rem; height: 1.05rem; }
+.p-trips-embed__sub { margin: 0.15rem 0 0; color: #64748b; font-size: 0.875rem; line-height: 1.35; }
+.p-trips-embed .p-trips-card:first-of-type { padding-top: 1.1rem; }
+
+/* Phones: "Plan a public trip" sits under the hosting switch, in the panel that folds,
+   not under the search */
+.l-hosting-plan { display: none; }
+@media (max-width: 575.98px) {
+  .l-hello__me .l-hosting-plan,
+  .l-hello__me .l-hosting-plan:hover { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.6rem; padding: 0.6rem 0.7rem; border: 1px dashed #f7cfa6; border-radius: 0.9rem; background: #fff8f1; color: #c2410c; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
+  .l-hello__me .l-hosting-plan i, .l-hello__me .l-hosting-plan svg { font-size: 0.8rem; }
+  .l-hello .l-hello__under.js-hello-mode-place { display: none; }
+}
+
+/* Phones: the panel under the name is animated by landing.js (height, ease-in-out),
+   so no CSS transition; it stays visible while it slides up */
+@media (max-width: 575.98px) {
+  .l-hello .l-hello__me .l-hosting,
+  .l-hello.is-collapsed .l-hello__me .l-hosting { overflow: hidden; transition: none; }
+  .l-hello.is-animating .l-hello__me .l-hosting { visibility: visible; }
+  .l-hello__toggle svg, .l-hello__toggle i { transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1); }
+}
+
+/* Messages card: a request still waiting for the member's answer gets a small label next to the name */
+.c-home-msg .c-home-item__top { justify-content: flex-start; gap: 0.5rem; }
+.c-home-msg .c-home-item__time { margin-left: auto; padding-left: 0.25rem; }
+.c-home-msg__waiting { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #fff1e3; color: #c2410c; font-size: 0.75rem; font-weight: 700; line-height: 1.4; white-space: nowrap; align-self: center; }
+.c-home-msg__waiting i, .c-home-msg__waiting svg { font-size: 0.65rem; }
+.c-home-dash .c-home-item.is-unread .c-home-msg__waiting { background: #fff; box-shadow: inset 0 0 0 1px #f7cfa6; }
+
+/* "Waiting for you" now on the request line, after the dates (the name keeps the top line) */
+.c-home-msg .c-home-msg__line--wait { display: flex; align-items: center; gap: 0.5rem; }
+.c-home-msg__line-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -27,9 +27,10 @@ final class LandingGroupsTabTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('a[aria-controls="groups"]'));
-        self::assertCount(0, $crawler->filter('a[aria-controls="threads"]'));
+        // One card for the discussions of the member's groups, no forum list of its own
+        self::assertCount(1, $crawler->filter('#groupsdisplay'));
         self::assertCount(0, $crawler->filter('#threadsdisplay'));
+        self::assertCount(0, $crawler->filter('.c-home-tabs'));
     }
 
     public function testTheGroupsTabShowsTheAgoraToMembersOfTheBeWelcomeGroup(): void

@@ -1,34 +1,26 @@
 {#
-  The upcoming activities near the member, on the home page (loaded into the Activities tab).
+  The upcoming activities near the member, in the Upcoming activities card of the home page: the date,
+  the title, where and when, and how many come.
 #}
-<div id="activitiesdisplay" class="c-home-list">
+<div id="activitiesdisplay" class="c-home-list"{% if activities is empty %} data-empty{% endif %}>
     {% for activity in activities %}
-        <a class="c-home-item" href="/activities/{{ activity.id }}">
+        {% set _coming = activity.attendeesYes.count %}
+        <a class="c-home-item c-home-activity" href="{{ path('activities_show', { id: activity.id }) }}">
             <span class="c-home-item__date" aria-hidden="true">
                 <span class="c-home-item__date-day">{{ activity.starts|format_date(pattern='d') }}</span>
                 <span class="c-home-item__date-month">{{ activity.starts|format_date(pattern='MMM') }}</span>
             </span>
             <span class="c-home-item__body">
-                <span class="c-home-item__title">{{ activity.title }}</span>
-                <span class="c-home-item__meta">
-                    {% if activity.online %}
-                        <i class="fas fa-globe" aria-hidden="true"></i> {{ 'activityonline'|trans }}
-                    {% else %}
-                        <i class="fa fa-map-marker-alt" aria-hidden="true"></i> {{ activity.location.name }}, {{ activity.location.country.name }}
-                    {% endif %}
-                </span>
-                <span class="c-home-item__meta">
-                    <i class="far fa-calendar" aria-hidden="true"></i> {{ activity.starts|format_datetime('medium', 'short') }}
-                    {% if activity.attendeesYes.count != 0 %}
-                        · <i class="fa fa-user" aria-hidden="true"></i> {{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes'|trans }}
-                    {% endif %}
-                    {% if activity.attendeesMaybe.count != 0 %}
-                        · {{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe'|trans }}
-                    {% endif %}
+                <span class="c-home-activity__title">{{ activity.title }}</span>
+                <span class="c-home-activity__meta">
+                    {{- activity.online ? 'activityonline'|trans : activity.location.name }} · {{ activity.starts|format_datetime(pattern='EEE d MMM, ') }}{{ activity.starts|format_time('short') -}}
                 </span>
             </span>
+            {% if _coming %}
+                <span class="c-home-activity__coming" aria-label="{{ _coming }} {{ 'activitiesnumbattendeesyes'|trans }}"><i class="fas fa-user-check" aria-hidden="true"></i> {{ _coming }}</span>
+            {% endif %}
         </a>
     {% else %}
-        <p class="c-home-list__empty">{{ 'dashboard.activities.none'|trans }}</p>
+        <p class="c-home-dash__empty">{{ 'landing.dash.activities.none'|trans }} · <a href="{{ path('activities_create') }}">{{ 'landing.dash.activities.create'|trans }}</a></p>
     {% endfor %}
 </div>

@@ -27,6 +27,8 @@ export function initContactDrawer(from) {
         backdrop.hidden = true;
         contact.close(false);
         markRow(null);
+        // The page can show again what changed in the panel (an answer: landing.js)
+        window.dispatchEvent(new CustomEvent('bw-contact-closed'));
     };
     const contact = createContactPanel(contactDrawer.querySelector('.js-search-contact'), {
         from,

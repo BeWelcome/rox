@@ -247,7 +247,8 @@
           <ul class="p-pe-langs">
             {% for level in member.languageLevels %}
               <li class="p-pe-langs__item">
-                <span class="p-pe-langs__name">{{ ('lang_' ~ level.language.shortCode)|lower|trans }}</span>
+                {# the language's own name, as in the languages side panel (LanguageChoices) #}
+                <span class="p-pe-langs__name" lang="{{ level.language.shortCode }}">{{ language_name(level.language.shortCode) }}</span>
                 <span class="p-pe-langs__level">{{ ('language.level.' ~ level.level)|lower|trans }}</span>
               </li>
             {% endfor %}

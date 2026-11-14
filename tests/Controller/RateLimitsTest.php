@@ -148,18 +148,25 @@ final class RateLimitsTest extends WebTestCase
 
     public function testTheConfirmationMailIsResentThreeTimesAnHour(): void
     {
-        // the page is for logged-in members whose last login name is their own
+        // the button of the confirm page (a POST with its token), for the logged-in member whose address isn't
+        // confirmed yet
         $this->login('member-2', self::PASSWORD, '10.0.7.1');
         self::assertFalse($this->failed());
+        $this->member('member-2')->setRegistrationKey('zztest-key');
+        static::getContainer()->get(EntityManagerInterface::class)->flush();
+        $crawler = $this->client->request('GET', '/members/member-2/confirm');
+        $token = $crawler->filter('form#resend-confirmation input[name=_token]')->attr('value');
 
         for ($i = 1; $i <= 3; ++$i) {
-            $this->client->request('GET', '/members/member-2/resend');
-            self::assertResponseIsSuccessful('mail ' . $i . ' is sent');
+            $this->client->request('POST', '/members/member-2/resend', ['_token' => $token]);
+            self::assertResponseRedirects('/members/member-2/confirm');
+            $crawler = $this->client->followRedirect();
+            self::assertStringNotContainsString($this->trans('flash.signup.resend.too.many'), $crawler->filter('body')->text(), 'mail ' . $i . ' is sent');
         }
 
-        $this->client->request('GET', '/members/member-2/resend');
+        $this->client->request('POST', '/members/member-2/resend', ['_token' => $token]);
 
-        self::assertResponseRedirects('/members/member-2');
+        self::assertResponseRedirects('/members/member-2/confirm');
         $crawler = $this->client->followRedirect();
         self::assertStringContainsString($this->trans('flash.signup.resend.too.many'), $crawler->filter('body')->text());
     }

@@ -50,6 +50,8 @@ class AccountControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/members/bwadmin/change/email/' . $registrationKey);
         $this->assertResponseIsSuccessful();
         // the page has other forms too (the layout's), so take the confirmation form by its name
+        // not the box that sends the signup's confirmation mail again
+        self::assertCount(0, $crawler->filter('#resend-confirmation, .signup-resend'));
         $form = $crawler->filter('form[name="confirm_email_address_form"]')->form();
         $client->submit($form);
 

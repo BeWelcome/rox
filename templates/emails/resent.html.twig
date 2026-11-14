@@ -1,6 +1,7 @@
 {% extends 'emails/base.html.twig' %}
 {#
-  The confirmation link again, for members who had trouble with the first one. username, email_address, key.
+  The confirmation link again, for members who had trouble with the first one, and the key for the confirmation page
+  as in the first mail (signup.html.twig). username, email_address, key.
 #}
 {% block preheader %}{{ 'signup.confirm.link'|trans({ email_address: email_address }) }}{% endblock %}
 
@@ -12,4 +13,6 @@
     {% include 'emails/_partials/buttons.html.twig' with {
         primary: { label: 'signup.confirm.email.address'|trans, url: url('confirm_email', { username: username, registrationKey: key }) },
     } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.confirm.key'|trans|e, muted: true } %}
+    {% include 'emails/_partials/code.html.twig' with { code: key } %}
 {% endblock content %}

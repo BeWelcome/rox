@@ -2,6 +2,7 @@ import L from 'leaflet';
 import { initializeSingleAutoComplete } from '../suggest/locations';
 import { initializeCalendar } from '../calendar';
 import { addPositronLayer } from '../map/positron';
+import { escapeHtml, findLanguages, languageResults } from '../languages/search';
 
 /*
  * Finish the account (templates/signup/finalize.html.twig): the birth date calendar, the
@@ -105,20 +106,15 @@ if (tongues) {
     const results = tongues.querySelector('.js-lang-results');
     const commons = tongues.querySelectorAll('.js-lang-common');
     const languages = JSON.parse(tongues.dataset.languages || '[]');
+    const groups = JSON.parse(tongues.dataset.groups || '{}');
     const removeLabel = tongues.dataset.remove || '';
-
-    const escapeHtml = (text) => String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
 
     const picked = () => new Set(Array.from(select.selectedOptions).map((option) => option.value));
 
     const render = () => {
         const codes = picked();
         chips.innerHTML = Array.from(select.selectedOptions).map((option) => `
-            <span class="p-sf-chip">
+            <span class="p-sf-chip" lang="${escapeHtml(option.value)}">
                 ${escapeHtml(option.textContent)}
                 <button type="button" class="p-sf-chip__remove js-sf-tongue-remove" data-code="${escapeHtml(option.value)}"
                         aria-label="${escapeHtml(removeLabel)}" title="${escapeHtml(removeLabel)}">
@@ -147,28 +143,16 @@ if (tongues) {
     });
     commons.forEach((chip) => chip.addEventListener('click', () => setPicked(chip.dataset.code, true)));
 
-    // The search: the first languages whose name starts with, then contains, what is typed
+    // The search (languages/search.js): by either name, grouped
     let matches = [];
     let active = 0;
     const showResults = () => {
-        results.innerHTML = matches.map((item, position) => `
-            <li role="option" class="p-lang-add__result${position === active ? ' is-active' : ''}" data-code="${escapeHtml(item.code)}" aria-selected="${position === active}">
-                ${escapeHtml(item.name)}
-            </li>`).join('');
+        results.innerHTML = languageResults(matches, active, groups);
         results.hidden = matches.length === 0;
     };
     const find = () => {
-        const text = search.value.trim().toLowerCase();
-        const codes = picked();
         active = 0;
-        if (!text) {
-            matches = [];
-        } else {
-            const free = languages.filter((item) => !codes.has(item.code));
-            const starts = free.filter((item) => item.name.toLowerCase().startsWith(text));
-            const contains = free.filter((item) => !item.name.toLowerCase().startsWith(text) && item.name.toLowerCase().includes(text));
-            matches = starts.concat(contains).slice(0, 8);
-        }
+        matches = findLanguages(languages, search.value, picked());
         showResults();
     };
     const pick = (code) => {
@@ -217,4 +201,16 @@ if (tongues) {
 const firstError = document.querySelector('.p-sf .invalid-feedback, .p-sf .alert-danger');
 if (firstError) {
     firstError.closest('.p-sf-field, .p-sf-interest, .p-pe-card, form').scrollIntoView({ block: 'center' });
+}
+
+// ── The button: "Finish setup" with the registration key, "Save, confirm later" without it ──
+const submit = document.querySelector('.js-finalize-submit');
+const registrationKey = document.getElementById('signup_form_finalize_registration_key');
+if (submit && submit.dataset.finish && registrationKey && registrationKey.type !== 'hidden') {
+    const label = submit.querySelector('.js-finalize-submit-label');
+    const update = () => {
+        label.textContent = registrationKey.value.trim() ? submit.dataset.finish : submit.dataset.later;
+    };
+    registrationKey.addEventListener('input', update);
+    update();
 }

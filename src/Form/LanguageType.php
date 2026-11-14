@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Language;
 use App\Form\ChoiceLoader\LanguageChoiceLoader;
+use App\Service\LanguageNames;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\ChoiceList;
@@ -16,18 +18,21 @@ class LanguageType extends AbstractType
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly LanguageNames $languageNames,
     ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $choiceLoader = function (Options $options): ChoiceLoaderInterface {
-            return ChoiceList::loader($this, new LanguageChoiceLoader($options, $this->entityManager));
+            return ChoiceList::loader($this, new LanguageChoiceLoader($options, $this->entityManager, $this->languageNames));
         };
 
         $resolver->setDefaults([
             'choice_loader' => $choiceLoader,
-            'choice_label' => 'name',
+            // the language's own name (intl: "Français"), not language.Name, some of which are still HTML entities
+            // from the old site
+            'choice_label' => fn (Language $language): string => $this->languageNames->native($language->getShortCode()),
             'choice_value' => 'shortcode',
             'label' => 'label.language',
             'label_translation_domain' => 'messages',

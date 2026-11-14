@@ -55,3 +55,86 @@ signup.error.too.many:
 flash.signup.resend.too.many:
     - 'The confirmation mail was already sent several times. Please check your spam folder or try again in an hour.'
     - Profile page, when a member asked for the confirmation mail again too often within an hour.
+members.confirm.email.resend.title:
+    - 'Didn''t get the mail?'
+    - Confirm email and finish setup pages, title of the box that offers to send the confirmation mail again.
+members.confirm.email.resend.blurb:
+    - 'Please check your spam folder first. We can also send the mail to {email} again.'
+    - Confirm email and finish setup pages, text in the box below the registration key. Keep {email}.
+members.confirm.email.resend:
+    - 'Send the mail again'
+    - Confirm email and finish setup pages, button in that box that sends the confirmation mail again.
+flash.signup.resent:
+    - 'We sent the confirmation mail to {email} again. It can take a few minutes to arrive.'
+    - Confirm email or finish setup page, after the member asked for the confirmation mail again. Keep {email}.
+label.mother_tongue:
+    - 'Mother tongue'
+    - Finish setup page, label of the field for the languages the member grew up with.
+help.mother_tongue:
+    - 'The language or languages you speak natively, spoken or signed. You can add the other languages you speak on your profile later.'
+    - Finish setup page, help below the mother tongue field.
+help.location:
+    - 'The town where you live. Members look for hosts by place, so this is how they find you.'
+    - Finish setup page, help below the location field.
+placeholder.birthdate:
+    - 'Pick your date of birth'
+    - Finish setup and edit account pages, placeholder of the date of birth field (it opens a calendar).
+profile.setlocation.marker:
+    - 'Drag the pin to where you live'
+    - Finish setup and set location pages, bubble on the pin of the map.
+signup.activate:
+    - 'Finish setup'
+    - Finish setup page, the button that saves the form.
+error.name:
+    - 'Please enter your name.'
+    - Finish setup and edit account pages, when the name is empty.
+    - validators
+error.birthdate:
+    - 'Please enter your date of birth.'
+    - Finish setup and edit account pages, when the date of birth is empty.
+    - validators
+error.gender:
+    - 'Please choose your gender.'
+    - Finish setup and edit account pages, when no gender is chosen.
+    - validators
+error.mother_tongue:
+    - 'Please choose at least one mother tongue.'
+    - Finish setup page, when no mother tongue is chosen.
+    - validators
+error.accommodation:
+    - 'Please choose whether you can host members.'
+    - Finish setup page, when neither answer about hosting is chosen.
+    - validators
+signup.welcome.subject:
+    - 'Welcome to BeWelcome, {username}!'
+    - Subject of the welcome message every new member finds in their inbox, from the BeWelcome team. Keep {username}.
+signup.welcome.body:
+    - '<p>Hi {username},</p><p>welcome to BeWelcome! We are happy to have you here. BeWelcome is a hospitality exchange run by volunteers: members host travellers for free, show them around, meet up at activities and share what they know about their places.</p><p>A few things to get you started:</p><ul><li><strong>Confirm your email address</strong> with the link we sent you, if you have not done so yet.</li><li><strong>Fill in your profile</strong>: add a photo and tell others a bit about yourself, what you like and what you can share. Members are much more likely to host or visit you when they can see who you are.</li><li><strong>Look around</strong>: search for members in places you would like to visit, join a group or say hello in the forum.</li></ul><p>Questions? The FAQ answers most of them, and our volunteers are happy to help with the rest.</p><p>Have a great time and safe travels!<br>The BeWelcome volunteers</p>'
+    - Body of the welcome message every new member finds in their inbox, from the BeWelcome team. Keep {username} and the HTML tags.
+signup.activate.later:
+    - 'Save, confirm later'
+    - Finish setup page, the button that saves the form while no registration key is entered (the email address is not confirmed yet).
+signup.finalize.unconfirmed.title:
+    - 'Your email address is not confirmed yet'
+    - Finish setup page, title of the note above the button while the email address is not confirmed.
+signup.finalize.unconfirmed.text:
+    - 'Enter the registration key from our mail in the field at the top to finish your setup right away. Without it we save your details, and your account starts once you confirm your email address.'
+    - Finish setup page, text of the note above the button while the email address is not confirmed.
+flash.signup.saved.unconfirmed:
+    - 'Your details are saved. Your account starts once you confirm your email address: use the link in the mail or enter its key on the confirmation page (the bell at the top leads there).'
+    - Edit profile page, after the finish setup form was saved without the registration key.
+flash.signup.complete:
+    - 'Your email address is confirmed and your account is ready. Welcome to BeWelcome!'
+    - Edit profile page, after the member confirmed the email address with the setup already done.
+flash.signup.mail.confirmed:
+    - 'Your email address is confirmed. One last step: finish your account setup.'
+    - Finish setup page, after the member confirmed the email address before doing the setup.
+flash.signup.wrong.user:
+    - 'This confirmation link belongs to another member. Please log out and log in with the account it was sent to.'
+    - Profile page, when a logged-in member opens the confirmation link of another member (after the signup or a change of the email address).
+flash.profile.mail.already.confirmed:
+    - 'Your email address is already confirmed.'
+    - Profile page, when a member opens the confirmation page or asks for the confirmation mail again while the address is confirmed already.
+error.hosting.interest:
+    - 'You can host: please also tell how much you would like to.'
+    - Finish setup page, below the hosting interest steps when the member can host but left the interest at its lowest step.

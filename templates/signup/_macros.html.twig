@@ -1,0 +1,22 @@
+{# The fields of the finish setup and confirm email pages: the look of the edit page's side panel. #}
+{% macro label(field, optional = false) %}
+  <label class="p-sf-field__label" for="{{ field.vars.id }}">
+    <span>{{ field.vars.label|trans }}</span>
+    {% if optional %}<span class="p-sf-field__optional">{{ 'profile.edit.optional'|trans }}</span>{% endif %}
+  </label>
+{% endmacro %}
+
+{% macro help(field) %}
+  {% if field.vars.help %}<small class="p-sf-field__help" id="{{ field.vars.id }}_help">{{ field.vars.help|trans|striptags }}</small>{% endif %}
+{% endmacro %}
+
+{% macro input(field, icon, attr = {}) %}
+  <div class="p-sf-input{{ field.vars.valid ? '' : ' is-invalid' }}">
+    <i class="fas fa-{{ icon }} p-sf-input__icon" aria-hidden="true"></i>
+    <input type="text" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ field.vars.value }}"
+           class="p-sf-input__control{{ attr.class is defined ? ' ' ~ attr.class }}" autocomplete="off"
+           placeholder="{{ (field.vars.attr.placeholder ?? '')|trans|striptags }}"
+           {% if field.vars.help %}aria-describedby="{{ field.vars.id }}_help"{% endif %}>
+  </div>
+  {% do field.setRendered %}
+{% endmacro %}

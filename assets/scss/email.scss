@@ -28,3 +28,11 @@
 }
 
 @import "~foundation-emails/scss/foundation-emails";
+
+// foundation-emails hyphenates every cell (hyphens: auto): mail programs then break addresses, usernames and keys
+// with a hyphen that is not part of them ("test-signup@..."). Lines still wrap at spaces.
+td {
+  -webkit-hyphens: manual;
+  -moz-hyphens: manual;
+  hyphens: manual;
+}

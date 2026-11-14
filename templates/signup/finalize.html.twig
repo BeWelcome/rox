@@ -15,29 +15,8 @@
   languages and the map of "Set location"), the same form as before
   (signup/finalize.js).
 #}
-{% macro label(field, optional = false) %}
-  <label class="p-sf-field__label" for="{{ field.vars.id }}">
-    <span>{{ field.vars.label|trans }}</span>
-    {% if optional %}<span class="p-sf-field__optional">{{ 'profile.edit.optional'|trans }}</span>{% endif %}
-  </label>
-{% endmacro %}
-
-{% macro help(field) %}
-  {% if field.vars.help %}<small class="p-sf-field__help" id="{{ field.vars.id }}_help">{{ field.vars.help|trans|striptags }}</small>{% endif %}
-{% endmacro %}
-
-{% macro input(field, icon, attr = {}) %}
-  <div class="p-sf-input{{ field.vars.valid ? '' : ' is-invalid' }}">
-    <i class="fas fa-{{ icon }} p-sf-input__icon" aria-hidden="true"></i>
-    <input type="text" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ field.vars.value }}"
-           class="p-sf-input__control{{ attr.class is defined ? ' ' ~ attr.class }}" autocomplete="off"
-           placeholder="{{ (field.vars.attr.placeholder ?? '')|trans|striptags }}"
-           {% if field.vars.help %}aria-describedby="{{ field.vars.id }}_help"{% endif %}>
-  </div>
-  {% do field.setRendered %}
-{% endmacro %}
 {% block content %}
-{% import _self as sf %}
+{% import 'signup/_macros.html.twig' as sf %}
 {% set interestKeys = ['not_set', 'very_low', 'low', 'lower', 'low_to_medium', 'medium', 'medium_to_high', 'high', 'higher', 'very_high', 'cant_wait'] %}
 <div class="p-pe p-sf">
   <header class="p-pe-head">
@@ -71,6 +50,8 @@
           {{ sf.input(finalize.registration_key, 'gift') }}
           {{ form_errors(finalize.registration_key) }}
           {{ sf.help(finalize.registration_key) }}
+          {# The mail got lost: send it again (its form is below this one) #}
+          {% include 'signup/_resend_button.html.twig' %}
         </div>
       {% endif %}
 
@@ -121,19 +102,20 @@
         one, as in "Spoken languages". They fill the hidden list of the form.
       #}
       {% set tongue = finalize.mother_tongue %}
-      {% set choices = [] %}
-      {% for group in tongue.vars.choices %}
-        {% for choice in (group.choices is defined ? group.choices : [group]) %}
-          {% set choices = choices|merge([{code: choice.value, name: choice.label}]) %}
-        {% endfor %}
-      {% endfor %}
+      {# own names, the member's language for the search, spoken then sign languages (LanguageChoices) #}
+      {% set choices = language_choices(tongue.vars.choices) %}
+      {% set groups = language_groups() %}
       {% set picked = tongue.vars.value is iterable ? tongue.vars.value : [] %}
-      <div class="p-sf-field js-sf-tongues{{ tongue.vars.valid ? '' : ' is-invalid' }}" data-languages="{{ choices|json_encode }}"
+      <div class="p-sf-field js-sf-tongues{{ tongue.vars.valid ? '' : ' is-invalid' }}" data-languages="{{ choices|json_encode }}" data-groups="{{ groups|json_encode }}"
            data-remove="{{ 'profile.edit.language.remove'|trans }}">
         <label class="p-sf-field__label" for="{{ tongue.vars.id }}_search"><span>{{ tongue.vars.label|trans }}</span></label>
         <select id="{{ tongue.vars.id }}" name="{{ tongue.vars.full_name }}" multiple hidden class="js-sf-tongues-select">
-          {% for choice in choices %}
-            <option value="{{ choice.code }}"{{ choice.code in picked ? ' selected' }}>{{ choice.name }}</option>
+          {% for key, label in groups %}
+            <optgroup label="{{ label }}">
+              {% for choice in choices|filter(choice => choice.group == key) %}
+                <option value="{{ choice.code }}" lang="{{ choice.code }}"{{ choice.code in picked ? ' selected' }}>{{ choice.name }}</option>
+              {% endfor %}
+            </optgroup>
           {% endfor %}
         </select>
         {% do tongue.setRendered %}
@@ -149,7 +131,7 @@
             {% for code in ['en', 'fr', 'es', 'de', 'it', 'pt'] %}
               {% set choice = choices|filter(choice => choice.code == code)|first %}
               {% if choice %}
-                <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}">
+                <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}" lang="{{ choice.code }}">
                   <i class="fas fa-plus" aria-hidden="true"></i> {{ choice.name }}
                 </button>
               {% endif %}
@@ -280,11 +262,30 @@
       </div>
     </section>
 
+    {% set _unconfirmed = 'hidden' not in finalize.registration_key.vars.block_prefixes %}
+    {% if _unconfirmed %}
+      {# Without the registration key the setup is saved, but the account only starts with the confirmation #}
+      <div class="p-sf-unconfirmed" role="note">
+        <span class="p-sf-unconfirmed__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+        <div>
+          <p class="p-sf-unconfirmed__title">{{ 'signup.finalize.unconfirmed.title'|trans }}</p>
+          <p class="p-sf-unconfirmed__text">{{ 'signup.finalize.unconfirmed.text'|trans }}</p>
+        </div>
+      </div>
+    {% endif %}
     <div class="p-sf-actions">
-      <button type="submit" class="p-sf-actions__submit"><i class="fas fa-check" aria-hidden="true"></i> {{ 'signup.activate'|trans }}</button>
+      {# with the key field: "Finish setup" once a key is entered, else "Save, confirm later" (assets/js/signup/finalize.js) #}
+      {% set _later = _unconfirmed and finalize.registration_key.vars.value is empty %}
+      <button type="submit" class="p-sf-actions__submit js-finalize-submit"
+              {% if _unconfirmed %}data-finish="{{ 'signup.activate'|trans }}" data-later="{{ 'signup.activate.later'|trans }}"{% endif %}>
+        <i class="fas fa-check" aria-hidden="true"></i> <span class="js-finalize-submit-label">{{ (_later ? 'signup.activate.later' : 'signup.activate')|trans }}</span>
+      </button>
     </div>
 
     {{ form_end(finalize) }}
+    {% if 'hidden' not in finalize.registration_key.vars.block_prefixes %}
+      {% include 'signup/_resend_form.html.twig' %}
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

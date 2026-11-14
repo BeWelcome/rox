@@ -24,15 +24,16 @@
   {value: 'mother.tongue', short: 'profile.edit.level.mother.tongue'},
 ] %}
 
-{% macro card(row, levels, name, nativeName) %}
+{# name: the language's own name; alt: its name in the member's language, below it when different #}
+{% macro card(row, levels, name, alt) %}
   {% set id = row.vars.full_name %}
   {% set current = row.level.vars.value %}
   <div class="p-lang-card js-lang-card" id="{{ id }}" data-language="{{ row.language.vars.value }}">
     <input type="hidden" name="{{ row.language.vars.full_name }}" value="{{ row.language.vars.value }}">
     {% do row.language.setRendered %}
     <div class="p-lang-card__head">
-      <strong class="p-lang-card__name js-lang-card-name">{{ name }}</strong>
-      {% if nativeName and nativeName != name %}<span class="p-lang-card__native">{{ nativeName }}</span>{% endif %}
+      <strong class="p-lang-card__name js-lang-card-name" lang="{{ row.language.vars.value ?: '' }}">{{ name }}</strong>
+      {% if alt and alt != name %}<span class="p-lang-card__native js-lang-card-alt">{{ alt }}</span>{% endif %}
       <span class="p-lang-card__level js-lang-card-level"></span>
       <button type="button" class="p-lang-card__remove js-lang-remove" aria-label="{{ 'profile.edit.language.remove'|trans }}">
         <i class="fas fa-times" aria-hidden="true"></i>
@@ -62,17 +63,9 @@
 
 {% block subpage_body %}
   {% set prototype = form.language_levels.vars.prototype %}
-  {# All the languages one can pick (spoken, then signed: groups of the form) #}
-  {% set choices = [] %}
-  {% for group in prototype.language.vars.choices %}
-    {% for choice in (group.choices is defined ? group.choices : [group]) %}
-      {# Named in the member's language (Spanish): the languages table holds the native
-         names, with HTML entities (espa&ntilde;ol) #}
-      {% set key = ('lang_' ~ choice.value)|lower %}
-      {% set translated = key|trans %}
-      {% set choices = choices|merge([{code: choice.value, name: translated != key ? translated : choice.label}]) %}
-    {% endfor %}
-  {% endfor %}
+  {# All the languages one can pick: their own names, the member's language for the search, spoken then sign
+     languages (LanguageChoices, as on the finish setup page) #}
+  {% set choices = language_choices(prototype.language.vars.choices) %}
   {% set common = ['en', 'fr', 'es', 'de', 'it', 'pt'] %}
 
   {{ form_start(form, {attr: {class: 'p-language-form js-lang-form'}}) }}
@@ -87,16 +80,16 @@
   </div>
   <div class="p-lang-list collection-languages js-lang-list"
        data-index="{{ form.language_levels|length > 0 ? form.language_levels|last.vars.name + 1 : 0 }}"
-       data-prototype="{{ _self.card(prototype, levels, '__language__', '')|e('html_attr') }}">
+       data-prototype="{{ _self.card(prototype, levels, '__language__', '__alt__')|e('html_attr') }}">
     {% for language_level in form.language_levels %}
       {% set code = language_level.language.vars.value %}
-      {% set name = (choices|filter(choice => choice.code == code)|first).name ?? code %}
-      {{ _self.card(language_level, levels, name, ('lang_' ~ code)|lower|trans({}, 'messages', code)) }}
+      {% set choice = choices|filter(choice => choice.code == code)|first %}
+      {{ _self.card(language_level, levels, choice ? choice.name : code, choice ? choice.alt : '') }}
     {% endfor %}
   </div>
   {% do form.language_levels.setRendered %}
 
-  <div class="p-lang-add js-lang-add" data-languages="{{ choices|json_encode }}">
+  <div class="p-lang-add js-lang-add" data-languages="{{ choices|json_encode }}" data-groups="{{ language_groups()|json_encode }}">
     <div class="p-lang-add__field">
       <i class="fas fa-plus" aria-hidden="true"></i>
       <input type="text" class="p-lang-add__input js-lang-search" placeholder="{{ 'profile.edit.add.spoken.language'|trans }}"
@@ -107,7 +100,7 @@
       {% for code in common %}
         {% set choice = choices|filter(choice => choice.code == code)|first %}
         {% if choice %}
-          <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}">
+          <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}" lang="{{ choice.code }}">
             <i class="fas fa-plus" aria-hidden="true"></i> {{ choice.name }}
           </button>
         {% endif %}

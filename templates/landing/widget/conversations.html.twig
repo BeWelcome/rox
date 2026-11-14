@@ -1,15 +1,20 @@
 {#
-  The latest messages received, on the home page (loaded into the Messages tab).
-  A hosting request or invitation shows its dates in a pill next to the subject and where it
-  stands as an icon on the avatar, like in the inbox (conversations/_request_state.html.twig).
+  The latest messages received, in the Messages card of the home page: who wrote and when, then
+  one line, the start of the message, or for a hosting request or invitation its kind and dates
+  and then the start of the message.
+  Where a request stands shows as an icon on the avatar, like in the inbox
+  (conversations/_request_state.html.twig).
 #}
 <div id="conversationsdisplay" class="c-home-list"{% if messages is empty %} data-empty{% endif %}>
     {% for message in messages %}
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}
         {% set closed = request and request.status in [1, 2] %}
+        {# A request or invitation from someone else, still open and not over: waiting for the member's answer, even once read #}
+        {% set toAnswer = request and request.status == 0 and message.initiator != app.user
+            and (request.departure ?? request.arrival) is not null and (request.departure ?? request.arrival)|date('Y-m-d') >= 'now'|date('Y-m-d') %}
         {# Opens in the side panel of the home page, like Send on a profile (contact/drawer.js) #}
-        <a class="c-home-item js-contact-open js-home-message{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}"
+        <a class="c-home-item c-home-msg js-contact-open js-home-message{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}"
            data-title="{{ message.sender ? (message.sender.shortNameOrUsername ?? message.sender.username) : 'BeWelcome' }}">
             {% if message.sender %}
                 <span class="c-home-item__avatar-wrap">
@@ -22,24 +27,27 @@
             <span class="c-home-item__body">
                 <span class="c-home-item__top">
                     <span class="c-home-item__name">{{ message.sender ? message.sender.username : 'BeWelcome' }}</span>
-                    <span class="c-home-item__time">{{ message.created.diffForHumans }}</span>
+                    {% if toAnswer %}<span class="c-home-msg__waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{ 'landing.dash.waiting.you'|trans }}</span>{% endif %}
+                    <span class="c-home-item__time">{{ message.created.diffForHumans }}{% if unread %}<span class="c-home-item__dot" aria-hidden="true"></span>{% endif %}</span>
                 </span>
-                {% if request %}
-                    {# The subject, and the dates on the right coloured by where the request stands #}
-                    <span class="c-home-item__middle">
-                        <span class="c-home-item__title">{{ message.subject ? message.subject.subject|striptags }}</span>
-                        {% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'pill' } only %}
-                    </span>
-                {% elseif message.subject %}
-                    <span class="c-home-item__title">{{ message.subject.subject|striptags }}</span>
-                {% endif %}
-                {# The message, and for a request its state in words on the right #}
-                <span class="c-home-item__bottom">
-                    {# Received (this list only has those): the small orange arrow, as in the inbox list #}
-                    <span class="c-home-item__text"><svg class="c-inbox-item__dir c-inbox-item__dir--received" viewBox="0 0 10 10" aria-hidden="true"><path d="M8 2 2 8M6.5 8H2V3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ message.message|striptags|truncate(90) }}</span>
-                    {% if request %}{% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'status' } only %}{% endif %}
-                    {%- if unread %}<span class="c-home-item__dot" aria-hidden="true"></span>{% endif %}
+                <span class="c-home-msg__line">
+                    {%- if request -%}
+                        {%- set _from = request.arrival -%}
+                        {%- set _to = request.departure -%}
+                        {{ (request.inviteForLeg ? 'conversations.invitation' : 'conversations.request')|trans }} ·
+                        {% if _to is null -%}
+                            {{ _from|format_date(pattern='MMM d') }}
+                        {%- elseif _from|date('Y-m') == _to|date('Y-m') -%}
+                            {{ _from|format_date(pattern='MMM d') }}–{{ _to|format_date(pattern='d') }}
+                        {%- else -%}
+                            {{ _from|format_date(pattern='MMM d') }} – {{ _to|format_date(pattern='MMM d') }}
+                        {%- endif -%}
+                    {%- else -%}
+                        {{ message.message|striptags|truncate(90) }}
+                    {%- endif -%}
                 </span>
+                {# A request: the start of its message too #}
+                {% if request %}<span class="c-home-msg__line c-home-msg__line--text">{{ message.message|striptags|truncate(90) }}</span>{% endif %}
             </span>
         </a>
     {% else %}

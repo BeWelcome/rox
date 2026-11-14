@@ -1,20 +1,24 @@
 {#
-  Members travelling near the member, on the home page (loaded into the Visitors tab):
-  the trips of the next 7 days under "This week", the others under "Later" (sorted by arrival).
+  Members coming to the member's area, in the trips card of the home page: one trip at a time,
+  sorted by arrival, with previous and next under it (landing.js).
 #}
-{% block content %}
-{% set _weekEnd = date('+7 days')|date('Y-m-d') %}
-<div id="legsdisplay" class="c-home-list c-home-list--legs">
-    {% set _group = null %}
-    {% for leg in legs %}
-        {% set _legGroup = leg.arrival|date('Y-m-d') < _weekEnd ? 'this.week' : 'later' %}
-        {% if _legGroup != _group %}
-            {% set _group = _legGroup %}
-            <p class="c-home-list__group">{{ ('landing.visitors.' ~ _group)|trans }}</p>
-        {% endif %}
-        {% include 'trip/landing.html.twig' with { leg: leg } %}
-    {% else %}
+<div id="legsdisplay" class="c-home-list c-home-trips" data-count="{{ legs|length }}">
+    {% if legs is empty %}
         <p class="c-home-list__empty">{{ 'landing.bevisited.none'|trans }}</p>
-    {% endfor %}
+    {% else %}
+        <div class="c-home-trips__track js-home-trips-track" tabindex="-1">
+            {% for leg in legs %}
+                {% include 'landing/widget/_leg_slide.html.twig' with { leg: leg } %}
+            {% endfor %}
+        </div>
+        {% if legs|length > 1 %}
+            <div class="c-home-trips__nav">
+                <button type="button" class="c-home-trips__btn js-home-trips-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                <span class="c-home-trips__dots" aria-hidden="true">
+                    {% for leg in legs %}<span class="c-home-slider__dot{% if loop.first %} is-active{% endif %}"></span>{% endfor %}
+                </span>
+                <button type="button" class="c-home-trips__btn js-home-trips-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+        {% endif %}
+    {% endif %}
 </div>
-{% endblock content %}

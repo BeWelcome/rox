@@ -1,0 +1,40 @@
+{#
+  One trip coming to the member's area, as a slide of the trips card on the home page: the traveller,
+  the dates, the trip's title with its nights, the start of its text, what they look for (or Invited)
+  and See trip, which opens the trip in the side panel where the member can invite or write.
+#}
+{% set traveller = leg.trip.creator %}
+{% set invited = leg.invitationBy(app.user) %}
+{% set _arrival = leg.arrival|date('Y-m-d') %}
+{% set _soon = _arrival == 'today'|date('Y-m-d') ? 'today' : (_arrival == 'tomorrow'|date('Y-m-d') ? 'tomorrow' : null) %}
+{% set _nights = date(leg.departure|date('Y-m-d')).diff(date(_arrival)).days %}
+{% set _travellers = leg.trip.countOfTravellers %}
+<article class="c-home-trip js-contact-row">
+    <div class="c-home-trip__who">
+        <img class="c-home-trip__avatar" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="" loading="lazy">
+        <span class="c-home-trip__person">
+            <span class="c-home-trip__name">{{ traveller.shortNameOrUsername }}</span>
+            <span class="c-home-trip__people">{{ 'trip.count.of.travellers'|trans({ countOfTravellers: max(_travellers, 1) }) }}</span>
+        </span>
+        <span class="c-home-trip__dates{{ _soon ? ' is-soon' }}">
+            {{- _soon ? ('landing.visitors.' ~ _soon)|trans : leg.arrival|format_date(pattern='MMM d') -}}
+            {%- if leg.departure|date('Y-m-d') != _arrival %} → {{ leg.departure|date('Y-m') == leg.arrival|date('Y-m') and not _soon ? leg.departure|format_date(pattern='d') : leg.departure|format_date(pattern='MMM d') }}{% endif -%}
+        </span>
+    </div>
+    <p class="c-home-trip__title">
+        <span class="c-home-trip__summary">{{ leg.trip.summary ?: leg.location.name }}</span>
+        {% if _nights > 0 %}<span class="c-home-trip__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: _nights }) }}</span>{% endif %}
+    </p>
+    {% set _excerpt = leg.trip.description|striptags|trim %}
+    {% if _excerpt %}<p class="c-home-trip__text">{{ _excerpt }}</p>{% endif %}
+    <div class="c-home-trip__foot">
+        {% if invited %}
+            <span class="c-home-trip__tag c-home-trip__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
+        {% elseif constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+            <span class="c-home-trip__tag"><i class="fas fa-house" aria-hidden="true"></i> {{ 'trip.option.looking.for.host'|trans }}</span>
+        {% elseif constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+            <span class="c-home-trip__tag c-home-trip__tag--plain"><i class="fas fa-users" aria-hidden="true"></i> {{ 'trip.option.meet.locals'|trans }}</span>
+        {% endif %}
+        <a class="c-home-trip__see js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.trip.summary ?: leg.location.name }}">{{ 'landing.dash.see.trip'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+</article>

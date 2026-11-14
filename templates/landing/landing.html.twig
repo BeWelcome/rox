@@ -15,8 +15,8 @@
 
 {#
   Welcome banner: the member (avatar, name, city, hosting status) on the left, a
-  search on the right that switches between a place and a member, and three
-  counters at the bottom.
+  place search with "Plan a trip" next to it on the right. A request to answer shows in a
+  thin line under it.
 #}
 {% set homeCity = searchLocation.vars.value.location ?? '' %}
 <div class="l-hello">
@@ -53,27 +53,20 @@
 					<p class="l-hello__not-setup">{{ 'profile.created'|trans }}</p>
 				{% endif %}
 			</div>
-			<button type="button" class="l-hello__toggle js-hello-toggle" aria-expanded="true" aria-controls="hello_stats"
+			<button type="button" class="l-hello__toggle js-hello-toggle" aria-expanded="true" aria-controls="hello_search"
 				data-expand="{{ 'landing.banner.expand'|trans }}" data-collapse="{{ 'landing.banner.collapse'|trans }}"
 				aria-label="{{ 'landing.banner.collapse'|trans }}">
 				<i class="fas fa-chevron-up" aria-hidden="true"></i>
-				{% if requestsToAnswerCount %}<span class="l-hello__toggle-badge" aria-hidden="true">{{ requestsToAnswerCount }}</span>{% endif %}
 			</button>
 		</div>
 
 		<div class="l-hello__search js-hello-search" id="hello_search" data-mode="place">
-			<div class="l-hello__search-head">
-				<p class="l-hello__search-title">
-					<span class="js-hello-mode-place">{{ 'landing.whereyougo'|trans }}</span>
-					<span class="js-hello-mode-member" hidden>{{ 'landing.search.findmember'|trans }}</span>
-				</p>
+			<div class="l-hello__box">
 				<div class="l-hello__modes" role="radiogroup" aria-label="{{ 'landing.search.submit'|trans }}">
 					<button type="button" class="l-hello__mode active js-hello-mode" data-mode="place" role="radio" aria-checked="true"><i class="fas fa-location-dot" aria-hidden="true"></i> {{ 'landing.search.mode.place'|trans }}</button>
 					<button type="button" class="l-hello__mode js-hello-mode" data-mode="member" role="radio" aria-checked="false"><i class="fas fa-user" aria-hidden="true"></i> {{ 'landing.search.mode.member'|trans }}</button>
 				</div>
-			</div>
-
-			<div class="js-hello-mode-place">
+			<div class="l-hello__go-search js-hello-mode-place">
 				{{ form_start(tinySearch, { action: path('search_locations'), attr: { class: 'u:w-full' } }) }}
 				<label for="{{ tinySearch.location.vars.id }}" class="visually-hidden">{{ 'landing.whereyougo'|trans }}</label>
 				<div class="l-hello__bar">
@@ -84,12 +77,12 @@
 							name="{{ tinySearch.location.vars.full_name }}"
 							class="l-hello__input js-location-picker"
 							autocomplete="off"
-							placeholder="{{ 'landing.search.placeholder'|trans }}"
+							placeholder="{{ 'landing.search.where'|trans }}"
 							{% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
 						>
 					</div>
-					{# Picking a place starts the search (landing.js), so no visible button; it stays for Enter #}
-					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-hello__submit l-hello__submit--hidden" tabindex="-1" aria-hidden="true">
+					{# Picking a place starts the search too (landing.js) #}
+					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-hello__submit">
 						<span class="l-hello__submit-text">{{ 'landing.search.submit'|trans }}</span> <i class="fas fa-arrow-right l-hello__submit-arrow" aria-hidden="true"></i><i class="fas fa-magnifying-glass l-hello__submit-loupe" aria-hidden="true"></i>
 					</button>
 				</div>
@@ -98,10 +91,8 @@
 				{% do tinySearch.updateMap.setRendered %}
 				<div class="d-none" aria-hidden="true">{{ form_rest(tinySearch) }}</div>
 				{{ form_end(tinySearch) }}
-				<p class="l-hello__hint">{{ 'landing.search.place.hint'|trans }}</p>
 			</div>
-
-			<div class="js-hello-mode-member" hidden>
+			<div class="l-hello__go-search js-hello-mode-member" hidden>
 				<form method="get" class="l-hello__member-form u:w-full" data-profile-url="{{ path('members_profile', { username: '__username__' }) }}">
 					<label for="hello_username" class="visually-hidden">{{ 'landing.search.findmember'|trans }}</label>
 					<div class="l-hello__bar">
@@ -118,149 +109,128 @@
 						data-loading="{{ 'landing.search.member.searching'|trans }}"
 						data-empty="{{ 'select.no.results'|trans }}"></ul>
 				</form>
-				<p class="l-hello__hint">{{ 'landing.search.member.hint'|trans }}</p>
 			</div>
-		</div>
-	</div>
-
-	<div class="l-hello__stats" id="hello_stats">
-		<div class="l-hello__stats-inner">
-		<a class="l-hello__stat{% if requestsToAnswerCount %} l-hello__stat--alert{% endif %}" href="{{ url('conversations', { conversationsType: 'requests' }) }}">
-			<span class="l-hello__stat-icon"><i class="fas fa-bed" aria-hidden="true"></i></span>
-			<span class="l-hello__stat-text"><strong>{{ requestsToAnswerCount }}</strong> <span class="l-hello__long">{{ 'landing.stats.requests'|trans }}</span><span class="l-hello__short">{{ 'landing.stats.requests.short'|trans }}</span></span>
-			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
-		</a>
-		<a class="l-hello__stat" href="{{ url('visitors') }}">
-			<span class="l-hello__stat-icon"><i class="fas fa-suitcase" aria-hidden="true"></i></span>
-			<span class="l-hello__stat-text"><strong>{{ visitorsCount }}</strong> <span class="l-hello__long">{% if homeCity %}{{ 'landing.stats.travelers'|trans({ city: homeCity }) }}{% else %}{{ 'landing.stats.travelers.area'|trans }}{% endif %}</span><span class="l-hello__short">{{ 'landing.stats.travelers.short'|trans }}</span></span>
-			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
-		</a>
-		<a class="l-hello__stat l-hello__stat--trip js-contact-open" href="{{ path('new_trip') }}" data-title="{{ 'landing.stats.trip'|trans }}">
-			<span class="l-hello__stat-icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
-			<span class="l-hello__stat-text"><span class="l-hello__long"><span class="l-hello__trip-title">{{ 'landing.stats.trip'|trans }}</span><span class="l-hello__trip-hint">{{ 'landing.stats.trip.hint'|trans }}</span></span><span class="l-hello__short">{{ 'landing.stats.trip.short'|trans }}</span></span>
-			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
-		</a>
+			</div>
+			{# Under the box: plan a trip (place), or how to search a member #}
+			<p class="l-hello__under js-hello-mode-place">
+				<i class="fas fa-route l-hello__under-icon" aria-hidden="true"></i>
+				<span class="l-hello__under-text">{{ 'landing.search.dates.known'|trans }}</span>
+				<a class="l-hello__under-plan js-contact-open" href="{{ path('new_trip') }}" data-title="{{ 'landing.stats.trip'|trans }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'landing.plan.public.trip'|trans }}</a>
+				<span class="l-hello__under-hint">· {{ 'landing.plan.public.trip.hint'|trans }}</span>
+			</p>
+			<p class="l-hello__under js-hello-mode-member" hidden>
+				<i class="fas fa-circle-info l-hello__under-icon" aria-hidden="true"></i>
+				<span class="l-hello__under-text">{{ 'landing.search.by.username'|trans }}</span>
+			</p>
 		</div>
 	</div>
 </div>
 
 {#
-  The two main blocks: messages and visitors, then groups and activities.
-  Each is a card with its tabs on top; the lists are loaded by landing.js.
-  The filter pills keep the "active" class landing.js reads when it reloads a list.
+  A request to answer: a thin line under the banner, all of it a link. One request opens it in
+  the side panel (contact/drawer.js), several go to the requests list.
+#}
+{% if requestsToAnswerCount %}
+	{% if requestToAnswerMessageId %}
+	<a class="l-hello-alert js-contact-open" href="{{ path('conversation_view', { id: requestToAnswerMessageId }) }}" data-title="{{ 'landing.alert.answer'|trans }}">
+	{% else %}
+	<a class="l-hello-alert" href="{{ url('conversations', { conversationsType: 'requests' }) }}">
+	{% endif %}
+		<span class="l-hello-alert__icon" aria-hidden="true"><i class="fas fa-bed"></i></span>
+		<span class="l-hello-alert__text"><strong>{{ 'landing.alert.requests'|trans({ count: requestsToAnswerCount }) }}</strong> <span class="l-hello-alert__long">{{ 'landing.alert.waiting'|trans }}</span><span class="l-hello-alert__short">{{ 'landing.alert.to.answer'|trans }}</span></span>
+		<span class="l-hello-alert__go">{{ 'landing.alert.answer'|trans }} <i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+	</a>
+{% endif %}
+
+{#
+  The four cards of the dashboard: messages, members coming to the member's area (one trip at a
+  time, previous and next), upcoming activities and the discussions of the member's groups.
+  Each card has its title, a count and a link to the full list; the lists are loaded by landing.js.
 #}
 {% set loading %}
     <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
 {% endset %}
-<div class="c-home-blocks">
+<div class="c-home-blocks c-home-dash">
 
-    {# messages and visitors #}
-    <section class="c-home-card">
-        <ul class="nav c-home-tabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link active" aria-controls="conversations" href="#conversations" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.tab.messagesreceived'|trans }}
-                    {% if conversationCount %}<span class="c-home-tabs__count">{{ conversationCount }}</span>{% endif %}
+    {# Messages: the unread count in orange #}
+    <section class="c-home-card c-home-dash__card c-home-dash__card--messages" aria-labelledby="home_messages_title">
+        <header class="c-home-dash__head">
+            <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+            <h2 class="c-home-dash__title" id="home_messages_title">{{ 'landing.dash.messages'|trans }}</h2>
+            {% if conversationCount %}<span class="c-home-dash__count c-home-dash__count--hot">{{ conversationCount }}</span>{% endif %}
+        </header>
+        <div class="c-home-pane c-home-dash__body">
+            <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
+            {% set _allConversations = inbox_total_count() %}
+            <div class="c-home-pane__footer c-home-pane__footer--more">
+                <a class="c-home-more" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">
+                    {{ 'landing.conversations.all'|trans }}
+                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
                 </a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link" aria-controls="visitors" href="#visitors" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.tab.visitors'|trans }}
-                    {% if visitorsCount %}<span class="c-home-tabs__count">{{ visitorsCount }}</span>{% endif %}
-                </a>
-            </li>
-        </ul>
-
-        <div class="tab-content c-home-card__content">
-            <div role="tabpanel" class="tab-pane c-home-pane active" id="conversations">
-                <div class="c-home-pane__filters" role="radiogroup" aria-label="{{ 'landing.tab.messagesreceived'|trans }}">
-                    <button type="button" class="c-home-pill js-home-filter{% if messageFilter != 'Unread' %} active{% endif %}" id="all" role="radio" aria-checked="{{ messageFilter != 'Unread' ? 'true' : 'false' }}" data-group="messages">{{ 'landing.button.all'|trans }}</button>
-                    <button type="button" class="c-home-pill js-home-filter{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio" aria-checked="{{ messageFilter == 'Unread' ? 'true' : 'false' }}" data-group="messages">{{ 'landing.button.unread'|trans }}</button>
-                </div>
-                <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
-                {% set _allConversations = inbox_total_count() %}
-                <div class="c-home-pane__footer c-home-pane__footer--more">
-                    <a class="c-home-more" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">
-                        {{ 'landing.conversations.all'|trans }}
-                        {% if _allConversations %}<span class="c-home-more__count">{{ _allConversations }}</span>{% endif %}
-                        <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div role="tabpanel" class="tab-pane c-home-pane" id="visitors">
-                {# How far to look: a few quick choices (landing.js reloads the list) #}
-                {% set _radius = radiusForm.radius.vars.value|default('') %}
-                <div class="c-home-radius js-trips-radius" role="group" aria-label="{{ 'trips.radius'|trans }}">
-                    {# "Near Berlin" (the member's city), else "Within" #}
-                    <span class="c-home-radius__label">
-                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                        {% if homeCity %}
-                            <span class="c-home-radius__text">{{ 'landing.visitors.near'|trans }}</span> <strong class="c-home-radius__city">{{ homeCity }}</strong>
-                        {% else %}
-                            <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span>
-                        {% endif %}
-                    </span>
-                    <span class="c-home-radius__options">
-                        {% for choice in radiusForm.radius.vars.choices %}
-                            {% if choice.value in ['20', '50', '100'] or choice.value == _radius ~ '' %}
-                                <button type="button" class="c-home-radius__option{% if choice.value == _radius ~ '' %} is-active{% endif %}" data-radius="{{ choice.value }}" aria-pressed="{{ choice.value == _radius ~ '' ? 'true' : 'false' }}">{{ choice.label|trans }}</button>
-                            {% endif %}
-                        {% endfor %}
-                    </span>
-                    <input type="hidden" id="trips_radius" value="{{ _radius }}">
-                </div>
-                <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--more">
-                    <a class="c-home-more" href="{{ url('visitors') }}">
-                        {{ 'landing.bevisited.alltrips'|trans }}
-                        {% if visitorsCount %}<span class="c-home-more__count">{{ visitorsCount }}</span>{% endif %}
-                        <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                    </a>
-                </div>
             </div>
         </div>
     </section>
 
-    {# groups and activities #}
-    <section class="c-home-card">
-        <ul class="nav c-home-tabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link active" aria-controls="groups" href="#groups" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.button.mygroups'|trans }}
-                    {% if groupsTodayCount %}<span class="c-home-tabs__count" title="{{ 'landing.tab.today'|trans }}">{{ groupsTodayCount }}</span>{% endif %}
-                </a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link" aria-controls="activities" href="#activities" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.tab.activities'|trans }}
-                    {% if activityCount %}<span class="c-home-tabs__count">{{ activityCount }}</span>{% endif %}
-                </a>
-            </li>
-        </ul>
+    {# Trips to the member's area: one at a time, the distance in a pill (landing.js reloads the list) #}
+    {% set _radius = radiusForm.radius.vars.value|default('') %}
+    {# Hidden when nobody comes (landing.js checks again once the list is loaded) #}
+    <section class="c-home-card c-home-dash__card c-home-dash__card--trips js-home-trips" aria-labelledby="home_trips_title"{% if not visitorsCount %} hidden{% endif %}>
+        <header class="c-home-dash__head">
+            <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
+            <h2 class="c-home-dash__title" id="home_trips_title">
+                <a href="{{ url('visitors') }}">{{ homeCity ? 'landing.dash.coming.to'|trans({ city: homeCity }) : 'landing.tab.visitors'|trans }}</a>
+            </h2>
+            <span class="c-home-dash__count js-home-trips-position" hidden></span>
+            <label class="c-home-dash__radius">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                <span class="visually-hidden">{{ 'trips.radius'|trans }}</span>
+                <select class="js-home-trips-radius">
+                    {% for choice in radiusForm.radius.vars.choices %}
+                        {% if choice.value in ['20', '50', '100', '200'] or choice.value == _radius ~ '' %}
+                            <option value="{{ choice.value }}"{% if choice.value == _radius ~ '' %} selected{% endif %}>{{ choice.label|trans }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <input type="hidden" id="trips_radius" value="{{ _radius }}">
+        </header>
+        <div class="c-home-pane c-home-dash__body">
+            <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
+        </div>
+    </section>
 
-        <div class="tab-content c-home-card__content">
-            <div role="tabpanel" class="tab-pane c-home-pane active" id="groups">
-                <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--buttons c-home-pane__footer--end">
-                    <a class="c-home-seeall" href="{{ path('groups_mygroups') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                </div>
+    {# Upcoming activities, and a button to create one; none: a thin strip at the bottom #}
+    <section class="c-home-card c-home-dash__card c-home-dash__card--activities js-home-activities{% if not activityCount %} is-empty{% endif %}" aria-labelledby="home_activities_title" data-online="{{ onlineActivities ? 1 : 0 }}">
+        <header class="c-home-dash__head">
+            <span class="c-home-dash__icon" aria-hidden="true"><i class="far fa-calendar"></i></span>
+            <h2 class="c-home-dash__title" id="home_activities_title">{{ 'landing.dash.activities'|trans }}</h2>
+            {% if activityCount %}<span class="c-home-dash__count">{{ activityCount }}</span>{% endif %}
+            <a class="c-home-dash__add" href="{{ path('activities_create') }}" aria-label="{{ 'landing.activities.create'|trans }}"><i class="fas fa-plus" aria-hidden="true"></i></a>
+        </header>
+        <div class="c-home-pane c-home-dash__body">
+            <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
+            <div class="c-home-pane__footer c-home-pane__footer--more">
+                <a class="c-home-more" href="{{ path('activities') }}">
+                    {{ 'landing.dash.activities.all'|trans }}
+                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
+                </a>
             </div>
+        </div>
+    </section>
 
-            <div role="tabpanel" class="tab-pane c-home-pane" id="activities">
-                <div class="c-home-pane__filters">
-                    <label class="c-home-switch">
-                        <input type="checkbox" id="show_online" name="show_online"{% if onlineActivities %} checked{% endif %}>
-                        <span class="c-home-switch__track" aria-hidden="true"></span>
-                        {{ 'landing.activities.online'|trans }}
-                    </label>
-                    <a class="c-home-pill c-home-pill--action" href="/activities/create"><i class="fa fa-calendar-plus" aria-hidden="true"></i> {{ 'landing.activities.create'|trans }}</a>
-                </div>
-                <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--buttons">
-                    <a class="c-home-seeall c-home-seeall--light" href="/activities/myactivities"><i class="fa fa-calendar" aria-hidden="true"></i> {{ 'landing.activities.myactivities'|trans }}</a>
-                    <a class="c-home-seeall" href="/activities">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                </div>
+    {# The discussions of the member's groups, the BeWelcome group's agora included #}
+    <section class="c-home-card c-home-dash__card c-home-dash__card--groups" aria-labelledby="home_groups_title">
+        <header class="c-home-dash__head">
+            <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-comments"></i></span>
+            <h2 class="c-home-dash__title" id="home_groups_title">{{ 'landing.dash.groups'|trans }}</h2>
+        </header>
+        <div class="c-home-pane c-home-dash__body">
+            <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
+            <div class="c-home-pane__footer c-home-pane__footer--more">
+                <a class="c-home-more" href="{{ path('groups_mygroups') }}">
+                    {{ 'landing.dash.groups.all'|trans }}
+                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
+                </a>
             </div>
         </div>
     </section>

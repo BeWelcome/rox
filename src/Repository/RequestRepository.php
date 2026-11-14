@@ -35,4 +35,27 @@ class RequestRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * The last message the member received in a request still waiting for their answer
+     * (same requests as getRequestsToAnswerCount()), or null when there is none.
+     */
+    public function getLastMessageIdOfRequestToAnswer(Member $member): ?int
+    {
+        $id = $this->createQueryBuilder('r')
+            ->select('MAX(m.id)')
+            ->join('r.messages', 'm')
+            ->where('m.receiver = :member')
+            ->andWhere('m.initiator <> :member')
+            ->andWhere('r.status = :open')
+            ->andWhere('r.inviteForLeg IS NULL')
+            ->andWhere('r.departure >= :today')
+            ->setParameter('member', $member)
+            ->setParameter('open', HostingRequest::REQUEST_OPEN)
+            ->setParameter('today', new DateTime('today'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return null === $id ? null : (int) $id;
+    }
 }

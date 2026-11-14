@@ -204,6 +204,14 @@ class LandingController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
         $onlineActivities = ('Yes' === $member->getMemberPreferenceValue($preference)) ? 1 : 0;
 
+        // One request to answer: the alert opens it in the side panel; several: the requests list
+        $requestsToAnswerCount = $this->getRequestsToAnswerCount($member);
+        /** @var RequestRepository $requestRepository */
+        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+        $requestToAnswerMessageId = 1 === $requestsToAnswerCount
+            ? $requestRepository->getLastMessageIdOfRequestToAnswer($member)
+            : null;
+
         $content = $this->render('landing/landing.html.twig', [
             'title' => 'BeWelcome',
             'searchLocation' => $searchHomeLocation->createView(),
@@ -221,7 +229,8 @@ class LandingController extends AbstractController
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
             'groupsTodayCount' => $this->landingModel->getGroupThreadsWithPostsTodayCount($member),
-            'requestsToAnswerCount' => $this->getRequestsToAnswerCount($member),
+            'requestsToAnswerCount' => $requestsToAnswerCount,
+            'requestToAnswerMessageId' => $requestToAnswerMessageId,
         ]);
 
         return $content;

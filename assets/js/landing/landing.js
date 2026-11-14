@@ -16,8 +16,8 @@ document.addEventListener('click', (event) => {
         item.querySelectorAll('.c-req-kind--new, .c-req-pill--new').forEach((part) => {
             part.className = part.className.replace(/--new\b/, '--pending');
         });
-        // One unread less on the tab
-        const count = document.querySelector('.c-home-tabs__link[aria-controls="conversations"] .c-home-tabs__count');
+        // One unread less on the Messages card
+        const count = document.querySelector('.c-home-dash__count--hot');
         if (count) {
             const left = (parseInt(count.textContent, 10) || 0) - 1;
             if (left > 0) {
@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     Home.updateMessages();
     Home.updateGroups();
     Home.updateTripLegs();
+    Home.updateActivities();
 
     const tabElements = document.querySelectorAll('a[data-bs-toggle="tab"]');
     tabElements.forEach(tab => {
@@ -164,6 +165,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Trips card: the distance pill sets the hidden #trips_radius
+    document.querySelectorAll('.js-home-trips-radius').forEach(function (select) {
+        select.addEventListener('change', function () {
+            const input = document.getElementById('trips_radius');
+            input.value = select.value;
+            Home.updateTripLegs();
+        });
+    });
+
     // Visitors: the distance is a few quick choices that set the hidden #trips_radius
     document.querySelectorAll('.js-trips-radius').forEach(function (group) {
         const input = group.querySelector('#trips_radius');
@@ -214,12 +224,11 @@ var Home = {
                 if (display) {
                     display.outerHTML = messages;
                 }
-                // No messages at all: the filters and the link to the inbox have nothing to offer.
-                // With "Unread" on, keep them so the member can switch back to "All".
+                // No messages at all: the link to the inbox has nothing to offer
                 const list = document.getElementById('conversationsdisplay');
                 const pane = list ? list.closest('.c-home-pane') : null;
                 if (pane) {
-                    pane.classList.toggle('is-empty', all === 1 && list.hasAttribute('data-empty'));
+                    pane.classList.toggle('is-empty', list.hasAttribute('data-empty'));
                 }
             });
     },
@@ -235,8 +244,10 @@ var Home = {
             });
     },
     updateActivities: function () {
+        // The member's choice to show online activities (a preference, set on the activities page)
         const showOnline = document.getElementById('show_online');
-        const online = showOnline && showOnline.checked ? 1 : 0;
+        const card = document.getElementById('activitiesdisplay')?.closest('[data-online]');
+        const online = (showOnline ? showOnline.checked : card && card.dataset.online === '1') ? 1 : 0;
         
         const params = new URLSearchParams({
             online: online
@@ -249,6 +260,9 @@ var Home = {
                 if (display) {
                     display.outerHTML = activities;
                 }
+                // None: the card becomes a thin strip at the bottom
+                const list = document.getElementById('activitiesdisplay');
+                list?.closest('.js-home-activities')?.classList.toggle('is-empty', list.hasAttribute('data-empty'));
             });
     },
     updateTripLegs: function () {
@@ -266,6 +280,7 @@ var Home = {
                 if (display) {
                     display.outerHTML = legs;
                 }
+                initTripsSlider(document.getElementById('legsdisplay'));
             });
     },
 
@@ -349,8 +364,34 @@ function initHelloToggle(banner, button) {
         button.removeAttribute('title');
     };
 
+    // The panel under the name (hosting switch) slides up and down with an
+    // ease-in-out on its real height, measured before and after the change.
+    const panel = banner.querySelector('.l-hello__me .l-hosting');
+    const easing = 'cubic-bezier(0.65, 0, 0.35, 1)';
+    let running = null;
+    const box = () => {
+        const style = getComputedStyle(panel);
+        return { height: `${panel.getBoundingClientRect().height}px`, marginTop: style.marginTop, opacity: style.opacity };
+    };
+
     const toggle = () => {
+        const animate = panel && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            && panel.getBoundingClientRect().width > 0;
+        const from = animate ? box() : null;
+        if (running) {
+            running.cancel();
+        }
         const collapsed = banner.classList.toggle('is-collapsed');
+        if (animate) {
+            const to = box();
+            banner.classList.add('is-animating');
+            running = panel.animate([from, to], { duration: 420, easing });
+            running.onfinish = () => {
+                banner.classList.remove('is-animating');
+                running = null;
+            };
+            running.oncancel = () => banner.classList.remove('is-animating');
+        }
         try {
             localStorage.setItem(storageKey, collapsed ? '1' : '0');
         } catch (e) {
@@ -405,6 +446,57 @@ function initHomeSlider(slider) {
 
     prev.addEventListener('click', () => go(-1));
     next.addEventListener('click', () => go(1));
+    let frame = null;
+    track.addEventListener('scroll', () => {
+        if (frame === null) {
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                update();
+            });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+}
+
+/*
+ * Trips card: one trip at a time, scrolled sideways. The arrows move one trip, a swipe works
+ * too (scroll snap); the dots and the "1 / 3" pill in the card's head follow.
+ */
+function initTripsSlider(list) {
+    // Nobody comes: no card
+    const card = list ? list.closest('.js-home-trips') : null;
+    if (card) {
+        card.hidden = list.dataset.count === '0';
+    }
+    const position = document.querySelector('.js-home-trips-position');
+    const track = list ? list.querySelector('.js-home-trips-track') : null;
+    const count = track ? track.children.length : 0;
+    if (position) {
+        position.hidden = count < 2;
+    }
+    if (!track) {
+        return;
+    }
+    const prev = list.querySelector('.js-home-trips-prev');
+    const next = list.querySelector('.js-home-trips-next');
+    const dots = list.querySelectorAll('.c-home-slider__dot');
+    const current = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+    const update = () => {
+        const page = Math.min(current(), count - 1);
+        if (prev) prev.disabled = page <= 0;
+        if (next) next.disabled = page >= count - 1;
+        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === page));
+        if (position) {
+            position.textContent = `${page + 1} / ${count}`;
+        }
+    };
+    const go = (step) => {
+        const page = Math.min(Math.max(current() + step, 0), count - 1);
+        track.scrollTo({ left: page * track.clientWidth });
+    };
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
     let frame = null;
     track.addEventListener('scroll', () => {
         if (frame === null) {

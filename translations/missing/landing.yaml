@@ -99,3 +99,60 @@ landing.thread.replies:
 landing.activities.online:
     - 'Show online'
     - Short switch label above the activities on the home page, shows the online activities too. Keep it short, it shares a line with Create activity on phones.
+landing.dash.messages:
+    - 'Messages'
+    - 'Home page: title of the messages card'
+landing.dash.coming.to:
+    - 'Coming to {city}'
+    - 'Home page: title of the card of members travelling to the member''s city. Keep {city}'
+landing.dash.see.trip:
+    - 'See trip'
+    - 'Home page, trips card: link that opens the trip'
+landing.dash.activities:
+    - 'Upcoming activities'
+    - 'Home page: title of the activities card'
+landing.dash.activities.all:
+    - 'All activities'
+    - 'Home page: link at the bottom of the activities card'
+landing.dash.groups:
+    - 'Group discussions'
+    - 'Home page: title of the card with the discussions of the member''s groups'
+landing.dash.groups.all:
+    - 'All discussions'
+    - 'Home page: link at the bottom of the group discussions card'
+landing.dash.activities.none:
+    - 'No activities nearby'
+    - 'Home page, activities card: there is no upcoming activity near the member'
+landing.dash.activities.create:
+    - 'Create one'
+    - 'Home page, activities card: link to create an activity when there is none'
+landing.search.where:
+    - 'Where are you going?'
+    - 'Home page: placeholder of the place search in the welcome banner'
+landing.alert.requests:
+    - '{count, plural, one {# stay request} other {# stay requests}}'
+    - 'Home page: start of the line under the welcome banner when requests wait for an answer (in bold). Keep the # sign'
+landing.alert.waiting:
+    - 'waiting for your answer'
+    - 'Home page: end of the line under the welcome banner, after the number of stay requests'
+landing.alert.answer:
+    - 'Answer'
+    - 'Home page: link on the right of the line about stay requests waiting for an answer'
+landing.search.dates.known:
+    - 'Already know your dates?'
+    - 'Home page: text under the place search, before the link to plan a public trip'
+landing.plan.public.trip:
+    - 'Plan a public trip'
+    - 'Home page: link under the place search that opens the form to create a trip'
+landing.plan.public.trip.hint:
+    - "hosts will see you're coming"
+    - 'Home page: grey text after the link to plan a public trip'
+landing.search.by.username:
+    - 'Search by username'
+    - 'Home page: help under the member search'
+landing.alert.to.answer:
+    - 'to answer'
+    - 'Home page on phones: end of the line about stay requests, after the number of requests'
+landing.dash.waiting.you:
+    - 'Waiting for you'
+    - 'Home page, Messages card: small label on a stay request or invitation the member still has to answer'

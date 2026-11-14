@@ -1,4 +1,5 @@
 import Autocomplete from '@tomickigrzegorz/autocomplete';
+import { trans } from '../translator';
 
 // options: extra settings for the autocomplete (for example the clear button's)
 export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}, options = {}) {
@@ -28,18 +29,24 @@ class LocationSuggest {
                     currentValue
                 )}`;
 
-                /**
-                 * Promise
-                 */
+                // A failed search (an error page, the search index being rebuilt) shows a message too, instead of
+                // leaving the list closed without a word (noResults below)
+                this.failed = false;
                 return new Promise((resolve) => {
                     fetch(api)
-                        .then((response) => response.json())
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(`place search answered ${response.status}`);
+                            }
+                            return response.json();
+                        })
                         .then((data) => {
-                            resolve(data.locations);
+                            resolve(data.locations || []);
                         })
                         .catch((error) => {
-                            console.log(error);
-                            return template;
+                            console.error(error);
+                            this.failed = true;
+                            resolve([]);
                         });
                 });
             },
@@ -90,12 +97,19 @@ class LocationSuggest {
             // the results with the up/down cursors
             insertToInput: true,
             onSubmit: ({element, object}) => {
+                // the message of noResults is no place
+                if (!object) {
+                    return;
+                }
                 element.value = object.name.replaceAll("#", ", ");
                 this.onChange(element, object);
             },
-            // the method presents no results element
-            noResults: ({ currentValue, template }) =>
-                template(`<li>No results found: "${currentValue}"</li>`),
+            // nothing found, or the search failed: the autocomplete shows the HTML returned (it passes no template
+            // function, calling one threw and closed the list without a word)
+            noResults: ({ currentValue }) =>
+                `<li class="suggest-message">${escapeText(this.failed
+                    ? trans('suggest.locations.failed')
+                    : trans('suggest.locations.none', { term: currentValue }))}</li>`,
             ...options,
         });
     }

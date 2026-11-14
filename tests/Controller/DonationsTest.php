@@ -48,8 +48,11 @@ final class DonationsTest extends WebTestCase
             $crawler->filter('.c-home-tabs__link')->each(static fn (Crawler $tab): string => (string) $tab->attr('href')),
         );
         self::assertStringContainsString('FR76 4255 9100 0008 0117 7451 302', $crawler->filter('#bank .c-donate-account')->text());
-        // the reference needs a username
-        self::assertCount(3, $crawler->filter('#bank .c-donate-account dt'));
+        // one row per detail, each with its Copy button; the reference needs a username
+        self::assertCount(3, $crawler->filter('#bank .c-donate-account__row'));
+        self::assertCount(3, $crawler->filter('#bank .c-donate-account__row .js-donate-copy'));
+        // the IBAN is copied without its spaces
+        self::assertSame('FR7642559100000801177451302', $crawler->filter('#bank .c-donate-account__row')->eq(1)->filter('.js-donate-copy')->attr('data-copy'));
         self::assertCount(1, $crawler->filter('#paypal #donate-button'));
 
         // the four latest, newest first
@@ -80,7 +83,7 @@ final class DonationsTest extends WebTestCase
         // logged in: the reference of the transfer
         self::assertSame(
             $this->trans('donate.account.reference.value', ['username' => 'member-2']),
-            $crawler->filter('#bank .c-donate-account dd')->last()->text(),
+            $crawler->filter('#bank .c-donate-account__row .c-donate-account__value')->last()->text(),
         );
     }
 

@@ -59,6 +59,9 @@ final class ForumWritingTest extends WebTestCase
         // the author subscribed (the box is ticked) and gets their own post too, so the whole thread is in their mail
         // program; the BeWelcome group's member gets a notification
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $author->getId()]));
+        // the unsubscribe key fills the column's 20 characters (as on main), URL-safe for main's old links
+        $key = (string) $this->connection->fetchOne('SELECT UnSubscribeKey FROM members_threads_subscribed WHERE IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $author->getId()]);
+        self::assertMatchesRegularExpression('/^[A-Za-z0-9_-]{20}$/', $key);
         self::assertSame(1, $this->notifications($thread->getFirstPost(), $reader));
         self::assertSame(1, $this->notifications($thread->getFirstPost(), $author));
     }

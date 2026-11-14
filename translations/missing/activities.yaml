@@ -163,3 +163,33 @@ activity.keyword.empty:
   - 'Please enter what you are looking for.'
   - 'Activity search: the search field is empty'
   - validators
+activities.when.date:
+  - 'Date'
+  - 'Create or edit an activity: label of the date button'
+activities.when.start.date:
+  - 'Start date'
+  - 'Create or edit an activity: label of the date button when the activity lasts several days'
+activities.when.end.date:
+  - 'End date'
+  - 'Create or edit an activity: label of the end date button when the activity lasts several days'
+activities.when.from:
+  - 'Starts at'
+  - 'Create or edit an activity: label of the start time button'
+activities.when.until:
+  - 'Ends at'
+  - 'Create or edit an activity: label of the end time button'
+activities.when.pick:
+  - 'Pick a date'
+  - 'Create or edit an activity: date button before a date is picked'
+activities.when.several:
+  - 'Lasts several days'
+  - 'Create or edit an activity: checkbox that adds an end date'
+activities.when.next.day:
+  - 'next day'
+  - 'Create or edit an activity: the end time is after midnight'
+activities.when.previous.month:
+  - 'Previous month'
+  - 'Create or edit an activity: calendar arrow to the month before'
+activities.when.next.month:
+  - 'Next month'
+  - 'Create or edit an activity: calendar arrow to the month after'

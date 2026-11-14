@@ -19,11 +19,11 @@
   {{ encore_entry_script_tags('activities') }}
 {% endblock %}
 
-{% macro field(field, extra_class = '') %}
+{% macro field(field, extra_class = '', errors = true) %}
   <div class="p-activities-field">
     {{ form_label(field, null, { label_attr: { class: 'p-activities-label' } }) }}
     {{ form_widget(field, { attr: field.vars.attr|merge({ class: ('p-activities-input p-activities-input--box ' ~ extra_class)|trim }) }) }}
-    {{ form_errors(field) }}
+    {% if errors %}{{ form_errors(field) }}{% endif %}
   </div>
 {% endmacro %}
 
@@ -42,9 +42,17 @@
 
     <section class="p-activities-panel">
       <h2 class="p-activities-panel__title">{{ 'activities.when'|trans }}</h2>
-      <div class="p-activities-form__row">
-        {{ _self.field(form.starts) }}
-        {{ _self.field(form.ends) }}
+      <div class="js-activity-when"
+           data-date="{{ 'activities.when.date'|trans }}" data-start-date="{{ 'activities.when.start.date'|trans }}"
+           data-end-date="{{ 'activities.when.end.date'|trans }}" data-from="{{ 'activities.when.from'|trans }}"
+           data-until="{{ 'activities.when.until'|trans }}" data-pick="{{ 'activities.when.pick'|trans }}"
+           data-several="{{ 'activities.when.several'|trans }}" data-next-day="{{ 'activities.when.next.day'|trans }}"
+           data-previous="{{ 'activities.when.previous.month'|trans }}" data-next="{{ 'activities.when.next.month'|trans }}">
+        <div class="p-activities-form__row js-when-fields">
+          {{ _self.field(form.starts, '', false) }}
+          {{ _self.field(form.ends, '', false) }}
+        </div>
+        {{ form_errors(form.starts) }}{{ form_errors(form.ends) }}
       </div>
     </section>
 

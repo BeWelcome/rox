@@ -75,8 +75,10 @@
 .p-activities-btn--danger:hover { border-color: #fecaca; background: #fff; color: #dc2626; }
 .p-activities-btn--danger:hover { background: #fef2f2; }
 .p-activities-confirm__actions .p-activities-btn--danger { border-color: #dc2626; background: #dc2626; color: #fff; }
-.p-activities-btn--icon { width: 2.4rem; height: 2.4rem; padding: 0; color: #64748b; }
-.p-activities-btn--l { padding: 0.75rem 1.75rem; font-size: 1rem; }
+.p-activities-btn--icon,
+.p-activities-btn--icon:hover { width: 2.4rem; height: 2.4rem; padding: 0; color: #64748b; }
+.p-activities-btn--l,
+.p-activities-btn--l:hover { padding: 0.75rem 1.75rem; font-size: 1rem; }
 .p-activities-link { padding: 0; border: 0; background: none; color: #64748b; font-size: 0.875rem; font-weight: 600; text-decoration: underline; cursor: pointer; }
 .p-activities-link:hover { color: #dc2626; }
 
@@ -185,3 +187,58 @@
 
 .p-activities .p-activities-errors { margin: 0.1rem 0 0; padding: 0; color: #dc2626; font-size: 0.8125rem; font-weight: 600; list-style: none; }
 .p-activities .is-invalid { border-color: #fca5a5; background-image: none; }
+
+/* When: date and times picked from buttons (activities/when.js) */
+.p-when { position: relative; }
+.p-when__row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 0.75rem; }
+.p-when__row--several { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.p-when__item { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.p-activities .p-when__btn { display: flex; align-items: center; gap: 0.55rem; width: 100%; padding: 0.7rem 0.8rem 0.7rem 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; background: #f8fafc; color: #0f172a; font: inherit; font-size: 0.9375rem; font-weight: 600; text-align: left; cursor: pointer; transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s; }
+.p-activities .p-when__btn:hover { border-color: #cbd5e1; background: #fff; }
+.p-activities .p-when__btn.is-open,
+.p-activities .p-when__btn:focus-visible { border-color: #ea7a2e; outline: none; background: #fff; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.12); }
+.p-activities .p-when__btn.is-empty { color: #94a3b8; font-weight: 500; }
+.p-when__btn svg { flex: none; width: 1.1rem; height: 1.1rem; fill: none; stroke: #ea7a2e; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.p-when__btn .p-when__chevron { width: 1rem; height: 1rem; margin-left: auto; stroke: #94a3b8; transition: transform 0.15s; }
+.p-when__btn.is-open .p-when__chevron { transform: rotate(180deg); }
+.p-when__value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.p-when__pop { position: absolute; z-index: 30; width: 19rem; padding: 0.6rem; border-radius: 1rem; background: #fff; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px #e2e8f0; animation: p-when-in 0.14s ease-out; }
+.p-when__pop--from, .p-when__pop--until, .p-when__pop--until-day { width: 13rem; padding: 0.35rem; }
+@keyframes p-when-in { from { opacity: 0; transform: translateY(-4px); } }
+
+.p-when__cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.p-when__month { color: #0f172a; font-weight: 700; text-transform: capitalize; }
+.p-activities .p-when__nav { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; border: 0; border-radius: 999px; background: transparent; color: #334155; cursor: pointer; }
+.p-activities .p-when__nav:hover:not(:disabled) { background: #f1f5f9; }
+.p-activities .p-when__nav:disabled { opacity: 0.3; cursor: default; }
+.p-when__nav svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.p-when__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; text-align: center; }
+.p-when__weekday { padding: 0.2rem 0; color: #94a3b8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+.p-activities .p-when__day { aspect-ratio: 1; padding: 0; border: 0; border-radius: 999px; background: transparent; color: #0f172a; font: inherit; font-size: 0.875rem; cursor: pointer; }
+.p-activities .p-when__day:hover:not(:disabled) { background: #fff7ed; }
+.p-activities .p-when__day.is-today { color: #ea7a2e; font-weight: 700; }
+.p-activities .p-when__day.is-selected { background: #ea7a2e; color: #fff; font-weight: 700; }
+.p-activities .p-when__day:disabled { color: #cbd5e1; cursor: default; }
+
+.p-when__times { max-height: 15rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; overscroll-behavior: contain; }
+.p-activities .p-when__time { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; width: 100%; padding: 0.5rem 0.7rem; border: 0; border-radius: 0.6rem; background: transparent; color: #0f172a; font: inherit; font-size: 0.9375rem; font-variant-numeric: tabular-nums; text-align: left; cursor: pointer; }
+.p-activities .p-when__time:hover { background: #fff7ed; }
+.p-activities .p-when__time.is-selected { background: #ea7a2e; color: #fff; font-weight: 700; }
+.p-when__lasts { color: #94a3b8; font-size: 0.8125rem; font-weight: 400; white-space: nowrap; }
+.p-when__time.is-selected .p-when__lasts { color: rgba(255, 255, 255, 0.85); }
+
+.p-when__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 0.9rem; }
+.p-when__foot .p-when__several { margin: 0; }
+.p-when__summary { margin: 0; padding: 0.35rem 0.75rem; border-radius: 999px; background: #fff7ed; color: #9a3412; font-size: 0.8125rem; font-weight: 600; }
+
+/* Phones: date on its own line, times side by side, the picker as wide as the card */
+@media (max-width: 767px) {
+  .p-when__row, .p-when__row--several { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .p-when__row:not(.p-when__row--several) .p-when__item--date { grid-column: 1 / -1; }
+  .p-when__pop, .p-when__pop--from, .p-when__pop--until, .p-when__pop--until-day { right: 0; left: 0; width: auto; }
+  .p-when__foot { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 767px) {
+  .p-when__row .p-when__item:not(.p-when__item--date):not(.p-when__item--end-date) .p-when__chevron { display: none; }
+}

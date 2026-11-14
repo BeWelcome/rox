@@ -1,4 +1,5 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
+import {initActivityWhen} from './when';
 
 // The place of the activity (App\Form\SearchLocationType): the suggestion fills the hidden fields next to it.
 function onChange(element, result) {
@@ -11,3 +12,5 @@ function onChange(element, result) {
 }
 
 initializeSingleAutoComplete('/suggest/locations/places', 'js-location-picker', onChange);
+
+document.querySelectorAll('.js-activity-when').forEach((root) => initActivityWhen(root));

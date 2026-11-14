@@ -13260,7 +13260,8 @@ body:has(.l-hello) main { background: #fffaf4; }
 }
 
 /* Dashboard: nobody coming, no trips card (the groups move up next to the messages); no
-   activities, a thin strip across the bottom with a link to create one */
+   activities, a thin strip across the bottom with a link to create one, or, with the trips card
+   shown, a small card in the space next to the groups */
 .c-home-dash__card[hidden] { display: none; }
 .c-home-dash__card--messages { order: 1; }
 .c-home-dash__card--trips { order: 2; }
@@ -13268,6 +13269,7 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-home-dash__card--groups { order: 4; }
 .c-home-dash:has(.c-home-dash__card--trips[hidden]) .c-home-dash__card--groups { order: 2; }
 .c-home-dash .c-home-dash__card--activities.is-empty { grid-column: 1 / -1; order: 5; }
+.c-home-dash:not(:has(.c-home-dash__card--trips[hidden])) .c-home-dash__card--activities.is-empty { grid-column: auto; align-self: start; }
 .c-home-dash__card--activities.is-empty .c-home-dash__head { padding-bottom: 0.25rem; }
 .c-home-dash__card--activities.is-empty .c-home-list { min-height: 0; }
 .c-home-dash__card--activities.is-empty .c-home-pane__footer { display: none; }

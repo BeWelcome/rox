@@ -3,6 +3,7 @@ ux_translator:
     dump_directory: '%kernel.project_dir%/var/translations'
     keys_patterns:
         - hosting_interest.*
+        - suggest.locations.*
 
 when@prod:
     ux_translator:

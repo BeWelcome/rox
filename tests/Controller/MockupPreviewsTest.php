@@ -92,6 +92,39 @@ class MockupPreviewsTest extends WebTestCase
         );
     }
 
+    public static function emptyDataExportSections(): iterable
+    {
+        yield ['translations'];
+        yield ['subscriptions'];
+        yield ['posts'];
+    }
+
+    /**
+     * The count of a variant comes from the link's query string, a string: "none" has to show the empty section all
+     * the same.
+     */
+    #[DataProvider('emptyDataExportSections')]
+    public function testTheNoneVariantOfADataExportSectionIsEmpty(string $section): void
+    {
+        $crawler = $this->client->request('GET', $this->previewLink('my_data', $section, 'Count: none'));
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.p-tr-mockup__stage .c-mydata-empty'));
+        self::assertCount(1, $crawler->filter('.p-tr-mockup__stage .c-mydata-card'));
+    }
+
+    public function testTheTranslationsOfTheDataExportShowTheirLanguage(): void
+    {
+        $crawler = $this->client->request('GET', $this->previewLink('my_data', 'translations', 'Count: some'));
+
+        $this->assertResponseIsSuccessful();
+        $translator = static::getContainer()->get(TranslatorInterface::class);
+        self::assertSame(
+            [$translator->trans('lang_pt'), $translator->trans('lang_es')],
+            $crawler->filter('.p-tr-mockup__stage .c-mydata-card .c-mydata-tag')->each(static fn ($tag) => trim($tag->text())),
+        );
+    }
+
     public function testTheTextsOfAMailCanBeTranslatedOnItsPreview(): void
     {
         // translation mode is off (as when logging in): the preview has its texts listed all the same

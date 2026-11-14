@@ -267,7 +267,8 @@ class MyDataMockups implements MockupProviderInterface
     {
         $mockEntity = null;
         $key = $parameters['name'];
-        $count = $parameters['count'] ?? -1;
+        // from the query string or the variant list, so a string: '0' has to be 0 for the empty variants
+        $count = (int) ($parameters['count'] ?? -1);
         switch ($key) {
             case 'activities':
                 $mockEntity = new Activity();
@@ -318,14 +319,14 @@ class MyDataMockups implements MockupProviderInterface
                     ->setReferencePaypal('paypal')
                     ->setSystemComment('system comment')
                     ->setMemberComment('member comment')
-                    ->setStatusPrivate(1 === $parameters['count'] % 2 ? 'showamountonly' : 'showall');
+                    ->setStatusPrivate(1 === $count % 2 ? 'showamountonly' : 'showall');
                 break;
             case 'gallery':
                 $key = 'hrefs';
                 $mockEntity = 'https://source.unsplash.com/random/300×300';
                 break;
             case 'groups':
-                return ['groupmemberships' => $this->getGroupMemberships($parameters['count'])];
+                return ['groupmemberships' => $this->getGroupMemberships($count)];
             case 'logs':
                 $mockEntity = new Log();
                 $mockEntity->setType('log');
@@ -358,7 +359,7 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'posts':
-                return $this->postsData($parameters['count']);
+                return $this->postsData($count);
             case 'privileges':
                 $mockEntity = $this->getPrivilege();
                 break;
@@ -387,7 +388,7 @@ class MyDataMockups implements MockupProviderInterface
         }
 
         $entities = [];
-        for ($i = 0; $i < $parameters['count']; ++$i) {
+        for ($i = 0; $i < $count; ++$i) {
             $entities[] = $mockEntity;
         }
 
@@ -451,7 +452,7 @@ class MyDataMockups implements MockupProviderInterface
             ->setCreatedAt(new DateTime());
     }
 
-    private function postsData($count): array
+    private function postsData(int $count): array
     {
         if (0 === $count) {
             return ['years' => []];
@@ -470,7 +471,7 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function postsYearData($count)
+    private function postsYearData(int $count)
     {
         if (0 === $count) {
             return ['year' => 2010];
@@ -591,7 +592,7 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getSubscriptions($count): array
+    private function getSubscriptions(int $count): array
     {
         if (0 === $count) {
             return ['subscriptions' => []];
@@ -619,7 +620,7 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getTranslations($count): array
+    private function getTranslations(int $count): array
     {
         if (0 === $count) {
             return ['translations' => []];
@@ -629,16 +630,16 @@ class MyDataMockups implements MockupProviderInterface
             'translations' => [
                 [
                     'code' => 'mydata.translations.headline',
-                    'sentence' => 'Translations',
+                    'sentence' => 'Traduções',
                     'shortCode' => 'en',
-                    'language' => ['wordCode' => 'lang_pt'],
+                    'language' => ['shortCode' => 'pt'],
                     'created' => new DateTime()->format('Y-m-d'),
                 ],
                 [
                     'code' => 'mydata.translations.abstract',
-                    'sentence' => 'Traducions',
+                    'sentence' => 'Traducciones',
                     'shortCode' => 'en',
-                    'language' => ['wordCode' => 'lang_es'],
+                    'language' => ['shortCode' => 'es'],
                     'created' => new DateTime()->format('Y-m-d'),
                 ],
             ],

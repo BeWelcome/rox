@@ -110,4 +110,43 @@ class SearchControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         self::assertSame('Berlin, Land Berlin, Germany', $crawler->filter('form.p-search input#search_location')->attr('value'));
     }
+
+    public function testTheHomePagesCityOpensTheSearchForTheMembersPlace(): void
+    {
+        // a member with an address (the front page shows the city) and another member in the same place
+        $client = static::createClient();
+        $connection = static::getContainer()->get('doctrine.dbal.default_connection');
+        $found = $connection->fetchAssociative(<<<'SQL'
+                SELECT m.Username AS username, o.Username AS other, l.name
+                FROM member m
+                JOIN address a ON a.member_id = m.id AND a.active = 1
+                JOIN location l ON l.geoname_id = a.location
+                JOIN address oa ON oa.location = a.location AND oa.active = 1 AND oa.member_id <> m.id
+                JOIN member o ON o.id = oa.member_id AND o.Status = 'Active'
+                WHERE m.Status = 'Active' AND m.Accommodation IS NOT NULL
+                ORDER BY m.id LIMIT 1
+            SQL);
+        self::assertNotFalse($found, 'the test fixtures contain two active members in one place');
+        // the other member passes the default filters (active in the last two years, room for a guest)
+        $connection->executeStatement(
+            "UPDATE member SET LastActive = NOW(), Accommodation = 'yes', MaxGuests = 2 WHERE Username = ?",
+            [$found['other']],
+        );
+        $client->loginUser(static::getContainer()->get(MemberRepository::class)->loadUserByIdentifier($found['username']));
+
+        $crawler = $client->request('GET', '/');
+        $form = $crawler->filter('#home_updateMap')->form();
+        self::assertSame('GET', $form->getMethod());
+        $crawler = $client->submit($form);
+
+        $this->assertResponseIsSuccessful();
+        // no "pick the place from the list": the place is the member's, with its full name
+        self::assertCount(0, $crawler->filter('form.p-search .invalid-feedback, form.p-search .form-error-message'));
+        self::assertStringNotContainsString(
+            static::getContainer()->get('translator')->trans('search.location.dropdown'),
+            $crawler->filter('main')->text(),
+        );
+        self::assertSame($found['name'], $crawler->filter('form.p-search input#search_location')->attr('value'));
+        self::assertGreaterThan(0, $crawler->filter('main a[href*="/members/' . $found['other'] . '"]')->count(), 'the other member of the place is found');
+    }
 }

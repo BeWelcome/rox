@@ -134,3 +134,31 @@
 .c-treasurer-who__option:has(:checked) { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
 .c-treasurer-who__option:has(:focus-visible) { outline: 2px solid #f37000; outline-offset: 1px; }
 .c-treasurer-who__input { position: absolute; opacity: 0; pointer-events: none; }
+
+/* Bank transfer: one row per detail with a Copy button, Copy all in the head */
+.c-donate-account { display: block; padding: 0; overflow: hidden; border: 1px solid #fde3c8; border-radius: 1rem; background: #fffaf4; }
+.c-donate-account__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 1rem 0.85rem 1.15rem; border-bottom: 1px solid #fde3c8; }
+.c-donate-account__title { display: inline-flex; align-items: center; gap: 0.5rem; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
+.c-donate-account__title i, .c-donate-account__title svg { width: 0.95rem; height: 0.95rem; color: #ea7a2e; }
+.c-donate-account__rows { margin: 0; padding: 0; list-style: none; }
+.c-donate-account__row { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1rem 0.8rem 1.15rem; }
+.c-donate-account__row + .c-donate-account__row { border-top: 1px solid #f6e7d6; }
+.c-donate-account__text { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 0.15rem; }
+.c-donate-account__label { color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+.c-donate-account__value { color: #0f172a; font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; user-select: all; }
+.c-donate-account__value.is-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; letter-spacing: 0.02em; }
+.c-donate-copy { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 0.4rem; min-width: 5.5rem; height: 2.25rem; padding: 0 0.85rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.c-donate-copy:hover { border-color: #f3b98d; color: #c2410c; }
+.c-donate-copy i, .c-donate-copy svg { width: 0.8rem; height: 0.8rem; }
+.c-donate-copy.is-copied, .c-donate-copy.is-copied:hover { border-color: #bfe3c8; background: #e8f6ec; color: #166534; }
+.c-donate-copy--all { background: #ea7a2e; border-color: #ea7a2e; color: #fff; }
+.c-donate-copy--all:hover { background: #c2410c; border-color: #c2410c; color: #fff; }
+.c-donate-account__hint { display: flex; align-items: flex-start; gap: 0.45rem; margin: 0; padding: 0.75rem 1.15rem 0.9rem; border-top: 1px solid #f6e7d6; color: #64748b; font-size: 0.8125rem; line-height: 1.45; }
+.c-donate-account__hint i, .c-donate-account__hint svg { flex-shrink: 0; width: 0.8rem; height: 0.8rem; margin-top: 0.2rem; color: #94a3b8; }
+.c-donate-account__copied { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (max-width: 575.98px) {
+  .c-donate-copy { min-width: 0; width: 2.4rem; padding: 0; }
+  .c-donate-copy .js-donate-copy-label { display: none; }
+  .c-donate-copy--all { width: auto; padding: 0 0.85rem; }
+  .c-donate-copy--all .js-donate-copy-label { display: inline; }
+}

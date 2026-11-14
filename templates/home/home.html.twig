@@ -267,6 +267,42 @@
             </div>
         </div>
     </section>
+
+    {#
+      Supported by members: BeWelcome is free because its members pay for it. Told plainly at the
+      end, with this year's donations, and a quiet link to the donations page (open without an
+      account; bank transfer, HelloAsso and PayPal are there).
+    #}
+    {% set _donated = campaign.YearDonation ?? 0 %}
+    {% set _needed = campaign.YearNeededAmount ?? 0 %}
+    {% set _percent = _needed > 0 ? (_donated / _needed * 100)|round : 0 %}
+    <section class="fp-support">
+        <div class="fp-wrap">
+            <div class="fp-support__card">
+                <span class="fp-support__icon" aria-hidden="true"><i class="fas fa-hand-holding-heart"></i></span>
+                <div class="fp-support__text">
+                    <p class="fp-eyebrow">{{ 'frontpage.support.eyebrow'|trans }}</p>
+                    <h2 class="fp-support__title">{{ 'frontpage.support.title'|trans }}</h2>
+                    <p class="fp-support__lead">{{ 'frontpage.support.text'|trans }}</p>
+                    {% if _needed > 0 %}
+                        <div class="fp-support__progress">
+                            <div class="fp-support__bar" role="progressbar" aria-valuenow="{{ _donated }}" aria-valuemin="0" aria-valuemax="{{ _needed }}">
+                                <span style="width: {{ min(_percent, 100) }}%;"></span>
+                            </div>
+                            <p class="fp-support__numbers">
+                                {{ 'frontpage.support.raised'|trans({ amount: _donated|format_currency('EUR', { fraction_digit: 0 }) }) }}
+                                · <strong>{{ 'landing.donate.share'|trans({ percent: _percent }) }}</strong>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="fp-support__action">
+                    <a class="fp-btn fp-support__btn" href="{{ url('donations') }}"><i class="fas fa-heart" aria-hidden="true"></i> {{ 'frontpage.support.button'|trans }}</a>
+                    <p class="fp-support__note">{{ 'frontpage.support.note'|trans }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 {% include 'footer.html.twig' with {footer_on_mobile: true} %}

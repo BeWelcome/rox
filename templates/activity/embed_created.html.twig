@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the side panel of the home page once an activity is created (?embed=1): the same
+  animated confirmation as a created trip or a sent request (trip/embed_created.html.twig),
+  the activity (title, when, where) and two ways on: back to the home page, or the activity.
+#}
+{% block title %}{{ 'activity.created'|trans }}{% endblock title %}
+
+{% block content %}
+    <div class="c-embed-sent c-embed-sent--trip" role="status">
+        <button type="button" class="c-embed-sent__close js-embed-sent-close" aria-label="{{ 'close'|trans }}">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="c-embed-sent__scene" aria-hidden="true">
+            <span class="c-embed-sent__ring"></span>
+            <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
+            <span class="c-embed-sent__plane"><i class="fas fa-calendar-day"></i></span>
+            <svg class="c-embed-sent__check" viewBox="0 0 64 64">
+                <circle class="c-embed-sent__disc" cx="32" cy="32" r="30"></circle>
+                <path class="c-embed-sent__tick" d="M19 33.5l9 9 17-19"></path>
+            </svg>
+            {% for i in 1..10 %}<span class="c-embed-sent__spark c-embed-sent__spark--{{ i }}"></span>{% endfor %}
+        </div>
+
+        <h1 class="c-embed-sent__title">{{ 'activity.created'|trans }}</h1>
+        <p class="c-embed-sent__text">{{ 'activities.embed.created.text'|trans }}</p>
+
+        {# The activity: its title, when and where #}
+        <div class="c-embed-sent__card">
+            <span class="c-embed-sent__avatar c-embed-sent__avatar--icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+            <div class="c-embed-sent__card-text">
+                <strong class="c-embed-sent__subject">{{ activity.title }}</strong>
+                <span class="c-embed-sent__stay">
+                    <i class="far fa-clock" aria-hidden="true"></i>
+                    {{ activity.starts|format_datetime(pattern='EEE d MMM, ') }}{{ activity.starts|format_time('short') }} ·
+                    {{ activity.online ? 'activityonline'|trans : activity.location.name }}
+                </span>
+            </div>
+        </div>
+
+        <div class="c-embed-sent__actions">
+            <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'contact.sent.back.home'|trans }}
+            </button>
+            <a class="c-embed-sent__btn" href="{{ path('activities_show', { id: activity.id, embed: 1 }) }}">
+                <i class="fas fa-calendar-day" aria-hidden="true"></i> {{ 'activities.created.show'|trans }}
+            </a>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var parentWindow = window.parent !== window ? window.parent : null;
+            if (parentWindow) {
+                parentWindow.postMessage({ type: 'bw-contact-sent', kind: 'activity' }, window.location.origin);
+            }
+            document.querySelectorAll('.js-embed-sent-close').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (parentWindow) {
+                        parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+                    } else {
+                        window.location.href = '{{ path('activities_show', { id: activity.id }) }}';
+                    }
+                });
+            });
+        })();
+    </script>
+{% endblock content %}

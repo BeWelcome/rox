@@ -11,6 +11,7 @@ function onChange(element, result) {
     document.getElementById(baseId + 'longitude').value = result.longitude;
 }
 
-initializeSingleAutoComplete('/suggest/locations/places', 'js-location-picker', onChange);
-
+// The date and times first: an error in the place search must not leave the old date fields
 document.querySelectorAll('.js-activity-when').forEach((root) => initActivityWhen(root));
+
+initializeSingleAutoComplete('/suggest/locations/places', 'js-location-picker', onChange);

@@ -178,6 +178,14 @@ class ActivityController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $this->activityModel->create($data, $member);
+
+            // From the side panel of the home page: a confirmation fills the panel, like a trip
+            if ($request->query->getBoolean('embed')) {
+                return $this->render('activity/embed_created.html.twig', [
+                    'activity' => $activity,
+                ]);
+            }
+
             $this->addTranslatedFlash('success', 'activity.created.flash');
 
             return $this->redirectToRoute('activity_created', ['id' => $activity->getId()]);
@@ -212,7 +220,7 @@ class ActivityController extends AbstractController
     }
 
     #[Route(path: '/activities/{id}', name: 'activities_show', requirements: ['id' => '\d+'])]
-    public function show(Activity $activity): Response
+    public function show(Request $request, Activity $activity): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -224,7 +232,9 @@ class ActivityController extends AbstractController
                 'status' => $attendee?->getStatus(),
                 'comment' => $attendee?->getComment() ?? '',
             ], [
-                'action' => $this->generateUrl('activity_answer', ['id' => $activity->getId()]),
+                // In the side panel of the home page (?embed=1), the answer stays in it
+                'action' => $this->generateUrl('activity_answer', ['id' => $activity->getId()]
+                    + ($request->query->getBoolean('embed') ? ['embed' => 1] : [])),
             ])->createView();
         }
 
@@ -261,7 +271,12 @@ class ActivityController extends AbstractController
                 (int) $form->get('status')->getData(),
                 (string) $form->get('comment')->getData()
             );
-            $this->addTranslatedFlash('success', 'activity.answer.saved');
+            // In the side panel, the picked answer button shows it with a short animation instead
+            if (!$request->query->getBoolean('embed')) {
+                $this->addTranslatedFlash('success', 'activity.answer.saved');
+            } else {
+                return $this->redirectToRoute('activities_show', ['id' => $activity->getId(), 'embed' => 1, 'answered' => 1]);
+            }
         } else {
             $this->addTranslatedFlash('error', 'activity.answer.empty');
         }

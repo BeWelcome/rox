@@ -26,7 +26,8 @@ class DonationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private const string PAYPAL_NONCE = 'paypal_nonce';
+    // Also set by the home page, whose Donate box opens the PayPal window too
+    public const string PAYPAL_NONCE = 'paypal_nonce';
     // Amount of the donation just recorded, for the Plausible revenue event (#540).
     private const string DONATION_ANALYTICS = 'donation_analytics';
 

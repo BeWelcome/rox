@@ -16,7 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * When such a page sends elsewhere (a form saved, then a redirect to a page that isn't
  * made for the panel), that page couldn't be shown in the frame: the frame gets a short
  * page instead that tells the panel where to go ("bw-embed-leave"). A redirect back to a
- * conversation (a reply sent from the panel) keeps ?embed=1 and stays in the panel. Runs after
+ * conversation (a reply sent from the panel) or to an activity (created, answered, cancelled from
+ * the panel of the home page) keeps ?embed=1 and stays in the panel. Runs after
  * NelmioSecurityBundle.
  */
 #[AsEventListener(event: KernelEvents::RESPONSE, priority: -1024)]
@@ -29,11 +30,11 @@ final class EmbedFrameListener
         }
 
         $response = $event->getResponse();
-        // Back to a conversation (a reply or an answer sent from the panel): it stays in the panel
+        // Back to a conversation or an activity (sent or saved from the panel): it stays in the panel
         if (
             $response instanceof RedirectResponse
             && !str_contains($response->getTargetUrl(), 'embed=')
-            && 1 === preg_match('~^(?:https?://[^/]+)?/conversation/\d+(?:[?#]|$)~', $response->getTargetUrl())
+            && 1 === preg_match('~^(?:https?://[^/]+)?/(?:conversation/\d+|activities/\d+|activity/\d+/created)(?:[?#]|$)~', $response->getTargetUrl())
         ) {
             $target = $response->getTargetUrl();
             $fragment = '';

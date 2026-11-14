@@ -156,3 +156,54 @@ landing.alert.to.answer:
 landing.dash.waiting.you:
     - 'Waiting for you'
     - 'Home page, Messages card: small label on a stay request or invitation the member still has to answer'
+landing.dash.needs.host:
+    - 'Needs a host'
+    - 'Home page, Visitors card: label under a traveller who is looking for a host'
+landing.dash.online:
+    - 'Online'
+    - 'Home page, Upcoming activities card: label on an online activity'
+landing.dash.when.today:
+    - 'Today'
+    - 'Home page, Upcoming activities: label next to an activity that starts today'
+landing.dash.when.tomorrow:
+    - 'Tomorrow'
+    - 'Home page, Upcoming activities: label next to an activity that starts tomorrow'
+landing.dash.when.days:
+    - '{count, plural, one {In # day} other {In # days}}'
+    - 'Home page, Upcoming activities: label next to an activity that starts in a few days'
+landing.dash.when.weeks:
+    - '{count, plural, one {In a week} other {In # weeks}}'
+    - 'Home page, Upcoming activities: label next to an activity that starts in a few weeks'
+landing.dash.when.months:
+    - '{count, plural, one {In a month} other {In # months}}'
+    - 'Home page, Upcoming activities: label next to an activity that starts in a few months'
+landing.donate.reached:
+    - 'Goal reached'
+    - 'Home page, Donate box: badge once the goal of the year is reached'
+landing.donate.raised:
+    - 'raised for {years}'
+    - 'Home page, Donate box: under the amount given this year, years is like 2025–2026'
+landing.donate.share:
+    - '{percent}% of the goal'
+    - 'Home page, Donate box: how much of the goal of the year was given'
+landing.donate.goal:
+    - 'Goal {amount}'
+    - 'Home page, Donate box: under the bar, the goal of the year'
+landing.donate.togo:
+    - '{amount} to go'
+    - 'Home page, Donate box: under the bar, what is still missing to reach the goal'
+landing.donate.text:
+    - 'BeWelcome is run by volunteers and paid for by its members. Every euro helps.'
+    - 'Home page, Donate box: text above the Donate button while the goal is not reached'
+landing.donate.button:
+    - 'Donate'
+    - 'Home page, Donate box: button that opens the PayPal window'
+landing.donate.other:
+    - 'Other ways to give'
+    - 'Home page, Donate box: link to the donations page (bank transfer, HelloAsso)'
+landing.donate.thanks:
+    - 'Thank you!'
+    - 'Home page, Donate box: shown in the box once a donation was made'
+landing.donate.thanks.text:
+    - 'Your donation keeps BeWelcome free and running.'
+    - 'Home page, Donate box: text under the thank you'

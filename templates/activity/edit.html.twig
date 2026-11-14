@@ -9,6 +9,9 @@
   {{ activity ? 'activitiesedit'|trans : 'activitiescreate'|trans }}
 {% endblock %}
 
+{% block embed_icon %}{{ activity ? 'fas fa-pen' : 'fas fa-calendar-plus' }}{% endblock %}
+{% block embed_sub %}{{ 'activities.embed.hint'|trans }}{% endblock %}
+
 {% block stylesheets %}
   {{ parent() }}
   {{ encore_entry_link_tags('activities') }}
@@ -28,6 +31,8 @@
 {% endmacro %}
 
 {% block content %}
+  {# In the side panel (?embed=1), the pages it links to and the forms stay in it #}
+  {% set _embed = app.request.query.getBoolean('embed') ? { embed: 1 } : {} %}
   {% form_theme form 'activity/_form_theme.html.twig' %}
   {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-activities-form', novalidate: 'novalidate' } }) }}
     <section class="p-activities-panel">
@@ -86,13 +91,25 @@
     </section>
 
     {{ form_errors(form) }}
+    {% if _embed %}
+    {# In the panel: Cancel and the button stay at the bottom, like the trip panel #}
+    <div class="p-ped-foot">
+      {% if activity %}
+        <a class="p-ped-foot__cancel" href="{{ path('activities_show', { id: activity.id }|merge(_embed)) }}">{{ 'cancel'|trans }}</a>
+      {% else %}
+        <button type="button" class="p-ped-foot__cancel js-ped-close">{{ 'cancel'|trans }}</button>
+      {% endif %}
+      <button class="p-ped-foot__save" type="submit"><i class="fas fa-check" aria-hidden="true"></i> {{ activity ? 'activity.update'|trans : 'activitiescreate'|trans }}</button>
+    </div>
+    {% else %}
     <div class="p-activities-form__actions">
       {% if activity %}
-        <a class="p-activities-btn" href="{{ path('activities_show', { id: activity.id }) }}">{{ 'cancel'|trans }}</a>
+        <a class="p-activities-btn" href="{{ path('activities_show', { id: activity.id }|merge(_embed)) }}">{{ 'cancel'|trans }}</a>
       {% endif %}
       <button class="p-activities-btn p-activities-btn--primary p-activities-btn--l" type="submit">
         {{ activity ? 'activity.update'|trans : 'activitiescreate'|trans }}
       </button>
     </div>
+    {% endif %}
   {{ form_end(form) }}
 {% endblock content %}

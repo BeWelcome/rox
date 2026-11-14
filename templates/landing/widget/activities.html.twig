@@ -1,26 +1,46 @@
 {#
   The upcoming activities near the member, in the Upcoming activities card of the home page: the date,
-  the title, where and when, and how many come.
+  the title, where and when, and how many come. An activity and Create one open in the side panel
+  of the home page (contact/drawer.js, the activity pages with ?embed=1).
 #}
 <div id="activitiesdisplay" class="c-home-list"{% if activities is empty %} data-empty{% endif %}>
     {% for activity in activities %}
-        {% set _coming = activity.attendeesYes.count %}
-        <a class="c-home-item c-home-activity" href="{{ path('activities_show', { id: activity.id }) }}">
-            <span class="c-home-item__date" aria-hidden="true">
-                <span class="c-home-item__date-day">{{ activity.starts|format_date(pattern='d') }}</span>
-                <span class="c-home-item__date-month">{{ activity.starts|format_date(pattern='MMM') }}</span>
-            </span>
+        {% set _going = activity.attendeesYes %}
+        {% set _coming = _going|length %}
+        <a class="c-home-item c-home-activity js-contact-open" href="{{ path('activities_show', { id: activity.id }) }}" data-title="{{ activity.title }}">
+            {#- The same date card as the head of the activity in the side panel (activity/_date_tile) -#}
+            {{ include('activity/_date_tile.html.twig', { date: activity.starts, weekday: false }) }}
             <span class="c-home-item__body">
+                {#- How soon, in words: Today, Tomorrow, In 3 days, In 2 weeks, In 2 months -#}
+                {% set _days = ((activity.starts|date('Y-m-d')|date('U')) - ('today'|date('U'))) // 86400 %}
+                {% if _days <= 0 %}{% set _soon = 'landing.dash.when.today'|trans %}
+                {% elseif _days == 1 %}{% set _soon = 'landing.dash.when.tomorrow'|trans %}
+                {% elseif _days < 7 %}{% set _soon = 'landing.dash.when.days'|trans({ count: _days }) %}
+                {% elseif _days < 30 %}{% set _soon = 'landing.dash.when.weeks'|trans({ count: _days // 7 }) %}
+                {% else %}{% set _soon = 'landing.dash.when.months'|trans({ count: _days // 30 }) %}
+                {% endif %}
                 <span class="c-home-activity__title">{{ activity.title }}</span>
                 <span class="c-home-activity__meta">
-                    {{- activity.online ? 'activityonline'|trans : activity.location.name }} · {{ activity.starts|format_datetime(pattern='EEE d MMM, ') }}{{ activity.starts|format_time('short') -}}
+                    <span class="c-home-activity__soon{{ _days <= 1 ? ' c-home-activity__soon--now' }}">{{ _soon }}</span>
+                    {%- if activity.online -%}
+                        <i class="fas fa-video" aria-hidden="true"></i> {{ 'landing.dash.online'|trans }}
+                    {%- else -%}
+                        <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.name }}
+                    {%- endif %} · {{ activity.starts|format_time('short') -}}
                 </span>
             </span>
             {% if _coming %}
-                <span class="c-home-activity__coming" aria-label="{{ _coming }} {{ 'activitiesnumbattendeesyes'|trans }}"><i class="fas fa-user-check" aria-hidden="true"></i> {{ _coming }}</span>
+                <span class="c-home-activity__going">
+                    <span class="c-home-activity__faces" aria-hidden="true">
+                        {%- for person in _going|slice(0, 3) -%}
+                            <img src="{{ path('avatar', { username: person.attendee.username, size: 48 }) }}" alt="" width="28" height="28" loading="lazy">
+                        {%- endfor -%}
+                    </span>
+                    <span class="c-home-activity__going-count">{{ 'activities.panel.going.count'|trans({ count: _coming }) }}</span>
+                </span>
             {% endif %}
         </a>
     {% else %}
-        <p class="c-home-dash__empty">{{ 'landing.dash.activities.none'|trans }} · <a href="{{ path('activities_create') }}">{{ 'landing.dash.activities.create'|trans }}</a></p>
+        <p class="c-home-dash__empty">{{ 'landing.dash.activities.none'|trans }} · <a class="js-contact-open" href="{{ path('activities_create') }}" data-title="{{ 'activitiescreate'|trans }}">{{ 'landing.dash.activities.create'|trans }}</a></p>
     {% endfor %}
 </div>

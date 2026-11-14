@@ -18,7 +18,7 @@
     <div class="p-note-view">
         <div class="p-pro-note__text">{{ note.comment|purify }}</div>
         <div class="p-pro-note__foot">
-            {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
+            {% for name in note.categoryNames %}<span class="p-pro-note__category">{{ name }}</span>{% endfor %}
             {% set noteDate = note.updated ?: note.created %}
             {% if noteDate %}<span class="p-pro-note__date">{{ noteDate|format_date('medium') }}</span>{% endif %}
         </div>

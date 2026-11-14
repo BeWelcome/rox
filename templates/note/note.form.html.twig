@@ -1,10 +1,11 @@
 {#
-  Add or edit a private note about a member. In the side panel of the profile (?embed=1):
+  Add or edit a private note about a member, in the side panel of the profile (?embed=1) or as a page of
+  its own (edit_subpage, outside the panel):
   the member's picture and name on top, "only you" just under, the note on yellow paper,
-  its category (with the ones already used, one click away), then delete, cancel and save
+  its categories (one or more; the ones already used one click away), then delete, cancel and save
   at the bottom. Once saved or deleted, the profile is shown again (NoteController).
 #}
-{% extends app.request.query.getBoolean('embed') ? 'profile/edit_subpage.html.twig' : 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 {% import 'macros.twig' as macros %}
 
 {% block subpage_title %}{{ member.visibleName ?: member.username }}{% endblock %}
@@ -28,11 +29,11 @@
 
     <div class="p-note-form__categories js-note-categories"
          data-add="{{ 'profile.note.category.add'|trans }}">
-        <label class="p-note-form__label" for="{{ form.category.vars.id }}">
-            {{ 'profile.note.category'|trans }} <span>· {{ 'profile.note.categories.hint'|trans }}</span>
+        <label class="p-note-form__label" for="{{ form.categories.vars.id }}">
+            {{ 'profile.note.categories'|trans }} <span>· {{ 'profile.note.categories.hint'|trans }}</span>
         </label>
-        {{ form_widget(form.category) }}
-        {{ form_errors(form.category) }}
+        {{ form_widget(form.categories) }}
+        {{ form_errors(form.categories) }}
         <div class="p-note-form__used js-note-used" hidden>
             <span class="p-note-form__used-label">{{ 'profile.note.your.categories'|trans }}</span>
         </div>
@@ -60,7 +61,7 @@
     {% endif %}
 
     <script>
-      // The categories already used: a click puts one in the field (one category per note)
+      // The categories already used: a click adds one to the note's categories (a note can have several)
       window.addEventListener('load', function () {
         var box = document.querySelector('.js-note-categories');
         var field = box ? box.querySelector('.js-tom-select') : null;
@@ -85,7 +86,7 @@
           chip.textContent = choice.title;
           chip.addEventListener('click', function () {
             select.addOption({ title: choice.title });
-            select.setValue(choice.title);
+            select.addItem(choice.title);
             select.close();
           });
           used.appendChild(chip);
@@ -96,19 +97,3 @@
       });
     </script>
 {% endblock subpage_body %}
-
-{% block page_content %}
-    <h2>{{ 'profile.note.about'|trans({'username': member.username}) }}</h2>
-
-    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
-    {{ form_row(form.category) }}
-    {{ form_errors(form.category) }}
-    {{ form_row(form.comment) }}
-    {{ form_errors(form.comment) }}
-
-    <div class="u:flex u:justify-end u:my-8">
-        <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>
-    </div>
-
-    {{ form_end(form) }}
-{% endblock page_content %}

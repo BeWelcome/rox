@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use App\Entity\ProfileNote;
+use App\Entity\ProfileNoteCategory;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -44,16 +45,19 @@ class ProfileNoteRepository extends EntityRepository
             ;
         }
 
+        // notes in one of the categories
         if (!empty($categories)) {
             $qb
-                ->andWhere('n.category IN (:categories)')
+                ->andWhere('EXISTS (SELECT 1 FROM ' . ProfileNoteCategory::class . ' c WHERE c.note = n AND c.name IN (:categories))')
                 ->setParameter('categories', $categories)
             ;
         }
 
         switch ($order) {
             case 2:
-                $qb->orderBy('n.category', 'ASC');
+                // by the first of a note's categories
+                $qb->addSelect('(SELECT MIN(oc.name) FROM ' . ProfileNoteCategory::class . ' oc WHERE oc.note = n) AS HIDDEN firstCategory');
+                $qb->orderBy('firstCategory', 'ASC');
                 $qb->addOrderBy('n.updated', 'DESC');
                 break;
             case 1:
@@ -70,13 +74,20 @@ class ProfileNoteRepository extends EntityRepository
         return $notes;
     }
 
+    /**
+     * The categories the member gave their notes, by name.
+     *
+     * @return array<string, string> name => name
+     */
     public function getCategories(Member $member): array
     {
-        $categories = $this->createQueryBuilder('n')
-            ->select('DISTINCT n.category')
+        $categories = $this->getEntityManager()->createQueryBuilder()
+            ->select('DISTINCT c.name')
+            ->from(ProfileNoteCategory::class, 'c')
+            ->join('c.note', 'n')
             ->where('n.owner = :member')
             ->setParameter('member', $member)
-            ->orderBy('n.category', 'ASC')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getSingleColumnResult()
         ;
@@ -91,13 +102,14 @@ class ProfileNoteRepository extends EntityRepository
      */
     public function getCategoryCounts(Member $member): array
     {
-        $rows = $this->createQueryBuilder('n')
-            ->select('n.category AS category, COUNT(n.id) AS total')
+        $rows = $this->getEntityManager()->createQueryBuilder()
+            ->select('c.name AS category, COUNT(DISTINCT n.id) AS total')
+            ->from(ProfileNoteCategory::class, 'c')
+            ->join('c.note', 'n')
             ->where('n.owner = :member')
-            ->andWhere("n.category IS NOT NULL AND n.category <> ''")
             ->setParameter('member', $member)
-            ->groupBy('n.category')
-            ->orderBy('n.category', 'ASC')
+            ->groupBy('c.name')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getArrayResult()
         ;

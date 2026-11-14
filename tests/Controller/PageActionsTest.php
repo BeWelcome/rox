@@ -86,7 +86,7 @@ final class PageActionsTest extends WebTestCase
         $note = new ProfileNote()
             ->setOwner($member)
             ->setMember($this->member('member-3'))
-            ->setCategory('')
+            ->setCategoryNames([])
             ->setComment('A note')
             ->setCreated(new DateTime())->setUpdated(new DateTime());
         $this->entityManager->persist($note);

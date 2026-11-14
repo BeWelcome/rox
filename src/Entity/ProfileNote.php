@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -45,8 +47,16 @@ class ProfileNote
     /**
      * @var string
      */
+    /** main's single category (mycontacts.Category): the first of the note's categories */
     #[ORM\Column(name: 'Category', type: 'string', length: 255, nullable: false)]
-    private $category;
+    private $category = '';
+
+    /**
+     * @var Collection<int, ProfileNoteCategory>
+     */
+    #[ORM\OneToMany(targetEntity: ProfileNoteCategory::class, mappedBy: 'note', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
+    private Collection $categories;
 
     /**
      * @var string
@@ -61,6 +71,11 @@ class ProfileNote
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
 
     /**
      * Set owner.
@@ -111,27 +126,45 @@ class ProfileNote
     }
 
     /**
-     * Set category.
-     *
-     * @param string $category
-     *
-     * @return ProfileNote
+     * @return list<string> the names of the note's categories, by name
      */
-    public function setCategory($category)
+    public function getCategoryNames(): array
     {
-        $this->category = $category;
+        $names = array_map(static fn (ProfileNoteCategory $category): string => $category->getName(), $this->categories->toArray());
+        sort($names, \SORT_NATURAL | \SORT_FLAG_CASE);
 
-        return $this;
+        return $names;
     }
 
     /**
-     * Get category.
+     * Gives the note these categories (names, trimmed; empty ones and repeats are left out), keeping those it has.
      *
-     * @return string
+     * @param iterable<string> $names
      */
-    public function getCategory()
+    public function setCategoryNames(iterable $names): self
     {
-        return $this->category;
+        $wanted = [];
+        foreach ($names as $name) {
+            $name = trim((string) $name);
+            if ('' !== $name) {
+                $wanted[mb_strtolower($name)] ??= $name;
+            }
+        }
+
+        foreach ($this->categories as $category) {
+            if (isset($wanted[mb_strtolower($category->getName())])) {
+                unset($wanted[mb_strtolower($category->getName())]);
+            } else {
+                $this->categories->removeElement($category);
+            }
+        }
+        foreach ($wanted as $name) {
+            $this->categories->add(new ProfileNoteCategory($this, $name));
+        }
+
+        $this->category = $this->getCategoryNames()[0] ?? '';
+
+        return $this;
     }
 
     /**

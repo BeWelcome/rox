@@ -184,7 +184,7 @@ class LandingController extends AbstractController
 
         // The Donate box opens the PayPal window here; the donation is recorded like on the
         // donations page (DonationController::finishDonation checks this nonce)
-        $donationNonce = (new Client())->generateId();
+        $donationNonce = new Client()->generateId();
         $request->getSession()->set(DonationController::PAYPAL_NONCE, $donationNonce);
 
         $latestNews = $communityNewsModel->getLatest();

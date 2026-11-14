@@ -283,6 +283,9 @@ class LandingController extends AbstractController
         if (false !== $address) {
             $location = $address->getLocation();
             $searchHomeRequest->location = $location->getName();
+            // as if picked from the place list: the search asks for the full name ("pick from the list") otherwise
+            $searchHomeRequest->location_fullname = $location->getFullname();
+            $searchHomeRequest->location_name = $location->getName();
             $searchHomeRequest->location_geoname_id = $location->getGeonameId();
             $searchHomeRequest->location_latitude = $address->getLatitude();
             $searchHomeRequest->location_longitude = $address->getLongitude();

@@ -204,14 +204,6 @@ class LandingController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
         $onlineActivities = ('Yes' === $member->getMemberPreferenceValue($preference)) ? 1 : 0;
 
-        // One request to answer: the alert opens it in the side panel; several: the requests list
-        $requestsToAnswerCount = $this->getRequestsToAnswerCount($member);
-        /** @var RequestRepository $requestRepository */
-        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
-        $requestToAnswerMessageId = 1 === $requestsToAnswerCount
-            ? $requestRepository->getLastMessageIdOfRequestToAnswer($member)
-            : null;
-
         $content = $this->render('landing/landing.html.twig', [
             'title' => 'BeWelcome',
             'searchLocation' => $searchHomeLocation->createView(),
@@ -229,19 +221,39 @@ class LandingController extends AbstractController
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
             'groupsTodayCount' => $this->landingModel->getGroupThreadsWithPostsTodayCount($member),
-            'requestsToAnswerCount' => $requestsToAnswerCount,
-            'requestToAnswerMessageId' => $requestToAnswerMessageId,
-        ]);
+        ] + $this->getRequestAlert($member));
 
         return $content;
     }
 
-    protected function getRequestsToAnswerCount(Member $member): int
+    /**
+     * The alert under the welcome banner again, after something was answered in the side panel.
+     */
+    #[Route(path: '/widget/requests-alert', name: '/widget/requests-alert')]
+    public function getRequestsAlert(): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->render('landing/widget/request_alert.html.twig', $this->getRequestAlert($member));
+    }
+
+    /**
+     * Stay requests waiting for the member's answer. With one, the alert opens it in the side
+     * panel (its last message received); with several, it goes to the requests list.
+     *
+     * @return array{requestsToAnswerCount: int, requestToAnswerMessageId: ?int}
+     */
+    private function getRequestAlert(Member $member): array
     {
         /** @var RequestRepository $requestRepository */
         $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+        $count = $requestRepository->getRequestsToAnswerCount($member);
 
-        return $requestRepository->getRequestsToAnswerCount($member);
+        return [
+            'requestsToAnswerCount' => $count,
+            'requestToAnswerMessageId' => 1 === $count ? $requestRepository->getLastMessageIdOfRequestToAnswer($member) : null,
+        ];
     }
 
     protected function getVisitorsCount(TripModel $tripModel, Member $member): int

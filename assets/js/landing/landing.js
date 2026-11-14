@@ -39,6 +39,23 @@ window.addEventListener('message', (event) => {
     }
 });
 
+// The side panel closed: an answer may have been sent there, so the messages and the
+// "requests to answer" line under the banner are loaded again
+window.addEventListener('bw-contact-closed', () => {
+    Home.updateMessages();
+    const alert = document.querySelector('.js-home-alert');
+    if (alert) {
+        fetch('/widget/requests-alert', { credentials: 'same-origin' })
+            .then((response) => (response.ok ? response.text() : null))
+            .then((html) => {
+                if (html !== null) {
+                    alert.innerHTML = html;
+                }
+            })
+            .catch(() => {});
+    }
+});
+
 function onChange(element, result) {
     const locationFullName = document.getElementById('tiny_location_fullname');
     const locationName = document.getElementById('tiny_location_name');

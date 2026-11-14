@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
+use App\Entity\Message;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * RequestRepository.
@@ -17,45 +19,47 @@ class RequestRepository extends EntityRepository
 {
     /**
      * Number of stay requests the member received as host that are still open
-     * and not over yet. Invitations (sent by the host) are left out.
+     * and not over yet, and not answered yet (last message not from the member).
+     * Invitations (sent by the host) are left out.
      */
     public function getRequestsToAnswerCount(Member $member): int
     {
-        return (int) $this->createQueryBuilder('r')
+        return (int) $this->requestsToAnswer($member)
             ->select('COUNT(DISTINCT r.id)')
-            ->join('r.messages', 'm')
-            ->where('m.receiver = :member')
-            ->andWhere('m.initiator <> :member')
-            ->andWhere('r.status = :open')
-            ->andWhere('r.inviteForLeg IS NULL')
-            ->andWhere('r.departure >= :today')
-            ->setParameter('member', $member)
-            ->setParameter('open', HostingRequest::REQUEST_OPEN)
-            ->setParameter('today', new DateTime('today'))
             ->getQuery()
             ->getSingleScalarResult();
     }
 
     /**
-     * The last message the member received in a request still waiting for their answer
+     * The last message the member received in a request waiting for their answer
      * (same requests as getRequestsToAnswerCount()), or null when there is none.
      */
     public function getLastMessageIdOfRequestToAnswer(Member $member): ?int
     {
-        $id = $this->createQueryBuilder('r')
+        $id = $this->requestsToAnswer($member)
             ->select('MAX(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return null === $id ? null : (int) $id;
+    }
+
+    /**
+     * Stay requests sent to the member, still open and not over, whose last message is
+     * not from the member: an answer in words counts, like accepting or declining.
+     */
+    private function requestsToAnswer(Member $member): QueryBuilder
+    {
+        return $this->createQueryBuilder('r')
             ->join('r.messages', 'm')
             ->where('m.receiver = :member')
             ->andWhere('m.initiator <> :member')
             ->andWhere('r.status = :open')
             ->andWhere('r.inviteForLeg IS NULL')
             ->andWhere('r.departure >= :today')
+            ->andWhere('NOT EXISTS (SELECT reply.id FROM ' . Message::class . ' reply WHERE reply.request = r AND reply.sender = :member AND reply.id > m.id)')
             ->setParameter('member', $member)
             ->setParameter('open', HostingRequest::REQUEST_OPEN)
-            ->setParameter('today', new DateTime('today'))
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        return null === $id ? null : (int) $id;
+            ->setParameter('today', new DateTime('today'));
     }
 }

@@ -126,21 +126,8 @@
 	</div>
 </div>
 
-{#
-  A request to answer: a thin line under the banner, all of it a link. One request opens it in
-  the side panel (contact/drawer.js), several go to the requests list.
-#}
-{% if requestsToAnswerCount %}
-	{% if requestToAnswerMessageId %}
-	<a class="l-hello-alert js-contact-open" href="{{ path('conversation_view', { id: requestToAnswerMessageId }) }}" data-title="{{ 'landing.alert.answer'|trans }}">
-	{% else %}
-	<a class="l-hello-alert" href="{{ url('conversations', { conversationsType: 'requests' }) }}">
-	{% endif %}
-		<span class="l-hello-alert__icon" aria-hidden="true"><i class="fas fa-bed"></i></span>
-		<span class="l-hello-alert__text"><strong>{{ 'landing.alert.requests'|trans({ count: requestsToAnswerCount }) }}</strong> <span class="l-hello-alert__long">{{ 'landing.alert.waiting'|trans }}</span><span class="l-hello-alert__short">{{ 'landing.alert.to.answer'|trans }}</span></span>
-		<span class="l-hello-alert__go">{{ 'landing.alert.answer'|trans }} <i class="fas fa-chevron-right" aria-hidden="true"></i></span>
-	</a>
-{% endif %}
+{# Requests to answer: reloaded by landing.js when the side panel closes #}
+<div class="l-hello-alert-wrap js-home-alert">{% include 'landing/widget/request_alert.html.twig' %}</div>
 
 {#
   The four cards of the dashboard: messages, members coming to the member's area (one trip at a

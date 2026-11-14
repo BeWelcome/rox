@@ -10,9 +10,16 @@
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}
         {% set closed = request and request.status in [1, 2] %}
-        {# A request or invitation from someone else, still open and not over: waiting for the member's answer, even once read #}
-        {% set toAnswer = request and request.status == 0 and message.initiator != app.user
+        {#
+          A request or invitation from someone else, still open and not over, whose last message is
+          not from the member: waiting for their answer, even once read
+        #}
+        {% set toAnswer = request and request.status == 0 and message.initiator.id != app.user.id
             and (request.departure ?? request.arrival) is not null and (request.departure ?? request.arrival)|date('Y-m-d') >= 'now'|date('Y-m-d') %}
+        {% if toAnswer %}
+            {% set _last = request.messages|reduce((last, one) => last is null or one.id > last.id ? one : last) %}
+            {% set toAnswer = _last is null or _last.sender.id != app.user.id %}
+        {% endif %}
         {# Opens in the side panel of the home page, like Send on a profile (contact/drawer.js) #}
         <a class="c-home-item c-home-msg js-contact-open js-home-message{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}"
            data-title="{{ message.sender ? (message.sender.shortNameOrUsername ?? message.sender.username) : 'BeWelcome' }}">

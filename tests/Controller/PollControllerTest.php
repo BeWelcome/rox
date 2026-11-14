@@ -107,9 +107,25 @@ class PollControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/polls/update/' . $poll->getId());
         $this->client->submit($crawler->filter('form.p-polls-form')->form(['poll[status]' => Poll::STATUS_OPEN]));
 
+        // the creator can't edit the open poll any more: they land on its page, not on a 403
+        $this->assertResponseRedirects('/polls/contribute/' . $poll->getId());
+        $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
         $poll = $this->reload($poll);
         self::assertTrue($poll->isOpen());
         self::assertSame(['Park', 'Cafe'], array_map(static fn (PollChoice $choice) => $choice->getText(), $poll->getChoices()->toArray()));
+    }
+
+    public function testSavingADraftStaysOnItsEditPage(): void
+    {
+        $poll = $this->createPoll('member-1', Poll::STATUS_DRAFT, ['Park', 'Cafe']);
+        $this->client->loginUser($this->member('member-1'));
+
+        $crawler = $this->client->request('GET', '/polls/update/' . $poll->getId());
+        $this->client->submit($crawler->filter('form.p-polls-form')->form(['poll[status]' => Poll::STATUS_DRAFT]));
+
+        $this->assertResponseRedirects('/polls/update/' . $poll->getId());
     }
 
     public function testMemberCreatesSeveralPolls(): void

@@ -128,7 +128,10 @@ class PollController extends AbstractController
                 $this->pollModel->update($poll, $data);
                 $this->addTranslatedFlash('success', 'poll.updated');
 
-                return $this->redirectToRoute('polls_update', ['pollId' => $poll->getId()]);
+                // a creator edits a draft only: once opened (or closed), the poll's page
+                return $this->isGranted(PollVoter::EDIT, $poll)
+                    ? $this->redirectToRoute('polls_update', ['pollId' => $poll->getId()])
+                    : $this->redirectToRoute('polls_contribute', ['pollId' => $poll->getId()]);
             }
         }
 

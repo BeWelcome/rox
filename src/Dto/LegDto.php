@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-use App\Entity\Subtrip;
+use App\Entity\Leg;
 use DateTime;
 
 class LegDto
@@ -13,7 +13,7 @@ class LegDto
     public ?DateTime $departure = null;
     public ?array $options = [];
 
-    public static function fromEntity(Subtrip $leg): self
+    public static function fromEntity(Leg $leg): self
     {
         $dto = new self();
         $dto->id = $leg->getId();

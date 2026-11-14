@@ -193,6 +193,8 @@
                     {{ _self.widget_prototype(leg) }}
                 {% endfor %}
             </div>
+            {# a trip has at least one stop (TripDto); the × of the only stop is hidden (.p-trips-stop:only-child) #}
+            {{ form_errors(form.legs) }}
             <button type="button" class="p-trips-btn js-btn-add" data-target="legs-list">
                 <i class="fa fa-plus" aria-hidden="true"></i> {{ 'trip.leg.add'|trans }}
             </button>

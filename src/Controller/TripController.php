@@ -6,13 +6,13 @@ use App\Doctrine\LegOptionsType;
 use App\Doctrine\MemberStatusType;
 use App\Dto\LegDto;
 use App\Dto\TripDto;
+use App\Entity\Leg;
 use App\Entity\Member;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Form\TripRadiusType;
 use App\Form\TripType;
 use App\Model\TripModel;
-use App\Repository\SubtripRepository;
+use App\Repository\LegRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -204,8 +204,11 @@ class TripController extends AbstractController
      * this leg, which open their form in the same panel. Outside the panel it goes to the trip page.
      */
     #[Route(path: '/trip/leg/{id}/panel', name: 'trip_leg_panel', requirements: ['id' => '\d+'])]
-    public function legPanel(Request $request, Subtrip $leg): Response
+    public function legPanel(Request $request, Leg $leg): Response
     {
+        if ($leg->isRemoved()) {
+            throw $this->createNotFoundException();
+        }
         $trip = $leg->getTrip();
         $this->denyAccessUnlessGranted('TRIP_VIEW', $trip);
 
@@ -228,7 +231,7 @@ class TripController extends AbstractController
 
     #[Route(path: '/trip/leg/{id}/hide', name: 'trip_hide', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsCsrfTokenValid('hide_leg')]
-    public function hideLeg(Request $request, Subtrip $leg): RedirectResponse
+    public function hideLeg(Request $request, Leg $leg): RedirectResponse
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -267,8 +270,8 @@ class TripController extends AbstractController
             }
         }
 
-        /** @var SubtripRepository $legRepository */
-        $legRepository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var LegRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Leg::class);
         $legsQuery = $legRepository->getLegsInAreaQuery($host, $radius);
 
         $legsAdapter = new QueryAdapter($legsQuery);

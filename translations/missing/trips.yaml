@@ -149,6 +149,10 @@ trip.update:
 trip.error.date.overlap:
     - 'Dates are overlapping.'
     - Shown if a trip contains legs that overlap.
+trip.error.no.legs:
+    - 'A trip needs at least one stop.'
+    - 'Trip form: shown when the trip is saved without any stop.'
+    - validators
 trip.leg.not.matched:
     - "The leg's duration and the invitation's duration do not match."
     - Alert message shown to the guest in their reply form (invitation).

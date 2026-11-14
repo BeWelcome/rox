@@ -4,10 +4,10 @@ namespace App\Tests\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Entity\Subtrip;
 use App\Model\HostingRequestModel;
 use DateInterval;
 use DateTime;
@@ -429,7 +429,7 @@ class HostingRequestModelTest extends TestCase
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
 
-        $inviteForLeg = new Subtrip()->setInvitedBy($this->sender);
+        $inviteForLeg = new Leg()->setInvitedBy($this->sender);
 
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', null);
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', $inviteForLeg);
@@ -454,7 +454,7 @@ class HostingRequestModelTest extends TestCase
         int $numberOfTravellers,
         int $state,
         string $messageText = '',
-        ?Subtrip $inviteForLeg = null,
+        ?Leg $inviteForLeg = null,
     ): Message {
         $message = new Message();
         $message->setParent($this->parent);

@@ -4,10 +4,10 @@ namespace App\Repository;
 
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Leg;
 use App\Entity\Member;
 use App\Entity\MemberLegHidden;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -22,7 +22,7 @@ use Doctrine\ORM\QueryBuilder;
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class SubtripRepository extends EntityRepository
+class LegRepository extends EntityRepository
 {
     public function getVisitorsCount(Member $member, int $distance = 20, int $duration = 3): int
     {
@@ -65,7 +65,7 @@ class SubtripRepository extends EntityRepository
     }
 
     public function getMembersToNotifyAboutLeg(
-        Subtrip $leg,
+        Leg $leg,
         array $notificationValues = [
             Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
         ],
@@ -206,6 +206,7 @@ class SubtripRepository extends EntityRepository
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
+            ->andWhere($qb->expr()->isNull('s.removed'))
             ->andWhere($qb->expr()->isNull('hiddenLeg.id'))
             ->andWhere('GeoDistance(:latitude, :longitude, ST_Y(l.coordinates), ST_X(l.coordinates)) <= :distance')
             ->andWhere(

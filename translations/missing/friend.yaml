@@ -2,7 +2,8 @@ profile.no.friends:
     - 'No members marked as friends yet.'
     - Text shown if a member hasn''t marked any member as friend
 profile.friend.add:
-    - '@addfriend'
+    - 'Add as friend'
+    - Profile menu entry that opens the form to send this member a friendship request.
 profile.friend.edit:
     - 'Edit friends entry'
     - Menu entry if you already have a link to this member.
@@ -49,9 +50,11 @@ email.subject.friend:
 friendship.sender.says.exist:
     - '@friend.sender.says.exist'
 friendship.confirm:
-    - '@confirm'
+    - 'Confirm friendship'
+    - Main button in the mail about a friendship request; accepts the request.
 friendship.dismiss:
-    - '@dismiss'
+    - 'Dismiss'
+    - Second button in the mail about a friendship request; declines the request.
 profile.edit.friend.keep:
     - 'Keep as friend'
     - Label on keep button on the edit friend form
@@ -71,7 +74,8 @@ friend.add.blurb:
       "
     - Added on the 'Add a friend' page to guide members
 profile.add.friend.confirm:
-    - '@confirm'
+    - 'Send friend request'
+    - Submit button on the Add friend page.
 email.subject.friendship:
     - '{username} would like to be your friend on BeWelcome'
     - Subject of the mail about a friendship request. Keep {username}.

@@ -238,6 +238,18 @@ class LandingController extends AbstractController
         return $this->render('landing/widget/request_alert.html.twig', $this->getRequestAlert($member));
     }
 
+    protected function getVisitorsCount(TripModel $tripModel, Member $member): int
+    {
+        $radius = $tripModel->getTripsRadius($member);
+
+        /** @var SubtripRepository $subtripRepository */
+        $subtripRepository = $this->entityManager->getRepository(Subtrip::class);
+
+        $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
+
+        return $visitorsCount;
+    }
+
     /**
      * Stay requests waiting for the member's answer. With one, the alert opens it in the side
      * panel (its last message received); with several, it goes to the requests list.
@@ -254,18 +266,6 @@ class LandingController extends AbstractController
             'requestsToAnswerCount' => $count,
             'requestToAnswerMessageId' => 1 === $count ? $requestRepository->getLastMessageIdOfRequestToAnswer($member) : null,
         ];
-    }
-
-    protected function getVisitorsCount(TripModel $tripModel, Member $member): int
-    {
-        $radius = $tripModel->getTripsRadius($member);
-
-        /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->entityManager->getRepository(Subtrip::class);
-
-        $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
-
-        return $visitorsCount;
     }
 
     private function getUpcomingAroundLocationCount(Member $member, bool $showOnlineActivities): int

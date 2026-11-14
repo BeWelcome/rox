@@ -37,8 +37,11 @@
 
   {% set _translations = member.translations %}
   {% set _langs = _translations|keys %}
+  {# A language with text (more than the ProfileLanguage marker) for others; on the own profile every profile
+     language, also one without text yet, so the member sees all of them #}
+  {% set _minFields = own ? 1 : 2 %}
   {% set _langCount = 0 %}
-  {% for _l in _langs %}{% if _translations[_l]|length > 1 %}{% set _langCount = _langCount + 1 %}{% endif %}{% endfor %}
+  {% for _l in _langs %}{% if _translations[_l]|length >= _minFields %}{% set _langCount = _langCount + 1 %}{% endif %}{% endfor %}
 
   <div class="p-pro__wrap container-lg">
 
@@ -198,7 +201,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
               {% for _l in _langs %}
-                {% if _translations[_l]|length > 1 %}
+                {% if _translations[_l]|length >= _minFields %}
                   <li>
                     <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
                             data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>

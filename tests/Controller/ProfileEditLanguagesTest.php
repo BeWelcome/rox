@@ -56,4 +56,22 @@ class ProfileEditLanguagesTest extends WebTestCase
             self::assertSame($names->native($card->attr('data-language')), trim($card->filter('.js-lang-card-name')->text()));
         });
     }
+
+    public function testTheEditPageListsTheSpokenLanguagesByTheirOwnNames(): void
+    {
+        $client = static::createClient();
+        $member = static::getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
+        $client->loginUser($member);
+
+        $crawler = $client->request('GET', '/members/member-2/edit');
+
+        $this->assertResponseIsSuccessful();
+        $names = static::getContainer()->get(LanguageNames::class);
+        $items = $crawler->filter('.p-pe-langs__name');
+        self::assertGreaterThan(0, $items->count(), 'member-2 has no spoken languages in the fixtures');
+        $items->each(static function ($item) use ($names) {
+            self::assertSame($names->native((string) $item->attr('lang')), trim($item->text()));
+        });
+    }
 }

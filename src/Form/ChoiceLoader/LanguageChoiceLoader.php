@@ -3,6 +3,7 @@
 namespace App\Form\ChoiceLoader;
 
 use App\Entity\Language;
+use App\Service\LanguageNames;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\ChoiceList\Loader\AbstractChoiceLoader;
 use Symfony\Component\OptionsResolver\Options;
@@ -12,6 +13,7 @@ class LanguageChoiceLoader extends AbstractChoiceLoader
     public function __construct(
         private readonly Options $options,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LanguageNames $languageNames,
     ) {
     }
 
@@ -39,6 +41,13 @@ class LanguageChoiceLoader extends AbstractChoiceLoader
             } elseif ($this->options['written'] && $language->isWrittenLanguage()) {
                 $languages['languages.written'][$shortCode] = $language;
             }
+        }
+
+        // each group by the languages' own names, which the field shows (LanguageType's choice_label)
+        foreach ($languages as $group => $groupLanguages) {
+            uasort($groupLanguages, fn (Language $a, Language $b): int => $this->languageNames->native($a->getShortCode())
+                <=> $this->languageNames->native($b->getShortCode()));
+            $languages[$group] = $groupLanguages;
         }
 
         return $languages;

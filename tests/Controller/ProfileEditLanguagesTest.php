@@ -74,4 +74,33 @@ class ProfileEditLanguagesTest extends WebTestCase
             self::assertSame($names->native((string) $item->attr('lang')), trim($item->text()));
         });
     }
+
+    public function testTheAddLanguagePageNamesTheLanguagesByTheirOwnNames(): void
+    {
+        // a new profile language: the written languages by their own names, without the HTML entities of language.Name
+        $client = static::createClient();
+        $member = static::getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
+        $client->loginUser($member);
+
+        $crawler = $client->request('GET', '/members/member-2/add/language');
+
+        $this->assertResponseIsSuccessful();
+        $names = static::getContainer()->get(LanguageNames::class);
+        $options = $crawler->filter('select[name="add_language_form[language]"] option[value!=""]');
+        self::assertGreaterThan(0, $options->count());
+        $labels = $options->each(static function ($option) use ($names) {
+            self::assertSame($names->native((string) $option->attr('value')), trim($option->text()));
+            self::assertStringNotContainsString('&#', $option->html());
+
+            return trim($option->text());
+        });
+        $sorted = $labels;
+        sort($sorted);
+        self::assertSame($sorted, $labels);
+        self::assertSame(
+            static::getContainer()->get(TranslatorInterface::class)->trans('profile.edit.add.translation'),
+            trim($crawler->filter('.p-edit-subpage__title, h1')->first()->text()),
+        );
+    }
 }

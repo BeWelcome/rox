@@ -175,6 +175,18 @@ class AccountControllerTest extends WebTestCase
         $this->assertNull($this->reloadMember('bwadmin')->getShortName());
     }
 
+    public function testAnotherMembersAccountPageLeadsToTheOwnOne(): void
+    {
+        $client = static::createClient();
+        $this->loginMember($client, 'member-2');
+
+        $client->request('GET', '/members/bwadmin/account');
+
+        $this->assertResponseRedirects('/members/member-2/account');
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+    }
+
     public function testLegacyEditProfileRedirectsToModernProfileEdit(): void
     {
         $client = static::createClient();

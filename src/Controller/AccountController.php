@@ -38,9 +38,11 @@ class AccountController extends AbstractController
         ProfileModel $profileModel,
         ProfileSubmenu $profileSubmenu,
     ): Response {
+        /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
+        // another member's account page: to the own one (it was the same page again, a redirect loop)
         if ($loggedInMember !== $member) {
-            return $this->redirectToRoute('account_edit', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('account_edit', ['username' => $loggedInMember->getUsername()]);
         }
 
         $form = $this->createForm(AccountEditFormType::class, [

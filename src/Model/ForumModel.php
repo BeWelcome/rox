@@ -22,6 +22,7 @@ use App\Service\ForumSearchIndex;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Hidehalo\Nanoid\Client;
 
 /**
  * Writing in the forums: new threads, replies, edits and translations of posts, thread subscriptions, and the
@@ -171,7 +172,8 @@ class ForumModel
                 ->setSubscriber($member)
                 ->setThread($thread)
                 ->setActionToWatch(ActionToWatchType::REPLIES)
-                ->setUnsubscribeKey(bin2hex(random_bytes(16)))
+                // fills the column's 20 characters, URL-safe like main's links with the key need
+                ->setUnsubscribeKey(new Client()->generateId(20, Client::MODE_DYNAMIC))
                 ->setNotificationsEnabled(true);
             $subscription->setSubscribed(new DateTime());
             $this->entityManager->persist($subscription);

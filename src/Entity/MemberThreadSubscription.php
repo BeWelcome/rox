@@ -43,9 +43,9 @@ class MemberThreadSubscription
     private $actionToWatch = ActionToWatchType::REPLIES;
 
     /**
-     * @var string
+     * @var string the column has 20 characters (as on main, which reads the key from its old links)
      */
-    #[ORM\Column(name: 'UnSubscribeKey', type: 'string', length: 32, nullable: false)]
+    #[ORM\Column(name: 'UnSubscribeKey', type: 'string', length: 20, nullable: false)]
     private $unsubscribeKey;
 
     /**

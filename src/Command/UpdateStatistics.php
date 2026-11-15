@@ -94,14 +94,18 @@ class UpdateStatistics extends Command
         $startDate->setTime(0, 0, 0, 0);
         $endDate->setTime(0, 0, 0, 0);
 
-        if ($startDate === $endDate) {
+        // the period ends before its end: a given last date is included, without one the period ends with yesterday
+        if ($endDateGiven) {
             $endDate->modify('+1 day');
         }
 
         $interval = new DateInterval('P1D');
         $dates = new DatePeriod($startDate, $interval, $endDate);
 
-        $this->logger->info('Updating statistics from ' . $startDate->format('Y-m-d') . ' to ' . $endDate->format('Y-m-d'));
+        $lastDate = (clone $endDate)->modify('-1 day');
+        $this->logger->info(
+            'Updating statistics from ' . $startDate->format('Y-m-d') . ' to ' . $lastDate->format('Y-m-d')
+        );
 
         $returnCode = 1;
         try {

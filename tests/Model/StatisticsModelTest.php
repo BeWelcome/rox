@@ -3,10 +3,8 @@
 namespace App\Tests\Model;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\Activity;
 use App\Model\StatisticsModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use PHPUnit\Framework\TestCase;
@@ -19,32 +17,39 @@ class StatisticsModelTest extends TestCase
 {
     public function testHomepageStatisticsAreQueriedOnceAndThenServedFromCache(): void
     {
-        $result = $this->createStub(Result::class);
-        $result->method('fetchOne')->willReturn(42);
-
         $queries = [];
+        $parameters = [];
+        // the countries in native SQL
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(4))
-            ->method('executeQuery')
-            ->willReturnCallback(static function (string $sql) use (&$queries, $result): Result {
-                $queries[] = preg_replace('/\s+/', ' ', $sql);
-
-                return $result;
-            })
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with(
+                $this->stringContains('COUNT(DISTINCT l.country_id)'),
+                ['statuses' => [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND]],
+            )
+            ->willReturn('42')
         ;
-
-        // the activities are counted with DQL
-        $activities = $this->createStub(Query::class);
-        $activities->method('setParameter')->willReturnSelf();
-        $activities->method('getSingleScalarResult')->willReturn(42);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getConnection')->willReturn($connection);
         $entityManager
-            ->expects($this->once())
+            ->expects($this->exactly(4))
             ->method('createQuery')
-            ->with($this->stringContains('FROM ' . Activity::class . ' a WHERE a.status = :active'))
-            ->willReturn($activities)
+            ->willReturnCallback(function (string $dql) use (&$queries, &$parameters): Query {
+                $queries[] = $dql;
+                $index = \count($queries) - 1;
+                $query = $this->createStub(Query::class);
+                $query->method('setParameter')->willReturnCallback(
+                    static function (string $name, mixed $value) use (&$parameters, $index, &$query): Query {
+                        $parameters[$index][$name] = $value;
+
+                        return $query;
+                    }
+                );
+                $query->method('getSingleScalarResult')->willReturn(42);
+
+                return $query;
+            })
         ;
 
         $model = new StatisticsModel(
@@ -63,26 +68,24 @@ class StatisticsModelTest extends TestCase
         $this->assertSame($expected, $model->getStatisticsHomepage());
         $this->assertSame($expected, $model->getStatisticsHomepage());
 
-        // members, languages and comments only count active members
-        $activeOnly = '.status IN (' . MemberStatusType::ACTIVE_ALL . ') ';
+        // members, languages and comments count the active members (countries those who can be found, above)
         $this->assertCount(4, $queries);
-        foreach ([0, 2, 3] as $index) {
-            $this->assertStringContainsStringIgnoringCase($activeOnly, $queries[$index]);
+        foreach ([0, 1, 2] as $index) {
+            $this->assertStringContainsString('m.status IN (:statuses)', $queries[$index]);
+            $this->assertSame(MemberStatusType::ACTIVE_ALL_ARRAY, $parameters[$index]['statuses']);
         }
     }
 
     public function testHomepageStatisticsAreCachedForAnHour(): void
     {
-        $result = $this->createStub(Result::class);
-        $result->method('fetchOne')->willReturn(1);
+        $query = $this->createStub(Query::class);
+        $query->method('setParameter')->willReturnSelf();
+        $query->method('getSingleScalarResult')->willReturn(1);
         $connection = $this->createStub(Connection::class);
-        $connection->method('executeQuery')->willReturn($result);
-        $activities = $this->createStub(Query::class);
-        $activities->method('setParameter')->willReturnSelf();
-        $activities->method('getSingleScalarResult')->willReturn(1);
+        $connection->method('fetchOne')->willReturn('1');
         $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('createQuery')->willReturn($query);
         $entityManager->method('getConnection')->willReturn($connection);
-        $entityManager->method('createQuery')->willReturn($activities);
 
         $item = $this->createMock(ItemInterface::class);
         $item->expects($this->once())->method('expiresAfter')->with(3600)->willReturnSelf();

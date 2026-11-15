@@ -334,8 +334,13 @@ class MyDataMockups implements MockupProviderInterface
                 $mockEntity->setCreated(new Carbon());
                 break;
             case 'newsletters':
-                $mockEntity = $this->newsletter();
-                break;
+                // as NewslettersExtractor gives them: one entry per language the member wrote
+                $entries = [];
+                for ($i = 0; $i < $count; ++$i) {
+                    $entries[] = ['newsletter' => $this->newsletter(), 'locale' => 'en', 'title' => 'Newsletter title', 'body' => '<p>The text of the newsletter.</p>'];
+                }
+
+                return ['newsletters' => $entries];
             case 'polls_created':
                 $key = 'polls';
                 $mockEntity = $this->getPoll();

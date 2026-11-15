@@ -92,6 +92,25 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
+    /**
+     * Same members as findByProfileInfoStartsWith(), with their city joined: a member whose city
+     * no longer exists in geo__names gets null instead of a proxy that fails when the search
+     * results read it (#797).
+     */
+    public function findForMemberSearch(string $term): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.city', 'c')
+            ->addSelect('c')
+            ->where('u.username like :term')
+            ->setParameter('term', $term . '%')
+            ->andWhere('u.status in (:status)')
+            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function loadDataRetentionMembers(?int $limit = null): array
     {
         $qb = $this->createQueryBuilder('m')

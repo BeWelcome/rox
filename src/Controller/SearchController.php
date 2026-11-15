@@ -58,7 +58,7 @@ class SearchController extends AbstractController
             $username = $data['username'];
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->entityManager->getRepository(Member::class);
-            $members = $memberRepository->findByProfileInfoStartsWith($username);
+            $members = $memberRepository->findForMemberSearch($username);
         }
 
         return $this->render('search/searchmembers.html.twig', [

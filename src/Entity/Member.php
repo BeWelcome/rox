@@ -3231,12 +3231,12 @@ class Member implements \Serializable, ObjectManagerAware, UserInterface, Passwo
 
     public function getRegion(): ?NewLocation
     {
-        return $this->city->getAdmin1();
+        return $this->city?->getAdmin1();
     }
 
     public function getCountry(): ?NewLocation
     {
-        return $this->city->getCountry();
+        return $this->city?->getCountry();
     }
 
     public function getAge(): int

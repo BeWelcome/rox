@@ -44,6 +44,13 @@ class Preference
     public const TRIP_NOTIFICATIONS_DAILY = 'Daily';
     public const TRIP_NOTIFICATIONS_WEEKLY = 'Weekly';
     public const TRIP_NOTIFICATIONS_MONTHLY = 'Monthly';
+    /** How often a member hears about new activities near them (ActivitiesNearMeRadius); the values of the trips'. */
+    public const ACTIVITY_NOTIFICATIONS = 'ActivitiesNotifications';
+    public const ACTIVITY_NOTIFICATIONS_NEVER = 'Never';
+    public const ACTIVITY_NOTIFICATIONS_IMMEDIATELY = 'Immediately';
+    public const ACTIVITY_NOTIFICATIONS_DAILY = 'Daily';
+    public const ACTIVITY_NOTIFICATIONS_WEEKLY = 'Weekly';
+    public const ACTIVITY_NOTIFICATIONS_MONTHLY = 'Monthly';
     public const SHOW_PROFILE_VISITORS = 'PreferenceShowProfileVisits';
     public const SHOW_FORUMS_POSTS = 'MyForumPostsPagePublic';
     public const SEARCH_OPTIONS = 'SearchOptions';

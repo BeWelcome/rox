@@ -192,6 +192,17 @@ class SignupModel
         ;
         $this->entityManager->persist($tripNotificationsPreference);
 
+        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
+            'codename' => Preference::ACTIVITY_NOTIFICATIONS,
+        ]);
+        $activityNotificationsPreference = new MemberPreference();
+        $activityNotificationsPreference
+            ->setMember($member)
+            ->setPreference($preference)
+            ->setValue($data['activities_notifications'] ?? Preference::ACTIVITY_NOTIFICATIONS_NEVER)
+        ;
+        $this->entityManager->persist($activityNotificationsPreference);
+
         $this->entityManager->flush();
     }
 

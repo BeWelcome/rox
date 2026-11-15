@@ -16,7 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'activitiesattendees')]
+#[ORM\Table(name: 'activity_attendee')]
+#[ORM\UniqueConstraint(name: 'activity_attendee_unique', columns: ['activity_id', 'attendee_id'])]
 #[ORM\Entity(repositoryClass: ActivityAttendeeRepository::class)]
 class ActivityAttendee
 {
@@ -30,14 +31,14 @@ class ActivityAttendee
     /**
      * @var Activity
      */
-    #[ORM\JoinColumn(name: 'activityId', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'activity_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Activity::class, inversedBy: 'attendees')]
     private $activity;
 
     /**
      * @var Member
      */
-    #[ORM\JoinColumn(name: 'attendeeId', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'attendee_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private $attendee;
 
@@ -62,7 +63,7 @@ class ActivityAttendee
     /**
      * @var int
      */
-    // The primary key of activitiesattendees (AUTO_INCREMENT on production).
+    // develop's table activity_attendee, filled from main's activitiesattendees (Version20261115100000).
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]

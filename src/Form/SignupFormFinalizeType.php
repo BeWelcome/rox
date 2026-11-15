@@ -157,6 +157,19 @@ class SignupFormFinalizeType extends AbstractType
                 'data' => Preference::TRIP_NOTIFICATIONS_NEVER,
                 'required' => true,
             ])
+            ->add('activities_notifications', ChoiceType::class, [
+                'label' => 'label.activities_notifications',
+                'help' => 'help.activities_notifications',
+                'choices' => [
+                    'trips.never' => Preference::ACTIVITY_NOTIFICATIONS_NEVER,
+                    'trips.immediately' => Preference::ACTIVITY_NOTIFICATIONS_IMMEDIATELY,
+                    'trips.daily' => Preference::ACTIVITY_NOTIFICATIONS_DAILY,
+                    'trips.weekly' => Preference::ACTIVITY_NOTIFICATIONS_WEEKLY,
+                    'trips.monthly' => Preference::ACTIVITY_NOTIFICATIONS_MONTHLY,
+                ],
+                'data' => Preference::ACTIVITY_NOTIFICATIONS_NEVER,
+                'required' => true,
+            ])
         ;
     }
 

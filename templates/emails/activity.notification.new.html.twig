@@ -1,0 +1,29 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  A member created an activity near the receiver: who, the activity (title, when, where) in a box; the activity, the
+  profile. Below the box how to change these mails.
+  sender (the creator), activity, receiver.
+#}
+{% block preheader %}{{ 'activity.notification.new.email'|trans }}{% endblock %}
+
+{% block content %}
+    {% set _locale = receiverLocale ?? 'en' %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'activities'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'activity.notification.new.email'|trans|trim('.', 'right') } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, references: true } %}
+    {% set _where = activity.location.name ~ (activity.address ? ', ' ~ activity.address : '') %}
+    {% set _box %}
+        <div style="font-size:18px;line-height:26px;font-weight:bold;color:#0f172a;">{{ activity.title }}</div>
+        <div style="margin-top:6px;font-size:14px;line-height:20px;color:#334155;">&#128197; {{ activity.starts|format_datetime('medium', 'short', locale=_locale) }} &ndash; {{ activity.ends|format_datetime(activity.ends|date('Y-m-d') == activity.starts|date('Y-m-d') ? 'none' : 'medium', 'short', locale=_locale) }}</div>
+        <div style="margin-top:2px;font-size:14px;line-height:20px;color:#334155;">&#128205; {{ _where }}</div>
+    {% endset %}
+    {% include 'emails/_partials/box.html.twig' with { html: _box } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'activity.notification.see'|trans, url: url('activities_show', { id: activity.id }) },
+        secondary: { label: 'message.profile'|trans({ username: sender.username }), url: url('members_profile', { username: sender.username }) },
+    } %}
+{% endblock content %}
+
+{% block footer_extra %}
+<p style="margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;"><a href="{{ url('preferences', { username: receiver.username }) }}" style="color:#64748b;font-weight:normal;text-decoration:underline;">{{ 'activity.notification.preference.link'|trans }}</a></p>
+{% endblock %}

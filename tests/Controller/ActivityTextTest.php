@@ -4,10 +4,10 @@ namespace App\Tests\Controller;
 
 use App\Dto\ActivityDto;
 use App\Entity\Activity;
+use App\Entity\ActivityAttendee;
 use App\Entity\Member;
 use App\Model\ActivityModel;
 use DateTime;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -30,8 +30,8 @@ class ActivityTextTest extends WebTestCase
 
     public function testNearMeWithoutActivitiesNearbySaysSo(): void
     {
-        static::getContainer()->get(Connection::class)->executeStatement('DELETE FROM activitiesattendees');
-        static::getContainer()->get(Connection::class)->executeStatement('DELETE FROM activities');
+        $this->entityManager->createQuery('DELETE ' . ActivityAttendee::class . ' a')->execute();
+        $this->entityManager->createQuery('DELETE ' . Activity::class . ' a')->execute();
         $this->client->loginUser($this->member());
 
         $this->client->request('GET', '/activities/nearme');

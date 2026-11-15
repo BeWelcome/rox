@@ -7,23 +7,68 @@ use App\Dto\ActivityDto;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Member;
+use App\Entity\MemberActivityNotificationSent;
 use App\Entity\Preference;
 use App\Form\ActivityRadiusType;
 use App\Repository\ActivityRepository;
+use App\Service\Mailer;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use HTMLPurifier;
+use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Lock\LockFactory;
 
 class ActivityModel
 {
+    private const array SCHEDULED_NOTIFICATIONS = [
+        Preference::ACTIVITY_NOTIFICATIONS_DAILY,
+        Preference::ACTIVITY_NOTIFICATIONS_WEEKLY,
+        Preference::ACTIVITY_NOTIFICATIONS_MONTHLY,
+    ];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         #[Autowire(service: 'exercise_html_purifier.default')]
         private readonly HTMLPurifier $purifier,
         #[Autowire(service: 'exercise_html_purifier.text')]
         private readonly HTMLPurifier $textPurifier,
+        private readonly Mailer $mailer,
+        private readonly LockFactory $lockFactory,
     ) {
+    }
+
+    /**
+     * Mails the members near the activity who want to hear about new activities right away.
+     *
+     * @return int the mails sent
+     */
+    public function notifyMembersAboutActivity(Activity $activity): int
+    {
+        return $this->sendActivityNotifications($activity, [Preference::ACTIVITY_NOTIFICATIONS_IMMEDIATELY]);
+    }
+
+    /**
+     * Mails the members who want to hear daily, weekly or monthly ($frequency) about the activities created in the
+     * period.
+     *
+     * @return int the mails sent
+     */
+    public function sendScheduledActivityNotifications(string $frequency, DateTimeInterface $createdSince, DateTimeInterface $createdUntil): int
+    {
+        if (!\in_array($frequency, self::SCHEDULED_NOTIFICATIONS, true)) {
+            throw new InvalidArgumentException('Unsupported activity notification frequency.');
+        }
+
+        /** @var ActivityRepository $repository */
+        $repository = $this->entityManager->getRepository(Activity::class);
+        $sent = 0;
+        foreach ($repository->findActivitiesCreatedBetween($createdSince, $createdUntil) as $activity) {
+            $sent += $this->sendActivityNotifications($activity, [$frequency]);
+        }
+
+        return $sent;
     }
 
     public function getLatest($page, $limit): Pagerfanta
@@ -212,5 +257,44 @@ class ActivityModel
         $data->description = $this->purifier->purify((string) $data->description);
 
         return $data;
+    }
+
+    /**
+     * One mail per member and activity (member_activity_notification_sent), also when the activity is saved again or
+     * a scheduled run overlaps.
+     *
+     * @param list<string> $notificationValues
+     */
+    private function sendActivityNotifications(Activity $activity, array $notificationValues): int
+    {
+        /** @var ActivityRepository $repository */
+        $repository = $this->entityManager->getRepository(Activity::class);
+        $members = $repository->getMembersToNotifyAboutActivity($activity, $notificationValues);
+        $sentRepository = $this->entityManager->getRepository(MemberActivityNotificationSent::class);
+
+        $sent = 0;
+        foreach ($members as $member) {
+            $lock = $this->lockFactory->createLock(\sprintf('member-activity-notification:%d:%d', $member->getId(), $activity->getId()));
+            if (!$lock->acquire()) {
+                continue;
+            }
+
+            try {
+                if (null !== $sentRepository->findOneBy(['member' => $member, 'activity' => $activity])) {
+                    continue;
+                }
+                if (!$this->mailer->sendActivityNotificationEmail($member, $activity)) {
+                    continue;
+                }
+
+                $this->entityManager->persist(new MemberActivityNotificationSent($member, $activity));
+                $this->entityManager->flush();
+                ++$sent;
+            } finally {
+                $lock->release();
+            }
+        }
+
+        return $sent;
     }
 }

@@ -111,3 +111,6 @@ loginmessage.acknowledge:
 loginmessage.acknowledge.error:
     - 'The announcement couldn''t be marked as read. Please try again.'
     - 'Error toast when acknowledging a site announcement failed.'
+label.activities_notifications:
+    - How often do you want to be informed about activities in your area?
+    - Label for the drop down for activity notifications (options trips.never and the like).

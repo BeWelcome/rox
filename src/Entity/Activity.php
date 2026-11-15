@@ -20,30 +20,34 @@ use Doctrine\ORM\Mapping as ORM;
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
+ *
+ * develop's table `activity`, filled from main's `activities` (Version20261115100000).
  */
-#[ORM\Table(name: 'activities')]
+#[ORM\Table(name: 'activity')]
+#[ORM\Index(name: 'activity_created_idx', columns: ['created'])]
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Activity
 {
     public const int STATUS_ACTIVE = 0;
     public const int STATUS_CANCELLED = 1;
 
-    #[ORM\JoinColumn(name: 'creator', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'creator_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $createdBy;
 
-    #[ORM\Column(name: 'dateTimeStart', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'starts', type: 'datetime', nullable: false)]
     private DateTime $starts;
 
-    #[ORM\Column(name: 'dateTimeEnd', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'ends', type: 'datetime', nullable: false)]
     private DateTime $ends;
 
-    #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geoname_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'geoname_id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private Location $location;
 
     #[ORM\Column(name: 'address', type: 'string', length: 320, nullable: true)]
-    private ?string $address;
+    private ?string $address = null;
 
     #[ORM\Column(name: 'title', type: 'string', length: 80, nullable: false)]
     private string $title;
@@ -54,8 +58,12 @@ class Activity
     #[ORM\Column(name: 'status', type: 'smallint', nullable: false)]
     private int $status;
 
-    #[ORM\Column(name: 'public', type: 'smallint', nullable: true)]
-    private ?int $online;
+    #[ORM\Column(name: 'online', type: 'smallint', nullable: true)]
+    private ?int $online = null;
+
+    /** When the activity was created; unknown (null) for those from main, which didn't keep it. */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: true)]
+    private ?DateTime $created = null;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -179,6 +187,17 @@ class Activity
     public function getOnline(): ?int
     {
         return $this->online;
+    }
+
+    public function getCreated(): ?DateTime
+    {
+        return $this->created;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created ??= new DateTime();
     }
 
     public function getId(): int

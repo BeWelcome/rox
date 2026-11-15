@@ -140,8 +140,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 ]
             ),
             new TwigFilter(
-                'forum_text',
-                $this->forumText(...),
+                'user_text',
+                $this->userText(...),
                 [
                     'is_safe' => ['html'],
                 ]
@@ -165,11 +165,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * A forum post's (purified) text ready to show. Posts written with the editor are HTML already: newlines
-     * between their tags are not turned into <br> (that made big empty gaps), and empty paragraphs and long runs
-     * of <br> are dropped. Plain-text posts get their line breaks, with at most one empty line in a row.
+     * A (purified) text members wrote, ready to show: forum posts, comments, newsletters. Texts written with the
+     * editor are HTML already: newlines between their tags are not turned into <br> (that made big empty gaps), and
+     * empty paragraphs and long runs of <br> are dropped. Plain texts get their line breaks, with at most one empty
+     * line in a row. Purify before: the result is output as HTML.
      */
-    public function forumText(string $text): string
+    public function userText(string $text): string
     {
         if (1 === preg_match('~<(p|div|br|ul|ol|li|h[1-6]|blockquote|figure|table|pre)\b~i', $text)) {
             $text = preg_replace('~<p\b[^>]*>(?:\s|&nbsp;|&#160;|\x{00A0}|<br\s*/?>)*</p>~iu', '', $text) ?? $text;

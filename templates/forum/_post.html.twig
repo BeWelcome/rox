@@ -85,7 +85,7 @@
         <div class="p-thread-post__text js-highlight">
             {% set shown = post.messageIn(app.request.locale) %}
             {% if _deleted %}<s>{% endif %}
-            {{ shown.message|purify|forum_text|forum_lightbox }}
+            {{ shown.message|purify|user_text|forum_lightbox }}
             {% if _deleted %}</s>{% endif %}
         </div>
         {% set translations = post.messageTranslations %}

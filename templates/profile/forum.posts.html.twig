@@ -66,7 +66,7 @@
                             {# As on the thread page: the text in the reader's language if there is one, then the languages it is in #}
                             <div class="p-member-post__text js-highlight">
                                 {% if deleted %}<s>{% endif %}
-                                {{ post.messageIn(app.request.locale).message|purify|forum_text|forum_lightbox }}
+                                {{ post.messageIn(app.request.locale).message|purify|user_text|forum_lightbox }}
                                 {% if deleted %}</s>{% endif %}
                             </div>
                             {% set translations = post.messageTranslations %}

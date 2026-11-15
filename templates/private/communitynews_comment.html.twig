@@ -5,7 +5,7 @@
     {% for comment in commentsAndNews.comments %}
         <div class="c-mydata-box">
             <p class="c-mydata-card__meta">{{ comment.created|format_datetime('medium', 'short') }}</p>
-            <div class="c-mydata-card__text">{{ comment.text|purify|nl2br }}</div>
+            <div class="c-mydata-card__text">{{ comment.text|purify|user_text }}</div>
         </div>
     {% endfor %}
     <div class="c-mydata-card__foot"><span></span>{{ my.site(url('communitynews_show', {id: commentsAndNews.news.id})) }}</div>

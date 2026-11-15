@@ -4,9 +4,10 @@
   sidebar and the page. Static files: everything is relative, pages in a subdirectory (messages/, polls/, …) set
   isSubDir. The sidebar and the member's chip need every section's count, known once all pages are written: the
   pages leave markers that MemberModel replaces (the mockups pass mydata_sections and get them right away).
-  Pages set section (the sidebar's active row).
+  Pages set section (the sidebar's active row). The translators' previews (MyDataMockups) set mydata_prefix to '/': in
+  the tool the relative paths would point below its own address, the page would show without its stylesheet.
 #}
-{% set _prefix = (isSubDir ?? false) ? '../' : '' %}
+{% set _prefix = mydata_prefix ?? ((isSubDir ?? false) ? '../' : '') %}
 {% set _section = section ?? '' %}
 <html lang="{{ app.request ? app.request.locale : app.locale }}">
 <head>
@@ -41,9 +42,12 @@
         <!--mydata:sidebar:{{ _section }}-->
     {%- endif -%}
     <main class="c-mydata-main">
-        {% block header %}{% endblock %}
-        {% block content %}{% endblock content %}
-        {% include 'private/footer.html.twig' %}
+        {# the export's styles are scoped to .c-mydata: also in the translators' previews, which show the main's content #}
+        <div class="c-mydata c-mydata-main__page">
+            {% block header %}{% endblock %}
+            {% block content %}{% endblock content %}
+            {% include 'private/footer.html.twig' %}
+        </div>
     </main>
 </div>
 </body>

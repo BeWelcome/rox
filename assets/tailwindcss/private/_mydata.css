@@ -4,19 +4,30 @@
  * radio buttons, the picture viewer is a :target.
  */
 
-body.c-mydata { margin: 0; background: #f0f0f0; color: #334155; font-family: "Noto Sans", sans-serif; font-size: 0.9375rem; line-height: 1.55; }
+body.c-mydata { margin: 0; background: #f0f0f0; }
+/* on the body and on the page inside main, which the translators' previews show without the body */
+.c-mydata { color: #334155; font-family: "Noto Sans", sans-serif; font-size: 0.9375rem; line-height: 1.55; }
 .c-mydata a:not([class]) { color: #c2410c; text-decoration: none; transition: color 0.15s ease; }
 .c-mydata a:not([class]):hover { color: #9a3412; }
 .c-mydata a[class] { text-decoration: none; }
+/* Bootstrap's visually-hidden (the export has no Bootstrap): text for screen readers only, as in the shared templates'
+   request state on the avatar ("Accepted") */
+.c-mydata .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 .c-mydata h1, .c-mydata h2, .c-mydata h3 { margin: 0; color: #0f172a; font-family: "Signika", sans-serif; font-weight: 700; }
-.c-mydata img { max-width: 100%; }
+/* height: auto: an image with width and height attributes (from the editor) keeps its proportions when it is narrowed;
+   :where() keeps it as weak as img, so avatars and pictures sized by their class keep their size */
+:where(.c-mydata) img { max-width: 100%; height: auto; }
 
 /* Top bar */
 .c-mydata-top { position: sticky; top: 0; z-index: 10; background: #f37000; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12); }
 .c-mydata-top__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1140px; height: 64px; margin: 0 auto; padding: 0 0.9375rem; }
-.c-mydata-top__brand { display: inline-flex; color: #fff; align-items: center; gap: 0.5rem; }
-.c-mydata-top__brand img { height: 32px; }
-.c-mydata-top__brand img + img { height: 22px; }
+/* The logo as in the site's top bar: the icon 34px, the word mark 38px (24px on phones) */
+.c-mydata-top__brand { display: inline-flex; flex: 0 0 auto; color: #fff; align-items: center; gap: 0.4rem; }
+.c-mydata-top__brand img { display: block; width: 34px; height: 34px; object-fit: contain; }
+.c-mydata-top__brand img + img { width: auto; height: 38px; object-position: left center; }
+@media (max-width: 767px) {
+    .c-mydata-top__brand img + img { height: 24px; }
+}
 .c-mydata-top__chips { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .c-mydata-chip { display: inline-flex; align-items: center; gap: 0.45rem; min-width: 0; padding: 0.35rem 0.85rem; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
 .c-mydata-chip img { width: 24px; height: 24px; border-radius: 999px; object-fit: cover; }
@@ -56,6 +67,10 @@ body.c-mydata { margin: 0; background: #f0f0f0; color: #334155; font-family: "No
 .c-mydata-card + .c-mydata-card { margin-top: 1.25rem; }
 .c-mydata-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; align-items: start; }
 .c-mydata-grid > .c-mydata-card { margin: 0; }
+/* Articles to read (community news, newsletters): one column of a comfortable line length */
+.c-mydata-reading { display: flex; flex-direction: column; gap: 1.25rem; max-width: 46rem; }
+.c-mydata-reading > .c-mydata-card { margin: 0; }
+.c-mydata-reading .c-mydata-card__text { font-size: 1rem; line-height: 1.65; }
 .c-mydata .c-mydata-card__title { margin-bottom: 0.5rem; font-size: 1.125rem; line-height: 1.3; }
 .c-mydata-card__meta { margin: 0 0 0.5rem; color: #64748b; font-size: 0.8125rem; }
 .c-mydata-card__text p:last-child { margin-bottom: 0; }
@@ -216,6 +231,11 @@ body.c-mydata { margin: 0; background: #f0f0f0; color: #334155; font-family: "No
 .c-mydata-legs { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.75rem 0 0; padding: 0; list-style: none; }
 .c-mydata-legs li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; padding: 0.5rem 0.65rem; border-radius: 0.75rem; background: #f8fafc; font-size: 0.875rem; }
 .c-mydata-legs .c-mydata-tile { width: 1.75rem; height: 1.75rem; border-radius: 0.5rem; font-size: 0.75rem; }
+/* A leg's options: a row of their own below the place and dates; a long one wraps inside the card */
+.c-mydata-legs__tags { flex-basis: 100%; }
+.c-mydata-legs__tags .c-mydata-tag { max-width: 100%; border-radius: 0.6rem; white-space: normal; line-height: 1.35; }
+.c-mydata-tag--private { background: #f1f5f9; color: #334155; }
+.c-mydata-tag--private i { font-size: 0.7rem; }
 
 /* Gallery */
 .c-mydata-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }

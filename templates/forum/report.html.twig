@@ -42,7 +42,7 @@
                         <img width="32" height="32" alt="" src="{{ post.author ? path('avatar', {username: post.author.username, size: 48}) : asset('images/empty_avatar_72_72.png') }}">
                         <span><strong>{{ forum.author(post, false) }}</strong> · {{ post.created|format_datetime('medium', 'short') }}{% if _thread %} · {{ forum.thread_title(_thread, app.request.locale) }}{% endif %}</span>
                     </div>
-                    <div class="p-report-quote__text">{{ post.messageIn(app.request.locale).message|purify|forum_text }}</div>
+                    <div class="p-report-quote__text">{{ post.messageIn(app.request.locale).message|purify|user_text }}</div>
                 </div>
 
                 {% if report %}

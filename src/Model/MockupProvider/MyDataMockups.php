@@ -149,9 +149,10 @@ class MyDataMockups implements MockupProviderInterface
     public function getMockupVariables(array $parameters): array
     {
         // every page has the sidebar with the sections and the member in the top bar (MemberModel puts them in
-        // once the export is written; here they come right away)
+        // once the export is written; here they come right away); the stylesheet and images from the site's root, not
+        // relative to the tool's address
         return array_merge(
-            ['mydata_sections' => MyDataSections::withCounts(self::SAMPLE_COUNTS), 'member' => $parameters['user'], 'picture' => null],
+            ['mydata_sections' => MyDataSections::withCounts(self::SAMPLE_COUNTS), 'member' => $parameters['user'], 'picture' => null, 'mydata_prefix' => '/'],
             $this->pageVariables($parameters),
         );
     }
@@ -421,6 +422,14 @@ class MyDataMockups implements MockupProviderInterface
                 ->setOptions([LegOptionsType::MEET_LOCALS])
                 ->setLocation($location)
                 ->setInvitedBy($host)
+        );
+        // a second leg with the other options, so all their texts show
+        $trip->addLeg(
+            self::withId(new Leg(), 2)
+                ->setArrival(new Carbon('2021-02-24'))
+                ->setDeparture(new Carbon('2021-02-27'))
+                ->setOptions([LegOptionsType::LOOKING_FOR_HOST, LegOptionsType::PRIVATE])
+                ->setLocation($location)
         );
 
         return $trip;

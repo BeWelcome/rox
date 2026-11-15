@@ -64,7 +64,7 @@
                             <span>{{ post.created|format_datetime('medium', 'short') }}</span>
                         </div>
                     </div>
-                    <div class="p-report__post-text{{ _deleted ? ' is-deleted' }}">{{ post.messageIn(app.request.locale).message|purify|forum_text }}</div>
+                    <div class="p-report__post-text{{ _deleted ? ' is-deleted' }}">{{ post.messageIn(app.request.locale).message|purify|user_text }}</div>
                     {% if _thread %}
                         <p class="p-report__post-topic"><i class="fas fa-comments" aria-hidden="true"></i> {{ forum.thread_title(_thread, app.request.locale) }} · {{ group.name }}</p>
                     {% endif %}

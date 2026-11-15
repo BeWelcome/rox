@@ -32,7 +32,7 @@
           <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.name }}
           {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" title="{{ activity.location.country.name }}"></i>{% endif %}
         </span>
-        <span class="p-activities-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'activities.count.yes'|trans({ count: activity.attendeesYes|length }) }}</span>
+        <span class="p-activities-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'activities.count.yes'|trans({ count: activity.attendeesYes.toArray|filter(a => a.attendee.status in constant('App\\Doctrine\\MemberStatusType::ACTIVE_SEARCH_ARRAY'))|length }) }}</span>
         {% if attendee and not activity.cancelled %}
           {% if activity.organizer(member) %}
             <span class="p-activities-chip p-activities-chip--own"><i class="fa fa-star" aria-hidden="true"></i> {{ 'activities.you.organize'|trans }}</span>

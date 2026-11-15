@@ -63,6 +63,13 @@
             </span>
         </a>
     {% else %}
-        <p class="c-home-list__empty">{{ 'dashboard.messages.none'|trans }}</p>
+        {#- None: find someone to write to (landing.js hides See all) -#}
+        {% include 'landing/widget/_empty.html.twig' with {
+            modifier: 'center',
+            icon: 'fas fa-paper-plane',
+            title: 'landing.messages.none.title'|trans,
+            text: 'landing.messages.none.text'|trans,
+            primary: { href: path('search_locations'), label: 'landing.messages.none.find'|trans, icon: 'fas fa-search' },
+        } only %}
     {% endfor %}
 </div>

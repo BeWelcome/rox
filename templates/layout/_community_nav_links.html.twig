@@ -1,10 +1,14 @@
-{# Shared Community links (text only). The forum is reached from the groups and the home page. #}
+{# Shared Community links, rows like the member's menu (an icon, the label, a chevron on phones). The forum is reached from the groups and the home page. #}
 {% set _community_nav_items = [
-    { route: 'groups_mygroups', label: 'landing.button.mygroups' },
-    { route: 'activities', label: 'activities' },
+    { route: 'groups_mygroups', label: 'landing.button.mygroups', icon: 'fas fa-users' },
+    { route: 'activities', label: 'activities', icon: 'far fa-calendar' },
 ] %}
 {% for item in _community_nav_items %}
     <li{% if item_li_class is defined and item_li_class %} class="{{ item_li_class|e('html_attr') }}"{% endif %}>
-        <a href="{{ path(item.route) }}" class="dropdown-item{% if item_link_class is defined and item_link_class %} {{ item_link_class|e('html_attr') }}{% endif %}">{{ item.label|trans }}</a>
+        <a href="{{ path(item.route) }}" class="member-menu__item{% if item_link_class is defined and item_link_class %} {{ item_link_class|e('html_attr') }}{% endif %}">
+            <span class="member-menu__icon member-menu__icon--warm" aria-hidden="true"><i class="{{ item.icon }}"></i></span>
+            <span class="member-menu__label">{{ item.label|trans }}</span>
+            <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
+        </a>
     </li>
 {% endfor %}

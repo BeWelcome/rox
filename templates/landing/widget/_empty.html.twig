@@ -1,0 +1,20 @@
+{#
+  The empty state of a card of the home page: an icon, a title and a line, then a main button and a
+  second one. Takes modifier (optional, e.g. center: stacked and centred, for a tall card), icon (Font Awesome classes), title, text, primary and secondary
+  ({ href, label, icon, attr }: attr is printed as is, e.g. a js- class for the side panel).
+#}
+<div class="c-home-empty{{ modifier is defined ? ' c-home-empty--' ~ modifier }}">
+    <span class="c-home-empty__icon" aria-hidden="true"><i class="{{ icon }}"></i></span>
+    <div class="c-home-empty__body">
+        <p class="c-home-empty__title">{{ title }}</p>
+        <p class="c-home-empty__text">{{ text }}</p>
+    </div>
+    <div class="c-home-empty__actions">
+        <a class="c-home-empty__btn c-home-empty__btn--primary{{ primary.class|default('') ? ' ' ~ primary.class }}" href="{{ primary.href }}"{% if primary.title is defined %} data-title="{{ primary.title }}"{% endif %}>
+            <i class="{{ primary.icon }}" aria-hidden="true"></i> {{ primary.label }}
+        </a>
+        {% if secondary is defined %}
+            <a class="c-home-empty__btn" href="{{ secondary.href }}">{{ secondary.label }}</a>
+        {% endif %}
+    </div>
+</div>

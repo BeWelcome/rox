@@ -14,8 +14,8 @@
         <div class="c-contact__body">
             {{ form_errors(form) }}
 
-            {# The trip, as the traveller wrote it (already shown when coming from the trip in the panel) #}
-            {% if not app.request.query.get('back') %}
+            {# The trip, as the traveller wrote it (already shown when coming from the trip in the panel, or on its card on the home page) #}
+            {% if not app.request.query.get('back') and app.request.query.get('from') != 'home' %}
             <section class="c-contact-trip">
                 <p class="c-contact-trip__where">
                     <i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ leg.location.name }}

@@ -9834,11 +9834,13 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-card .p-pro-where__city { margin: 0.75rem 0 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
 .p-pro-card .p-pro-where__area { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }
 
-/* One column: the cards in one list, "Where I live" right after the accommodation, the comments (the longest) last */
+/* One column: the cards in one list, the Admin box first, "Where I live" right after the accommodation, the comments
+   (the longest) last */
 @media (max-width: 991.98px) {
   .p-pro-layout { display: flex; flex-direction: column; align-items: stretch; }
   .p-pro-layout__main,
   .p-pro-layout__side { display: contents; }
+  .p-pro-layout__side > .p-pro-admin-tools { order: -1; }
   .p-pro-layout__side > .p-pro-card { order: 3; }
   .p-pro-layout__main > .p-pro-card--comments { order: 4; }
   .p-pro-layout__side > .p-pro-card--where { order: 1; }

@@ -40,10 +40,12 @@ function init() {
 
     // "Can you host?", the number of guests and the hosting interest: saved as soon as they
     // change, like the old accommodation form did (ProfileController::setAccommodation...).
+    // with the username of the member whose profile this is: admins and the safety team edit others' profiles too
+    const editedMember = document.querySelector('.js-pe-accommodation')?.dataset.username;
     const post = (url, body) => fetch(url, {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ...body, username: editedMember }),
     });
 
     document.querySelectorAll('.js-pe-accommodation').forEach((card) => {

@@ -46,3 +46,12 @@ document.addEventListener('click', event => {
         window.requestAnimationFrame(updateAbout);
     }
 });
+
+// The Admin box is folded; a link to it (#admin-tools-side, from the rights tool) opens it
+const openAdminTools = () => {
+    if (window.location.hash.startsWith('#admin-tools')) {
+        document.getElementById(window.location.hash.slice(1))?.setAttribute('open', '');
+    }
+};
+openAdminTools();
+window.addEventListener('hashchange', openAdminTools);

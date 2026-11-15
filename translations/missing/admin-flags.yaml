@@ -34,6 +34,9 @@ admin.flags.not.blocked:
 admin.flags.history.link:
   - 'Flag history ({count} earlier)'
   - 'Admin box of the profile: link to the member''s earlier flags. Keep {count}.'
+admin.flags.member.link:
+    - 'Flags of {username}'
+    - 'Admin box on a profile, below the forum posting switch, when the member had no flag before: opens the flags filtered to them. Keep {username}.'
 admin.flags.all:
   - 'All flags'
   - 'Admin box of the profile: link to the flags list (the member has no earlier flags).'

@@ -41,7 +41,8 @@ final class AdminFlagsControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $panel = $crawler->filter('.p-pro-flag')->first();
         self::assertSame('false', $panel->filter('[role="switch"]')->attr('aria-checked'));
-        self::assertSame('/admin/flags', $panel->filter('.p-pro-flag__history')->attr('href'));
+        // the member's flags, as the rights link shows the member's rights
+        self::assertSame('/admin/flags?member=member-empty', $panel->filter('.p-pro-flag__history')->attr('href'));
         $form = $crawler->filter('form[action="/admin/flags/member-empty/block"]')->first();
         self::assertCount(1, $form->filter('textarea[name="comment"]'));
         // the Flags link of the Admin box is the switch now

@@ -1821,6 +1821,11 @@ main:has(.p-hero) {
   font-weight: 700;
   line-height: 1.3;
 }
+/* the email address on the account page, with the link to change it (account.email.html.twig) */
+.p-account-email { margin: 0 0 0.35rem; color: #0f172a; font-size: 0.95rem; font-weight: 600; overflow-wrap: anywhere; }
+.p-account-email__change { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.25rem; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.p-account-email__change:hover { color: #9a3412; }
+
 
 .p-account-section__help {
   display: block;
@@ -11091,6 +11096,13 @@ body.is-embedded { background: #fff; }
 .p-pro-admin-tools .p-pro-admin-tools__title { display: flex; align-items: center; gap: 0.45rem; margin: 0 0.6rem 0.6rem; color: #f8fafc; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .p-pro-admin-tools__title i,
 .p-pro-admin-tools__title svg { color: #fbbf24; font-size: 0.85rem; }
+/* folded by default (a <details>): the title opens it, the chevron turns */
+.p-pro-admin-tools > summary { cursor: pointer; list-style: none; }
+.p-pro-admin-tools > summary::-webkit-details-marker { display: none; }
+.p-pro-admin-tools:not([open]) { padding-bottom: 1.1rem; }
+.p-pro-admin-tools:not([open]) > .p-pro-admin-tools__title { margin-bottom: 0; }
+.p-pro-admin-tools .p-pro-admin-tools__title .p-pro-admin-tools__fold { margin-left: auto; color: #94a3b8; font-size: 0.7rem; transition: transform 0.15s ease; }
+.p-pro-admin-tools[open] .p-pro-admin-tools__fold { transform: rotate(180deg); }
 .p-pro-admin-tools__list { margin: 0; padding: 0; list-style: none; }
 .p-pro-admin-tools__link,
 .p-pro-admin-tools__link:hover { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.6rem; border-radius: 0.65rem; color: #e2e8f0; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
@@ -11560,7 +11572,8 @@ a.p-pe-tile:hover { border-color: #fbc99f; }
 button.p-pe-account__seen:hover { background: #e2e8f0; }
 .p-pe-account__seen.is-shown { background: #dcfce7; color: #15803d; }
 button.p-pe-account__seen.is-shown:hover { background: #bbf7d0; }
-.p-pe-account__seen.is-locked { cursor: default; }
+a.p-pe-account__seen.is-locked { text-decoration: none; }
+a.p-pe-account__seen.is-locked:hover { background: #e2e8f0; color: #334155; }
 .p-pe-account__seen.is-busy { opacity: 0.6; }
 .p-pe-account__seen.is-failed { background: #fee2e2; color: #b91c1c; }
 .p-pe-account__eye-on, .p-pe-account__eye-off { display: none; }

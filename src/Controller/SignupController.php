@@ -251,13 +251,16 @@ class SignupController extends AbstractController
                 $this->entityManager->flush();
                 // The email address is confirmed: the signup funnel's goal in Plausible (#540)
                 $this->addFlash('plausible_event', 'Signup Confirmed');
+
+                if (MemberStatusType::ACTIVE === $member->getStatus()) {
+                    return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
+                }
+
+                return $this->redirectToRoute('finish_setup', ['username' => $member->getUsername()]);
             }
 
-            if (MemberStatusType::ACTIVE === $member->getStatus()) {
-                return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
-            }
-
-            return $this->redirectToRoute('finish_setup', ['username' => $member->getUsername()]);
+            // a wrong key: the form again with the error (it went on to the setup page without a word)
+            $confirmEmailAddressForm->get('registration_key')->addError(new FormError($this->getTranslator()->trans('error.registration.key')));
         }
 
         return $this->render('signup/confirm.email.html.twig', [

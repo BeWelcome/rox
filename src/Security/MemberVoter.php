@@ -9,7 +9,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * Who may see a member: their profile, gallery, picture and preview, and contact them.
+ * Who may see a member: their profile, gallery, picture and preview, and contact them (MEMBER_VIEW); and who may edit
+ * their profile (MEMBER_EDIT): the member, and admins and the safety team (the Admin box's "Admin: Edit Profile").
  *
  * Everybody sees browsable members who finished the sign-up. Members who just signed up (e-mail not confirmed or
  * details not filled in) and members who aren't browsable (banned, taken out, ...) are seen only by themselves and
@@ -20,6 +21,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class MemberVoter extends Voter
 {
     public const string MEMBER_VIEW = 'MEMBER_VIEW';
+    public const string MEMBER_EDIT = 'MEMBER_EDIT';
+
+    private const array EDITORS = [
+        Member::ROLE_ADMIN_ADMIN,
+        Member::ROLE_ADMIN_SAFETYTEAM,
+    ];
 
     private const array VOLUNTEERS = [
         Member::ROLE_ADMIN_ADMIN,
@@ -34,7 +41,7 @@ class MemberVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return self::MEMBER_VIEW === $attribute && $subject instanceof Member;
+        return \in_array($attribute, [self::MEMBER_VIEW, self::MEMBER_EDIT], true) && $subject instanceof Member;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
@@ -50,11 +57,11 @@ class MemberVoter extends Voter
             return true;
         }
 
-        if ($member->isVisibleToMembers()) {
+        if (self::MEMBER_VIEW === $attribute && $member->isVisibleToMembers()) {
             return true;
         }
 
-        foreach (self::VOLUNTEERS as $role) {
+        foreach (self::MEMBER_EDIT === $attribute ? self::EDITORS : self::VOLUNTEERS as $role) {
             if ($this->accessDecisionManager->decide($token, [$role])) {
                 return true;
             }

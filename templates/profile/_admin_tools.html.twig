@@ -2,7 +2,7 @@
   Volunteers with admin rights: their tools for this member (ProfileSubmenu::addVolunteerEntries),
   in a dark block of the right column. Each link shows only with the matching right.
   The Flags right gets the switch that blocks forum posting (Admin\FlagsController) instead of a link: on, it asks
-  for the reason; off, it asks before removing the flag.
+  for the reason; off, it asks before removing the flag. Folded by default: most volunteers visit profiles as members.
 #}
 {% set _adminItems = submenu.items ?? [] %}
 {% set _adminTools = [
@@ -13,10 +13,11 @@
 ]|filter(tool => _adminItems[tool.key] is defined) %}
 {% set _flag = _adminItems.adminflags is defined ? forum_posting_block(member) : null %}
 {% if _adminTools|length > 0 or _flag %}
-  <section class="p-pro-admin-tools" aria-labelledby="admin-tools-{{ where }}-title" id="admin-tools-{{ where }}">
-    <h2 class="p-pro-admin-tools__title" id="admin-tools-{{ where }}-title">
+  <details class="p-pro-admin-tools" id="admin-tools-{{ where }}">
+    <summary class="p-pro-admin-tools__title" id="admin-tools-{{ where }}-title">
       <i class="fas fa-user-shield" aria-hidden="true"></i> Admin
-    </h2>
+      <i class="fas fa-chevron-down p-pro-admin-tools__fold" aria-hidden="true"></i>
+    </summary>
     <ul class="p-pro-admin-tools__list">
       {% for tool in _adminTools %}
         {% set _item = _adminItems[tool.key] %}
@@ -49,8 +50,9 @@
         {% if _blocked and _flag.block.comment %}
           <p class="p-pro-flag__comment">“{{ _flag.block.comment }}”</p>
         {% endif %}
-        <a class="p-pro-flag__history" href="{{ _flag.earlier > 0 ? path('admin_flags', {member: member.username}) : path('admin_flags') }}">
-          {{- _flag.earlier > 0 ? 'admin.flags.history.link'|trans({count: _flag.earlier}) : 'admin.flags.all'|trans -}}
+        {# the member's flags, as the rights link shows the member's rights #}
+        <a class="p-pro-flag__history" href="{{ path('admin_flags', {member: member.username}) }}">
+          {{- _flag.earlier > 0 ? 'admin.flags.history.link'|trans({count: _flag.earlier}) : 'admin.flags.member.link'|trans({username: member.username}) -}}
           <i class="fas fa-arrow-right" aria-hidden="true"></i>
         </a>
       </div>
@@ -84,5 +86,5 @@
       </div>
       {{ encore_entry_script_tags('micromodal') }}
     {% endif %}
-  </section>
+  </details>
 {% endif %}

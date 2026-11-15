@@ -876,3 +876,33 @@ member.menu.mine:
 member.menu.account:
     - 'Account'
     - On phones, small heading in the member's own menu above My preferences and Change password
+account.email.change.link:
+    - 'Change email address'
+    - 'Account page, link below the current email address to the page that changes it.'
+account.email.change.title:
+    - 'Change email address'
+    - 'Title of the page that changes the email address of an account.'
+account.email.change.intro:
+    - 'Your address is {email}. We send a mail with a link to the new address; it replaces the current one once you confirm it there.'
+    - 'Change email address page, for the member themselves. Keep {email}.'
+account.email.change.intro.admin:
+    - 'You change the address of {username} ({email}). No password needed: the mail with the link goes to the new address, and {username} confirms it there.'
+    - 'Change email address page, for admins and the safety team changing a member''s address. Keep {username} and {email}.'
+account.email.new:
+    - 'New email address'
+    - 'Change email address page, label of the field for the new address.'
+account.email.password.help:
+    - 'To make sure it is you.'
+    - 'Change email address page, help below the password field (only when members change their own address).'
+account.email.change.button:
+    - 'Send confirmation mail'
+    - 'Change email address page, the button that saves the new address and sends the mail to confirm it.'
+flash.account.email.sent:
+    - 'We sent a mail with a link to {email}. The address changes once the link is confirmed.'
+    - 'Account page, after a new email address was requested. Keep {email}.'
+account.new.email.taken:
+    - 'This email address is already in use. Please choose another one.'
+    - 'Change email address page, when the new address is the current one or another member''s.'
+member.mail.not.confirmed:
+    - 'The current email address is not confirmed yet. Please confirm it before changing it.'
+    - 'Change email address page, when the account''s current address still waits for its confirmation.'

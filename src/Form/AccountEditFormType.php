@@ -6,10 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -83,18 +81,6 @@ class AccountEditFormType extends AbstractType
             ->add('show_gender', CheckboxType::class, [
                 'label' => 'label.show.gender',
                 'required' => false,
-            ])
-            ->add('email', EmailType::class, [
-                'label' => 'label.email.change',
-                'attr' => [
-                    'class' => 'o-input',
-                ],
-                'help' => 'help.email.change',
-                'required' => false,
-                'constraints' => [
-                    new NotBlank(message: 'signup.error.email.blank'),
-                    new Email(),
-                ],
             ])
         ;
     }

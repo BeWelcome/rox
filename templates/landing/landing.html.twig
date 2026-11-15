@@ -169,21 +169,39 @@
                 <a href="{{ url('visitors') }}">{% if homeCity %}<span class="c-home-dash__title-long">{{ 'landing.dash.coming.to'|trans({ city: homeCity }) }}</span><span class="c-home-dash__title-short">{{ 'landing.tab.visitors'|trans }}</span>{% else %}{{ 'landing.tab.visitors'|trans }}{% endif %}</a>
             </h2>
             <span class="c-home-dash__count js-home-trips-position" hidden></span>
-            <label class="c-home-dash__radius">
-                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                <span class="visually-hidden">{{ 'trips.radius'|trans }}</span>
-                <select class="js-home-trips-radius">
-                    {% for choice in radiusForm.radius.vars.choices %}
-                        {% if choice.value in ['20', '50', '100', '200'] or choice.value == _radius ~ '' %}
-                            <option value="{{ choice.value }}"{% if choice.value == _radius ~ '' %} selected{% endif %}>{{ choice.label|trans }}</option>
-                        {% endif %}
+            {# The distance: a pill that opens the site's dropdown menu (landing.js sets #trips_radius and reloads) #}
+            {% set _radii = radiusForm.radius.vars.choices|filter(choice => choice.value in ['20', '50', '100', '200'] or choice.value == _radius ~ '') %}
+            {% set _current = _radii|filter(choice => choice.value == _radius ~ '')|first %}
+            <div class="dropdown c-home-dash__radius-wrap">
+                <button type="button" class="c-home-dash__radius js-home-trips-radius" data-bs-toggle="dropdown" aria-expanded="false"
+                        aria-label="{{ 'trips.radius'|trans }}">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    <span class="js-home-trips-radius-label">{{ _current ? _current.label|trans : '' }}</span>
+                    <i class="fas fa-chevron-down c-home-dash__radius-chevron" aria-hidden="true"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown c-home-radius-menu">
+                    {% for choice in _radii %}
+                        {% set _on = choice.value == _radius ~ '' %}
+                        <li>
+                            <button type="button" class="dropdown-item p-hero__dropdown-item c-home-radius-menu__item js-home-trips-radius-option{{ _on ? ' is-active' }}"
+                                    data-value="{{ choice.value }}" aria-pressed="{{ _on ? 'true' : 'false' }}">
+                                <span>{{ choice.label|trans }}</span>
+                                <i class="fas fa-check c-home-radius-menu__check" aria-hidden="true"></i>
+                            </button>
+                        </li>
                     {% endfor %}
-                </select>
-            </label>
+                </ul>
+            </div>
             <input type="hidden" id="trips_radius" value="{{ _radius }}">
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
+            <div class="c-home-pane__footer c-home-pane__footer--more">
+                <a class="c-home-more" href="{{ url('visitors') }}">
+                    {{ 'landing.dash.visitors.all'|trans }}
+                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
+                </a>
+            </div>
         </div>
     </section>
 

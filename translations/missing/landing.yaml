@@ -114,6 +114,9 @@ landing.dash.activities:
 landing.dash.activities.all:
     - 'All activities'
     - 'Home page: link at the bottom of the activities card'
+landing.dash.visitors.all:
+    - 'All visitors'
+    - 'Home page: link at the bottom of the card with the members coming to the member''s area'
 landing.dash.groups:
     - 'Group discussions'
     - 'Home page: title of the card with the discussions of the member''s groups'

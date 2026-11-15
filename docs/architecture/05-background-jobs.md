@@ -11,6 +11,7 @@ and processed by a console command. The commands are started by the scheduler of
 | `send:notifications` | Sends queued forum notifications (`posts_notificationqueue`) as e-mails and browser push, in batches |
 | `send:massmail` | Sends the next batch of a newsletter or mass mail |
 | `trips:notifications:send daily\|weekly\|monthly` | Sends trip notification mails to members who chose that frequency in their preferences |
+| `activities:notifications:send daily\|weekly\|monthly` | Sends activity notification mails to members who chose that frequency in their preferences |
 | `comments:send:reminder` | Reminds members to leave a comment after a stay |
 | `members:remind:login` | Reminds members who haven't logged in for a long time |
 | `members:suspend:notification` | Suspends members away for five years despite reminders; schedules earlier ones for deletion |

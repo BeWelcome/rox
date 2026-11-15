@@ -244,21 +244,23 @@
           {% do field.setRendered %}
         {% endfor %}
 
-        {% set trips = finalize.trips_notifications %}
+        {# how often to hear about visitors and about activities nearby #}
+        {% for field in [finalize.trips_notifications, finalize.activities_notifications] %}
         <div class="p-preference-card p-sf-setting">
           <div class="p-preference-card__copy">
-            <label class="p-preference-card__title" for="{{ trips.vars.id }}">{{ trips.vars.label|trans }}</label>
-            {% if trips.vars.help %}<span class="p-preference-card__help">{{ trips.vars.help|trans }}</span>{% endif %}
+            <label class="p-preference-card__title" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+            {% if field.vars.help %}<span class="p-preference-card__help">{{ field.vars.help|trans }}</span>{% endif %}
           </div>
           <div class="p-preference-card__control">
-            <select id="{{ trips.vars.id }}" name="{{ trips.vars.full_name }}" class="p-preference-select">
-              {% for choice in trips.vars.choices %}
-                <option value="{{ choice.value }}"{{ choice.value == trips.vars.value ? ' selected' }}>{{ choice.label|trans }}</option>
+            <select id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" class="p-preference-select">
+              {% for choice in field.vars.choices %}
+                <option value="{{ choice.value }}"{{ choice.value == field.vars.value ? ' selected' }}>{{ choice.label|trans }}</option>
               {% endfor %}
             </select>
           </div>
-          {% do trips.setRendered %}
+          {% do field.setRendered %}
         </div>
+        {% endfor %}
       </div>
     </section>
 

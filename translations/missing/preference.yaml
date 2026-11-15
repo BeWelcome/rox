@@ -105,3 +105,24 @@ tripsnotificationsweekly:
 tripsnotificationsmonthly:
     - Monthly
     - Option on the preferences page for trip notifications.
+activitiesnotifications:
+    - Activity notifications
+    - Label on the preferences page for activity notifications.
+activities.notifications:
+    - Choose whether to be notified when members create activities in your area (within your radius for activities near you).
+    - Help text on the preferences page for activity notifications.
+activitiesnotificationsnever:
+    - Never
+    - Option on the preferences page for activity notifications.
+activitiesnotificationsimmediately:
+    - Immediately
+    - Option on the preferences page for activity notifications.
+activitiesnotificationsdaily:
+    - Daily
+    - Option on the preferences page for activity notifications.
+activitiesnotificationsweekly:
+    - Weekly
+    - Option on the preferences page for activity notifications.
+activitiesnotificationsmonthly:
+    - Monthly
+    - Option on the preferences page for activity notifications.

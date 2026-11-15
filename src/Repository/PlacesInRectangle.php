@@ -54,7 +54,7 @@ final class PlacesInRectangle
      */
     public function withActivities(float $latitude, float $longitude, float $distance): array
     {
-        return $this->find('INNER JOIN activities act ON act.locationId = l.geoname_id', $latitude, $longitude, $distance);
+        return $this->find('INNER JOIN activity act ON act.location_id = l.geoname_id', $latitude, $longitude, $distance);
     }
 
     /**

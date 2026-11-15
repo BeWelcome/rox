@@ -2,12 +2,15 @@
 
 namespace App\Repository;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Form\ActivityRadiusType;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -222,6 +225,96 @@ class ActivityRepository extends EntityRepository
         ;
 
         return $this->paginate($qb, $page, $items);
+    }
+
+    /**
+     * The members to tell about the activity: active, with their active address within their own radius for
+     * activities near them (ActivitiesNearMeRadius) of the activity's place, and with one of the given values for
+     * the activity notifications (ActivitiesNotifications, never by default). Not the creator, not who answered
+     * already. None for a cancelled, online or past activity, nor for one more than three months ahead.
+     *
+     * @param list<string> $notificationValues
+     *
+     * @return list<Member>
+     */
+    public function getMembersToNotifyAboutActivity(
+        Activity $activity,
+        array $notificationValues = [Preference::ACTIVITY_NOTIFICATIONS_IMMEDIATELY],
+        int $duration = 3,
+    ): array {
+        $preferenceRepository = $this->getEntityManager()->getRepository(Preference::class);
+        $notificationPreference = $preferenceRepository->findOneBy(['codename' => Preference::ACTIVITY_NOTIFICATIONS]);
+        $radiusPreference = $preferenceRepository->findOneBy(['codename' => Preference::ACTIVITIES_NEAR_ME_RADIUS]);
+        if (null === $notificationPreference || null === $radiusPreference) {
+            return [];
+        }
+
+        $activeStatuses = [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND];
+        $now = new DateTime();
+        if (
+            $activity->isCancelled()
+            || $activity->isOnline()
+            || $activity->getEnds() < $now
+            || $activity->getStarts() > new DateTime()->modify('+' . $duration . ' months')
+            || !\in_array($activity->getCreatedBy()->getStatus(), $activeStatuses, true)
+        ) {
+            return [];
+        }
+
+        $location = $activity->getLocation();
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('DISTINCT receiver')
+            ->from(Member::class, 'receiver')
+            ->join('receiver.addresses', 'a', Join::WITH, 'a.active = true')
+            ->join('a.location', 'memberLocation')
+            ->leftJoin('receiver.preferences', 'notifications', Join::WITH, 'notifications.preference = :notificationPreference')
+            ->leftJoin('receiver.preferences', 'radius', Join::WITH, 'radius.preference = :radiusPreference')
+            ->leftJoin(ActivityAttendee::class, 'answered', Join::WITH, 'answered.activity = :activity AND answered.attendee = receiver')
+            ->where($qb->expr()->in('receiver.status', ':activeStatuses'))
+            ->andWhere('receiver <> :creator')
+            ->andWhere('answered.id IS NULL')
+            ->andWhere('COALESCE(notifications.value, :defaultNotification) IN (:notificationValues)')
+            ->andWhere(
+                'ST_Distance_Sphere(memberLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= 1000 * COALESCE(radius.value, :defaultRadius)'
+            )
+            ->setParameter('activeStatuses', $activeStatuses)
+            ->setParameter('creator', $activity->getCreatedBy())
+            ->setParameter('activity', $activity)
+            ->setParameter('notificationPreference', $notificationPreference)
+            ->setParameter('radiusPreference', $radiusPreference)
+            ->setParameter('defaultNotification', $notificationPreference->getDefaultValue())
+            ->setParameter('notificationValues', $notificationValues)
+            ->setParameter('defaultRadius', $radiusPreference->getDefaultValue())
+            ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $location->getLongitude(), $location->getLatitude()))
+        ;
+        // the places with members within the largest radius first (see PlacesInRectangle), then each member's own
+        $places = new PlacesInRectangle($this->getEntityManager()->getConnection())->withMembers(
+            (float) $location->getLatitude(),
+            (float) $location->getLongitude(),
+            (float) max(ActivityRadiusType::DISTANCES),
+        );
+        PlacesInRectangle::restrict($qb, 'memberLocation.geonameId', $places, 'placesInRectangle');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Both ends included: the dates are compared in whole seconds, and a run's end is the next run's start; the
+     * notifications sent (member_activity_notification_sent) keep an activity of that second from being mailed twice.
+     *
+     * @return list<Activity>
+     */
+    public function findActivitiesCreatedBetween(DateTimeInterface $since, DateTimeInterface $until): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.created >= :since')
+            ->andWhere('a.created <= :until')
+            ->setParameter('since', $since)
+            ->setParameter('until', $until)
+            ->orderBy('a.created', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     private function getActivitiesRadius(Member $member)

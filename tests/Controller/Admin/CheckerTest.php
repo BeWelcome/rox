@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller\Admin;
 
+use App\Entity\Activity;
+use App\Entity\ActivityAttendee;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,10 +103,17 @@ final class CheckerTest extends WebTestCase
 
     public function testActivitiesAreDeleted(): void
     {
-        $ids = array_map('intval', $this->connection()->fetchFirstColumn('SELECT id FROM activities ORDER BY id LIMIT 2'));
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $ids = array_map('intval', $entityManager
+            ->createQuery('SELECT a.id FROM ' . Activity::class . ' a ORDER BY a.id')
+            ->setMaxResults(2)
+            ->getSingleColumnResult());
         self::assertCount(2, $ids);
         // longer than a day: looks like spam
-        $this->connection()->executeStatement('UPDATE activities SET dateTimeEnd = dateTimeStart + INTERVAL 3 DAY WHERE id IN (?, ?)', $ids);
+        $entityManager
+            ->createQuery('UPDATE ' . Activity::class . " a SET a.ends = DATE_ADD(a.starts, 3, 'DAY') WHERE a.id IN (:ids)")
+            ->setParameter('ids', $ids)
+            ->execute();
         $this->client->loginUser($this->member('bwadmin'));
 
         $crawler = $this->client->request('GET', '/admin/spam/activities');
@@ -121,7 +130,10 @@ final class CheckerTest extends WebTestCase
 
         $this->client->request('POST', '/admin/spam/activities', ['_token' => $token, 'ids' => [$ids[1]]]);
         self::assertSame(0, $this->activities([$ids[1]]));
-        self::assertSame(0, (int) $this->connection()->fetchOne('SELECT COUNT(*) FROM activitiesattendees WHERE activityId IN (?, ?)', $ids));
+        self::assertSame(0, (int) $entityManager
+            ->createQuery('SELECT COUNT(t.id) FROM ' . ActivityAttendee::class . ' t WHERE IDENTITY(t.activity) IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getSingleScalarResult());
 
         $this->client->request('POST', '/admin/spam/activities', ['_token' => 'wrong', 'ids' => [$ids[1]]]);
         $this->assertResponseStatusCodeSame(403);
@@ -170,7 +182,10 @@ final class CheckerTest extends WebTestCase
      */
     private function activities(array $ids): int
     {
-        return (int) $this->connection()->fetchOne('SELECT COUNT(*) FROM activities WHERE id IN (' . implode(',', $ids) . ')');
+        return (int) static::getContainer()->get(EntityManagerInterface::class)
+            ->createQuery('SELECT COUNT(a.id) FROM ' . Activity::class . ' a WHERE a.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getSingleScalarResult();
     }
 
     private function member(string $username): Member

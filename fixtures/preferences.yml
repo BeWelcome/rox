@@ -233,6 +233,15 @@ App\Entity\Preference:
         DefaultValue: Never
         PossibleValues: Never;Immediately;Daily;Weekly;Monthly
         Status: 'Normal'
+    ACTIVITY_NOTIFICATIONS:
+        position: 66
+        codename: 'ActivitiesNotifications'
+        codeDescription: 'activities.notifications'
+        description: 'How often the member wants notifications for activities in their area'
+        created: <DateTime()>
+        DefaultValue: Never
+        PossibleValues: Never;Immediately;Daily;Weekly;Monthly
+        Status: 'Normal'
     NEW_MEMBERS_COUNTRIES:
         position: 200
         codename: 'NewMembersCountries'

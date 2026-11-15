@@ -3,10 +3,12 @@
 namespace App\Tests\Model;
 
 use App\Doctrine\MemberStatusType;
+use App\Entity\Activity;
 use App\Model\StatisticsModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -23,7 +25,7 @@ class StatisticsModelTest extends TestCase
         $queries = [];
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(5))
+            ->expects($this->exactly(4))
             ->method('executeQuery')
             ->willReturnCallback(static function (string $sql) use (&$queries, $result): Result {
                 $queries[] = preg_replace('/\s+/', ' ', $sql);
@@ -32,8 +34,18 @@ class StatisticsModelTest extends TestCase
             })
         ;
 
-        $entityManager = $this->createStub(EntityManagerInterface::class);
+        // the activities are counted with DQL
+        $activities = $this->createStub(Query::class);
+        $activities->method('setParameter')->willReturnSelf();
+        $activities->method('getSingleScalarResult')->willReturn(42);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getConnection')->willReturn($connection);
+        $entityManager
+            ->expects($this->once())
+            ->method('createQuery')
+            ->with($this->stringContains('FROM ' . Activity::class . ' a WHERE a.status = :active'))
+            ->willReturn($activities)
+        ;
 
         $model = new StatisticsModel(
             $this->createStub(TranslatorInterface::class),
@@ -53,7 +65,7 @@ class StatisticsModelTest extends TestCase
 
         // members, languages and comments only count active members
         $activeOnly = '.status IN (' . MemberStatusType::ACTIVE_ALL . ') ';
-        $this->assertCount(5, $queries);
+        $this->assertCount(4, $queries);
         foreach ([0, 2, 3] as $index) {
             $this->assertStringContainsStringIgnoringCase($activeOnly, $queries[$index]);
         }
@@ -65,8 +77,12 @@ class StatisticsModelTest extends TestCase
         $result->method('fetchOne')->willReturn(1);
         $connection = $this->createStub(Connection::class);
         $connection->method('executeQuery')->willReturn($result);
+        $activities = $this->createStub(Query::class);
+        $activities->method('setParameter')->willReturnSelf();
+        $activities->method('getSingleScalarResult')->willReturn(1);
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $entityManager->method('getConnection')->willReturn($connection);
+        $entityManager->method('createQuery')->willReturn($activities);
 
         $item = $this->createMock(ItemInterface::class);
         $item->expects($this->once())->method('expiresAfter')->with(3600)->willReturnSelf();

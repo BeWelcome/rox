@@ -256,3 +256,15 @@ activities.panel.note.save:
 activities.panel.calendar.ics:
     - 'Apple, other (.ics)'
     - 'Activity in the side panel of the home page, Add to calendar menu: downloads the calendar file'
+activity.notification.new.subject:
+    - 'There''s an activity in your area.'
+    - Email subject for activity notifications (the creator's name is in the sender already).
+activity.notification.new.email:
+    - 'There''s an activity in your area.'
+    - Email title and preheader for activity notifications (the creator is shown below it).
+activity.notification.see:
+    - 'See the activity'
+    - Button in the activity notification email; opens the activity.
+activity.notification.preference.link:
+    - Change your activity notification preference
+    - Link text in activity notification emails pointing to the preferences page.

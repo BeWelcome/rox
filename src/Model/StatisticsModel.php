@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Activity;
 use App\Entity\HostingRequest;
 use App\Entity\Leg;
 use App\Entity\Statistic;
@@ -90,14 +91,10 @@ class StatisticsModel
                     AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
             ')->fetchOne();
 
-            $activities = $connection->executeQuery('
-                SELECT
-                    COUNT(a.id)
-                FROM
-                    activities a
-                WHERE
-                    a.status = 0
-            ')->fetchOne();
+            $activities = $this->entityManager
+                ->createQuery('SELECT COUNT(a.id) FROM ' . Activity::class . ' a WHERE a.status = :active')
+                ->setParameter('active', Activity::STATUS_ACTIVE)
+                ->getSingleScalarResult();
 
             $stats = [
                 'members' => $members,

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Activity;
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Friend;
@@ -244,6 +245,28 @@ class Mailer
             $receiver,
             'friendship.request',
             $parameters
+        );
+    }
+
+    /**
+     * A new activity near the receiver (ActivityModel::notifyMembersAboutActivity()), from its creator.
+     */
+    public function sendActivityNotificationEmail(Member $receiver, Activity $activity): bool
+    {
+        $sender = $activity->getCreatedBy();
+
+        return $this->sendTemplateEmail(
+            $this->getBeWelcomeAddress($sender, $this->noReplyEmailAddress),
+            $receiver,
+            'activity.notification.new',
+            [
+                'sender' => $sender,
+                'subject' => [
+                    'translationId' => 'activity.notification.new.subject',
+                    'parameters' => [],
+                ],
+                'activity' => $activity,
+            ]
         );
     }
 

@@ -138,3 +138,6 @@ flash.profile.mail.already.confirmed:
 error.hosting.interest:
     - 'You can host: please also tell how much you would like to.'
     - Finish setup page, below the hosting interest steps when the member can host but left the interest at its lowest step.
+help.activities_notifications:
+    - If you select a duration you will be notified when someone creates an activity in your area.
+    - Help text on the signup page.

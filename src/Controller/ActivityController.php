@@ -178,6 +178,7 @@ class ActivityController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $this->activityModel->create($data, $member);
+            $this->activityModel->notifyMembersAboutActivity($activity);
 
             // From the side panel of the home page: a confirmation fills the panel, like a trip
             if ($request->query->getBoolean('embed')) {
@@ -207,6 +208,8 @@ class ActivityController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->activityModel->update($activity, $data);
+            // members near a new place or date hear about it now; who got a mail already doesn't get another
+            $this->activityModel->notifyMembersAboutActivity($activity);
             $this->addTranslatedFlash('success', 'activity.updated.flash');
 
             return $this->redirectToRoute('activities_show', ['id' => $activity->getId()]);
@@ -317,6 +320,7 @@ class ActivityController extends AbstractController
     {
         if ($activity->isCancelled()) {
             $this->activityModel->reactivate($activity);
+            $this->activityModel->notifyMembersAboutActivity($activity);
             $this->addTranslatedFlash('success', 'activity.reactivated');
         }
 

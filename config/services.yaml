@@ -213,12 +213,7 @@ services:
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.newsletters:
-        class: App\Model\MemberDataExtractor\DoctrineExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\Newsletter'
-            $memberRelationName: createdBy
-            $alias: newsletters
+        class: App\Model\MemberDataExtractor\NewslettersExtractor
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.community_news:

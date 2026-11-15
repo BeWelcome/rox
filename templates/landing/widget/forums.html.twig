@@ -1,10 +1,10 @@
 {#
   The latest discussions in the member's groups, in the Group discussions card of the home page (the
   BeWelcome group's agora included): the starter's avatar, the title, then the group, who wrote last
-  and when, and the replies on the right. The row opens the thread.
+  and when, and the replies on the right. The row opens the thread. None: find or start a group.
 #}
 {% import 'forum/_macros.html.twig' as forum %}
-<div id="groupsdisplay" class="c-home-list">
+<div id="groupsdisplay" class="c-home-list"{% if threads is empty %} data-empty{% endif %}>
     {% for thread in threads %}
         {% set replies = thread.replies|default(0) %}
         <a class="c-home-item c-home-talk" href="{{ forum.thread_url(thread) }}">
@@ -23,6 +23,13 @@
             <span class="c-home-talk__replies" aria-label="{{ 'landing.thread.replies'|trans({ count: replies }) }}"><i class="far fa-comment" aria-hidden="true"></i> {{ replies }}</span>
         </a>
     {% else %}
-        <p class="c-home-list__empty">{{ 'landing.groups.empty'|trans }}</p>
+        {#- None: find a group to join or start one (landing.js hides All discussions) -#}
+        {% include 'landing/widget/_empty.html.twig' with {
+            icon: 'fas fa-users',
+            title: 'landing.groups.none.title'|trans,
+            text: 'landing.groups.none.text'|trans,
+            primary: { href: path('groups_search'), label: 'landing.groups.find'|trans, icon: 'fas fa-search' },
+            secondary: { href: path('new_group'), label: 'landing.groups.start'|trans },
+        } only %}
     {% endfor %}
 </div>

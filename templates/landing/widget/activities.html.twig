@@ -5,7 +5,9 @@
 #}
 <div id="activitiesdisplay" class="c-home-list"{% if activities is empty %} data-empty{% endif %}>
     {% for activity in activities %}
-        {% set _going = activity.attendeesYes %}
+        {#- Who goes: the organizer first (always shown), then the members going with an active account, as in the side panel (ActivityModel::getAttendeesByAnswer) -#}
+        {% set _active = constant('App\\Doctrine\\MemberStatusType::ACTIVE_SEARCH_ARRAY') %}
+        {% set _going = activity.attendees.toArray|filter(a => a.organizer)|merge(activity.attendeesYes.toArray|filter(a => not a.organizer and a.attendee.status in _active)) %}
         {% set _coming = _going|length %}
         <a class="c-home-item c-home-activity js-contact-open" href="{{ path('activities_show', { id: activity.id }) }}" data-title="{{ activity.title }}">
             {#- The same date card as the head of the activity in the side panel (activity/_date_tile) -#}
@@ -30,17 +32,25 @@
                 </span>
             </span>
             {% if _coming %}
+                {#- Up to five faces, then +N for the others, and N going under them -#}
                 <span class="c-home-activity__going">
                     <span class="c-home-activity__faces" aria-hidden="true">
-                        {%- for person in _going|slice(0, 3) -%}
+                        {%- for person in _going|slice(0, 5) -%}
                             <img src="{{ path('avatar', { username: person.attendee.username, size: 48 }) }}" alt="" width="28" height="28" loading="lazy">
                         {%- endfor -%}
+                        {%- if _coming > 5 -%}<span class="c-home-activity__more">+{{ _coming - 5 }}</span>{%- endif -%}
                     </span>
                     <span class="c-home-activity__going-count">{{ 'activities.panel.going.count'|trans({ count: _coming }) }}</span>
                 </span>
             {% endif %}
         </a>
     {% else %}
-        <p class="c-home-dash__empty">{{ 'landing.dash.activities.none'|trans }} · <a class="js-contact-open" href="{{ path('activities_create') }}" data-title="{{ 'activitiescreate'|trans }}">{{ 'landing.dash.activities.create'|trans }}</a></p>
+        {#- None: create one (in the side panel) -#}
+        {% include 'landing/widget/_empty.html.twig' with {
+            icon: 'far fa-calendar-plus',
+            title: 'landing.activities.none.title'|trans,
+            text: 'landing.activities.none.text'|trans,
+            primary: { href: path('activities_create'), label: 'landing.activities.none.create'|trans, icon: 'fas fa-plus', class: 'js-contact-open', title: 'activitiescreate'|trans },
+        } only %}
     {% endfor %}
 </div>

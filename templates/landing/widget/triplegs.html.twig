@@ -11,14 +11,16 @@
                 {% include 'landing/widget/_leg_slide.html.twig' with { leg: leg } %}
             {% endfor %}
         </div>
-        {% if legs|length > 1 %}
-            <div class="c-home-trips__nav">
+        {#- Under the trip: previous, the dots and next; on phones All visitors on the right (See all is not in the head there) -#}
+        <div class="c-home-trips__nav{{ legs|length > 1 ? '' : ' c-home-trips__nav--single' }}">
+            {% if legs|length > 1 %}
                 <button type="button" class="c-home-trips__btn js-home-trips-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
                 <span class="c-home-trips__dots" aria-hidden="true">
                     {% for leg in legs %}<span class="c-home-slider__dot{% if loop.first %} is-active{% endif %}"></span>{% endfor %}
                 </span>
                 <button type="button" class="c-home-trips__btn js-home-trips-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-            </div>
-        {% endif %}
+            {% endif %}
+            <a class="c-home-trips__all" href="{{ url('visitors') }}">{{ 'landing.dash.visitors.all'|trans }} <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+        </div>
     {% endif %}
 </div>

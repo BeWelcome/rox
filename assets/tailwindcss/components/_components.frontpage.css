@@ -402,3 +402,29 @@ body:has(.fp) { background: #fffaf4; }
   .fp-support__note { margin-top: 0.9rem; font-size: 0.8125rem; }
   .fp-support__year { margin-top: 0.6rem; padding-top: 0; border-top: 0; font-size: 0.875rem; }
 }
+
+/* The last card right after the stay block: one gap between them, as between the last card and the support block */
+.fp-stay:has(+ .fp-last) { padding-bottom: 3.5rem; }
+.fp-stay + .fp-last { padding-top: 0; }
+@media (max-width: 575.98px) {
+  .fp-stay:has(+ .fp-last) { padding-bottom: 2.5rem; }
+}
+
+/* Support BeWelcome: the heart beats, a light sweeps across the button now and then, it lifts on hover */
+.fp-support__btn { position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+.fp-support__btn::after { position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%); content: ""; transform: skewX(-20deg); animation: fp-support-shine 4.5s ease-in-out 1s infinite; pointer-events: none; }
+.fp-support__btn i, .fp-support__btn svg { transform-origin: center; animation: fp-support-beat 2.25s ease-in-out infinite; }
+.fp-support__btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(234, 122, 46, 0.36); }
+.fp-support__btn:hover i, .fp-support__btn:hover svg { animation-duration: 0.9s; }
+@keyframes fp-support-beat { 0%, 40%, 100% { transform: scale(1); } 10% { transform: scale(1.22); } 20% { transform: scale(1); } 30% { transform: scale(1.15); } }
+@keyframes fp-support-shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+@media (prefers-reduced-motion: reduce) {
+  .fp-support__btn::after, .fp-support__btn i, .fp-support__btn svg { animation: none; }
+  .fp-support__btn:hover { transform: none; }
+}
+/* Support BeWelcome: the same orange and the same hover as Join for free (.fp-btn--primary) */
+.fp-support__btn, .fp-support__btn:hover { background: linear-gradient(110deg, #f37000 0%, #f8862a 25%, #f37000 50%, #ea6800 75%, #f37000 100%); background-size: 300% 100%; color: #fff; animation: fp-btn-flow 14s linear infinite; }
+.fp-support__btn:hover { background-color: #cd5e00; background-image: linear-gradient(110deg, #e66a00 0%, #f37000 25%, #e66a00 50%, #cd5e00 75%, #e66a00 100%); box-shadow: 0 14px 28px rgba(243, 112, 0, 0.32); }
+@media (prefers-reduced-motion: reduce) {
+  .fp-support__btn, .fp-support__btn:hover { animation: none; }
+}

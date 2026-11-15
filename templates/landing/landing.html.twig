@@ -113,7 +113,7 @@
 			</div>
 			{# Under the box: plan a trip (place), or how to search a member #}
 			<p class="l-hello__under js-hello-mode-place">
-				<i class="fas fa-route l-hello__under-icon" aria-hidden="true"></i>
+				<i class="fas fa-plane l-hello__under-icon" aria-hidden="true"></i>
 				<span class="l-hello__under-text">{{ 'landing.search.dates.known'|trans }}</span>
 				<a class="l-hello__under-plan js-contact-open" href="{{ path('new_trip') }}" data-title="{{ 'landing.stats.trip'|trans }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'landing.plan.public.trip'|trans }}</a>
 				<span class="l-hello__under-hint">· {{ 'landing.plan.public.trip.hint'|trans }}</span>
@@ -132,7 +132,7 @@
 {#
   The four cards of the dashboard: messages, members coming to the member's area (one trip at a
   time, previous and next), upcoming activities and the discussions of the member's groups.
-  Each card has its title, a count and a link to the full list; the lists are loaded by landing.js.
+  Each card has its title, a count and See all at the top right (no footer row); the lists are loaded by landing.js.
 #}
 {% set loading %}
     <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
@@ -145,16 +145,10 @@
             <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
             <h2 class="c-home-dash__title" id="home_messages_title">{{ 'landing.dash.messages'|trans }}</h2>
             {% if conversationCount %}<span class="c-home-dash__count c-home-dash__count--hot">{{ conversationCount }}</span>{% endif %}
+            <a class="c-home-dash__seeall" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
-            {% set _allConversations = inbox_total_count() %}
-            <div class="c-home-pane__footer c-home-pane__footer--more">
-                <a class="c-home-more" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">
-                    {{ 'landing.conversations.all'|trans }}
-                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                </a>
-            </div>
         </div>
     </section>
 
@@ -172,6 +166,8 @@
             {# The distance: a pill that opens the site's dropdown menu (landing.js sets #trips_radius and reloads) #}
             {% set _radii = radiusForm.radius.vars.choices|filter(choice => choice.value in ['20', '50', '100', '200'] or choice.value == _radius ~ '') %}
             {% set _current = _radii|filter(choice => choice.value == _radius ~ '')|first %}
+            {# See all, small, next to the distance #}
+            <a class="c-home-dash__seeall" href="{{ url('visitors') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
             <div class="dropdown c-home-dash__radius-wrap">
                 <button type="button" class="c-home-dash__radius js-home-trips-radius" data-bs-toggle="dropdown" aria-expanded="false"
                         aria-label="{{ 'trips.radius'|trans }}">
@@ -196,12 +192,6 @@
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
-            <div class="c-home-pane__footer c-home-pane__footer--more">
-                <a class="c-home-more" href="{{ url('visitors') }}">
-                    {{ 'landing.dash.visitors.all'|trans }}
-                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                </a>
-            </div>
         </div>
     </section>
 
@@ -211,16 +201,11 @@
             <span class="c-home-dash__icon" aria-hidden="true"><i class="far fa-calendar"></i></span>
             <h2 class="c-home-dash__title" id="home_activities_title">{{ 'landing.dash.activities'|trans }}</h2>
             {% if activityCount %}<span class="c-home-dash__count">{{ activityCount }}</span>{% endif %}
+            <a class="c-home-dash__seeall" href="{{ path('activities') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
             <a class="c-home-dash__add js-contact-open" href="{{ path('activities_create') }}" data-title="{{ 'activitiescreate'|trans }}" aria-label="{{ 'landing.activities.create'|trans }}"><i class="fas fa-plus" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
-            <div class="c-home-pane__footer c-home-pane__footer--more">
-                <a class="c-home-more" href="{{ path('activities') }}">
-                    {{ 'landing.dash.activities.all'|trans }}
-                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                </a>
-            </div>
         </div>
     </section>
 
@@ -229,15 +214,10 @@
         <header class="c-home-dash__head">
             <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-comments"></i></span>
             <h2 class="c-home-dash__title" id="home_groups_title">{{ 'landing.dash.groups'|trans }}</h2>
+            <a class="c-home-dash__seeall" href="{{ path('groups_mygroups') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
-            <div class="c-home-pane__footer c-home-pane__footer--more">
-                <a class="c-home-more" href="{{ path('groups_mygroups') }}">
-                    {{ 'landing.dash.groups.all'|trans }}
-                    <i class="fas fa-chevron-right c-home-more__chevron" aria-hidden="true"></i>
-                </a>
-            </div>
         </div>
     </section>
 </div>
@@ -388,6 +368,6 @@
 {# Visitors: writing to a traveller or inviting them opens in a side panel #}
 {% include 'conversations/_contact_drawer.html.twig' %}
 {# A traveller's preview, opened from their face or name in the Members coming card (search/preview.js, loaded by bewelcome.js) #}
-<div class="js-places-preview" hidden></div>
+<div class="js-places-preview" data-from="home" hidden></div>
 {{ include('search/_preview_drawer.html.twig') }}
 {% endblock content %}

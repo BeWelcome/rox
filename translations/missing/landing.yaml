@@ -87,9 +87,6 @@ landing.beinformed.next:
 landing.tab.today:
     - 'Threads with a new post today'
     - Tooltip of the count next to the My groups tab on the home page
-landing.groups.empty:
-    - 'No discussions in your groups yet.'
-    - Shown in the My groups tab of the home page when the member's groups have no thread
 landing.see.all:
     - 'See all'
     - Button under the Forum, My groups and Activities lists on the home page, opens the full list
@@ -123,12 +120,6 @@ landing.dash.groups:
 landing.dash.groups.all:
     - 'All discussions'
     - 'Home page: link at the bottom of the group discussions card'
-landing.dash.activities.none:
-    - 'No activities nearby'
-    - 'Home page, activities card: there is no upcoming activity near the member'
-landing.dash.activities.create:
-    - 'Create one'
-    - 'Home page, activities card: link to create an activity when there is none'
 landing.search.where:
     - 'Where are you going?'
     - 'Home page: placeholder of the place search in the welcome banner'
@@ -210,3 +201,36 @@ landing.donate.thanks:
 landing.donate.thanks.text:
     - 'Your donation keeps BeWelcome free and running.'
     - 'Home page, Donate box: text under the thank you'
+landing.groups.none.title:
+    - 'Your groups are quiet'
+    - 'Title in the Group discussions card of the home page when the member''s groups have no discussion'
+landing.groups.none.text:
+    - 'Join groups about places and things you love to meet members and swap tips.'
+    - 'Line under the title in the Group discussions card of the home page when there is no discussion'
+landing.groups.find:
+    - 'Find a group'
+    - 'Main button in the Group discussions card of the home page when there is no discussion, opens the groups search'
+landing.groups.start:
+    - 'Start a group'
+    - 'Second button in the Group discussions card of the home page when there is no discussion, creates a group'
+landing.activities.none.title:
+    - 'Nothing planned nearby'
+    - 'Title in the Upcoming activities card of the home page when there is no activity near the member'
+landing.activities.none.text:
+    - 'Organise a walk, a dinner or a meetup and meet members around you.'
+    - 'Line under the title in the Upcoming activities card of the home page when there is no activity'
+landing.activities.none.create:
+    - 'Create an activity'
+    - 'Main button in the Upcoming activities card of the home page when there is no activity'
+landing.messages.none.title:
+    - 'Your inbox is waiting'
+    - 'Title in the Messages card of the home page when the member has no message yet'
+landing.messages.none.text:
+    - 'Find a host or a local to meet, and say hello. Their answers will show up here.'
+    - 'Line under the title in the Messages card of the home page when the member has no message yet'
+landing.messages.none.find:
+    - 'Find members'
+    - 'Button in the Messages card of the home page when the member has no message yet, opens the search'
+landing.dash.see.trip.details:
+    - 'See trip details'
+    - 'Button at the bottom of a trip in the Visitors card of the home page, opens the trip in the side panel'

@@ -30,8 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // A country page (places/country.html.twig): a click on a member opens their preview in a drawer,
 // as on the search. Loaded only there.
-if (document.querySelector('.js-places-preview')) {
-    import('./search/preview').then(({initMemberPreview}) => initMemberPreview());
+// data-from on it names the page for the message panel's back button (home: Back to home)
+const placesPreview = document.querySelector('.js-places-preview');
+if (placesPreview) {
+    import('./search/preview').then(({initMemberPreview}) => initMemberPreview({from: placesPreview.dataset.from || undefined}));
 }
 // A group's head (templates/group/_head.html.twig): its tabs scroll sideways on phones
 if (document.querySelector('.p-group-head [data-tabs-scroller]')) {

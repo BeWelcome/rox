@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * The trips card of the home page: its distance is a pill that opens a dropdown of distances, the current one checked,
- * and the card ends with "All visitors" like the other cards.
+ * and a small "See all" next to it opens the visitors page (no footer row).
  */
 #[Group('integration')]
 class HomeTripsCardTest extends WebTestCase
@@ -33,6 +33,7 @@ class HomeTripsCardTest extends WebTestCase
             self::assertSame($current, $active->attr('data-value'));
             self::assertSame(trim($active->text()), trim($card->filter('.js-home-trips-radius-label')->text()));
         }
-        self::assertSame('/visitors', parse_url((string) $card->filter('.c-home-pane__footer--more a.c-home-more')->attr('href'), \PHP_URL_PATH));
+        self::assertSame('/visitors', parse_url((string) $card->filter('.c-home-dash__head a.c-home-dash__seeall')->attr('href'), \PHP_URL_PATH));
+        self::assertCount(0, $card->filter('.c-home-pane__footer--more'));
     }
 }

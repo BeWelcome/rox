@@ -269,6 +269,9 @@ var Home = {
                 if (display) {
                     display.outerHTML = threads;
                 }
+                // No discussions: the line offers to find groups, All discussions has nothing to show
+                const list = document.getElementById('groupsdisplay');
+                list?.closest('.c-home-pane')?.classList.toggle('is-empty', list.hasAttribute('data-empty'));
             });
     },
     updateActivities: function () {

@@ -1,7 +1,8 @@
 {% extends 'private/mydata.html.twig' %}
 {#
-  The newsletters the member created, in each language they wrote (NewslettersExtractor). Expects newsletters: a list of
-  {newsletter, locale, title, body}, member.
+  The member's newsletter texts (NewslettersExtractor): the English version of the newsletters they created and the
+  versions they updated last. Without the empty paragraphs and runs of <br> (user_text). Expects newsletters: a list
+  of {newsletter, locale, title, body}, member.
 #}
 {% import 'private/_macros.html.twig' as my %}
 {% set section = 'newsletters' %}
@@ -11,12 +12,13 @@
     {% if newsletters is empty %}
         {{ my.empty('fa-envelope-open-text', 'mydata.newsletters.no.newsletters'|trans) }}
     {% else %}
-        <div class="c-mydata-grid">
+        {# newsletters to read: one column of a comfortable line length, the whole text #}
+        <div class="c-mydata-reading">
             {% for item in newsletters %}
                 <article class="c-mydata-card" lang="{{ item.locale }}">
                     <h2 class="c-mydata-card__title">{{ item.title ?? 'mydata.newsletter.no.title'|trans }}</h2>
                     <p class="c-mydata-card__meta">{{ item.newsletter.created|format_date('medium') }} · <span class="c-mydata-tag">{{ item.locale }}</span></p>
-                    <div class="c-mydata-card__text">{{ item.body is not null ? item.body|purify|truncate(500) : 'mydata.newsletter.no.body'|trans }}</div>
+                    <div class="c-mydata-card__text">{{ item.body is not null ? item.body|purify|user_text : 'mydata.newsletter.no.body'|trans }}</div>
                     <div class="c-mydata-card__foot"><span></span>{{ my.site(url('newsletter_single', {id: item.newsletter.id, language: item.locale})) }}</div>
                 </article>
             {% endfor %}

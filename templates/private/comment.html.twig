@@ -14,7 +14,7 @@
         {% if not mute %}<span class="c-mydata-tag{{ _quality == 'good' or _quality == 'positive' ? ' c-mydata-tag--green' : (_quality == 'bad' or _quality == 'negative' ? ' c-mydata-tag--red' : '') }}">{{ ('comment.quality.' ~ _quality)|trans }}</span>{% endif %}
         {{ comment.created|format_date('medium') }}
     </p>
-    <blockquote class="c-mydata-ref__quote">“{{ comment.comment|purify|nl2br }}”</blockquote>
+    <blockquote class="c-mydata-ref__quote">“{{ comment.comment|purify|user_text }}”</blockquote>
     {% set _relations = comment.relations|split(',')|filter(r => r|trim) %}
     {% if _relations is not empty %}
         <p class="c-mydata-ref__relations">{% for relation in _relations %}{{ ('Comment_' ~ relation)|lower|trans }}{% if not loop.last %}, {% endif %}{% endfor %}</p>

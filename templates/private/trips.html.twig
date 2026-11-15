@@ -24,9 +24,15 @@
                                 <span class="c-mydata-tile" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
                                 <strong>{{ leg.location ? leg.location.name ~ ', ' ~ leg.location.country.name : 'trip.location.none'|trans }}</strong>
                                 {% if leg.arrival is defined and leg.arrival %}<span>{{ leg.arrival|format_date('medium') }}{% if leg.departure ?? null %} – {{ leg.departure|format_date('medium') }}{% endif %}</span>{% endif %}
-                                {% for option, label in {PRIVATE: 'trip.option.private', MEET_LOCALS: 'trip.option.meet.locals', LOOKING_FOR_HOST: 'trip.option.looking.for.host'} %}
-                                    {% if constant(O ~ option) in leg.options %}<span class="c-mydata-tag c-mydata-tag--orange">{{ label|trans }}</span>{% endif %}
-                                {% endfor %}
+                                {# the leg's options in one row below, a long one (private) wrapping inside the card #}
+                                {% set _options = {LOOKING_FOR_HOST: 'trip.option.looking.for.host', MEET_LOCALS: 'trip.option.meet.locals', PRIVATE: 'trip.option.private'}|filter((label, option) => constant(O ~ option) in leg.options) %}
+                                {% if _options is not empty %}
+                                    <div class="c-mydata-tags c-mydata-legs__tags">
+                                        {% for option, label in _options %}
+                                            <span class="c-mydata-tag {{ option == 'PRIVATE' ? 'c-mydata-tag--private' : 'c-mydata-tag--orange' }}">{% if option == 'PRIVATE' %}<i class="fas fa-lock" aria-hidden="true"></i>{% endif %}{{ label|trans }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

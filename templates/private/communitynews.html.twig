@@ -8,7 +8,8 @@
     {% if communitynews|length == 0 %}
         {{ my.empty('fa-newspaper', 'mydata.communitynews.no.communitynews'|trans) }}
     {% else %}
-        <div class="c-mydata-grid">
+        {# articles to read: one column of a comfortable line length, not the grid of cards #}
+        <div class="c-mydata-reading">
             {% for news in communitynews %}
                 {% include 'private/communitynews_single.html.twig' with {news: news} %}
             {% endfor %}

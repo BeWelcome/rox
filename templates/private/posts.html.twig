@@ -31,7 +31,7 @@
                 {% for locale, translation in translations %}
                     <div class="{{ not loop.first ? 'c-mydata-post__translation' }}" lang="{{ translation.language.shortCode }}">
                         {% if translations|length > 1 %}<small class="c-mydata-label">{{ ('lang_' ~ translation.language.shortCode)|lower|trans }} ({{ translation.language.shortCode }})</small>{% endif %}
-                        <div class="c-mydata-card__text">{{ translation.message|purify|nl2br }}</div>
+                        <div class="c-mydata-card__text">{{ translation.message|purify|user_text }}</div>
                     </div>
                 {% endfor %}
                 {% if post.thread is not null %}

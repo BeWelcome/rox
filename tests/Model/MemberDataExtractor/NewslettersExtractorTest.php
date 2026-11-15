@@ -12,48 +12,83 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * The newsletters page of the personal data export: the newsletters the member created, in each language they wrote.
- * Their texts are words (broadcast_title_<name>, broadcast_body_<name>); the page is rendered with strict variables,
- * as in the dev environment, where reading translations of the newsletter entity failed.
+ * The newsletters page of the personal data export: the English version of each newsletter the member created, and
+ * every version, of any newsletter, they updated last. The texts are words (broadcast_title_<name>,
+ * broadcast_body_<name>); the page is rendered with strict variables, as in the dev environment.
  */
 #[Group('integration')]
 class NewslettersExtractorTest extends KernelTestCase
 {
-    public function testTheNewslettersPageShowsTheTextsTheMemberWrote(): void
+    private EntityManagerInterface $entityManager;
+
+    public function testTheNewslettersPageShowsTheMembersVersions(): void
     {
         self::bootKernel();
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $author = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
-        $translator = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-3']);
-        $newsletter = new Newsletter()
-            ->setName('zztest_export')
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $member = $this->member('member-2');
+        $other = $this->member('member-3');
+
+        // member-2's newsletter: English last updated by someone else (shown: their newsletter), French by someone
+        // else (not shown), German by member-2 (shown)
+        $this->newsletter('zztest_own', $member, '2026-10-01');
+        $this->version('zztest_own', 'en', 'Zztest own English', $other);
+        $this->version('zztest_own', 'fr', 'Zztest own French', $other);
+        $this->version('zztest_own', 'de', 'Zztest own German', $member);
+        // someone else's newsletter: English by them (not shown), Spanish last updated by member-2 (shown)
+        $this->newsletter('zztest_other', $other, '2026-09-01');
+        $this->version('zztest_other', 'en', 'Zztest other English', $other);
+        $this->version('zztest_other', 'es', 'Zztest other Spanish', $member);
+        $this->entityManager->flush();
+
+        [$counts, $page] = $this->extract($member);
+
+        self::assertSame(['newsletters' => 3], $counts);
+        $titles = new Crawler($page)->filter('.c-mydata-card__title')->each(static fn (Crawler $title): string => trim($title->text()));
+        self::assertSame(['Zztest own English', 'Zztest own German', 'Zztest other Spanish'], $titles);
+        // without the empty paragraphs and runs of <br> of the newsletter's source
+        $text = new Crawler($page)->filter('.c-mydata-card__text')->first()->html();
+        self::assertStringNotContainsString('<p></p>', $text);
+        self::assertStringNotContainsString('<br><br><br>', str_replace(["\n", ' '], '', $text));
+    }
+
+    private function newsletter(string $name, Member $creator, string $created): void
+    {
+        $this->entityManager->persist(new Newsletter()
+            ->setName($name)
             ->setType(Newsletter::REGULAR_NEWSLETTER)
-            ->setCreatedBy($author)
-            ->setCreated(new DateTime('2026-10-01'));
-        $entityManager->persist($newsletter);
-        // the English version by the author, the French one by someone else
+            ->setCreatedBy($creator)
+            ->setCreated(new DateTime($created)));
+    }
+
+    private function version(string $name, string $locale, string $title, Member $author): void
+    {
         $texts = [
-            ['en', 'Broadcast_title_zztest_export', 'Zztest autumn news', $author],
-            ['en', 'Broadcast_body_zztest_export', '<p>Zztest what happened this autumn.</p>', $author],
-            ['fr', 'Broadcast_title_zztest_export', 'Zztest nouvelles', $translator],
-            ['fr', 'Broadcast_body_zztest_export', '<p>Zztest ce qui est arrivé.</p>', $translator],
+            'Broadcast_title_' . $name => $title,
+            'Broadcast_body_' . $name => '<p>' . $title . ' text.</p><p></p><p>&nbsp;</p>Line<br><br><br><br>after',
         ];
-        foreach ($texts as [$locale, $code, $sentence, $member]) {
-            $entityManager->persist(new Word()
+        foreach ($texts as $code => $sentence) {
+            $this->entityManager->persist(new Word()
                 ->setCode($code)
-                ->setLanguage($entityManager->getRepository(Language::class)->findOneBy(['shortCode' => $locale]))
+                ->setLanguage($this->entityManager->getRepository(Language::class)->findOneBy(['shortCode' => $locale]))
                 ->setSentence($sentence)
                 ->setDomain(DomainType::MESSAGES)
                 ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
                 ->setDescription('')
-                ->setAuthor($member)
+                ->setAuthor($author)
                 ->setCreated(new DateTime())
                 ->setUpdated(new DateTime()));
         }
-        $entityManager->flush();
+    }
+
+    /**
+     * @return array{array<string, int>, string}
+     */
+    private function extract(Member $member): array
+    {
         static::getContainer()->get('twig')->enableStrictVariables();
         static::getContainer()->get('translator')->getCatalogue('en')->set(
             'mydata.generated',
@@ -64,16 +99,16 @@ class NewslettersExtractorTest extends KernelTestCase
         mkdir($directory);
 
         try {
-            $counts = static::getContainer()->get('app.member_data_extractor.newsletters')->extract($author, $directory);
-            $page = (string) file_get_contents($directory . 'newsletters.html');
+            $counts = static::getContainer()->get('app.member_data_extractor.newsletters')->extract($member, $directory);
+
+            return [$counts, (string) file_get_contents($directory . 'newsletters.html')];
         } finally {
             new Filesystem()->remove($directory);
         }
+    }
 
-        self::assertSame(['newsletters' => 1], $counts);
-        self::assertStringContainsString('Zztest autumn news', $page);
-        self::assertStringContainsString('Zztest what happened this autumn.', $page);
-        // not the translation by someone else
-        self::assertStringNotContainsString('Zztest nouvelles', $page);
+    private function member(string $username): Member
+    {
+        return $this->entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
     }
 }

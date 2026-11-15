@@ -1146,6 +1146,15 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         );
     }
 
+    /**
+     * The sign-up's address still waits for its confirmation. Not "has a registration key": for almost every member
+     * of the old site the column holds '0' or an empty string, not NULL.
+     */
+    public function hasUnconfirmedEmail(): bool
+    {
+        return \in_array($this->status, [MemberStatusType::AWAITING_MAIL_CONFIRMATION, MemberStatusType::ACCOUNT_ACTIVATED], true);
+    }
+
     public function isNotConfirmedYet(): bool
     {
         return MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status;

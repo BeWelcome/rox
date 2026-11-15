@@ -1,5 +1,8 @@
 import { initializeAccommodationWidget } from "../accommodation_widget";
 
+// the member whose profile is edited (admins and the safety team edit others' profiles too)
+const editedMember = document.querySelector('form[data-username]')?.dataset.username;
+
 const hostingInterest = document.getElementById('accommodation_form_hosting_interest')
 
 initializeAccommodationWidget()
@@ -19,7 +22,7 @@ const updateAccommodation = async (e) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newAccommodationValue)
+        body: JSON.stringify({ ...newAccommodationValue, username: editedMember })
     }).then((response) => {
     })
 }
@@ -37,7 +40,7 @@ const updateOffers = async (e) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newOffers)
+        body: JSON.stringify({ ...newOffers, username: editedMember })
     }).then((response) => {
     })
 }
@@ -55,7 +58,7 @@ const updateRestrictions = async (e) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newRestrictions)
+        body: JSON.stringify({ ...newRestrictions, username: editedMember })
     }).then((response) => {
     })
 }
@@ -88,7 +91,7 @@ const updateMaxGuests = async (e) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newMaxGuests)
+        body: JSON.stringify({ ...newMaxGuests, username: editedMember })
     }).then((response) => {
     })
 }

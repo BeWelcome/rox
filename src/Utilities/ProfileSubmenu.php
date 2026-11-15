@@ -322,10 +322,11 @@ class ProfileSubmenu
             $this->hasRole($roles, Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->hasRole($roles, Member::ROLE_ADMIN_ADMIN)
         ) {
+            // the member's own edit page, which admins and the safety team may open (MemberVoter::MEMBER_EDIT)
             $this->addSubmenuItem('adminedit', [
                 'key' => 'Admin: Edit Profile',
                 'icon' => 'bed invisible',
-                'url' => 'members/' . $username . '/adminedit',
+                'url' => $this->routing->generate('profile_edit', ['username' => $username]),
             ]);
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_ADMIN)) {
@@ -354,7 +355,8 @@ class ProfileSubmenu
             $this->addSubmenuItem('adminlogs', [
                 'key' => 'AdminLogs',
                 'icon' => 'bed invisible',
-                'url' => 'admin/logs?log[username=' . $username . ']',
+                // the logs filtered to the member, as the filter form sends it (log[username])
+                'url' => $this->routing->generate('admin_logs_overview', ['log' => ['username' => $username]]),
             ]);
         }
     }

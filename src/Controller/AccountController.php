@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Form\AccountEditFormType;
+use App\Form\ChangeEmailFormType;
 use App\Form\ConfirmEmailAddressFormType;
 use App\Model\ProfileModel;
 use App\Model\SignupModel;
+use App\Security\MemberVoter;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -15,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -40,8 +43,9 @@ class AccountController extends AbstractController
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
-        // another member's account page: to the own one (it was the same page again, a redirect loop)
-        if ($loggedInMember !== $member) {
+        // another member's account page: to the own one (it was the same page again, a redirect loop); admins and the
+        // safety team edit the member's account too (MemberVoter::MEMBER_EDIT), the email address included
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('account_edit', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -53,26 +57,11 @@ class AccountController extends AbstractController
             'show_gender' => $member->isGenderVisible(),
             'birthdate' => $member->getBirthdate(),
             'show_age' => $member->isAgeVisible(),
-            'email' => $member->getEmail(),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            // Check if email was changed, and the new one is unique
-            $email = $data['email'];
-
-            if ($email !== $member->getEmail()) {
-                $unknownEmail = $this->signupModel->checkEmailAddress($email);
-                if (!$unknownEmail) {
-                    $form->get('email')->addError(new FormError($this->translator->trans('account.new.email.taken')));
-                }
-
-                if (null !== $member->getRegistrationKey()) {
-                    $form->get('email')->addError(new FormError($this->translator->trans('member.mail.not.confirmed')));
-                }
-            }
-
             if (0 === $form->getErrors(true)->count()) {
                 $member->setName($data['name']);
                 $member->setShortName($data['short_name']);
@@ -100,11 +89,6 @@ class AccountController extends AbstractController
                     $member->hideName();
                 }
 
-                if ($data['email'] !== $member->getEmail()) {
-                    $member->setNewEmail($data['email']);
-                    $this->profileModel->sendEmailConfirmationEmail($member, $data['email']);
-                }
-
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
 
@@ -116,6 +100,59 @@ class AccountController extends AbstractController
             'form' => $form,
             'member' => $member,
             'status_form' => $profileModel->getStatusForm($loggedInMember, $member),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member),
+        ]);
+    }
+
+    /**
+     * A new email address, on a page of its own (linked from the account page): the member gives their password, admins
+     * and the safety team change it without (MemberVoter::MEMBER_EDIT). Either way the address waits for the member to
+     * confirm it: a mail to it with the link (changeEmailAddress), the current one stays until then.
+     */
+    #[Route(path: '/members/{username:member}/account/email', name: 'account_email', priority: 1)]
+    public function changeEmailAddressRequest(
+        Request $request,
+        Member $member,
+        PasswordHasherFactoryInterface $passwordHasherFactory,
+        ChangeProfilePictureGlobals $globals,
+        ProfileSubmenu $profileSubmenu,
+    ): Response {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
+            return $this->redirectToRoute('account_email', ['username' => $loggedInMember->getUsername()]);
+        }
+
+        $own = $member === $loggedInMember;
+        $form = $this->createForm(ChangeEmailFormType::class, null, ['ask_password' => $own]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = (string) $form->get('email')->getData();
+            if ($own && !$passwordHasherFactory->getPasswordHasher($member)->verify($member->getPassword(), (string) $form->get('password')->getData())) {
+                $form->get('password')->addError(new FormError($this->translator->trans('form.error.password.incorrect')));
+            }
+            if ($member->hasUnconfirmedEmail()) {
+                $form->get('email')->addError(new FormError($this->translator->trans('member.mail.not.confirmed')));
+            } elseif ($email === $member->getEmail() || !$this->signupModel->checkEmailAddress($email)) {
+                $form->get('email')->addError(new FormError($this->translator->trans('account.new.email.taken')));
+            }
+
+            if (0 === $form->getErrors(true)->count()) {
+                $member->setNewEmail($email);
+                $this->profileModel->sendEmailConfirmationEmail($member, $email);
+                $this->entityManager->flush();
+                $this->addTranslatedFlash('notice', 'flash.account.email.sent', ['email' => $email]);
+
+                return $this->redirectToRoute('account_edit', ['username' => $member->getUsername()]);
+            }
+        }
+
+        return $this->render('profile/account.email.html.twig', [
+            'form' => $form,
+            'member' => $member,
+            'own' => $own,
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member),
         ]);
@@ -166,9 +203,12 @@ class AccountController extends AbstractController
 
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
+
+                return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
             }
 
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+            // a wrong key: the form again with the error (it went to the profile without a word)
+            $changeEmailAddressForm->get('registration_key')->addError(new FormError($this->translator->trans('error.registration.key')));
         }
 
         return $this->render('signup/confirm.email.html.twig', [

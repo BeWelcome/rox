@@ -1,0 +1,42 @@
+{% extends 'profile/edit_subpage.html.twig' %}
+{#
+  A new email address (AccountController::changeEmailAddressRequest), as the data export page: the member confirms
+  with their password; admins and the safety team change it for the member without. Expects form, member, own.
+#}
+
+{% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
+
+{% block subpage_title -%}
+  {{ 'account.email.change.title'|trans }}
+{%- endblock %}
+
+{% block subpage_body %}
+  <p class="p-account-section__help u:mb-16">
+    {{ (own ? 'account.email.change.intro' : 'account.email.change.intro.admin')|trans({username: member.username, email: member.email}) }}
+  </p>
+
+  {{ form_start(form, {attr: {class: 'p-account-form'}}) }}
+  {{ form_errors(form) }}
+
+  <section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.email.vars.id }}">{{ form.email.vars.label|trans }}</label>
+    {{ form_widget(form.email, {attr: {class: 'o-input', autocomplete: 'email'}}) }}
+    {{ form_errors(form.email) }}
+    {{ form_help(form.email, {help_attr: {class: 'p-account-section__help'}}) }}
+  </section>
+
+  {% if form.password is defined %}
+    <section class="p-account-section">
+      <label class="p-account-section__label" for="{{ form.password.vars.id }}">{{ form.password.vars.label|trans }}</label>
+      {{ form_widget(form.password, {attr: {class: 'o-input', autocomplete: 'current-password'}}) }}
+      {{ form_errors(form.password) }}
+      {{ form_help(form.password, {help_attr: {class: 'p-account-section__help'}}) }}
+    </section>
+  {% endif %}
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'account.email.change.button'|trans }}">
+  </div>
+
+  {{ form_end(form) }}
+{% endblock subpage_body %}

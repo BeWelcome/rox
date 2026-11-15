@@ -349,7 +349,7 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('profile_edit', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -367,7 +367,7 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('profile_edit', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -385,7 +385,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('profile_edit', [
-            'username' => $loggedInMember->getUsername(),
+            'username' => $member->getUsername(),
         ]);
     }
 
@@ -395,7 +395,7 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('profile_edit', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -407,7 +407,7 @@ class ProfileController extends AbstractController
             $this->profileModel->addProfileLanguage($member, $language);
 
             return $this->redirectToRoute('profile_edit', [
-                'username' => $loggedInMember->getUsername(),
+                'username' => $member->getUsername(),
                 'language' => $language->getShortCode(),
             ]);
         }
@@ -426,7 +426,7 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('profile_edit_avatar', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -452,7 +452,7 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('profile_edit_languages', [
                 'username' => $loggedInMember->getUsername(),
                 'language' => $language,
@@ -527,7 +527,7 @@ class ProfileController extends AbstractController
 
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
-        if ($member !== $loggedInMember) {
+        if (!$this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
@@ -578,8 +578,8 @@ class ProfileController extends AbstractController
             $memberRepository = $this->entityManager->getRepository(Member::class);
             $member = $memberRepository->findOneBy(['username' => $data['username']]);
 
-            // Check if user exists and if logged in member is either same or privileged
-            if ($member === $loggedInMember) {
+            // the member themselves, or admins and the safety team editing their profile
+            if (null !== $member && $this->isGranted(MemberVoter::MEMBER_EDIT, $member)) {
                 $this->profileModel->handleField($member, $data['language'], $data['field'], $data['content']);
             }
         }
@@ -598,8 +598,7 @@ class ProfileController extends AbstractController
         // Result of call will not be communicated to the requestor
         $response = new Response();
 
-        /** @var Member $member */
-        $member = $this->getUser();
+        $member = $this->editedMember($payload->username);
         if (null === $member) {
             return $response;
         }
@@ -628,8 +627,7 @@ class ProfileController extends AbstractController
         // Result of call will not be communicated to the requestor
         $response = new Response();
 
-        /** @var Member $member */
-        $member = $this->getUser();
+        $member = $this->editedMember($payload->username);
         if (null === $member) {
             return $response;
         }
@@ -663,8 +661,7 @@ class ProfileController extends AbstractController
         // Result of call will not be communicated to the requestor
         $response = new Response();
 
-        /** @var Member $member */
-        $member = $this->getUser();
+        $member = $this->editedMember($payload->username);
         if (null === $member) {
             return $response;
         }
@@ -698,8 +695,7 @@ class ProfileController extends AbstractController
         // Result of call will not be communicated to the requestor
         $response = new Response();
 
-        /** @var Member $member */
-        $member = $this->getUser();
+        $member = $this->editedMember($payload->username);
         $maxGuests = $payload->maxGuests;
         if (null === $member || null === $maxGuests || $maxGuests < 1) {
             return $response;
@@ -723,6 +719,24 @@ class ProfileController extends AbstractController
         $member = $this->getUser();
 
         return $this->redirectToRoute('profile_visitors', ['username' => $member->getUsername()], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    /**
+     * The member whose profile the edit page's switches (hosting, offers, restrictions, guests) change: the logged-in
+     * member, or the member of that username when the logged-in member may edit their profile (admins, safety team).
+     * Null otherwise: nothing is saved.
+     */
+    private function editedMember(?string $username): ?Member
+    {
+        /** @var Member|null $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if (null === $username || null === $loggedInMember || $username === $loggedInMember->getUsername()) {
+            return $loggedInMember;
+        }
+
+        $member = $this->entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
+
+        return null !== $member && $this->isGranted(MemberVoter::MEMBER_EDIT, $member) ? $member : null;
     }
 
     private function renderProfile(Member $member, Member $loggedInMember, ?string $language, bool $editMode): Response

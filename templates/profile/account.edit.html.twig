@@ -97,12 +97,17 @@
     {% do form.show_gender.setRendered %}
   </section>
 
-  {# Email #}
+  {# Email: changed on a page of its own (account_email), the new address waits for its confirmation #}
   <section class="p-account-section">
-    <label class="p-account-section__label" for="{{ form.email.vars.id }}">{{ form.email.vars.label|trans }}</label>
-    {{ form_widget(form.email) }}
-    {{ form_errors(form.email) }}
-    {{ form_help(form.email, {help_attr: {class: 'p-account-section__help'}}) }}
+    <span class="p-account-section__label">{{ 'label.email'|trans }}</span>
+    <p class="p-account-email">{{ member.email }}</p>
+    {% if member.newEmail %}
+      <p class="p-account-section__help">{{ 'notices.email.change.text'|trans({email: member.newEmail}) }}</p>
+    {% endif %}
+    {# in the edit page's side panel (?embed=1) the email page stays in the panel: framed only with embed=1 #}
+    <a class="p-account-email__change" href="{{ path('account_email', {username: member.username}|merge(app.request.query.getBoolean('embed') ? {embed: 1} : {})) }}">
+      <i class="fas fa-pen" aria-hidden="true"></i> {{ 'account.email.change.link'|trans }}
+    </a>
   </section>
 
   <div class="p-edit-subpage__actions">

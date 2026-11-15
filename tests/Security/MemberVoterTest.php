@@ -72,6 +72,34 @@ class MemberVoterTest extends TestCase
         self::assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $this->member(MemberStatusType::ACTIVE), [MemberVoter::MEMBER_VIEW]));
     }
 
+    public function testAMemberEditsTheirOwnProfileOnly(): void
+    {
+        $member = $this->member(MemberStatusType::ACTIVE);
+        $voter = new MemberVoter($this->decisions([]));
+
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($this->token($member), $member, [MemberVoter::MEMBER_EDIT]));
+        self::assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($this->token($member), $this->member(MemberStatusType::ACTIVE), [MemberVoter::MEMBER_EDIT]));
+    }
+
+    /**
+     * @return iterable<string, array{string, int}>
+     */
+    public static function editors(): iterable
+    {
+        yield 'admin' => [Member::ROLE_ADMIN_ADMIN, VoterInterface::ACCESS_GRANTED];
+        yield 'safety team' => [Member::ROLE_ADMIN_SAFETYTEAM, VoterInterface::ACCESS_GRANTED];
+        yield 'checker' => [Member::ROLE_ADMIN_CHECKER, VoterInterface::ACCESS_DENIED];
+        yield 'profile admin' => [Member::ROLE_ADMIN_PROFILE, VoterInterface::ACCESS_DENIED];
+    }
+
+    #[DataProvider('editors')]
+    public function testAdminsAndTheSafetyTeamEditOthersProfiles(string $role, int $expected): void
+    {
+        $voter = new MemberVoter($this->decisions([$role]));
+
+        self::assertSame($expected, $voter->vote($this->token(new Member()), $this->member(MemberStatusType::ACTIVE), [MemberVoter::MEMBER_EDIT]));
+    }
+
     private function member(string $status): Member
     {
         return new Member()->setStatus($status);

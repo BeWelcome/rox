@@ -36,7 +36,8 @@
 {% block drawer_options %}track{% endblock %}
 
 {% block subpage_body %}
-  {{ form_start(form) }}
+  {# the member whose profile is edited: the switches save for them (admins and the safety team edit others) #}
+  {{ form_start(form, {attr: {'data-username': member.username}}) }}
   {{ form_errors(form) }}
 
   {#

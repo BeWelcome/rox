@@ -108,11 +108,12 @@ infection:
 composer-audit:
 	composer audit --locked --abandoned=ignore --no-interaction
 
-# GHSA-gcqx-w48m-w2h4 (low): deepmerge <= 4.3.1, prototype poisoning; no fixed version exists. deepmerge only runs
-# at build time (workbox-webpack-plugin > workbox-build > @rollup/plugin-node-resolve, merging our own config) and is
-# not part of the built assets. Remove the ignore once a fixed deepmerge or workbox without it is released.
+# The audit script of package.json ignores GHSA-gcqx-w48m-w2h4 (low): deepmerge <= 4.3.1, prototype poisoning; no
+# fixed version exists. deepmerge only runs at build time (workbox-webpack-plugin > workbox-build >
+# @rollup/plugin-node-resolve, merging our own config) and is not part of the built assets. Remove the ignore there
+# once a fixed deepmerge or workbox without it is released.
 bun-audit:
-	bun run audit --ignore GHSA-gcqx-w48m-w2h4
+	bun run audit
 
 #behat: encore
 #	bin/console doctrine:database:create --env=test --if-not-exists

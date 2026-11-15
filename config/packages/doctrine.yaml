@@ -97,9 +97,6 @@ doctrine:
         controller_resolver:
             auto_mapping: false
 
-        second_level_cache:
-            enabled: true
-
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff

@@ -122,12 +122,6 @@ Encore
     }, {
         resolveUrlLoader: true
     })
-    .addAliases({
-        'TweenLite': 'gsap/src/minified/TweenLite.min.js',
-        'TweenMax': 'gsap/src/minified/TweenMax.min.js',
-        'TimelineLite': 'gsap/src/minified/TimelineLite.min.js',
-        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js'
-    })
     .enableSourceMaps(!Encore.isProduction())
     // Use raw-loader for CKEditor 5 SVG files.
     .configureCssLoader((config) => {

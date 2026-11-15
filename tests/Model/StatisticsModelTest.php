@@ -2,8 +2,11 @@
 
 namespace App\Tests\Model;
 
+use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Activity;
 use App\Model\StatisticsModel;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -25,8 +28,14 @@ class StatisticsModelTest extends TestCase
             ->expects($this->once())
             ->method('fetchOne')
             ->with(
-                $this->stringContains('COUNT(DISTINCT l.country_id)'),
+                $this->logicalAnd(
+                    $this->stringContains('SELECT COUNT(DISTINCT l.country_id) FROM location l'),
+                    $this->stringContains('SELECT DISTINCT a.location FROM address a INNER JOIN member m ON m.id = a.member_id'),
+                    $this->stringContains('WHERE m.Status IN (:statuses)'),
+                    $this->stringContains(') places ON places.location = l.geoname_id'),
+                ),
                 ['statuses' => [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND]],
+                ['statuses' => ArrayParameterType::STRING],
             )
             ->willReturn('42')
         ;
@@ -69,11 +78,20 @@ class StatisticsModelTest extends TestCase
         $this->assertSame($expected, $model->getStatisticsHomepage());
 
         // members, languages and comments count the active members (countries those who can be found, above)
-        $this->assertCount(4, $queries);
-        foreach ([0, 1, 2] as $index) {
-            $this->assertStringContainsString('m.status IN (:statuses)', $queries[$index]);
-            $this->assertSame(MemberStatusType::ACTIVE_ALL_ARRAY, $parameters[$index]['statuses']);
-        }
+        $this->assertSame([
+            'SELECT COUNT(m.id) FROM App\Entity\Member m WHERE m.status IN (:statuses)',
+            'SELECT COUNT(DISTINCT IDENTITY(mll.language)) FROM App\Entity\MemberLanguageLevel mll'
+                . ' WHERE IDENTITY(mll.member) IN (SELECT m.id FROM App\Entity\Member m WHERE m.status IN (:statuses))',
+            'SELECT COUNT(c.id) FROM App\Entity\Comment c JOIN c.fromMember m'
+                . ' WHERE c.quality = :positive AND m.status IN (:statuses)',
+            'SELECT COUNT(a.id) FROM App\Entity\Activity a WHERE a.status = :active',
+        ], $queries);
+        $this->assertSame([
+            ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+            ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+            ['positive' => CommentQualityType::POSITIVE, 'statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+            ['active' => Activity::STATUS_ACTIVE],
+        ], $parameters);
     }
 
     public function testHomepageStatisticsAreCachedForAnHour(): void

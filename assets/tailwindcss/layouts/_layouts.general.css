@@ -13851,13 +13851,10 @@ a.c-home-trip__name:hover { color: #c2410c; }
   .c-home-dash .c-home-trips .c-home-trip .c-home-trip__see:hover { align-self: flex-start; justify-content: flex-start; }
 }
 
-/* Visitors card on phones: the head keeps "Coming to <city>" and the distance only (no count, no See all);
-   All visitors goes to the right of the row under the trip. On large screens that link is hidden (See all is in the head) */
+/* Visitors card on phones: the head keeps "Coming to <city>", the count and the distance; All visitors under the trip */
 .c-home-trips__all { display: none; }
 .c-home-trips__nav--single { display: none; }
 @media (max-width: 575.98px) {
-  .c-home-dash__card--trips .c-home-dash__head .c-home-dash__seeall,
-  .c-home-dash__card--trips .js-home-trips-position { display: none !important; }
   .c-home-dash__card--trips .c-home-dash__title-long { display: inline; }
   .c-home-dash__card--trips .c-home-dash__title-short { display: none; }
   .c-home-dash__card--trips .c-home-dash__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -13866,3 +13863,42 @@ a.c-home-trip__name:hover { color: #c2410c; }
   .c-home-trips__all, .c-home-trips__all:hover { display: inline-flex; align-items: center; gap: 0.35rem; margin-left: auto; color: #334155; font-size: 0.875rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
   .c-home-trips__all i, .c-home-trips__all svg { color: #94a3b8; font-size: 0.65rem; }
 }
+
+/* Visitors card (mockup 2026-11-15): the count of travellers in the head, no See all there; under the trip
+   previous, the travellers' faces (the current one bigger, ringed in orange) and next, All visitors on the right */
+.c-home-dash__card--trips .js-home-trips-position:not([hidden]) { display: inline-flex; }
+.c-home-dash__card--trips .c-home-dash__radius-wrap { margin-left: auto; }
+.c-home-trips__nav--single, .c-home-trips__all, .c-home-trips__all:hover { display: flex; }
+.c-home-dash__card--trips .c-home-trips__nav { align-items: center; gap: 0.4rem; }
+.c-home-trips__faces { display: flex; align-items: center; gap: 0.35rem; max-width: 60%; overflow-x: auto; padding: 0.2rem; scrollbar-width: none; }
+.c-home-trips__faces::-webkit-scrollbar { display: none; }
+.c-home-trips__face-dot { flex-shrink: 0; width: 1.75rem; height: 1.75rem; padding: 0; overflow: hidden; border: 0; border-radius: 50%; background: #e2e8f0; opacity: 0.7; cursor: pointer; transition: width 0.15s, height 0.15s, opacity 0.15s, box-shadow 0.15s; }
+.c-home-trips__face-dot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.c-home-trips__face-dot:hover { opacity: 1; }
+.c-home-trips__face-dot.is-active { width: 2.25rem; height: 2.25rem; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ea7a2e; opacity: 1; }
+.c-home-trips__faces .c-home-trips__face-dot.is-active { margin: 0 0.25rem; }
+.c-home-trips__all, .c-home-trips__all:hover { align-items: center; gap: 0.35rem; margin-left: auto; color: #334155; font-size: 0.9375rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.c-home-trips__all:hover { color: #c2410c; }
+.c-home-trips__all i, .c-home-trips__all svg { color: #94a3b8; font-size: 0.65rem; }
+/* How soon: a soft orange pill; the name and the dates in the titles' font, the dates larger */
+.c-home-trip__soon { background: #fdebd8; color: #c2410c; font-size: 0.8125rem; padding: 0.25rem 0.7rem; }
+.c-home-dash .c-home-trips a.c-home-trip__name { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.125rem; font-weight: 700; }
+.c-home-dash .c-home-trips .c-home-trip__dates { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; }
+.c-home-dash .c-home-trips .c-home-trip__summary { font-size: 1rem; }
+.c-home-dash .c-home-trips .c-home-trip__avatar { width: 3.75rem; height: 3.75rem; }
+@media (max-width: 575.98px) {
+  .c-home-dash .c-home-trips .c-home-trip__dates { font-size: 1.375rem; }
+  .c-home-dash .c-home-trips .c-home-trip__avatar { width: 3.5rem; height: 3.5rem; }
+  .c-home-trips__faces { max-width: 50%; }
+}
+/* The current face: the orange ring drawn inside its box (a shadow outside was cut by the scrolling row) */
+.c-home-trips__face-dot { box-sizing: border-box; }
+.c-home-trips__face-dot img { border-radius: 50%; }
+.c-home-trips__face-dot.is-active { padding: 2px; border: 2px solid #ea7a2e; background: #fff; box-shadow: none; }
+.c-home-trips__faces { padding: 0.15rem 0.1rem; }
+/* The faces keep one size in the flow: the others are scaled down, so choosing one moves nothing */
+.c-home-trips__face-dot, .c-home-trips__face-dot.is-active { width: 2.25rem; height: 2.25rem; margin: 0; transition: transform 0.15s ease, opacity 0.15s ease; }
+.c-home-trips__face-dot { transform: scale(0.78); }
+.c-home-trips__face-dot.is-active { transform: none; }
+.c-home-trips__faces .c-home-trips__face-dot.is-active { margin: 0; }
+.c-home-trips__faces { gap: 0.1rem; }

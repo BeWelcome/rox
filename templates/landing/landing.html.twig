@@ -166,8 +166,6 @@
             {# The distance: a pill that opens the site's dropdown menu (landing.js sets #trips_radius and reloads) #}
             {% set _radii = radiusForm.radius.vars.choices|filter(choice => choice.value in ['20', '50', '100', '200'] or choice.value == _radius ~ '') %}
             {% set _current = _radii|filter(choice => choice.value == _radius ~ '')|first %}
-            {# See all, small, next to the distance #}
-            <a class="c-home-dash__seeall" href="{{ url('visitors') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
             <div class="dropdown c-home-dash__radius-wrap">
                 <button type="button" class="c-home-dash__radius js-home-trips-radius" data-bs-toggle="dropdown" aria-expanded="false"
                         aria-label="{{ 'trips.radius'|trans }}">

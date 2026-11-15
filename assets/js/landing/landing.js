@@ -492,7 +492,7 @@ function initHomeSlider(slider) {
 
 /*
  * Trips card: one trip at a time, scrolled sideways. The arrows move one trip, a swipe works
- * too (scroll snap); the dots and the "1 / 3" pill in the card's head follow.
+ * too (scroll snap); the travellers' faces under it follow and take to their trip, the head shows how many come.
  */
 function initTripsSlider(list) {
     // Nobody comes: no card
@@ -503,29 +503,37 @@ function initTripsSlider(list) {
     const position = document.querySelector('.js-home-trips-position');
     const track = list ? list.querySelector('.js-home-trips-track') : null;
     const count = track ? track.children.length : 0;
+    // How many come, in the card's head
     if (position) {
         position.hidden = count < 2;
+        position.textContent = count;
     }
     if (!track) {
         return;
     }
     const prev = list.querySelector('.js-home-trips-prev');
     const next = list.querySelector('.js-home-trips-next');
-    const dots = list.querySelectorAll('.c-home-slider__dot');
+    const dots = list.querySelectorAll('.js-home-trips-goto');
     const current = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
     const update = () => {
         const page = Math.min(current(), count - 1);
         if (prev) prev.disabled = page <= 0;
         if (next) next.disabled = page >= count - 1;
         dots.forEach((dot, index) => dot.classList.toggle('is-active', index === page));
-        if (position) {
-            position.textContent = `${page + 1} / ${count}`;
+        // Many travellers: their row scrolls to keep the current face in view (not the page)
+        const face = dots[page];
+        const row = face ? face.parentElement : null;
+        if (row && row.scrollWidth > row.clientWidth) {
+            row.scrollLeft = face.offsetLeft - row.offsetLeft - (row.clientWidth - face.offsetWidth) / 2;
         }
     };
     const go = (step) => {
         const page = Math.min(Math.max(current() + step, 0), count - 1);
         track.scrollTo({ left: page * track.clientWidth });
     };
+    dots.forEach((dot) => dot.addEventListener('click', () => {
+        track.scrollTo({ left: Number(dot.dataset.index) * track.clientWidth });
+    }));
     prev?.addEventListener('click', () => go(-1));
     next?.addEventListener('click', () => go(1));
     let frame = null;

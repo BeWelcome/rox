@@ -13199,8 +13199,17 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-home-dash__radius { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; margin: 0 0 0 auto; padding: 0.35rem 0.75rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
 .c-home-dash__radius:hover { background: #e9eef4; }
 .c-home-dash__radius > i, .c-home-dash__radius > svg { color: #ea7a2e; font-size: 0.75rem; }
-.c-home-dash__radius select { padding: 0; border: 0; outline: none; background: transparent; color: inherit; font: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; }
-.c-home-dash__radius:focus-within { box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.2); }
+/* the pill is the button of a dropdown (the site's menu, p-hero__dropdown) with the distances */
+.c-home-dash__radius-wrap { margin-left: auto; flex-shrink: 0; }
+.c-home-dash__radius-wrap .c-home-dash__radius { margin: 0; border: 0; font: inherit; font-size: 0.8125rem; font-weight: 700; line-height: 1.4; cursor: pointer; }
+.c-home-dash__radius:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.2); }
+.c-home-dash__radius .c-home-dash__radius-chevron { color: #94a3b8; font-size: 0.6rem; transition: transform 0.15s ease; }
+.c-home-dash__radius[aria-expanded="true"] .c-home-dash__radius-chevron { transform: rotate(180deg); }
+.c-home-radius-menu { min-width: 9rem; }
+.c-home-radius-menu .c-home-radius-menu__item { justify-content: space-between; width: 100%; border: 0; background: none; font-weight: 600; }
+.c-home-radius-menu__check { visibility: hidden; color: #ea7a2e; font-size: 0.75rem; }
+.c-home-radius-menu__item.is-active { color: #c2410c; }
+.c-home-radius-menu__item.is-active .c-home-radius-menu__check { visibility: visible; }
 .c-home-dash__add, .c-home-dash__add:hover { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; margin-left: auto; border-radius: 999px; background: #fff1e6; color: #ea7a2e; font-size: 0.95rem; text-decoration: none; transition: background-color 0.15s, color 0.15s; }
 .c-home-dash__add:hover { background: #ea7a2e; color: #fff; }
 
@@ -13487,9 +13496,9 @@ a.c-home-trip__name:hover { color: #c2410c; }
   .c-home-trips__nav { margin: 0.85rem -1rem 0; }
 }
 
-/* Visitors card: as tall as the card next to it; the trip's panel fills it, its content at the
-   top, and the trip's text gets more lines to use the room */
-.c-home-dash__card--trips .c-home-trips__track { flex: 1 1 auto; align-items: stretch; }
+/* Visitors card: as tall as the card next to it; the trip's panel as tall as its trip, its content at the top, with
+   "All visitors" below as on the other cards, and the trip's text gets more lines */
+.c-home-dash__card--trips .c-home-trips__track { flex: 0 0 auto; align-items: flex-start; }
 .c-home-dash__card--trips .c-home-trip { align-items: flex-start; }
 .c-home-dash__card--trips .c-home-trip__text { -webkit-line-clamp: 6; }
 @media (max-width: 575.98px) {

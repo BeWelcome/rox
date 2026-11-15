@@ -184,11 +184,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Trips card: the distance pill sets the hidden #trips_radius
-    document.querySelectorAll('.js-home-trips-radius').forEach(function (select) {
-        select.addEventListener('change', function () {
+    // The trips card's distance: an entry of its dropdown sets #trips_radius, the pill's label and the check
+    document.querySelectorAll('.js-home-trips-radius-option').forEach(function (option) {
+        option.addEventListener('click', function () {
             const input = document.getElementById('trips_radius');
-            input.value = select.value;
+            if (option.dataset.value === input.value) {
+                return;
+            }
+            input.value = option.dataset.value;
+            const wrap = option.closest('.c-home-dash__radius-wrap');
+            wrap.querySelector('.js-home-trips-radius-label').textContent = option.textContent.trim();
+            wrap.querySelectorAll('.js-home-trips-radius-option').forEach(function (other) {
+                other.classList.toggle('is-active', other === option);
+                other.setAttribute('aria-pressed', other === option ? 'true' : 'false');
+            });
             Home.updateTripLegs();
         });
     });

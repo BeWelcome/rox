@@ -5,13 +5,18 @@ namespace App\Model;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Activity;
+use App\Entity\Comment;
 use App\Entity\HostingRequest;
 use App\Entity\Leg;
+use App\Entity\Member;
+use App\Entity\MemberLanguageLevel;
+use App\Entity\Message;
 use App\Entity\Statistic;
 use App\Repository\StatisticsRepository;
 use DatePeriod;
 use DateTime;
-use Doctrine\DBAL\Connection;
+use DateTimeImmutable;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
@@ -32,6 +37,15 @@ class StatisticsModel
     /** The rows of a list of the statistics page (languages, countries): the last one adds up the others */
     private const int LIST_ROWS = 8;
 
+    /**
+     * The statuses the daily numbers count as active members.
+     */
+    private const array DAILY_ACTIVE_STATUSES = [
+        MemberStatusType::ACTIVE,
+        MemberStatusType::CHOICE_INACTIVE,
+        MemberStatusType::OUT_OF_REMIND,
+    ];
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $entityManager,
@@ -41,55 +55,45 @@ class StatisticsModel
 
     public function getStatisticsHomepage(): array
     {
-        // Five full-table counts; the numbers don't need to be live.
+        // Five counts over whole tables; the numbers don't need to be live.
         return $this->cache->get('homepage_statistics', function (ItemInterface $item): array {
             $item->expiresAfter(3600);
 
-            $connection = $this->entityManager->getConnection();
+            $activeAll = MemberStatusType::ACTIVE_ALL_ARRAY;
 
-            $members = $connection->executeQuery('
-                SELECT
-                    COUNT(*) AS cnt
-                FROM
-                    member m
-                WHERE
-                    m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetchOne();
+            $members = $this->entityManager
+                ->createQuery('SELECT COUNT(m.id) FROM ' . Member::class . ' m WHERE m.status IN (:statuses)')
+                ->setParameter('statuses', $activeAll)
+                ->getSingleScalarResult();
 
-            $countries = $connection->executeQuery("
-                SELECT
-                    COUNT(DISTINCT g.country_id) AS cnt
-                FROM
-                    member m,
-    			    address a
-                JOIN location g ON a.location = g.geoname_id 
-    			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
-            ")->fetchOne();
+            // The countries of the places of the members who can be found (all their addresses). Native SQL: the
+            // distinct places first (a subquery in FROM, which DQL lacks), then their countries; that looks up each
+            // place once instead of once per address.
+            $countries = (int) $this->entityManager->getConnection()->fetchOne(
+                'SELECT COUNT(DISTINCT l.country_id) FROM location l
+                 INNER JOIN (
+                     SELECT DISTINCT a.location FROM address a INNER JOIN member m ON m.id = a.member_id
+                     WHERE m.Status IN (:statuses)
+                 ) places ON places.location = l.geoname_id',
+                ['statuses' => [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND]],
+                ['statuses' => ArrayParameterType::STRING],
+            );
 
-            $languages = $connection->executeQuery('
-                SELECT
-                    COUNT(DISTINCT l.shortCode) AS cnt
-                FROM
-                    language l,
-                    member_language_level mll,
-                    member m
-                WHERE
-                    l.ShortCode = mll.language
-                    AND mll.member_id = m.Id
-                    AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetchOne();
+            // the members as a subquery: MariaDB reads the language levels in member order and checks each member's
+            // status once; the language itself needs no join (a foreign key)
+            $languages = $this->entityManager
+                ->createQuery('SELECT COUNT(DISTINCT IDENTITY(mll.language)) FROM ' . MemberLanguageLevel::class
+                    . ' mll WHERE IDENTITY(mll.member) IN (SELECT m.id FROM ' . Member::class
+                    . ' m WHERE m.status IN (:statuses))')
+                ->setParameter('statuses', $activeAll)
+                ->getSingleScalarResult();
 
-            $positiveComments = $connection->executeQuery("
-                SELECT
-                    COUNT(c.id) AS cnt
-                FROM
-                    comment c,
-                    member m
-                WHERE
-                    c.quality = '" . CommentQualityType::POSITIVE . "'
-                    AND c.from_member_id = m.id
-                    AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetchOne();
+            $positiveComments = $this->entityManager
+                ->createQuery('SELECT COUNT(c.id) FROM ' . Comment::class . ' c JOIN c.fromMember m'
+                    . ' WHERE c.quality = :positive AND m.status IN (:statuses)')
+                ->setParameter('positive', CommentQualityType::POSITIVE)
+                ->setParameter('statuses', $activeAll)
+                ->getSingleScalarResult();
 
             $activities = $this->entityManager
                 ->createQuery('SELECT COUNT(a.id) FROM ' . Activity::class . ' a WHERE a.status = :active')
@@ -114,8 +118,10 @@ class StatisticsModel
         $count = iterator_count($dates);
         $output->write(['Update statistics ']);
         if (1 !== $count) {
+            // the period ends before its end date
+            $lastDate = DateTimeImmutable::createFromInterface($dates->getEndDate())->modify('-1 day');
             $output->writeln(['from ' . $dates->getStartDate()->format('Y-m-d')
-                . ' to ' . $dates->getEndDate()->format('Y-m-d'),
+                . ' to ' . $lastDate->format('Y-m-d'),
                 '',
             ]);
             $progressBar = new ProgressBar($output, $count);
@@ -128,7 +134,6 @@ class StatisticsModel
         }
 
         $em = $this->entityManager;
-        $connection = $em->getConnection();
         $statisticsRepository = $em->getRepository(Statistic::class);
         /** @var DateTime $day */
         foreach ($dates as $day) {
@@ -150,15 +155,15 @@ class StatisticsModel
                 $statistics->setCreated($day);
                 $new = true;
             }
-            $this->setMemberInfo($connection, $current, $statistics);
+            $this->setMemberInfo($current, $statistics);
 
             if ($new) {
-                $this->setLoggedInMembers($connection, $current, $next, $statistics);
+                $this->setLoggedInMembers($current, $next, $statistics);
             }
-            $this->setMessagesSentAndRead($connection, $current, $next, $statistics);
-            $this->setRequestsSentAndAccepted($connection, $current, $next, $statistics);
-            $this->setLegsCreated($connection, $current, $next, $statistics);
-            $this->setInvitationsSentAndAccepted($connection, $current, $next, $statistics);
+            $this->setMessagesSentAndRead($current, $next, $statistics);
+            $this->setRequestsSentAndAccepted($current, $next, $statistics);
+            $this->setLegsCreated($current, $next, $statistics);
+            $this->setInvitationsSentAndAccepted($current, $next, $statistics);
 
             $em->persist($statistics);
         }
@@ -267,99 +272,98 @@ class StatisticsModel
         return $this->prepareDailyData($statisticsRepository->getCreatedLegsDataDaily());
     }
 
+    /**
+     * The languages members speak, by number of members; cached for an hour like the home page numbers.
+     */
     public function getLanguagesData(): array
     {
-        $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery('
-            SELECT
-                l.ShortCode AS `language`,
-                COUNT(m.id) cnt
-            FROM
-                member_language_level mll,
-                language l,
-                member m
-            WHERE
-                l.ShortCode = mll.language
-                AND mll.member_id = m.id
-                AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            GROUP BY
-                l.ShortCode
-            ORDER BY
-                cnt DESC
-        ');
+        $resultSet = $this->cache->get('statistics_languages', function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
 
-        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
+            // the members as a subquery: MariaDB reads the language levels in member order (see the home page)
+            $rows = $this->entityManager
+                ->createQuery('SELECT IDENTITY(mll.language) AS language, COUNT(IDENTITY(mll.member)) AS cnt FROM '
+                    . MemberLanguageLevel::class . ' mll WHERE IDENTITY(mll.member) IN (SELECT m.id FROM '
+                    . Member::class . ' m WHERE m.status IN (:statuses)) GROUP BY language ORDER BY cnt DESC')
+                ->setParameter('statuses', MemberStatusType::ACTIVE_ALL_ARRAY)
+                ->getArrayResult();
 
-        return $this->translateLanguages($resultSet);
-    }
+            return array_map('intval', array_column($rows, 'cnt', 'language'));
+        });
 
-    public function getPreferredLanguagesData(): array
-    {
-        $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery('
-            SELECT
-                m.Locale AS `language`,
-                COUNT(m.id) cnt
-            FROM
-                member m
-            WHERE
-                m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            GROUP BY
-                m.Locale
-            ORDER BY
-                cnt DESC
-        ');
-
-        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
-
-        return $this->translateLanguages($resultSet);
-    }
-
-    public function getMembersPerCountryData(): array
-    {
-        $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery('
-            SELECT
-                g.country_id AS country,
-                COUNT(*) AS cnt
-            FROM
-                member m,
-                address a,
-                location g
-            WHERE
-                m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-                AND m.id = a.member_id 
-                AND a.active = 1
-                AND a.location = g.geoname_id
-            GROUP BY
-                g.country_id
-            ORDER BY
-                cnt DESC
-        ');
-
-        $resultSet = $this->reduceResultSet(self::LIST_ROWS, $result->fetchAllKeyValue());
-
-        return $this->translateCountries($resultSet);
+        return $this->translateLanguages($this->reduceResultSet(self::LIST_ROWS, $resultSet));
     }
 
     /**
+     * The languages members chose for the site, by number of members; cached for an hour.
+     */
+    public function getPreferredLanguagesData(): array
+    {
+        $resultSet = $this->cache->get('statistics_preferred_languages', function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
+
+            $rows = $this->entityManager
+                ->createQuery('SELECT m.locale AS language, COUNT(m.id) AS cnt FROM ' . Member::class
+                    . ' m WHERE m.status IN (:statuses) GROUP BY m.locale ORDER BY cnt DESC')
+                ->setParameter('statuses', MemberStatusType::ACTIVE_ALL_ARRAY)
+                ->getArrayResult();
+
+            return array_map('intval', array_column($rows, 'cnt', 'language'));
+        });
+
+        return $this->translateLanguages($this->reduceResultSet(self::LIST_ROWS, $resultSet));
+    }
+
+    /**
+     * The countries of the members' active addresses, by number of members; cached for an hour.
+     */
+    public function getMembersPerCountryData(): array
+    {
+        $resultSet = $this->cache->get('statistics_members_per_country', function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
+
+            // Native SQL: the members per place first (a subquery in FROM, which DQL lacks), then per country;
+            // that looks up each place once instead of once per address.
+            $resultSet = $this->entityManager->getConnection()->fetchAllKeyValue(
+                'SELECT l.country_id AS country, SUM(places.cnt) AS cnt FROM location l
+                 INNER JOIN (
+                     SELECT a.location, COUNT(*) AS cnt FROM address a INNER JOIN member m ON m.id = a.member_id
+                     WHERE m.Status IN (:statuses) AND a.active = 1
+                     GROUP BY a.location
+                 ) places ON places.location = l.geoname_id
+                 GROUP BY l.country_id
+                 ORDER BY cnt DESC',
+                ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+                ['statuses' => ArrayParameterType::STRING],
+            );
+
+            return array_map('intval', $resultSet);
+        });
+
+        return $this->translateCountries($this->reduceResultSet(self::LIST_ROWS, $resultSet));
+    }
+
+    /**
+     * How long ago members were last active, in periods; cached for an hour.
+     *
      * @SuppressWarnings("PHPMD")
      */
     public function getMembersPerLoginData(): array
     {
-        $connection = $this->entityManager->getConnection();
-        $executionResult = $connection->executeQuery('
-            SELECT
-                TIMESTAMPDIFF(DAY, m.LastActive, NOW()) AS logindiff,
-                COUNT(*) AS cnt
-            FROM member m
-            WHERE TIMESTAMPDIFF(DAY, m.LastActive, NOW()) >= 0
-            AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            GROUP BY logindiff
-            ORDER BY logindiff ASC
-        ');
+        $resultSet = $this->cache->get('statistics_logins', function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
 
-        $resultSet = $executionResult->fetchAllKeyValue();
+            // Native SQL: TIMESTAMPDIFF counts whole days of 24 hours, DQL's DATE_DIFF calendar days
+            return array_map('intval', $this->entityManager->getConnection()->fetchAllKeyValue(
+                'SELECT TIMESTAMPDIFF(DAY, m.LastActive, NOW()) AS logindiff, COUNT(*) AS cnt
+                 FROM member m
+                 WHERE TIMESTAMPDIFF(DAY, m.LastActive, NOW()) >= 0 AND m.Status IN (:statuses)
+                 GROUP BY logindiff
+                 ORDER BY logindiff ASC',
+                ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+                ['statuses' => ArrayParameterType::STRING],
+            ));
+        });
 
         $translator = $this->translator;
         $translatedPeriods = [
@@ -383,7 +387,8 @@ class StatisticsModel
         $result['longer'] = 0;
 
         foreach ($resultSet as $diff => $count) {
-            if (1 === $diff) {
+            // 0: less than 24 hours ago
+            if ($diff <= 1) {
                 $result['1 day'] += $count;
             } elseif ($diff <= 7) {
                 $result['1 week'] += $count;
@@ -432,226 +437,104 @@ class StatisticsModel
         return $result;
     }
 
-    private function setMemberInfo(Connection $connection, string $current, Statistic $statistics): void
+    private function setMemberInfo(string $current, Statistic $statistics): void
     {
         // Active members
-        $count = $connection->executeQuery(
-            "
-                    SELECT
-                      COUNT(*) AS cnt
-                    FROM
-                      member m
-                    WHERE
-                      m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
-                      AND m.created <= :created
-                ",
-            [
-                'created' => $current,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setActiveMembers($count);
+        $statistics->setActiveMembers($this->count(
+            'SELECT COUNT(m.id) FROM ' . Member::class . ' m WHERE m.status IN (:statuses) AND m.created <= :created',
+            ['statuses' => self::DAILY_ACTIVE_STATUSES, 'created' => $current],
+        ));
 
         // Number of member with at least one positive comment
-        $count = $connection->executeQuery(
-            "
-                    SELECT
-                      COUNT(DISTINCT(m.id)) AS cnt
-                    FROM
-                      member m,
-                      comment c
-                    WHERE
-                      m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
-                      AND m.id = c.to_member_id
-                      AND c.quality = :quality
-                      AND c.updated <= :updated
-                      ",
+        $statistics->setMembersWithPositiveComment($this->count(
+            'SELECT COUNT(DISTINCT m.id) FROM ' . Comment::class . ' c JOIN c.toMember m'
+            . ' WHERE m.status IN (:statuses) AND c.quality = :quality AND c.updated <= :updated',
             [
+                'statuses' => self::DAILY_ACTIVE_STATUSES,
                 'quality' => CommentQualityType::POSITIVE,
                 'updated' => $current,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setMembersWithPositiveComment($count);
+            ],
+        ));
     }
 
-    private function setLoggedInMembers(Connection $connection, string $current, string $next, Statistic $statistics): void
+    private function setLoggedInMembers(string $current, string $next, Statistic $statistics): void
     {
         // Number of members who have logged in during the current date
-        $count = $connection->executeQuery(
-            "
-                        SELECT
-                          COUNT(m.id) AS cnt
-                        FROM
-                          member m
-                        WHERE
-                          m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
-                          AND m.LastActive >= :current
-                          AND m.LastActive < :next
-                          ",
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setMembersWhoLoggedInToday($count);
+        $statistics->setMembersWhoLoggedInToday($this->count(
+            'SELECT COUNT(m.id) FROM ' . Member::class . ' m'
+            . ' WHERE m.status IN (:statuses) AND m.lastActive >= :current AND m.lastActive < :next',
+            ['statuses' => self::DAILY_ACTIVE_STATUSES, 'current' => $current, 'next' => $next],
+        ));
     }
 
-    private function setMessagesSentAndRead(Connection $connection, string $current, string $next, Statistic $statistics): void
+    private function setMessagesSentAndRead(string $current, string $next, Statistic $statistics): void
     {
         // Number of messages sent from one member to another during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(m.id) AS cnt
-                    FROM
-                      message m
-                    WHERE
-                      m.created >= :current
-                      AND m.created < :next
-                      AND m.request_id IS null
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setMessagesSent($count);
+        $statistics->setMessagesSent($this->count(
+            'SELECT COUNT(m.id) FROM ' . Message::class . ' m'
+            . ' WHERE m.created >= :current AND m.created < :next AND m.request IS NULL',
+            ['current' => $current, 'next' => $next],
+        ));
 
         // Number of messages read during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(m.id) AS cnt
-                    FROM
-                      message m
-                    WHERE
-                      m.first_read >= :current
-                      AND m.first_read < :next
-                      AND m.request_id IS null
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setMessagesRead($count);
+        $statistics->setMessagesRead($this->count(
+            'SELECT COUNT(m.id) FROM ' . Message::class . ' m'
+            . ' WHERE m.firstRead >= :current AND m.firstRead < :next AND m.request IS NULL',
+            ['current' => $current, 'next' => $next],
+        ));
     }
 
-    private function setRequestsSentAndAccepted(
-        Connection $connection,
-        string $current,
-        string $next,
-        Statistic $statistics,
-    ): void {
+    private function setRequestsSentAndAccepted(string $current, string $next, Statistic $statistics): void
+    {
         // Number of requests created from one member to another during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(r.id) AS cnt
-                    FROM
-                      request r
-                    WHERE
-                      r.created >= :current
-                      AND r.created < :next
-                      AND r.invite_for_leg IS NULL
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setRequestsSent($count);
+        $statistics->setRequestsSent($this->count(
+            'SELECT COUNT(r.id) FROM ' . HostingRequest::class . ' r'
+            . ' WHERE r.created >= :current AND r.created < :next AND r.inviteForLeg IS NULL',
+            ['current' => $current, 'next' => $next],
+        ));
 
         // Number of requests accepted during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(r.id) AS cnt
-                    FROM
-                      request r
-                    WHERE
-                      r.updated >= :current
-                      AND r.updated < :next
-                      AND r.`status` = :status
-                      AND r.invite_for_leg IS NULL
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-                'status' => HostingRequest::REQUEST_ACCEPTED,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setRequestsAccepted($count);
+        $statistics->setRequestsAccepted($this->count(
+            'SELECT COUNT(r.id) FROM ' . HostingRequest::class . ' r'
+            . ' WHERE r.updated >= :current AND r.updated < :next AND r.status = :status AND r.inviteForLeg IS NULL',
+            ['current' => $current, 'next' => $next, 'status' => HostingRequest::REQUEST_ACCEPTED],
+        ));
     }
 
-    private function setLegsCreated(
-        Connection $connection,
-        string $current,
-        string $next,
-        Statistic $statistics,
-    ): void {
+    private function setLegsCreated(string $current, string $next, Statistic $statistics): void
+    {
         // Number of legs of the trips created during the current date
-        $count = $this->entityManager->createQuery(
-            'SELECT COUNT(l.id) FROM ' . Leg::class . ' l JOIN l.trip t WHERE t.created >= :current AND t.created < :next'
-        )
-            ->setParameters(['current' => $current, 'next' => $next])
-            ->getSingleScalarResult();
-        $statistics->setLegsCreated((int) $count);
+        $statistics->setLegsCreated($this->count(
+            'SELECT COUNT(l.id) FROM ' . Leg::class . ' l JOIN l.trip t'
+            . ' WHERE t.created >= :current AND t.created < :next',
+            ['current' => $current, 'next' => $next],
+        ));
     }
 
-    private function setInvitationsSentAndAccepted(
-        Connection $connection,
-        string $current,
-        string $next,
-        Statistic $statistics,
-    ): void {
-        // Number of requests created from one member to another during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(r.id) AS cnt
-                    FROM
-                      request r
-                    WHERE
-                      r.created >= :current
-                      AND r.created < :next
-                      AND NOT r.invite_for_leg IS NULL
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setInvitationsSent($count);
+    private function setInvitationsSentAndAccepted(string $current, string $next, Statistic $statistics): void
+    {
+        // Number of invitations created from one member to another during the current date
+        $statistics->setInvitationsSent($this->count(
+            'SELECT COUNT(r.id) FROM ' . HostingRequest::class . ' r'
+            . ' WHERE r.created >= :current AND r.created < :next AND r.inviteForLeg IS NOT NULL',
+            ['current' => $current, 'next' => $next],
+        ));
 
-        // Number of requests accepted during the current date
-        $count = $connection->executeQuery(
-            '
-                    SELECT
-                      COUNT(r.id) AS cnt
-                    FROM
-                      request r
-                    WHERE
-                      r.updated >= :current
-                      AND r.updated < :next
-                      AND r.`status` = :status
-                      AND NOT r.invite_for_leg IS NULL
-                      ',
-            [
-                'current' => $current,
-                'next' => $next,
-                'status' => HostingRequest::REQUEST_ACCEPTED,
-            ]
-        )
-            ->fetchOne();
-        $statistics->setInvitationsAccepted($count);
+        // Number of invitations accepted during the current date
+        $statistics->setInvitationsAccepted($this->count(
+            'SELECT COUNT(r.id) FROM ' . HostingRequest::class . ' r'
+            . ' WHERE r.updated >= :current AND r.updated < :next AND r.status = :status'
+            . ' AND r.inviteForLeg IS NOT NULL',
+            ['current' => $current, 'next' => $next, 'status' => HostingRequest::REQUEST_ACCEPTED],
+        ));
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    private function count(string $dql, array $parameters): int
+    {
+        return (int) $this->entityManager->createQuery($dql)->setParameters($parameters)->getSingleScalarResult();
     }
 
     private function prepareDailyData($data): array

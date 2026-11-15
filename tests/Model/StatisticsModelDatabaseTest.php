@@ -29,6 +29,18 @@ class StatisticsModelDatabaseTest extends KernelTestCase
         self::bootKernel();
         $this->model = static::getContainer()->get(StatisticsModel::class);
         $this->connection = static::getContainer()->get(Connection::class);
+        // the numbers are cached for an hour; the database is rolled back after each test, the cache isn't
+        $cache = static::getContainer()->get('cache.app');
+        $keys = [
+            'homepage_statistics',
+            'statistics_languages',
+            'statistics_preferred_languages',
+            'statistics_members_per_country',
+            'statistics_logins',
+        ];
+        foreach ($keys as $key) {
+            $cache->delete($key);
+        }
     }
 
     public function testUpdateStatisticsCountsFromTheMemberAndCommentTables(): void
@@ -74,10 +86,32 @@ class StatisticsModelDatabaseTest extends KernelTestCase
         self::assertSame($active, array_sum($perLogin));
     }
 
+    public function testMembersActiveInTheLastDayAreInTheFirstPeriod(): void
+    {
+        $this->connection->executeStatement('UPDATE member SET LastActive = NOW() - INTERVAL 3 DAY');
+        // less than 24 hours ago: 0 days
+        $this->connection->executeStatement(
+            "UPDATE member SET LastActive = NOW() - INTERVAL 2 HOUR WHERE Status = 'Active' ORDER BY id LIMIT 1"
+        );
+
+        $perLogin = array_values($this->model->getMembersPerLoginData());
+
+        // 1 day, 1 week, ...
+        self::assertSame(1, $perLogin[0]);
+    }
+
+    public function testTheChartsAreCached(): void
+    {
+        $before = $this->model->getPreferredLanguagesData();
+        $this->connection->executeStatement(
+            "UPDATE member SET Status = 'Banned' WHERE Status = 'Active' ORDER BY id LIMIT 1"
+        );
+
+        self::assertSame($before, $this->model->getPreferredLanguagesData());
+    }
+
     public function testHomepageCountsPositiveCommentsOfActiveMembers(): void
     {
-        static::getContainer()->get('cache.app')->delete('homepage_statistics');
-
         $statistics = $this->model->getStatisticsHomepage();
 
         self::assertSame(

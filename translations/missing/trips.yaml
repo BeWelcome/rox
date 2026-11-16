@@ -241,3 +241,54 @@ trips.visitors.of:
 trips.visitors.coming:
     - '{count, plural, one {visitor coming} other {visitors coming}}'
     - Visitors page, after the number of trips near the member (4 visitors coming); the number is shown before it
+trip.step.where:
+    - 'Where'
+    - Plan a public trip, first of the four steps over the form (the stops and their dates)
+trip.step.about:
+    - 'About'
+    - Plan a public trip, second of the four steps over the form (title and description)
+trip.step.who:
+    - 'Who'
+    - Plan a public trip, third of the four steps over the form (travellers, extra info, invitation radius)
+trip.step.review:
+    - 'Review'
+    - Plan a public trip, last of the four steps over the form (the trip before it is published)
+trip.step.of:
+    - 'Step {n} of {total}'
+    - Plan a public trip, under the title of the panel, e.g. Step 2 of 4. Keep {n} and {total}
+trip.step.next:
+    - 'Next'
+    - Plan a public trip, button at the bottom that goes to the next step
+trip.step.back:
+    - 'Back'
+    - Plan a public trip, button at the bottom that goes back to the previous step
+trip.step.who.title:
+    - 'Who is travelling?'
+    - Plan a public trip, title of the third step (travellers, extra info, invitation radius)
+trip.step.who.hint:
+    - 'Tell hosts how many you are and how far they can be.'
+    - Plan a public trip, line under the title of the third step
+trip.publish:
+    - 'Publish trip'
+    - Plan a public trip, button of the last step that creates the trip
+trip.review.title:
+    - 'Ready to publish?'
+    - Plan a public trip, title of the last step that shows the trip before it is created
+trip.review.text:
+    - 'This is what hosts near your stops will see.'
+    - Plan a public trip, line under the title of the last step
+trip.review.edit:
+    - 'Edit'
+    - Plan a public trip, last step, link on each part of the trip that goes back to its step
+trip.review.travellers:
+    - '{count, plural, one {# traveller} other {# travellers}}'
+    - Plan a public trip, last step, the number of travellers. Keep the # sign
+trip.created.search:
+    - 'Find hosts in {place}'
+    - Main button of the confirmation shown once a trip has been created, opens the search around the first stop. Keep {place}
+trip.stop.title:
+    - 'Stop'
+    - Plan a public trip, title over each stop of the itinerary; the number of the stop is added after it (Stop 1, Stop 2)
+trip.created.search.hint:
+    - 'See who can host you there'
+    - Small line under "Find hosts in (city)" on the confirmation shown once a trip has been created

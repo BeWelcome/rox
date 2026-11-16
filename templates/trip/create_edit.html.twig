@@ -34,6 +34,14 @@
         {% for error in field.vars.errors %}{% set location_errors = location_errors|merge([error.message]) %}{% endfor %}
     {% endfor %}
     <div data-content="{{ name }}" class="p-trips-stop">
+        {# "Stop 1", "Stop 2"...: the number comes from a CSS counter, so it follows stops added or removed #}
+        <div class="p-trips-stop__head">
+            <span class="p-trips-stop__num" aria-hidden="true"></span>
+            <span class="p-trips-stop__title">{{ 'trip.stop.title'|trans }}</span>
+            <button type="button" class="p-trips-stop__remove js-btn-remove" data-related="{{ name }}" aria-label="{{ 'delete'|trans }}">
+                <i class="fas fa-trash-can" aria-hidden="true"></i>
+            </button>
+        </div>
         <div class="p-trips-stop__fields">
             <div class="p-trips-field p-trips-field--icon{{ location_errors is not empty ? ' has-error' }}">
                 <i class="fas fa-location-dot" aria-hidden="true"></i>
@@ -55,9 +63,6 @@
                     'aria-label': 'trip.leg.duration'|trans,
                 } }) }}
             </div>
-            <button type="button" class="p-trips-stop__remove js-btn-remove" data-related="{{ name }}" aria-label="{{ 'delete'|trans }}" title="{{ 'delete'|trans }}">
-                <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
         </div>
         {% if location_errors is not empty %}
             <p class="p-trips-stop__error js-location-error">
@@ -115,62 +120,27 @@
         <span class="p-trips-embed__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
         <div class="p-ped-head__text">
           <h1 class="p-ped-head__title">{{ 'landing.stats.trip'|trans }}</h1>
-          <p class="p-trips-embed__sub">{{ 'trip.details.hint'|trans }}</p>
+          <p class="p-trips-embed__sub{{ create ? ' js-trip-step-sub' }}">{{ 'trip.details.hint'|trans }}</p>
         </div>
         <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
           <i class="fas fa-times" aria-hidden="true"></i>
         </button>
       </header>
     {% endif %}
-    {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-trips-form' } }) }}
-        <section class="p-trips-card">
-            {# In the panel, the panel's head already says it: no second title #}
-            <div class="p-trips-card__head{{ embedded ? ' visually-hidden' }}">
-                <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
-                <div>
-                    <h2 class="p-trips-card__title">{{ 'trip.details'|trans }}</h2>
-                    <p class="p-trips-card__hint">{{ 'trip.details.hint'|trans }}</p>
-                </div>
-            </div>
-            <div class="p-trips-field">
-                <label class="p-trips-label" for="{{ form.summary.vars.id }}">{{ form.summary.vars.label|trans }}</label>
-                {{ form_widget(form.summary, { attr: form.summary.vars.attr|merge({ class: 'p-trips-input p-trips-input--box' }) }) }}
-                {{ form_errors(form.summary) }}
-            </div>
-            <div class="p-trips-field">
-                <label class="p-trips-label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
-                {{ form_widget(form.description, { attr: form.description.vars.attr|merge({ class: 'p-trips-input p-trips-input--box', rows: 4 }) }) }}
-                {{ form_errors(form.description) }}
-            </div>
-            <div class="p-trips-form__row">
-                {% for field in [form.countOfTravellers, form.additionalInfo, form.invitationRadius] %}
-                    <div class="p-trips-field">
-                        {% if field.vars.name == 'countOfTravellers' %}
-                            {# The number of travellers with - and + (trips.js): 1 to 5, then "5+" (the form's 6) #}
-                            {% set count = field.vars.value ?: 1 %}
-                            <span class="p-trips-label" id="{{ field.vars.id }}_label">{{ field.vars.label|trans }}</span>
-                            <div class="p-trips-stepper js-stepper" role="group" aria-labelledby="{{ field.vars.id }}_label" data-min="1" data-max="6">
-                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="-1" aria-label="-"{{ count <= 1 ? ' disabled' }}>
-                                    <i class="fas fa-minus" aria-hidden="true"></i>
-                                </button>
-                                <output class="p-trips-stepper__value js-stepper-value" for="{{ field.vars.id }}" aria-live="polite">{{ count >= 6 ? '5+' : count }}</output>
-                                <input type="hidden" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ count }}" class="js-stepper-input">
-                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="1" aria-label="+"{{ count >= 6 ? ' disabled' }}>
-                                    <i class="fas fa-plus" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            {% do field.setRendered %}
-                        {% else %}
-                            <label class="p-trips-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
-                            {{ form_widget(field, { attr: { class: 'p-trips-select' } }) }}
-                        {% endif %}
-                        {{ form_errors(field) }}
-                    </div>
+    {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-trips-form' ~ (create ? ' p-trips-form--steps js-trip-stepper' : '') } }) }}
+        {# Creating a trip: four steps (Where, About, Who, Review), one shown at a time (trip-stepper.js) #}
+        {% if create %}
+            <nav class="p-trips-steps js-trip-steps" aria-label="{{ 'trip.create'|trans }}"
+                 data-of="{{ 'trip.step.of'|trans({ n: '{n}', total: 4 }) }}">
+                {% for _step in ['where', 'about', 'who', 'review'] %}
+                    <button type="button" class="p-trips-steps__item js-trip-go" data-go="{{ loop.index }}">
+                        <span class="p-trips-steps__bar" aria-hidden="true"></span>
+                        <span class="p-trips-steps__label"><i class="fas fa-check" aria-hidden="true"></i> {{ ('trip.step.' ~ _step)|trans }}</span>
+                    </button>
                 {% endfor %}
-            </div>
-        </section>
-
-        <section class="p-trips-card">
+            </nav>
+        {% endif %}
+        <section class="p-trips-card p-trips-step" data-step="1">
             <div class="p-trips-card__head">
                 <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-route"></i></span>
                 <div>
@@ -199,16 +169,119 @@
                 <i class="fa fa-plus" aria-hidden="true"></i> {{ 'trip.leg.add'|trans }}
             </button>
         </section>
+        <section class="p-trips-card p-trips-step" data-step="2">
+            {# In the panel, the panel's head already says it: no second title #}
+            <div class="p-trips-card__head{{ embedded ? ' visually-hidden' }}">
+                <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
+                <div>
+                    <h2 class="p-trips-card__title">{{ 'trip.details'|trans }}</h2>
+                    <p class="p-trips-card__hint">{{ 'trip.details.hint'|trans }}</p>
+                </div>
+            </div>
+            <div class="p-trips-field">
+                <label class="p-trips-label" for="{{ form.summary.vars.id }}">{{ form.summary.vars.label|trans }}</label>
+                {{ form_widget(form.summary, { attr: form.summary.vars.attr|merge({ class: 'p-trips-input p-trips-input--box' }) }) }}
+                {{ form_errors(form.summary) }}
+            </div>
+            <div class="p-trips-field">
+                <label class="p-trips-label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
+                {{ form_widget(form.description, { attr: form.description.vars.attr|merge({ class: 'p-trips-input p-trips-input--box', rows: 8 }) }) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </section>
+        <section class="p-trips-card p-trips-step" data-step="3">
+            <div class="p-trips-card__head">
+                <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-user-group"></i></span>
+                <div>
+                    <h2 class="p-trips-card__title">{{ 'trip.step.who.title'|trans }}</h2>
+                    <p class="p-trips-card__hint">{{ 'trip.step.who.hint'|trans }}</p>
+                </div>
+            </div>
+            <div class="p-trips-form__row">
+                {% for field in [form.countOfTravellers, form.additionalInfo, form.invitationRadius] %}
+                    <div class="p-trips-field">
+                        {% if field.vars.name == 'countOfTravellers' %}
+                            {# The number of travellers with - and + (trips.js): 1 to 5, then "5+" (the form's 6) #}
+                            {% set count = field.vars.value ?: 1 %}
+                            <span class="p-trips-label" id="{{ field.vars.id }}_label">{{ field.vars.label|trans }}</span>
+                            <div class="p-trips-stepper js-stepper" role="group" aria-labelledby="{{ field.vars.id }}_label" data-min="1" data-max="6">
+                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="-1" aria-label="-"{{ count <= 1 ? ' disabled' }}>
+                                    <i class="fas fa-minus" aria-hidden="true"></i>
+                                </button>
+                                <output class="p-trips-stepper__value js-stepper-value" for="{{ field.vars.id }}" aria-live="polite">{{ count >= 6 ? '5+' : count }}</output>
+                                <input type="hidden" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ count }}" class="js-stepper-input">
+                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="1" aria-label="+"{{ count >= 6 ? ' disabled' }}>
+                                    <i class="fas fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            {% do field.setRendered %}
+                        {% else %}
+                            <label class="p-trips-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+                            {{ form_widget(field, { attr: { class: 'p-trips-select' } }) }}
+                        {% endif %}
+                        {{ form_errors(field) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        {# The last step: the trip as hosts will see it, each part with Edit (filled by trip-stepper.js) #}
+        {% if create %}
+            <section class="p-trips-step p-trips-review js-trip-review" data-step="4"
+                     data-nights-one="{{ 'request.night.stay'|trans({ numbernights: 1 }) }}"
+                     data-nights-other="{{ 'request.night.stay'|trans({ numbernights: 99 })|replace({ '99': '{n}' }) }}"
+                     data-travellers-one="{{ 'trip.review.travellers'|trans({ count: 1 }) }}"
+                     data-travellers-other="{{ 'trip.review.travellers'|trans({ count: 99 })|replace({ '99': '{n}' }) }}">
+                <h2 class="p-trips-review__title">{{ 'trip.review.title'|trans }}</h2>
+                <p class="p-trips-review__text">{{ 'trip.review.text'|trans }}</p>
+                <div class="p-trips-review__card">
+                    <div class="p-trips-review__part p-trips-review__part--head">
+                        <span class="p-trips-review__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
+                        <div class="p-trips-review__main">
+                            <strong class="p-trips-review__summary js-review-summary"></strong>
+                            <p class="p-trips-review__description js-review-description"></p>
+                        </div>
+                        <button type="button" class="p-trips-review__edit js-trip-go" data-go="2"><i class="fas fa-pen" aria-hidden="true"></i><span class="visually-hidden">{{ 'trip.review.edit'|trans }}</span></button>
+                    </div>
+                    <div class="p-trips-review__part">
+                        <div class="p-trips-review__main">
+                            <span class="p-trips-review__label">{{ 'trip.legs.title'|trans }}</span>
+                            <ol class="p-trips-review__stops js-review-stops"></ol>
+                        </div>
+                        <button type="button" class="p-trips-review__edit js-trip-go" data-go="1"><i class="fas fa-pen" aria-hidden="true"></i><span class="visually-hidden">{{ 'trip.review.edit'|trans }}</span></button>
+                    </div>
+                    <div class="p-trips-review__part">
+                        <div class="p-trips-review__facts">
+                            <span class="p-trips-review__chip"><i class="fas fa-user-group" aria-hidden="true"></i> <span class="js-review-travellers"></span></span>
+                            <span class="p-trips-review__chip"><i class="fas fa-bullseye" aria-hidden="true"></i> <span class="js-review-radius"></span></span>
+                            <span class="p-trips-review__chip"><i class="fas fa-circle-info" aria-hidden="true"></i> <span class="js-review-info"></span></span>
+                        </div>
+                        <button type="button" class="p-trips-review__edit js-trip-go" data-go="3"><i class="fas fa-pen" aria-hidden="true"></i><span class="visually-hidden">{{ 'trip.review.edit'|trans }}</span></button>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
 
         {{ form_errors(form) }}
         {% if embedded %}
         <div class="p-ped-foot">
-            <button type="button" class="p-ped-foot__cancel js-ped-close">{{ 'cancel'|trans }}</button>
-            <button class="p-ped-foot__save" type="submit"><i class="fas fa-check" aria-hidden="true"></i> {{ button_text|trans|capitalize }}</button>
+            <button type="button" class="p-ped-foot__cancel js-ped-close{{ create ? ' js-trip-cancel' }}">{{ 'cancel'|trans }}</button>
+            {% if create %}
+                <button type="button" class="p-ped-foot__cancel js-trip-back" hidden><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'trip.step.back'|trans }}</button>
+                <button type="button" class="p-ped-foot__save js-trip-next">{{ 'trip.step.next'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+                <button class="p-ped-foot__save js-trip-submit" type="submit" hidden>{{ 'trip.publish'|trans }} <i class="fas fa-check" aria-hidden="true"></i></button>
+            {% else %}
+                <button class="p-ped-foot__save" type="submit"><i class="fas fa-check" aria-hidden="true"></i> {{ button_text|trans|capitalize }}</button>
+            {% endif %}
         </div>
         {% else %}
         <div class="p-trips-form__actions">
-            <button class="p-trips-btn p-trips-btn--primary p-trips-btn--l" type="submit">{{ button_text|trans|capitalize }}</button>
+            {% if create %}
+                <button type="button" class="p-trips-btn p-trips-btn--l js-trip-back" hidden><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'trip.step.back'|trans }}</button>
+                <button type="button" class="p-trips-btn p-trips-btn--primary p-trips-btn--l js-trip-next">{{ 'trip.step.next'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+                <button class="p-trips-btn p-trips-btn--primary p-trips-btn--l js-trip-submit" type="submit" hidden>{{ 'trip.publish'|trans }} <i class="fas fa-check" aria-hidden="true"></i></button>
+            {% else %}
+                <button class="p-trips-btn p-trips-btn--primary p-trips-btn--l" type="submit">{{ button_text|trans|capitalize }}</button>
+            {% endif %}
         </div>
         {% endif %}
     {{ form_end(form) }}

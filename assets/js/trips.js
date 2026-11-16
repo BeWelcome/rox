@@ -10,6 +10,7 @@ import {initializeMultipleAutoCompletes} from './suggest/locations';
 import {initContactDrawer} from './contact/drawer';
 import {initStayDates} from './contact/stay_dates';
 import {prettySelect} from './pretty-select';
+import {initTripStepper} from './trip-stepper';
 
 // Visitors page: a trip, the invitation or the message open in a side panel
 initContactDrawer();
@@ -27,6 +28,7 @@ function onChange(element, result) {
     latitude.value = result.latitude;
     longitude.value = result.longitude;
     clearLocationError(element);
+    geonameId.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 // A place picked: its error under the field goes
@@ -78,6 +80,8 @@ initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker
 
 // Travellers, radius...: a menu in the site's look instead of the browser's own
 document.querySelectorAll('.p-trips-form select.p-trips-select').forEach(prettySelect);
+// Plan a public trip: the form in steps
+initTripStepper();
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let lastEndDateSet = null;

@@ -46,8 +46,35 @@
             </div>
         </div>
 
+        {# The first stop's town: its members, searched around it (the search page, out of the panel) #}
+        {% set first_place = (trip.legs|first) ? (trip.legs|first).location : null %}
         <div class="c-embed-sent__actions">
-            <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
+            {% if first_place %}
+                {# Posted like the home page's place search (the search form checks its token, a plain link is refused) #}
+                <form class="c-embed-sent__search-form" method="post" action="{{ path('search_locations') }}" target="_top">
+                    {% for _name, _value in {
+                        location: first_place.name,
+                        location_fullname: first_place.fullname,
+                        location_name: first_place.name,
+                        location_geoname_id: first_place.geonameId,
+                        location_latitude: first_place.latitude,
+                        location_longitude: first_place.longitude,
+                        location_admin_unit: 0,
+                        _token: csrf_token('submit'),
+                    } %}
+                        <input type="hidden" name="tiny[{{ _name }}]" value="{{ _value }}">
+                    {% endfor %}
+                    <button type="submit" class="c-embed-sent__search">
+                        <span class="c-embed-sent__search-icon" aria-hidden="true"><i class="fas fa-magnifying-glass-location"></i></span>
+                        <span class="c-embed-sent__search-text">
+                            <strong>{{ 'trip.created.search'|trans({ place: first_place.name }) }}</strong>
+                            <span>{{ 'trip.created.search.hint'|trans }}</span>
+                        </span>
+                        <i class="fas fa-arrow-right c-embed-sent__search-go" aria-hidden="true"></i>
+                    </button>
+                </form>
+            {% endif %}
+            <button type="button" class="c-embed-sent__btn{{ first_place ? '' : ' c-embed-sent__btn--primary' }} js-embed-sent-close">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'contact.sent.back.home'|trans }}
             </button>
             <a class="c-embed-sent__btn" href="{{ path('trip_show', { id: trip.id }) }}" target="_top">

@@ -13,6 +13,7 @@ import '../scss/cookie-consent.scss';
 // import 'select2/dist/js/select2.full.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
+import './footer.js';
 import '../scss/home.scss';
 
 window.bootstrap = bootstrap;

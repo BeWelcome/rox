@@ -99,9 +99,6 @@ browser.notification.friendship.title:
 browser.notification.body:
     - Open BeWelcome to read it.
     - Generic browser push notification body. Do not include private message, request, or forum content.
-footer.links.toggle:
-    - Links and help
-    - Button that opens the footer links on small screens
 flash.mail.link.expired:
     - This link has expired or isn't valid.
     - Shown when a link from a mail (accept or decline a group invitation or join request, confirm or dismiss a friendship) is older than 30 days or was changed; the member lands on the group's or the friendship's page.
@@ -114,3 +111,21 @@ loginmessage.acknowledge.error:
 label.activities_notifications:
     - How often do you want to be informed about activities in your area?
     - Label for the drop down for activity notifications (options trips.never and the like).
+footer.tagline:
+    - 'Hospitality exchange, free for everyone. Run by volunteers, open source since 2007.'
+    - 'Footer of every page, under the logo'
+footer.heading.about:
+    - 'About'
+    - 'Footer, heading of the links about BeWelcome (About us, FAQ, Contact us, Report a bug)'
+footer.translate.help:
+    - 'Help us translate'
+    - 'Footer button on large screens, opens the translators group'
+footer.translate.short:
+    - 'Translate'
+    - 'Footer button on phones (short for Help us translate), opens the translators group'
+footer.contributors:
+    - 'and contributors'
+    - 'Footer, after the copyright and BeVolunteer'
+footer.open.source:
+    - 'Open source'
+    - 'Footer, link to the source code on GitHub, before the running revision'

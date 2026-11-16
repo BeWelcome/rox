@@ -1,0 +1,85 @@
+/*
+ * The site's footer (footer.html.twig): dark, the logo, a line, the language and Help us translate on the left,
+ * the link groups on the right, the copyright and the revision under a line. Phones: the groups fold (footer.js).
+ */
+.bw-foot { --bw-foot-bg: #252220; order: 2; width: 100%; padding: 3.5rem 1.5rem 1.75rem; background: var(--bw-foot-bg); color: #d6d3d1; font-size: 0.9375rem; line-height: 1.5; }
+.bw-foot__in { max-width: 1260px; margin: 0 auto; }
+.bw-foot a { color: #e7e5e4; text-decoration: none; }
+.bw-foot a:hover, .bw-foot a:focus-visible { color: #fff; text-decoration: none; }
+.bw-foot__top { display: grid; grid-template-columns: minmax(16rem, 1.15fr) minmax(0, 3fr); gap: 2.5rem 3rem; }
+.bw-foot__logo { display: inline-flex; }
+.bw-foot__logo .bw-header-logo { display: flex; align-items: center; gap: 0.6rem; }
+.bw-foot__logo .bw-header-logo__icon { width: 2.4rem; height: 2.4rem; }
+.bw-foot__logo .bw-header-logo__text { height: 1.6rem; width: auto; filter: brightness(0) invert(1); }
+.bw-foot__logo .bw-header-logo__icon { filter: brightness(0) invert(1); }
+.bw-foot__tagline { max-width: 23rem; margin: 1rem 0 0; color: #a8a29e; font-size: 0.9375rem; line-height: 1.6; }
+.bw-foot__tools { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-top: 1.5rem; }
+
+/* The language and Help us translate: pills */
+.bw-foot__pill { display: inline-flex; align-items: center; gap: 0.55rem; height: 2.65rem; padding: 0 1.1rem; border: 1px solid transparent; border-radius: 999px; background: #3a3633; color: #fafaf9; font-size: 0.9375rem; font-weight: 700; line-height: 1; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
+.bw-foot .bw-foot__pill { color: #fafaf9; }
+.bw-foot__pill:hover { background: #46413d; }
+.bw-foot__pill--line { border-color: #57524e; background: transparent; }
+.bw-foot__pill--line:hover { border-color: #78716c; background: rgba(255, 255, 255, 0.04); }
+.bw-foot__pill[aria-expanded="true"] { border-color: #ea7a2e; }
+.bw-foot__pill-icon { color: #f3a46b; font-size: 0.85rem; }
+.bw-foot__pill--line .bw-foot__pill-icon { color: #e7e5e4; }
+.bw-foot__pill-chevron { color: #a8a29e; font-size: 0.65rem; }
+.bw-foot__translate-short { display: none; }
+
+/* The languages: a dark list above the pill, the current one checked */
+.bw-foot .bw-foot__langs { min-width: 14rem; max-height: min(60vh, 26rem); margin-bottom: 0.5rem !important; padding: 0.4rem; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 0.9rem; background: #1c1a19; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4); }
+.bw-foot .bw-foot__lang-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.75rem; border-radius: 0.6rem; color: #e7e5e4; font-size: 0.9375rem; }
+.bw-foot .bw-foot__lang-item:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+.bw-foot .bw-foot__lang-item.is-active { color: #f3a46b; font-weight: 700; }
+.bw-foot__lang-item i, .bw-foot__lang-item svg { font-size: 0.75rem; }
+
+/* The link groups */
+.bw-foot__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+.bw-foot--member .bw-foot__groups { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bw-foot__heading { margin: 0 0 1rem; }
+.bw-foot__heading-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; border: 0; background: none; color: #f3a46b; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-align: left; text-transform: uppercase; cursor: default; pointer-events: none; }
+.bw-foot__sign { display: none; }
+.bw-foot__links { display: flex; flex-direction: column; gap: 0.7rem; margin: 0; padding: 0; list-style: none; }
+.bw-foot__links a { font-size: 1rem; }
+
+/* The band under a line: the copyright and the revision */
+.bw-foot__bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 2rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #3a3633; color: #a8a29e; font-size: 0.875rem; }
+.bw-foot__bottom p { margin: 0; }
+.bw-foot__copy a { color: #fafaf9; font-weight: 700; }
+.bw-foot__rev { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8125rem; }
+.bw-foot .bw-foot__rev a { color: #a8a29e; }
+.bw-foot .bw-foot__rev a:hover { color: #fff; }
+.bw-foot__rev svg, .bw-foot__rev i { margin-right: 0.25rem; }
+
+/* Tablets: the groups under the brand */
+@media (max-width: 991.98px) {
+  .bw-foot__top { grid-template-columns: minmax(0, 1fr); }
+  .bw-foot--member .bw-foot__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Phones: language and Translate side by side, the groups fold with + and − */
+@media (max-width: 767.98px) {
+  .bw-foot { padding: 2.25rem 1.25rem 1.5rem; }
+  .bw-foot__top { gap: 1.5rem; }
+  .bw-foot__tagline { max-width: none; }
+  .bw-foot__tools { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; gap: 0.75rem; margin-top: 1.25rem; }
+  .bw-foot__lang .bw-foot__pill, .bw-foot__tools > .bw-foot__pill { box-sizing: border-box; justify-content: center; width: 100%; min-width: 0; height: 3rem; }
+  .bw-foot__lang { min-width: 0; }
+  .bw-foot__lang .dropdown-menu { width: 100%; }
+  .bw-foot__translate-long { display: none; }
+  .bw-foot__translate-short { display: inline; }
+  .bw-foot__groups, .bw-foot--member .bw-foot__groups { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .bw-foot__group { border-bottom: 1px solid #3a3633; }
+  .bw-foot__heading { margin: 0; }
+  .bw-foot__heading-btn { padding: 1.15rem 0; color: #fafaf9; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.0625rem; letter-spacing: 0; text-transform: none; cursor: pointer; pointer-events: auto; }
+  .bw-foot__sign { position: relative; display: block; width: 0.8rem; height: 0.8rem; }
+  .bw-foot__sign::before, .bw-foot__sign::after { position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; margin-top: -0.75px; background: #f3a46b; content: ""; transition: transform 0.2s ease; }
+  .bw-foot__sign::after { transform: rotate(90deg); }
+  .bw-foot__group.is-open .bw-foot__sign::after { transform: rotate(0deg); }
+  .bw-foot__links { display: none; gap: 0; padding-bottom: 0.75rem; }
+  .bw-foot__group.is-open .bw-foot__links { display: flex; }
+  .bw-foot__links a { display: block; padding: 0.55rem 0; font-size: 1rem; }
+  .bw-foot__bottom { flex-direction: column; align-items: flex-start; gap: 0.35rem; margin-top: 1.5rem; padding-top: 0; border-top: 0; }
+  .bw-foot__date { display: none; }
+}

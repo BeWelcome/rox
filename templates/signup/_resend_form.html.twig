@@ -1,8 +1,0 @@
-{#
-  The form that sends the confirmation mail again (SignupController::resendConfirmationEmail), without fields: its
-  button sits where the page asks for the registration key (form="resend-confirmation"), also inside another form.
-  Expects member.
-#}
-<form method="post" action="{{ path('resend_confirmation_email', {username: member.username}) }}" id="resend-confirmation" hidden>
-    <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\SignupController::RESEND_TOKEN')) }}">
-</form>

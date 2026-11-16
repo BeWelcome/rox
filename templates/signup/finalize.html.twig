@@ -35,6 +35,10 @@
   </header>
 
   <div class="p-pe__body p-sf__body container-lg">
+    {% if 'hidden' not in finalize.registration_key.vars.block_prefixes %}
+      {# The mail got lost: send it again, next to the key, its first field (a form of its own, so outside the setup's) #}
+      {% include 'signup/_resend_button.html.twig' %}
+    {% endif %}
     {{ form_start(finalize, {attr: {autocomplete: 'off', class: 'p-sf-form', novalidate: 'novalidate'}}) }}
     {{ form_errors(finalize) }}
 
@@ -50,8 +54,6 @@
           {{ sf.input(finalize.registration_key, 'gift') }}
           {{ form_errors(finalize.registration_key) }}
           {{ sf.help(finalize.registration_key) }}
-          {# The mail got lost: send it again (its form is below this one) #}
-          {% include 'signup/_resend_button.html.twig' %}
         </div>
       {% endif %}
 
@@ -285,9 +287,6 @@
     </div>
 
     {{ form_end(finalize) }}
-    {% if 'hidden' not in finalize.registration_key.vars.block_prefixes %}
-      {% include 'signup/_resend_form.html.twig' %}
-    {% endif %}
   </div>
 </div>
 {% endblock content %}

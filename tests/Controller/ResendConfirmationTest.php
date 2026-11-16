@@ -67,8 +67,9 @@ class ResendConfirmationTest extends WebTestCase
         $member = $this->signUp();
         $crawler = $this->client->request('GET', '/members/' . $member->getUsername() . '/finalize');
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('form#resend-confirmation'));
-        self::assertCount(1, $crawler->filter('button[form=resend-confirmation]'));
+        self::assertCount(1, $crawler->filter('form#resend-confirmation button[type=submit]'));
+        // a form of its own, outside the setup's: that keeps its one submit button
+        self::assertCount(1, $crawler->filter('form[name=signup_form_finalize] [type=submit]'));
         $sent = $this->sentMails();
 
         $this->client->submit($crawler->filter('form#resend-confirmation')->form());
@@ -157,6 +158,9 @@ class ResendConfirmationTest extends WebTestCase
         $this->entityManager()->flush();
         $crawler = $this->client->request('GET', '/members/' . $member->getUsername() . '/confirm');
         self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('form#resend-confirmation button[type=submit]'));
+        // a form of its own, outside the confirmation's: that keeps its one submit button
+        self::assertCount(1, $crawler->filter('form[name=confirm_email_address_form] [type=submit]'));
 
         $sent = $this->sentMails();
         $this->client->submit($crawler->filter('form#resend-confirmation')->form());

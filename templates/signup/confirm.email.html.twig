@@ -41,10 +41,6 @@
         {{ sf.input(confirm_email.registration_key, 'key') }}
         {{ form_errors(confirm_email.registration_key) }}
         {{ sf.help(confirm_email.registration_key) }}
-        {% if _resend %}
-          {# The mail got lost: send it again (its form is below this one) #}
-          {% include 'signup/_resend_button.html.twig' %}
-        {% endif %}
       </div>
     </section>
 
@@ -54,7 +50,8 @@
 
     {{ form_end(confirm_email) }}
     {% if _resend %}
-      {% include 'signup/_resend_form.html.twig' %}
+      {# The mail got lost: send it again (a form of its own, so outside the one above) #}
+      {% include 'signup/_resend_button.html.twig' %}
     {% endif %}
   </div>
 </div>

@@ -325,7 +325,6 @@ class GroupPagesController extends AbstractController
             'allCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
             'archivedCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch(archived: true)), 1, 1)->getNbResults(),
             'agora' => $agora,
-            'agoraDescription' => $agora?->getDescription($request->getLocale()),
             'agoraThread' => null === $agora ? null : ($repository->findLatestThreads($agora, 1)[0] ?? null),
             'near' => $member instanceof Member ? $this->findGroupsNear($member) : null,
             'newSubscriptions' => $member instanceof Member ? \count(array_filter(

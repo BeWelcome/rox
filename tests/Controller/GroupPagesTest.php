@@ -48,9 +48,9 @@ final class GroupPagesTest extends WebTestCase
         self::assertContains('Hiking Enthusiasts', $names);
         self::assertContains('Language Exchange', $names);
         self::assertNotContains('Vegan Travelers', $names, 'groups waiting for approval are left out');
-        // the agora is pinned above the list, not in it
+        // the agora is pinned first, apart from the groups found
         self::assertNotContains('BeWelcome Agora', $names);
-        self::assertSelectorTextContains('.p-groups-agora__title', 'BeWelcome Agora');
+        self::assertSelectorTextContains('.p-groups__list > .p-group-card--pinned:first-child', 'BeWelcome Agora');
     }
 
     public function testArchivedGroupsHaveTheirOwnTab(): void
@@ -270,7 +270,7 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/search', ['name' => 'Agora']);
 
         self::assertSame(['BeWelcome Agora'], $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
-        self::assertSelectorNotExists('.p-groups-agora', 'a search shows no pinned agora');
+        self::assertSelectorNotExists('.p-group-card--pinned', 'a search shows no pinned agora');
     }
 
     public function testTheGroupsNearTheMembersPlaceAreShown(): void
@@ -282,18 +282,19 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/search');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('#groups-near-title', $this->trans('group.near.title', ['place' => 'Berlin']));
-        self::assertSame(['Hiking Enthusiasts'], $crawler->filter('.p-groups-near__name')->each(static fn ($name) => $name->text()));
+        // the place picker offers the groups near the member's place
+        self::assertSelectorTextContains('.p-groups__near', $this->trans('group.list.near', ['place' => 'Berlin']));
+        self::assertStringContainsString('location=' . self::BERLIN, (string) $crawler->filter('.p-groups__near')->attr('href'));
     }
 
     public function testNoGroupsNearAreShownWithoutAny(): void
     {
         $this->client->request('GET', '/groups/search');
 
-        self::assertSelectorNotExists('.p-groups-near');
+        self::assertSelectorNotExists('.p-groups__near');
     }
 
-    public function testTheCategoriesAreTilesAndChips(): void
+    public function testTheCategoriesAreInTheDropdownAndTheSheet(): void
     {
         $category = new GroupCategory()->setName('en', 'Outdoors')->setIcon('person-hiking');
         $this->entityManager->persist($category);
@@ -304,13 +305,13 @@ final class GroupPagesTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/groups/search');
 
-        $tile = $crawler->filter('.p-groups-categories__tile')->reduce(static fn ($node) => str_contains($node->text(), 'Outdoors'));
-        self::assertCount(1, $tile);
-        self::assertSame('/groups/search?category=' . $category->getId(), $tile->attr('href'));
-        self::assertCount(1, $tile->filter('.fa-person-hiking'));
-        self::assertSame('1', $tile->filter('.p-groups-categories__count')->text());
-        $card = $crawler->filter('.p-group-card')->reduce(static fn ($node) => str_contains($node->text(), 'Hiking Enthusiasts'));
-        self::assertSame(['Berlin', 'Outdoors'], $card->filter('.c-group-chip')->each(static fn ($chip) => trim($chip->text())));
+        // the category dropdown links to the groups in it, with their number
+        $item = $crawler->filter('.p-groups__cat .p-groups__menu a')->reduce(static fn ($node) => str_contains($node->text(), 'Outdoors'));
+        self::assertCount(1, $item);
+        self::assertStringContainsString('category=' . $category->getId(), (string) $item->attr('href'));
+        self::assertSame('1', $item->filter('span')->text());
+        // the filters sheet of the phones has it as a chip
+        self::assertCount(1, $crawler->filter('.p-groups-sheet input[name="category"][value="' . $category->getId() . '"]'));
     }
 
     public function testTheSubscriptionsTabListsTheFollowedTopicsUnreadFirst(): void
@@ -325,7 +326,7 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/subscriptions');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('.p-groups__tab.is-active .fa-bell');
+        self::assertSelectorTextContains('.p-groups__tab.is-active', $this->trans('group.list.subscriptions'));
         $row = $crawler->filter('.p-groups-subs__row')->first();
         self::assertStringContainsString('is-unread', (string) $row->attr('class'), 'a post newer than the subscription is unread');
         self::assertSelectorTextContains('.p-groups__count--new', $this->trans('group.list.subscriptions.new', ['count' => 1]));

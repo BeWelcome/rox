@@ -1,6 +1,7 @@
 {#
-  One group in a list (my groups, all groups): picture, name and when its last post was, its place and categories as
-  chips, the number of members in a pill on the right; a small Joined next to the name when the member is in it.
+  One group in a list (my groups, all groups, the groups on a profile): its picture (or its first letter on a
+  colour), the name with a lock when joining needs an approval or an invitation and a green Joined pill when the member is in it, when its last post was, the number of members on
+  the right.
   row is a result row of GroupRepository: the group (key 0), memberCount, newMemberCount and lastActivity.
   myGroupIds: the groups the member is in.
 #}
@@ -8,12 +9,24 @@
 {% set group = row[0] %}
 {# Archived groups are named "[Archived] ..." for now: the name without it, and a grey Archived tag #}
 {% set _archived = group.name|lower starts with '[archived]' %}
+{% set _name = _archived ? group.name|slice(10)|trim : group.name %}
 <a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
-    <img class="p-group-card__picture" width="68" height="68" alt="" loading="lazy"
-         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+    {% if group.picture %}
+        <img class="p-group-card__picture" width="56" height="56" alt="" loading="lazy"
+             src="{{ path('group_thumbimg', {group_id: group.id}) }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+    {% else %}
+        <span class="p-group-card__picture p-group-card__letter p-group-card__letter--{{ group.id % 6 }}" aria-hidden="true">{{ _name|first|upper }}</span>
+    {% endif %}
     <span class="p-group-card__main">
         <span class="p-group-card__title">
-            <span class="p-group-card__name">{{ _archived ? group.name|slice(10)|trim : group.name }}</span>
+            <span class="p-group-card__name">{{ _name }}</span>
+            {% if group.type != constant('App\\Doctrine\\GroupType::PUBLIC') %}
+                {# The lock says why in a bubble on hover (desktop) #}
+                <span class="p-group-card__lock">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <span class="p-group-card__tip">{{ (group.type == constant('App\\Doctrine\\GroupType::INVITE_ONLY') ? 'group.list.type.invite' : 'group.list.type.approval')|trans }}</span>
+                </span>
+            {% endif %}
             {% if group.id in myGroupIds|default([]) %}
                 <span class="p-group-card__joined"><i class="fa fa-check" aria-hidden="true"></i> {{ 'group.list.joined'|trans }}</span>
             {% endif %}
@@ -24,12 +37,8 @@
             {% endif %}
             {{ groups.activity(row.lastActivity) }}
         </span>
-        {% if group.location or group.categories is not empty %}
-            <span class="p-group-card__chips">{{ groups.place(group) }}{{ groups.categories(group) }}</span>
-        {% endif %}
     </span>
-    {# The members as a number in a pill on the right, like the replies of a thread #}
-    <span class="p-group-card__members" data-member-count="{{ row.memberCount }}" title="{{ 'group.list.members'|trans({count: row.memberCount}) }}">
+    <span class="p-group-card__members" data-member-count="{{ row.memberCount }}">
         <i class="fas fa-user-group" aria-hidden="true"></i> {{ row.memberCount }}
         <span class="visually-hidden">{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
     </span>

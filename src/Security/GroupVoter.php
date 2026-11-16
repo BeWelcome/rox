@@ -59,7 +59,9 @@ class GroupVoter extends Voter
             self::GROUP_ADMINISTER, self::EDIT_CATEGORIES => $administers,
             self::GROUP_VIEW => $administers || Group::APPROVED === $group->getApproved(),
             self::GROUP_VIEW_FORUM => $administers || !$group->isMembersOnly() || $this->isMember($group, $member),
-            self::EDIT_WIKI => !$group->isBeWelcome() && ($administers || $this->isMember($group, $member)),
+            // only active members edit (Member::isActiveMember())
+            self::EDIT_WIKI => !$group->isBeWelcome() && $member->isActiveMember()
+                && ($administers || $this->isMember($group, $member)),
             default => false,
         };
     }

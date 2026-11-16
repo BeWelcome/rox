@@ -55,6 +55,12 @@ class CommunityNewsController extends AbstractController
 
         $form = $this->createForm(CommunityNewsCommentType::class, new CommunityNewsCommentRequest());
         $form->handleRequest($request);
+        if ($form->isSubmitted() && !$member->isActiveMember()) {
+            // only active members comment; the page shows them no comment box
+            $this->addTranslatedFlash('notice', 'flash.communitynews.comment.not.active');
+
+            return $this->redirectToRoute('communitynews_show', ['id' => $communityNews->getId()]);
+        }
         if ($form->isSubmitted()) {
             $data = $form->getData();
             $parent = null;

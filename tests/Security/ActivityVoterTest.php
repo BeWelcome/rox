@@ -38,13 +38,15 @@ class ActivityVoterTest extends TestCase
             'member answers' => [ActivityVoter::ATTEND, false, true, false, $granted],
             'nobody answers a cancelled activity' => [ActivityVoter::ATTEND, false, true, true, $denied],
             'nobody answers when over' => [ActivityVoter::ATTEND, true, false, false, $denied],
+            'members not active yet don\'t answer' => [ActivityVoter::ATTEND, false, true, false, $denied, false],
         ];
     }
 
     #[DataProvider('votes')]
-    public function testVote(string $attribute, bool $organizer, bool $upcoming, bool $cancelled, int $expected): void
+    public function testVote(string $attribute, bool $organizer, bool $upcoming, bool $cancelled, int $expected, bool $active = true): void
     {
         $member = Mockery::mock(Member::class);
+        $member->allows('isActiveMember')->andReturn($active);
         $token = Mockery::mock(TokenInterface::class, ['getUser' => $member]);
 
         $activity = new Activity();

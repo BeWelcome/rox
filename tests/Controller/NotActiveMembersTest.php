@@ -12,10 +12,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Only active members (Active, OutOfRemind) write messages, hosting requests and invitations, plan trips and create
- * groups (Member::isActiveMember(), ActiveMemberTrait). The status is the first reason: a member who hasn't given the
+ * Only active members (Active, OutOfRemind) write messages, hosting requests, invitations and comments, ask for
+ * friendships, plan trips, create groups, activities and polls, and ask to join groups that need approval
+ * (Member::isActiveMember(), ActiveMemberTrait). The status is the first reason: a member who hasn't given the
  * details of the sign-up goes to its setup page, one who hasn't confirmed the address back where they came from,
- * with a notice, whatever the profile has (member-2's has a picture and an About me).
+ * with a notice, whatever the profile has (member-2's has a picture and an About me). Neither comments on community
+ * news, edits the wiki or answers an activity (shown no box, no editor, no answer buttons).
  */
 #[Group('integration')]
 class NotActiveMembersTest extends WebTestCase
@@ -50,6 +52,12 @@ class NotActiveMembersTest extends WebTestCase
             '/new/message/member-3' => '/members/member-3',
             '/new/request/member-3' => '/members/member-3',
             '/new/invitation/' . $leg => '/members/' . $traveller,
+            '/members/member-3/comment/add' => '/members/member-3',
+            '/members/member-3/friendship/add' => '/members/member-3',
+            '/activities/create' => '/activities/myactivities',
+            '/polls/create' => '/polls',
+            // the fixtures' group that needs approval
+            '/group/3/join' => '/group/3',
         ];
         foreach ($forms as $form => $elsewhere) {
             $this->client->loginUser($member);
@@ -59,6 +67,28 @@ class NotActiveMembersTest extends WebTestCase
             $this->client->followRedirect();
             self::assertSelectorExists('#toasts .bw-toast', $form . ' (' . $status . '): no notice');
         }
+    }
+
+    #[DataProvider('notActiveYet')]
+    public function testAMemberNotActiveYetNeitherCommentsOnNewsNorEditsTheWikiNorAnswersActivities(string $status, bool $detailsGiven): void
+    {
+        // the same for all: these pages show no box, editor or buttons, whether or not the details were given
+        unset($detailsGiven);
+        $this->client->loginUser($this->memberWithStatus('member-2', $status));
+
+        $crawler = $this->client->request('GET', '/communitynews/1');
+        self::assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->filter('form[data-comment-form], form[data-reply-form]'), 'a comment box (' . $status . ')');
+
+        $this->client->request('GET', '/wiki/Zztest_not_active/edit');
+        self::assertResponseRedirects();
+        self::assertStringStartsWith('/wiki/', (string) $this->client->getResponse()->headers->get('Location'));
+        self::assertStringNotContainsString('/edit', (string) $this->client->getResponse()->headers->get('Location'));
+
+        $activity = (int) static::getContainer()->get(Connection::class)
+            ->fetchOne('SELECT id FROM activity WHERE status = 0 ORDER BY id LIMIT 1');
+        $this->client->request('POST', '/activities/' . $activity . '/answer', ['activity_attend' => ['status' => 1]]);
+        self::assertResponseStatusCodeSame(403, 'an answer to the activity (' . $status . ')');
     }
 
     public function testAnActiveMemberGetsTheForms(): void

@@ -58,7 +58,9 @@ class PollVoter extends Voter
         return match ($attribute) {
             self::VIEW => true,
             self::EDIT => $isAdmin || ($isCreator && $poll->isDraft()),
-            self::VOTE => $poll->isOpen() && Poll::CHOICE_ORDERED !== $poll->getChoiceType() && !$this->hasVoted($poll, $member),
+            // only active members vote (Member::isActiveMember())
+            self::VOTE => $poll->isOpen() && Poll::CHOICE_ORDERED !== $poll->getChoiceType() && $member->isActiveMember()
+                && !$this->hasVoted($poll, $member),
             self::CANCEL_VOTE => $poll->isOpen() && $poll->canChangeVote() && !$poll->isAnonymous() && $this->hasVoted($poll, $member),
             self::RESULTS => $this->canSeeResults($poll, $member, $isAdmin),
             default => false,

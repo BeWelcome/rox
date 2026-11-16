@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Model\WikiIndexModel;
 use App\Model\WikiModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -40,7 +41,7 @@ class WikiController extends AbstractController
     #[Route(path: '/wiki', name: 'wiki_front_page')]
     public function showWikiFrontPage(): Response
     {
-        $view = $this->wikiReadView(WikiScope::main(WikiPageName::FRONT_PAGE), 0, $this->wikiModel);
+        $view = $this->wikiReadView(WikiScope::main(WikiPageName::FRONT_PAGE, $this->canEditWiki()), 0, $this->wikiModel);
         if (null === $view) {
             return $this->redirectToRoute('wiki_page_create', ['pageTitle' => WikiPageName::FRONT_PAGE]);
         }
@@ -119,7 +120,7 @@ class WikiController extends AbstractController
                 : $this->redirectToRoute('group_wiki_page_version', ['id' => $group['id'], 'version' => $version]);
         }
 
-        $scope = WikiScope::main($pageName);
+        $scope = WikiScope::main($pageName, $this->canEditWiki());
         $view = $this->wikiReadView($scope, $version, $this->wikiModel);
         if (null === $view) {
             if (0 === $version) {
@@ -140,19 +141,19 @@ class WikiController extends AbstractController
     #[Route(path: '/wiki/{pageTitle}/edit', name: 'wiki_page_edit')]
     public function editWikiPage(Request $request, string $pageTitle): Response
     {
-        return $this->wikiEditPage($request, WikiScope::main(WikiPageName::fromTitle($pageTitle)), false, $this->wikiModel, $this->wikiIndexModel, 'wiki/edit.html.twig', []);
+        return $this->wikiEditPage($request, WikiScope::main(WikiPageName::fromTitle($pageTitle), $this->canEditWiki()), false, $this->wikiModel, $this->wikiIndexModel, 'wiki/edit.html.twig', []);
     }
 
     #[Route(path: '/wiki/{pageTitle}/create', name: 'wiki_page_create')]
     public function createWikiPage(Request $request, string $pageTitle): Response
     {
-        return $this->wikiEditPage($request, WikiScope::main(WikiPageName::fromTitle($pageTitle)), true, $this->wikiModel, $this->wikiIndexModel, 'wiki/edit.html.twig', []);
+        return $this->wikiEditPage($request, WikiScope::main(WikiPageName::fromTitle($pageTitle), $this->canEditWiki()), true, $this->wikiModel, $this->wikiIndexModel, 'wiki/edit.html.twig', []);
     }
 
     #[Route(path: '/wiki/{pageTitle}/history', name: 'wiki_page_history')]
     public function showHistory(string $pageTitle): Response
     {
-        $view = $this->wikiHistoryView(WikiScope::main(WikiPageName::fromTitle($pageTitle)), $this->wikiModel);
+        $view = $this->wikiHistoryView(WikiScope::main(WikiPageName::fromTitle($pageTitle), $this->canEditWiki()), $this->wikiModel);
         if (null === $view) {
             throw $this->createNotFoundException();
         }
@@ -163,7 +164,7 @@ class WikiController extends AbstractController
     #[Route(path: '/wiki/{pageTitle}/changes/{version}', name: 'wiki_page_changes', requirements: ['version' => '\d+'])]
     public function showChanges(string $pageTitle, int $version): Response
     {
-        $view = $this->wikiChangesView(WikiScope::main(WikiPageName::fromTitle($pageTitle)), $version, $this->wikiModel);
+        $view = $this->wikiChangesView(WikiScope::main(WikiPageName::fromTitle($pageTitle), $this->canEditWiki()), $version, $this->wikiModel);
         if (null === $view) {
             throw $this->createNotFoundException();
         }
@@ -200,5 +201,15 @@ class WikiController extends AbstractController
             'recently_changed' => $recent,
             'members' => $this->wikiModel->getMembers([$view['page']->getAuthor(), ...array_column($recent, 'author')]),
         ] + $view;
+    }
+
+    /**
+     * Only active members edit the wiki (Member::isActiveMember()).
+     */
+    private function canEditWiki(): bool
+    {
+        $member = $this->getUser();
+
+        return $member instanceof Member && $member->isActiveMember();
     }
 }

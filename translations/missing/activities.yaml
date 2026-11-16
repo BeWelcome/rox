@@ -120,9 +120,6 @@ activity.left:
 activity.reactivated:
   - 'The activity takes place again.'
   - 'Message after an organizer reactivated a cancelled activity'
-flash.activity.not.confirmed:
-  - 'Please confirm your email address before you create an activity.'
-  - 'Message when a member who did not confirm their email address wants to create an activity'
 activity.answer.empty:
   - 'Please choose whether you attend.'
   - 'Activity page: the member sent the answer form without choosing yes, maybe or no'
@@ -268,3 +265,6 @@ activity.notification.see:
 activity.notification.preference.link:
     - Change your activity notification preference
     - Link text in activity notification emails pointing to the preferences page.
+flash.activity.not.active:
+    - 'You can create activities once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet opens the new activity form (shown on their activities).

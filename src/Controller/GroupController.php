@@ -123,8 +123,13 @@ class GroupController extends AbstractController
         /** @var GroupMembership $membership */
         $membership = $group->getGroupMembership($member);
         if (DoctrineGroupType::NEED_ACCEPTANCE === $group->getType()) {
-            // Check if a join request is currently open
+            // the group's admins couldn't see a member who isn't active yet: they ask once they are
+            $refused = $this->refusedUntilActive($member, 'flash.group.join.not.active', $this->redirectToRoute('group_start', ['group_id' => $group->getId()]));
+            if ($refused) {
+                return $refused;
+            }
 
+            // Check if a join request is currently open
             if (false !== $membership) {
                 $this->addTranslatedFlash('notice', 'flash.group.already.applied');
 

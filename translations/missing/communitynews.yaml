@@ -247,3 +247,6 @@ admin.checker.communitynews.deleted:
 admin.communitynews.field.title:
     - Title
     - 'News editor: label of the title field.'
+flash.communitynews.comment.not.active:
+    - 'You can comment once your account is active: please fill in all required details and confirm your email address.'
+    - Community news page, instead of the comment box for a member whose account isn't active yet; also the notice when such a member sends a comment.

@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\Friend;
 use App\Entity\Member;
 use App\Model\FriendshipModel;
 use App\Repository\FriendRepository;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\MailLinkTrait;
@@ -26,6 +26,7 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 class FriendshipController extends AbstractController
 {
+    use ActiveMemberTrait;
     use ItemsPerPageTraits;
     use MailLinkTrait;
     use TranslatedFlashTrait;
@@ -226,7 +227,7 @@ class FriendshipController extends AbstractController
     }
 
     /**
-     * A member can't be their own friend; new members can't ask for friendships before their profile is checked.
+     * A member can't be their own friend; members who aren't active yet don't ask for friendships.
      */
     private function notAllowed(Member $loggedInMember, Member $member): ?RedirectResponse
     {
@@ -234,12 +235,6 @@ class FriendshipController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.friend.not.active');
-
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
-        }
-
-        return null;
+        return $this->refusedUntilActive($loggedInMember, 'flash.friendship.not.active', $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]));
     }
 }

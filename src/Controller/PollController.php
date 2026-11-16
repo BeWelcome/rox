@@ -12,6 +12,7 @@ use App\Form\PollVoteType;
 use App\Model\PollModel;
 use App\Repository\PollRepository;
 use App\Security\PollVoter;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -32,6 +33,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 class PollController extends AbstractController
 {
+    use ActiveMemberTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
@@ -94,6 +96,9 @@ class PollController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
+        if ($refused = $this->refusedUntilActive($member, 'flash.poll.not.active', $this->redirectToRoute('polls'))) {
+            return $refused;
+        }
         $data = new PollDto();
         $form = $this->createForm(PollType::class, $data, ['groups' => $member->getGroups()]);
         $form->handleRequest($request);

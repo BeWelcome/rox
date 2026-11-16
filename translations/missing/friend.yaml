@@ -140,6 +140,6 @@ flash.friendship.withdrawn:
 flash.friendship.removed:
     - 'The friendship with {username} has been removed.'
     - Flash message after removing a friendship. Keep {username}.
-flash.friend.not.active:
-    - 'You can add friends once your profile has been checked.'
-    - Flash message when a new member (profile not yet checked) tries to add a friend.
+flash.friendship.not.active:
+    - 'You can add friends once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet asks for a friendship (shown on the other member's profile).

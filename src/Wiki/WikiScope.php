@@ -41,9 +41,12 @@ final readonly class WikiScope
     ) {
     }
 
-    public static function main(string $pageName): self
+    /**
+     * @param bool $canEdit active members edit the wiki (Member::isActiveMember())
+     */
+    public static function main(string $pageName, bool $canEdit): self
     {
-        return new self($pageName, self::MAIN_ROUTES, ['pageTitle' => $pageName], true);
+        return new self($pageName, self::MAIN_ROUTES, ['pageTitle' => $pageName], $canEdit);
     }
 
     public static function group(Group $group, bool $canEdit): self

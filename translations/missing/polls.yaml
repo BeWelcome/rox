@@ -151,3 +151,6 @@ poll.open.needs.choices:
 mydata.polls.vote.anonymous:
   - 'The poll is anonymous, so your choices were not recorded.'
   - 'Personal data export: a vote in an anonymous poll, whose choices are not kept'
+flash.poll.not.active:
+    - 'You can create polls once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet opens the new poll form (shown on the polls page).

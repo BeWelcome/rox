@@ -441,5 +441,8 @@ group.admin.members.withdraw:
     - 'Withdraw'
     - 'Group member administration: the button that takes an invitation back.'
 flash.group.not.confirmed:
-    - 'Please confirm your email address before you create a group.'
+    - 'You can create groups once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member who hasn't confirmed the email address opens the new group form (shown on their groups).
+flash.group.join.not.active:
+    - 'You can ask to join this group once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet asks to join a group that needs approval (shown on the group page).

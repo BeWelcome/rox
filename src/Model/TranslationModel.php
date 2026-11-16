@@ -13,7 +13,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
@@ -48,15 +47,26 @@ class TranslationModel
         $lock->acquire(true);
         try {
             foreach ($this->getCachedCatalogues() as $file) {
-                $chain = $this->readCachedCatalogue($file);
-                $locales = array_column($chain, 'locale');
-                if ('en' !== $locale && !\in_array($locale, $locales, true)) {
+                // Changed as text, not included: PHP keeps what it compiles from a file until the request ends, about
+                // 2 MB per catalogue, more than the memory limit for the catalogues of every language.
+                $content = file_get_contents($file);
+                if (false === $content) {
                     continue;
                 }
-                foreach ($chain as $index => $catalogue) {
-                    $chain[$index]['messages'] = $this->withText($catalogue['messages'], $catalogue['locale'], $code, $english, $texts[$catalogue['locale']] ?? null);
+                $catalogues = $this->catalogueBodies($content);
+                if ('en' !== $locale && !\in_array($locale, array_column($catalogues, 'locale'), true)) {
+                    continue;
                 }
-                $this->writeCachedCatalogue($file, $chain);
+                $changed = $this->withText($content, $catalogues, $code, $english, $texts);
+                if (null === $changed) {
+                    // not written as expected: the translator builds it again when it's used
+                    $this->filesystem->remove($file);
+                } elseif ($changed !== $content) {
+                    $this->filesystem->dumpFile($file, $changed);
+                }
+                if (\function_exists('opcache_invalidate')) {
+                    opcache_invalidate($file, true);
+                }
             }
         } finally {
             $lock->release();
@@ -104,65 +114,117 @@ class TranslationModel
     }
 
     /**
-     * The catalogues of a cached file: the locale's and its fallbacks', with their messages by domain.
+     * The catalogues of a cached file (Translator::dumpCatalogue(): the locale's, then its fallbacks'), each with the
+     * text of its messages: from after "new MessageCatalogue('de', array (" to before the "));" that ends it.
      *
-     * @return list<array{locale: string, messages: array<string, array<string, string>>}>
+     * @return list<array{locale: string, offset: int, length: int}>
      */
-    private function readCachedCatalogue(string $file): array
+    private function catalogueBodies(string $content): array
     {
-        $chain = [];
-        /** @var MessageCatalogue|null $catalogue */
-        $catalogue = (static fn (string $file) => include $file)($file);
-        while ($catalogue instanceof MessageCatalogue) {
-            $chain[] = ['locale' => $catalogue->getLocale(), 'messages' => $this->getAllMessages($catalogue)];
-            $catalogue = $catalogue->getFallbackCatalogue();
-        }
-
-        return $chain;
-    }
-
-    /**
-     * Writes the catalogues as Translator::dumpCatalogue() does.
-     *
-     * @param list<array{locale: string, messages: array<string, array<string, string>>}> $chain
-     */
-    private function writeCachedCatalogue(string $file, array $chain): void
-    {
-        $variable = static fn (int $index, string $locale): string => 0 === $index
-            ? '$catalogue' : '$catalogue' . ucfirst((string) preg_replace('/[^a-z0-9_]/i', '_', $locale));
-
-        $content = "<?php\n\nuse Symfony\\Component\\Translation\\MessageCatalogue;\n\n";
-        foreach ($chain as $index => $catalogue) {
-            $content .= \sprintf("%s = new MessageCatalogue('%s', %s);\n", $variable($index, $catalogue['locale']), $catalogue['locale'], var_export($catalogue['messages'], true));
-            if ($index > 0) {
-                $content .= \sprintf("%s->addFallbackCatalogue(%s);\n", $variable($index - 1, $chain[$index - 1]['locale']), $variable($index, $catalogue['locale']));
+        preg_match_all(
+            '/^\$catalogue\w* = new MessageCatalogue\(\'([^\'\\\\]+)\', array \(\n/m',
+            $content,
+            $matches,
+            \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE,
+        );
+        $catalogues = [];
+        foreach ($matches as $match) {
+            $offset = $match[0][1] + \strlen($match[0][0]);
+            $end = strpos($content, "));\n", $offset);
+            while (false !== $end && 0 !== $end - $offset && "\n" !== $content[$end - 1]) {
+                $end = strpos($content, "));\n", $end + 1);
             }
-            $content .= "\n";
+            if (false !== $end) {
+                $catalogues[] = ['locale' => $match[1][0], 'offset' => $offset, 'length' => $end - $offset];
+            }
         }
-        $content .= "return \$catalogue;\n";
 
-        $this->filesystem->dumpFile($file, $content);
-        if (\function_exists('opcache_invalidate')) {
-            opcache_invalidate($file, true);
-        }
+        return $catalogues;
     }
 
     /**
-     * The messages with the text of the code as the language shows it (DatabaseLoader), in its domain only.
+     * The file with the text of the code as each of its catalogues shows it (DatabaseLoader), in its domain only;
+     * null when a catalogue isn't written as var_export() writes it.
      *
-     * @param array<string, array<string, string>> $messages
-     *
-     * @return array<string, array<string, string>>
+     * @param list<array{locale: string, offset: int, length: int}> $catalogues
+     * @param array<string, Word>                                   $texts
      */
-    private function withText(array $messages, string $locale, string $code, ?Word $english, ?Word $translation): array
+    private function withText(string $content, array $catalogues, string $code, ?Word $english, array $texts): ?string
     {
-        foreach ([DomainType::MESSAGES, DomainType::ICU_MESSAGES, DomainType::VALIDATORS] as $domain) {
-            unset($messages[$domain][$code]);
-        }
-        if (null === $english) {
-            return $messages;
+        // from the last, so the offsets of the others stay valid
+        foreach (array_reverse($catalogues) as $catalogue) {
+            $locale = $catalogue['locale'];
+            $text = null === $english ? null : $this->shownText($locale, $code, $english, $texts[$locale] ?? null);
+            $body = $this->withTextInBody(
+                substr($content, $catalogue['offset'], $catalogue['length']),
+                $code,
+                null === $text ? null : [$english->getDomain(), $text],
+            );
+            if (null === $body) {
+                return null;
+            }
+            $content = substr_replace($content, $body, $catalogue['offset'], $catalogue['length']);
         }
 
+        return $content;
+    }
+
+    /**
+     * The messages of a catalogue (var_export(): a list of "'domain' => array (...)") without the code in any domain,
+     * then with it in the given domain; null when they aren't written as expected.
+     *
+     * @param array{string, string}|null $domainText the domain and the text to set
+     */
+    private function withTextInBody(string $body, string $code, ?array $domainText): ?string
+    {
+        $string = "'(?:[^'\\\\]++|\\\\.)*+'";
+        // var_export() writes keys that are numbers without quotes, as the array keeps them
+        $key = var_export(array_key_first([$code => true]), true);
+        preg_match_all(
+            "/  ({$string}) => \\n  array \\(\\n((?:    (?:{$string}|-?\\d+) => {$string},\\n)*+)  \\),\\n/",
+            $body,
+            $domains,
+            \PREG_SET_ORDER,
+        );
+        if (implode('', array_column($domains, 0)) !== $body) {
+            return null;
+        }
+
+        $changed = '';
+        $added = null === $domainText;
+        $cleaned = [DomainType::MESSAGES, DomainType::ICU_MESSAGES, DomainType::VALIDATORS, $domainText[0] ?? null];
+        $line = static fn (string $text): string => "    {$key} => " . var_export($text, true) . ",\n";
+        foreach ($domains as [, $quotedDomain, $entries]) {
+            // var_export() escapes only \ and ' in strings
+            $domain = strtr(substr($quotedDomain, 1, -1), ['\\\\' => '\\', "\\'" => "'"]);
+            if (\in_array($domain, $cleaned, true)) {
+                preg_match_all("/    (?:{$string}|-?\\d+) => {$string},\\n/", $entries, $lines);
+                $others = array_filter(
+                    $lines[0],
+                    static fn (string $entry): bool => !str_starts_with($entry, "    {$key} => "),
+                );
+                $entries = implode('', $others);
+                if (!$added && $domain === $domainText[0]) {
+                    $entries .= $line($domainText[1]);
+                    $added = true;
+                }
+            }
+            $changed .= "  {$quotedDomain} => \n  array (\n{$entries}  ),\n";
+        }
+        if (!$added) {
+            $quotedDomain = var_export($domainText[0], true);
+            $changed .= "  {$quotedDomain} => \n  array (\n" . $line($domainText[1]) . "  ),\n";
+        }
+
+        return $changed;
+    }
+
+    /**
+     * The text of the code as the language shows it (DatabaseLoader): the English text, a translation in the same
+     * domain, or the English one where the translation is older than its last major change; null for none.
+     */
+    private function shownText(string $locale, string $code, Word $english, ?Word $translation): ?string
+    {
         $text = match (true) {
             'en' === $locale => $english->getSentence(),
             null === $translation || $translation->getDomain() !== $english->getDomain() => null,
@@ -177,32 +239,8 @@ class TranslationModel
         };
         // the database is a resource of the domains that have a file for the locale (translations/messages.de.db)
         $resource = \sprintf('%s/%s.%s.db', $this->translationsDirectory, $english->getDomain(), $locale);
-        if (null !== $text && is_file($resource)) {
-            $messages[$english->getDomain()][$code] = $text;
-        }
 
-        return $messages;
-    }
-
-    /**
-     * The messages by domain, the ICU ones in their own domain (as Translator::getAllMessages()).
-     *
-     * @return array<string, array<string, string>>
-     */
-    private function getAllMessages(MessageCatalogue $catalogue): array
-    {
-        $allMessages = [];
-        foreach ($catalogue->all() as $domain => $messages) {
-            if ($intlMessages = $catalogue->all($domain . MessageCatalogue::INTL_DOMAIN_SUFFIX)) {
-                $allMessages[$domain . MessageCatalogue::INTL_DOMAIN_SUFFIX] = $intlMessages;
-                $messages = array_diff_key($messages, $intlMessages);
-            }
-            if ($messages) {
-                $allMessages[$domain] = $messages;
-            }
-        }
-
-        return $allMessages;
+        return null !== $text && is_file($resource) ? $text : null;
     }
 
     private function removeAndWarmupCache(string $locale): void

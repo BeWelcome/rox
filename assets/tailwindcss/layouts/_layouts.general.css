@@ -9480,7 +9480,7 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro { position: relative; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
 .p-pro__wrap { position: relative; z-index: 2; padding-top: 2rem; }
-.p-pro__head { display: grid; grid-template-areas: "avatar info actions" "avatar trust trust" "avatar facts facts" "admin admin admin"; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto auto; align-items: start; column-gap: 2.5rem; }
+.p-pro__head { display: grid; grid-template-areas: "avatar info actions" "avatar trust trust" "avatar facts facts" "stay stay stay" "admin admin admin"; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto auto auto; align-items: start; column-gap: 2.5rem; }
 .p-pro__avatar { grid-area: avatar; }
 .p-pro__info { grid-area: info; }
 .p-pro__actions { grid-area: actions; }
@@ -9689,6 +9689,16 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro__tabs-wrap .p-hero__tabs { padding: 0; border-top: 0; }
 .p-pro__tabs-wrap .p-hero__tab { gap: 0.45rem; padding: 0.85rem 0.9rem; font-size: 0.875rem; font-weight: 600; }
 .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0; }
+/* The profile's language right after the tabs: globe, code, chevron, in the tabs' grey */
+.p-pro__tabs-row { display: flex; align-items: center; min-width: 0; }
+.p-pro__tabs-row > .p-hero__tabs-scroller { flex: 0 1 auto; min-width: 0; }
+.p-pro__tabs-row > .p-lang-switch { position: static; z-index: auto; flex: none; margin-left: 0.6rem; }
+.p-pro__tabs-row .p-lang-switch__toggle { gap: 0.4rem; padding: 0.4rem 0.6rem; border: 0; border-radius: 999px; background: none; backdrop-filter: none; color: #64748b; font-size: 0.875rem; font-weight: 600; }
+.p-pro__tabs-row .p-lang-switch__toggle:hover, .p-pro__tabs-row .p-lang-switch__toggle[aria-expanded="true"] { background: #f1f5f9; color: #0f172a; }
+.p-pro__tabs-row .p-lang-switch__toggle::after { margin-left: 0.1rem; border: 0; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-0.15rem) rotate(45deg); opacity: 0.6; vertical-align: middle; }
+.p-pro__tabs-row .p-lang-switch__prefix, .p-pro__tabs-row .p-lang-switch__name { display: none; }
+.p-pro__tabs-row .p-lang-switch__code { display: inline; }
+.p-pro__tabs-row .p-lang-switch__globe, .p-pro__tabs-row .p-lang-switch__toggle .fa-globe { display: inline-block; color: #94a3b8; font-size: 0.8rem; }
 
 /* Hosting interest on the profile: 10 bars, filled up to the interest */
 .p-pro-stat > .p-pro-hostbar { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; width: 100%; max-width: 12rem; margin-top: 0.6rem; }
@@ -9814,20 +9824,40 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-friend__img { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
 .p-pro-friend__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-pro__bottom-bar { display: none; }
-/* Already talking with this member: the latest conversation next to "Send" (profile/_contact_status) */
-.p-pro-contact-status { display: inline-flex; flex-basis: 100%; align-items: center; justify-content: flex-end; gap: 0.45rem; order: 10; min-width: 0; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+/* Already talking with this member: the latest conversation in one line (profile/_contact_status): a band under
+   the head on large screens, above Send on phones, a line in the search preview */
+.p-pro-contact-status { display: inline-flex; align-items: center; gap: 0.45rem; min-width: 0; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
 .p-pro-contact-status:hover { color: #0f172a; text-decoration: none; }
 .p-pro-contact-status i, .p-pro-contact-status svg { flex-shrink: 0; color: #94a3b8; }
-.p-pro-contact-status__text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.p-pro-contact-status__state { flex-shrink: 0; padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
-.p-pro-contact-status--success .p-pro-contact-status__state { background: #e9f6ec; color: #2e7d32; }
-.p-pro-contact-status--danger .p-pro-contact-status__state { background: #fdecec; color: #b42318; }
-.p-pro-contact-status--maybe .p-pro-contact-status__state { background: #fef9c3; color: #a16207; }
+.p-pro-contact-status__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; }
+.p-pro-contact-status__text { min-width: 0; overflow: hidden; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.p-pro-contact-status__text strong { color: #0f172a; font-weight: 700; }
+.p-pro-contact-status__state { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; padding: 0.1rem 0.55rem; border-radius: 999px; background: #ffedd5; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
+.p-pro-contact-status .p-pro-contact-status__state i, .p-pro-contact-status .p-pro-contact-status__state svg { color: inherit; font-size: 0.7em; }
+.p-pro-contact-status--success .p-pro-contact-status__state { background: #dcfce7; color: #15803d; }
+.p-pro-contact-status--danger .p-pro-contact-status__state { background: #fee2e2; color: #b42318; }
+.p-pro-contact-status--maybe .p-pro-contact-status__state { background: #fdf0c2; color: #92600a; }
 .p-pro-contact-status__dot { flex-shrink: 0; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #f37000; }
-.p-pro-contact-status.is-unread .p-pro-contact-status__text { color: #0f172a; }
 .p-pro-contact-status .p-pro-contact-status__arrow { font-size: 0.65rem; }
+.p-pro-contact-status__open { display: none; }
 .p-pro-contact-status--bar { display: none; }
 .p-pro-contact-status--preview { display: flex; justify-content: flex-start; margin-top: 0.7rem; }
+/* The band and the phones' line: a light background and border in the colour of where the stay stands */
+.p-pro-contact-status--strip,
+.p-pro-contact-status--bar { --cs-bg: #fff7ed; --cs-line: #fed7aa; --cs-accent: #e5832f; border: 1px solid var(--cs-line); background: var(--cs-bg); color: #334155; }
+.p-pro-contact-status--strip.p-pro-contact-status--maybe, .p-pro-contact-status--bar.p-pro-contact-status--maybe { --cs-bg: #fefaea; --cs-line: #f6e7a6; --cs-accent: #e08b3a; }
+.p-pro-contact-status--strip.p-pro-contact-status--success, .p-pro-contact-status--bar.p-pro-contact-status--success { --cs-bg: #f0fdf4; --cs-line: #bbf7d0; --cs-accent: #16a34a; }
+.p-pro-contact-status--strip.p-pro-contact-status--danger, .p-pro-contact-status--bar.p-pro-contact-status--danger { --cs-bg: #fef2f2; --cs-line: #fecaca; --cs-accent: #dc2626; }
+.p-pro-contact-status--strip.p-pro-contact-status--message, .p-pro-contact-status--bar.p-pro-contact-status--message { --cs-bg: #f8fafc; --cs-line: #e2e8f0; --cs-accent: #64748b; }
+.p-pro-contact-status--strip:hover, .p-pro-contact-status--bar:hover { border-color: var(--cs-accent); color: #334155; }
+/* Large screens: the band under the head, the icon in a tile, Open conversation on the right */
+.p-pro__head > .p-pro-contact-status--strip { grid-area: stay; display: flex; gap: 0.85rem; margin: 0.5rem 0 1.25rem; padding: 0.7rem 1.25rem 0.7rem 0.75rem; border-radius: 1rem; font-size: 1rem; }
+.p-pro-contact-status--strip .p-pro-contact-status__icon { width: 2.4rem; height: 2.4rem; border-radius: 0.6rem; background: var(--cs-accent); }
+.p-pro-contact-status--strip .p-pro-contact-status__icon i, .p-pro-contact-status--strip .p-pro-contact-status__icon svg { color: #fff; font-size: 0.95rem; }
+.p-pro-contact-status--strip .p-pro-contact-status__state { padding: 0.25rem 0.75rem; font-size: 0.875rem; }
+.p-pro-contact-status--strip .p-pro-contact-status__open { display: inline; margin-left: auto; color: #c2410c; font-weight: 700; white-space: nowrap; }
+.p-pro-contact-status--strip .p-pro-contact-status__arrow { color: #c2410c; font-size: 0.75rem; }
+.p-pro-contact-status--strip:hover .p-pro-contact-status__open { text-decoration: underline; }
 
 /* Where I live: grey map with the approximate area */
 .p-pro-where__map { height: 165px; overflow: hidden; border-radius: 0.8rem; background: #f1f5f9; }
@@ -9934,10 +9964,14 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__bottom-bar .p-pro__btn--request { flex-grow: 1.3; }
   body:has(.p-pro__bottom-bar) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
   /* Phones: the line sits on top of the bottom bar, above the two buttons */
-  .p-pro__bottom-bar:has(.p-pro-contact-status) { flex-wrap: wrap; row-gap: 0.5rem; padding-top: 0.55rem; }
-  .p-pro__bottom-bar .p-pro-contact-status--bar { display: flex; order: -1; justify-content: center; }
-  .p-pro__actions .p-pro-contact-status--head { display: none; }
-  body:has(.p-pro__bottom-bar .p-pro-contact-status) { padding-bottom: calc(6.3rem + env(safe-area-inset-bottom)); }
+  .p-pro__bottom-bar:has(.p-pro-contact-status) { flex-wrap: wrap; row-gap: 0.6rem; padding-top: 0.75rem; }
+  .p-pro__bottom-bar .p-pro-contact-status--bar { display: flex; flex-basis: 100%; order: -1; gap: 0.5rem; min-height: 2.6rem; padding: 0.35rem 0.6rem 0.35rem 0.85rem; border-radius: 0.8rem; font-size: 0.875rem; }
+  .p-pro-contact-status--bar .p-pro-contact-status__icon i, .p-pro-contact-status--bar .p-pro-contact-status__icon svg { color: var(--cs-accent); font-size: 0.9rem; }
+  .p-pro-contact-status--bar .p-pro-contact-status__text { flex: 1; }
+  .p-pro-contact-status--bar .p-pro-contact-status__state { padding: 0.2rem 0.6rem; font-size: 0.8125rem; }
+  .p-pro-contact-status--bar .p-pro-contact-status__arrow { color: #94a3b8; }
+  .p-pro__head > .p-pro-contact-status--strip { display: none; }
+  body:has(.p-pro__bottom-bar .p-pro-contact-status) { padding-bottom: calc(7.2rem + env(safe-area-inset-bottom)); }
   /* No site footer under a profile on phones */
   body:has(.p-pro) footer:has(#footer_content) { display: none; }
 }
@@ -12664,7 +12698,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 }
 /* Profile head, large screens: the same space between name, place, trust and facts, the block centred on the photo */
 @media (min-width: 768px) {
-  .p-pro__head { grid-template-rows: auto auto auto auto; align-content: center; }
+  .p-pro__head { grid-template-rows: auto auto auto auto auto; align-content: center; }
   .p-pro .p-pro__info { padding-top: 0; }
   .p-pro .p-pro__line { margin-top: 0.7rem; }
   .p-pro .p-pro__line .p-pro__meta { margin-top: 0; }
@@ -12675,7 +12709,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-pro .p-pro__facts .p-pro__fact:has(.p-pro__fact-label) { gap: 0; }
 /* Profile head, large screens: the actions (Edit, language) down the right column, so they don't stretch the name row */
 @media (min-width: 768px) {
-  .p-pro__head { grid-template-areas: "avatar info actions" "avatar trust actions" "avatar facts actions" "admin admin admin"; }
+  .p-pro__head { grid-template-areas: "avatar info actions" "avatar trust actions" "avatar facts actions" "stay stay stay" "admin admin admin"; }
   .p-pro .p-pro__actions { align-self: start; }
 }
 /* Profile tab counts in light orange */
@@ -13904,3 +13938,60 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-home-trips__face-dot.is-active { transform: none; }
 .c-home-trips__faces .c-home-trips__face-dot.is-active { margin: 0; }
 .c-home-trips__faces { gap: 0.1rem; }
+/* Phones: the tabs smaller so that three fit next to the language, which is only its globe */
+@media (max-width: 767.98px) {
+  .p-pro__tabs-row > .p-hero__tabs-scroller { flex: 1 1 auto; }
+  .p-pro__tabs-row .p-hero__tabs { gap: 0.1rem; padding: 0.2rem; }
+  .p-pro__tabs-row .p-hero__tab,
+  .p-pro__tabs-row .p-hero__tab:first-child { gap: 0.3rem; padding: 0.4rem 0.7rem; font-size: 0.8125rem; }
+  .p-pro__tabs-row .p-hero__tab .p-hero__tab-count { min-width: 1.15rem; height: 1.15rem; padding: 0 0.3rem; font-size: 0.6875rem; }
+  .p-pro__tabs-row > .p-lang-switch { margin-left: 0.35rem; }
+  .p-pro__tabs-row .p-lang-switch__toggle { justify-content: center; width: 2.25rem; height: 2.25rem; padding: 0; border: 1px solid #e2e8f0; background: #fff; }
+  .p-pro__tabs-row .p-lang-switch__code, .p-pro__tabs-row .p-lang-switch__toggle::after { display: none; }
+  .p-pro__tabs-row .p-lang-switch__globe, .p-pro__tabs-row .p-lang-switch__toggle .fa-globe { color: #475569; font-size: 0.9rem; }
+}
+/* Profile head: the trust line (Can host, the comments by quality) a bit smaller */
+.p-pro__trust { gap: 0.4rem 0.75rem; }
+.p-pro__trust .p-pro__hosting { gap: 0.4rem; padding: 0.3rem 0.85rem; font-size: 0.875rem; }
+.p-pro__trust .p-pro__hosting i, .p-pro__trust .p-pro__hosting svg { font-size: 0.75rem; }
+.p-pro__trust .p-pro__hosting + .p-quality-pill { padding-left: 0.75rem; }
+.p-pro__trust .p-quality-pill { gap: 0.3rem; }
+.p-pro__trust .c-reply-rate--pill { gap: 0.35rem; padding: 0.3rem 0.85rem; font-size: 0.875rem; }
+.p-pro__trust .c-reply-rate--pill .c-reply-ring { width: 1.15em; height: 1.15em; }
+.p-pro__trust .p-quality-pill__item { gap: 0.25rem; padding: 0.2rem 0.6rem; font-size: 0.8125rem; }
+@media (max-width: 767.98px) {
+  .p-pro__trust .p-pro__hosting + .p-quality-pill { padding-left: 0; }
+}
+/* Large screens: the profile's language on the right of the tabs row */
+@media (min-width: 768px) {
+  .p-pro__tabs-row > .p-lang-switch { margin-left: auto; }
+}
+/* Phones: the activity first on the facts line, so it is always seen; no "Member for" (no room) */
+@media (max-width: 767.98px) {
+  .p-pro .p-pro__facts .p-pro__fact.p-pro__status:last-child { order: -1; flex-shrink: 0; min-width: auto; overflow: visible; }
+  .p-pro .p-pro__facts .p-pro__fact.p-pro__status::before { content: none; }
+  .p-pro .p-pro__facts .p-pro__fact:first-child:not(.p-pro__status)::before { content: "•"; margin: 0 0.5rem; color: #cbd5e1; font-size: 0.7rem; }
+  .p-pro .p-pro__facts .p-pro__since { display: none; }
+  .p-pro .p-pro__facts .p-pro__fact:not(.p-pro__status) { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+}
+/* Phones: "Member for …" right of the About me title */
+.p-pro-about__since { display: none; }
+@media (max-width: 767.98px) {
+  .p-pro-card .p-pro-about__since { display: flex; flex: none; align-items: center; gap: 0.4rem; margin: 0; color: #94a3b8; font-size: 0.8125rem; }
+  .p-pro-about__since i, .p-pro-about__since svg { font-size: 0.75rem; }
+  .p-pro-card__head.p-pro-about__head { align-items: center; }
+}
+/* All the conversations with one member (conversations/between.html.twig): back, their picture, their name and how
+   many conversations, on white on every screen */
+.c-inbox__list .c-inbox-list__head.c-between-head { position: static; justify-content: flex-start; gap: 0.75rem; height: auto; margin: 0; padding: 1rem 1rem 0.85rem; background: #fff; box-shadow: none; }
+.c-between-head__back,
+.c-between-head__back:hover { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f1f5f9; color: #334155; text-decoration: none; }
+.c-between-head__back:hover { background: #e2e8f0; color: #0f172a; }
+.c-between-head__back i, .c-between-head__back svg { font-size: 0.9rem; }
+.c-between-head__who,
+.c-between-head__who:hover { display: flex; flex: 1; align-items: center; gap: 0.7rem; min-width: 0; color: inherit; text-decoration: none; }
+.c-between-head__avatar { flex: none; width: 2.75rem; height: 2.75rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
+.c-between-head__text { display: flex; flex-direction: column; min-width: 0; }
+.c-inbox-list .c-between-head__name { margin: 0; overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.25rem; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.c-between-head__who:hover .c-between-head__name { color: #c2410c; }
+.c-between-head__sub { color: #64748b; font-size: 0.8125rem; }

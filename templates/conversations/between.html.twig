@@ -25,14 +25,19 @@
 
         <section class="c-inbox__list">
             <div class="c-inbox-list">
-                <div class="c-inbox-list__head">
-                    <a class="c-inbox-list__back c-inbox-list__back--always" href="{{ path('members_profile', { username: otherMember.username }) }}">
+                {# The member: back to their profile, their picture and name, how many conversations #}
+                <div class="c-inbox-list__head c-between-head">
+                    <a class="c-between-head__back" href="{{ path('members_profile', { username: otherMember.username }) }}">
                         <i class="fas fa-chevron-left" aria-hidden="true"></i>
                         <span class="visually-hidden">{{ 'back'|trans }}</span>
                     </a>
-                    <div class="c-inbox-list__title">
-                        <h2>{{ 'messages.with.member.headline'|trans|format(otherMember.shortNameOrUsername) }}</h2>
-                    </div>
+                    <a class="c-between-head__who" href="{{ path('members_profile', { username: otherMember.username }) }}">
+                        <img class="c-between-head__avatar" src="{{ path('avatar', { username: otherMember.username, size: 96 }) }}" alt="" width="44" height="44">
+                        <span class="c-between-head__text">
+                            <h2 class="c-between-head__name">{{ otherMember.shortNameOrUsername }}</h2>
+                            <span class="c-between-head__sub">{{ 'conversations.with.count'|trans({ count: items.nbResults }) }}</span>
+                        </span>
+                    </a>
                 </div>
 
                 {% if items.nbResults == 0 %}

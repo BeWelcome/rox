@@ -149,9 +149,6 @@
               <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
             </a>
           {% endif %}
-          {% if existingConversation %}
-            {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'head' } %}
-          {% endif %}
           {% set hasMore = items.comment is defined or items.friend is defined
             or items.add_note is defined or items.edit_note is defined
             or items.report is defined %}
@@ -187,30 +184,6 @@
             </div>
           {% endif %}
         {% endif %}
-        {# The profile's languages: one shown at a time #}
-        {% if _langCount > 1 %}
-          {% set _reqLang = app.request.query.get('language') %}
-          {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
-          <div class="p-lang-switch dropdown">
-            <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-                    aria-label="{{ 'menu.language.toggle'|trans }}">
-              <i class="fas fa-globe p-lang-switch__globe" aria-hidden="true"></i>
-              <span class="p-lang-switch__prefix">{{ 'profile.in.language'|trans }}</span>
-              <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
-              <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
-              {% for _l in _langs %}
-                {% if _translations[_l]|length >= _minFields %}
-                  <li>
-                    <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
-                            data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
-                  </li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
       </div>
 
       {# ── What members trust: hosting on the left, the comments by quality on the right ── #}
@@ -242,6 +215,11 @@
       {# Large screens: occupation, gender, age and membership length, a line at the bottom of the head #}
       {% include 'profile/_facts.html.twig' with {variant: 'head'} %}
 
+      {# Large screens: the conversation already going with this member, a band under the head (above Send on phones) #}
+      {% if not own and canContact and existingConversation %}
+        {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'strip' } %}
+      {% endif %}
+
       {# Admins: the member's status, changed from a small bar under the head #}
       {% if not own and status_form is defined and not status_form is null %}
         {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}
@@ -266,6 +244,7 @@
 {# ── Tabs: outside the header block so that on phones they stay stuck to the top all the way down ── #}
   <div class="p-pro__tabs-wrap">
     <div class="container-lg">
+      <div class="p-pro__tabs-row">
       <div class="p-hero__tabs-scroller" data-tabs-scroller>
         <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
           <i class="fas fa-chevron-left"></i>
@@ -291,6 +270,31 @@
         <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
           <i class="fas fa-chevron-right"></i>
         </button>
+      </div>
+        {# The profile's languages, one shown at a time: right after the tabs #}
+        {% if _langCount > 1 %}
+          {% set _reqLang = app.request.query.get('language') %}
+          {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
+          <div class="p-lang-switch dropdown">
+            <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                    aria-label="{{ 'menu.language.toggle'|trans }}">
+              <i class="fas fa-globe p-lang-switch__globe" aria-hidden="true"></i>
+              <span class="p-lang-switch__prefix">{{ 'profile.in.language'|trans }}</span>
+              <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
+              <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+              {% for _l in _langs %}
+                {% if _translations[_l]|length >= _minFields %}
+                  <li>
+                    <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
+                            data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
       </div>
       {# The active tab in the middle of the row before the page shows (phones, where the tabs scroll): done later by
          profile.js, the row jumped after every switch #}

@@ -311,3 +311,6 @@ conversation.view.profile:
 conversation.answer.placeholder.short:
     - 'Add a message…'
     - Placeholder of the message on phones once the host picked Accept, Maybe or Decline (short, one line)
+conversations.with.count:
+    - '{count, plural, =0 {No conversations yet} one {# conversation} other {# conversations}}'
+    - 'Page of all the conversations with one member, under their name in the header.'

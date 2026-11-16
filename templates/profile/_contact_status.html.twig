@@ -14,9 +14,8 @@
 {% if _stay %}
     {% set _state = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[_stay.status] ?? 'open' %}
     {% set _tone = { accepted: 'success', declined: 'danger', cancelled: 'danger', tentatively: 'maybe' }[_state] ?? 'pending' %}
-    {# Who started it: the sender of its first message #}
-    {% set _first = _stay.messages|sort((a, b) => a.id <=> b.id)|first %}
-    {% set _mine = _first and _first.sender == app.user %}
+    {# Who started it: the conversation's initiator (no load of the request's messages) #}
+    {% set _mine = _m.initiator == app.user %}
     {% set _invite = _stay.inviteForLeg is not null %}
     {% set _label = _invite
         ? (_mine ? 'profile.contact.your.invitation' : 'conversations.invitation')

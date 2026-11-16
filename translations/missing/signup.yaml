@@ -141,3 +141,6 @@ error.hosting.interest:
 help.activities_notifications:
     - If you select a duration you will be notified when someone creates an activity in your area.
     - Help text on the signup page.
+flash.signup.finish.first:
+    - 'Please finish setting up your account first.'
+    - Notice on the finish setup page, when a member who hasn't finished the sign-up opens a form only active members may use (messages, hosting requests, invitations, trips, groups).

@@ -440,3 +440,6 @@ group.admin.members.invited:
 group.admin.members.withdraw:
     - 'Withdraw'
     - 'Group member administration: the button that takes an invitation back.'
+flash.group.not.confirmed:
+    - 'Please confirm your email address before you create a group.'
+    - Notice when a member who hasn't confirmed the email address opens the new group form (shown on their groups).

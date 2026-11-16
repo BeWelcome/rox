@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
@@ -16,6 +15,7 @@ use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\InboxFolders;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -34,6 +34,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 class ConversationController extends AbstractController
 {
+    use ActiveMemberTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -89,11 +90,9 @@ class ConversationController extends AbstractController
             return $this->redirectToRoute('conversations', ['conversationsType' => 'conversations']);
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
-            $receiver = ($message->getReceiver() === $member) ? $message->getSender() : $message->getReceiver();
-            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
-
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        $receiver = ($message->getReceiver() === $member) ? $message->getSender() : $message->getReceiver();
+        if ($refused = $this->refusedUntilActive($member, 'flash.conversation.not.active', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]))) {
+            return $refused;
         }
 
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
@@ -292,7 +291,7 @@ class ConversationController extends AbstractController
             if (
                 !$current->isMessage()
                 && ($member === $current->getSender() || $member === $current->getReceiver())
-                && MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()
+                && $member->isActiveMember()
             ) {
                 return $this->forward(MessageController::class . '::reply', ['message' => $current]);
             }
@@ -358,7 +357,7 @@ class ConversationController extends AbstractController
         if (
             !$current->isHostingRequest()
             || ($member !== $current->getSender() && $member !== $current->getReceiver())
-            || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
+            || !$member->isActiveMember()
             || $this->requestModel->hasExpired($current)
         ) {
             return null;
@@ -393,7 +392,7 @@ class ConversationController extends AbstractController
         $invitation = $current->getRequest();
         if (
             ($member !== $current->getSender() && $member !== $current->getReceiver())
-            || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
+            || !$member->isActiveMember()
             || HostingRequest::REQUEST_CANCELLED === $invitation->getStatus()
             || null === $invitation->getInviteForLeg()
             || $this->requestModel->hasExpired($current)

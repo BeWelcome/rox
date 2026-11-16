@@ -11627,12 +11627,14 @@ svg.p-pe-account__eye-on, svg.p-pe-account__eye-off { display: none; }
 .p-sf .p-sf-unconfirmed__title { margin: 0 0 0.2rem; color: #0f172a; font-size: 0.95rem; font-weight: 700; }
 .p-sf .p-sf-unconfirmed__text { margin: 0; color: #475569; font-size: 0.875rem; line-height: 1.5; }
 
-/* The confirmation mail again (signup/_resend_button.html.twig), below the registration key and on the confirm page */
+/* The confirmation mail again (signup/_resend_button.html.twig): below the confirm page's form, above the setup's */
 .signup-resend { display: flex; gap: 1rem; margin-top: 1rem; padding: 1.1rem 1.25rem; border: 1px solid #fed7aa; border-radius: 1rem; background: #fff7ed; text-align: left; }
 .signup-resend__icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #ffedd5; color: #e8772e; font-size: 1.15rem; }
 .signup-resend__body { flex: 1; min-width: 0; }
 .signup-resend .signup-resend__title { margin: 0 0 0.25rem; color: #0f172a; font-size: 1rem; font-weight: 700; }
 .signup-resend .signup-resend__text { margin: 0 0 0.85rem; color: #475569; font-size: 0.9rem; line-height: 1.5; }
+.p-sf__body > .signup-resend:first-child { margin: 0 0 1.25rem; }
+.signup-resend form { margin: 0; }
 /* the icon is an <i> until Font Awesome's script turns it into an <svg> */
 .signup-resend__button i, .signup-resend__button svg { margin-right: 0.45rem; }
 

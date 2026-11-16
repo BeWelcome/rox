@@ -12,6 +12,7 @@ use App\Repository\NewsletterStatisticsRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -119,7 +120,9 @@ class SendMassmailCommand extends Command
                     $parameters['has_images'] = true;
                 }
                 try {
-                    $this->mailer->sendNewsletterEmail($newsletter, $receiver, $parameters);
+                    if (!$this->mailer->sendNewsletterEmail($newsletter, $receiver, $parameters)) {
+                        throw new RuntimeException('The mail server refused the message');
+                    }
                     $this->setStatus($key, 'Sent', $parameters['unsubscribe_key']);
                     $statistics->add($newsletter, triggered: -1, sent: 1);
                     ++$sent;

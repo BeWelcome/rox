@@ -1,4 +1,4 @@
-// Below 768px the footer links are folded: the button above them opens and closes them.
+// Phones: the footer's link groups fold; the heading button of each opens and closes it.
 document.addEventListener('click', (event) => {
     const toggle = event.target.closest('.js-footer-toggle');
     if (!toggle) {
@@ -6,5 +6,5 @@ document.addEventListener('click', (event) => {
     }
     const open = toggle.getAttribute('aria-expanded') !== 'true';
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    toggle.closest('.stickyfooter__main').classList.toggle('is-open', open);
+    toggle.closest('.js-footer-group').classList.toggle('is-open', open);
 });

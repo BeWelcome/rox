@@ -1,100 +1,110 @@
-{% set footer_col = app.user ? 'col-12 col-md-6 col-lg-3 mb-4 mb-lg-0' : 'col-12 col-md-6 col-lg-4 mb-4 mb-lg-0' %}
-{# Phones show the footer only on pages that set footer_on_mobile (the front page and the members' home). Members
-   change the language on the preferences page (visitors in the top bar); translators switch translation mode in
-   the volunteer menu and in the translation section #}
+{#
+  The site's footer: the logo, a line about BeWelcome, the language (a dropdown of the site, not the browser's
+  list) and Help us translate; then the link groups (Community for members, Safety, About, Be informed), and a
+  band with the copyright and the running revision.
+  Phones: the groups fold, one heading button each (footer.js); the first one is open.
+  Phones show the footer only on pages that set footer_on_mobile (the front page and the members' home);
+  translators switch translation mode in the volunteer menu (layout/_translation_mode.html.twig).
+#}
+{% set _groups = [] %}
+{% if app.user %}
+    {% set _groups = _groups|merge([{ id: 'community', title: 'communitymenu'|trans, links: [
+        { href: path('groups_redirect'), label: 'landing.tab.forum'|trans },
+        { href: path('groups_mygroups'), label: 'landing.button.mygroups'|trans },
+        { href: path('activities'), label: 'activities'|trans },
+        { href: path('wiki_front_page'), label: 'wiki'|trans },
+        { href: path('newsletters'), label: 'newsletters'|trans },
+        { href: path('communitynews'), label: 'communitynews'|trans },
+    ] }]) %}
+{% endif %}
+{% set _safety = [
+    { href: url('safety'), label: 'menu.safety.information'|trans },
+    { href: url('safety_contact_no_modal'), label: 'menu.safety.report'|trans },
+] %}
+{% if app.user %}
+    {% set _safety = _safety|merge([
+        { href: url('donations'), label: 'donate'|trans },
+        { href: url('getactive'), label: 'about_getactive'|trans },
+    ]) %}
+{% endif %}
+{% set _about = [
+    { href: url('about'), label: 'aboutuspage'|trans },
+    { href: url('faqs_overview'), label: 'faq'|trans },
+    { href: url('feedback'), label: 'contactus'|trans },
+    { href: url('feedback', { IdCategory: 1, RequestURI: url('homepage') }), label: 'footer.reportbug'|trans },
+] %}
+{% if app.user %}
+    {% set _about = _about|merge([{ href: url('stats'), label: 'statspage'|trans }]) %}
+{% endif %}
+{% set _groups = _groups|merge([
+    { id: 'safety', title: 'safety'|trans, links: _safety },
+    { id: 'about', title: 'footer.heading.about'|trans, links: _about },
+    { id: 'informed', title: 'landing.beinformed.title'|trans, links: [
+        { href: url('terms_of_use'), label: 'termsofuse'|trans, blank: true },
+        { href: url('privacy_policy'), label: 'privacy'|trans, blank: true },
+        { href: url('data_rights'), label: 'datarights'|trans, blank: true },
+        { href: url('imprint'), label: 'impressum'|trans },
+    ] },
+]) %}
 <footer{% if not (footer_on_mobile ?? false) %} class="footer--no-mobile"{% endif %}>
-    <div id="footer_content" class="stickyfooter">
-        <div class="stickyfooter__main">
-        <div class="container-fluid stickyfooter-container">
-            {# Below 768px the links are folded behind this button (footer.js) #}
-            <button type="button" class="stickyfooter__toggle js-footer-toggle" aria-expanded="false" aria-controls="footer_links">
-                <span>{{ 'footer.links.toggle'|trans }}</span>
-                <i class="fas fa-chevron-down stickyfooter__toggle-icon" aria-hidden="true"></i>
-            </button>
-            <div id="footer_links" class="row align-items-lg-start stickyfooter__columns">
-                        {% if app.user %}
-                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                            <h2 class="stickyfooter__heading">
-                                <i class="fa fa-users stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
-                            </h2>
-                            <ul class="list-unstyled stickyfooter__link-list mb-0">
-                                <li><a href="{{ path('groups_redirect') }}">{{ 'landing.tab.forum' | trans }}</a></li>
-                                <li><a href="{{ path('groups_mygroups') }}">{{ 'landing.button.mygroups' | trans }}</a></li>
-                                <li><a href="{{ path('activities') }}">{{ 'activities' | trans }}</a></li>
-                                <li><a href="{{ path('wiki_front_page') }}">{{ 'wiki' | trans }}</a></li>
-                                <li><a href="{{ path('newsletters') }}">{{ 'newsletters' | trans }}</a></li>
-                                <li><a href="{{ path('communitynews') }}">{{ 'communitynews' | trans }}</a></li>
-                            </ul>
+    <div id="footer_content" class="bw-foot{{ app.user ? ' bw-foot--member' }}">
+        <div class="bw-foot__in">
+            <div class="bw-foot__top">
+                <div class="bw-foot__brand">
+                    <a class="bw-foot__logo" href="{{ url('homepage') }}">{% include 'logo.html.twig' %}</a>
+                    <p class="bw-foot__tagline">{{ 'footer.tagline'|trans }}</p>
+                    <div class="bw-foot__tools">
+                        {# The language: the site's own dropdown, opening upwards #}
+                        <div class="dropdown dropup bw-foot__lang">
+                            <button type="button" class="bw-foot__pill" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">
+                                <i class="fas fa-globe bw-foot__pill-icon" aria-hidden="true"></i>
+                                <span>{{ language_name(app.request.locale) }}</span>
+                                <i class="fas fa-chevron-down bw-foot__pill-chevron" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu bw-foot__langs">
+                                {% for lang in locales %}
+                                    <a class="bw-foot__lang-item{{ lang == app.request.locale ? ' is-active' }}" href="{{ path('language', { locale: lang }) }}"{% if lang == app.request.locale %} aria-current="true"{% endif %}>
+                                        <span>{{ language_name(lang) }}</span>
+                                        {% if lang == app.request.locale %}<i class="fas fa-check" aria-hidden="true"></i>{% endif %}
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
+                        {% if not is_granted('ROLE_ADMIN_WORDS') %}
+                            <a class="bw-foot__pill bw-foot__pill--line" href="{{ url('group_start', { group_id: 60 }) }}">
+                                <i class="fas fa-language bw-foot__pill-icon" aria-hidden="true"></i>
+                                <span class="bw-foot__translate-long">{{ 'footer.translate.help'|trans }}</span>
+                                <span class="bw-foot__translate-short">{{ 'footer.translate.short'|trans }}</span>
+                            </a>
                         {% endif %}
-                        <div class="{{ footer_col }}">
-                            <h2 class="stickyfooter__heading">
-                                <i class="fa fa-user-shield stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'safety' | trans }}
-                            </h2>
-                            <ul class="list-unstyled stickyfooter__link-list mb-0">
-                                <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
-                                <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
-                            </ul>
-                            {% if app.user %}
-                            <h2 class="stickyfooter__heading stickyfooter__heading--stacked">
-                                <i class="fa fa-heart stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
-                            </h2>
-                            <ul class="list-unstyled stickyfooter__link-list mb-0">
-                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
-                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
-                            </ul>
-                            {% endif %}
-                        </div>
-                        <div class="{{ footer_col }}">
-                            <h2 class="stickyfooter__heading">
-                                <i class="fa fa-question-circle stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
-                            </h2>
-                            <ul class="list-unstyled stickyfooter__link-list stickyfooter__link-list--legal mb-0">
-                                <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
-                                <li><a href="{{ url('faqs_overview') }}">{{ 'faq' | trans }}</a></li>
-                                <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
-                                <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
-                                {% if app.user %}
-                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                        <div class="{{ footer_col }}">
-                            <h2 class="stickyfooter__heading">
-                                <i class="fa fa-balance-scale stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
-                            </h2>
-                            <ul class="list-unstyled stickyfooter__link-list mb-0">
-                                <li><a href="{{ url('terms_of_use') }}" target="_blank" rel="noopener noreferrer">{{ 'termsofuse' | trans }}</a></li>
-                                <li><a href="{{ url('privacy_policy') }}" target="_blank" rel="noopener noreferrer">{{ 'privacy' | trans }}</a></li>
-                                <li><a href="{{ url('data_rights') }}" target="_blank" rel="noopener noreferrer">{{ 'datarights' | trans }}</a></li>
-                                <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
-                            </ul>
-                            {# translators switch translation mode in the volunteer menu (layout/_translation_mode.html.twig) #}
-                            {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN_WORDS') %}
-                                <a class="footer-help-translate mt-3" href="{{ url('group_start', { group_id: 60 }) }}">
-                                    <span class="footer-help-translate__icon" aria-hidden="true"><i class="fa fa-language"></i></span>
-                                    <span class="footer-help-translate__text">{{ 'translation.help' | trans }}</span>
-                                </a>
-                            {% endif %}
-                        </div>
-            </div>
-        </div>
-        </div>
-        <div class="footer-bottom-band">
-            <div class="container-fluid stickyfooter-container">
-                <div class="row align-items-center footer-bottom-band__row">
-                    <div class="col-12 footer-bottom-band__legal">
-                        <div class="footer-bottom-band__meta">
-                            &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
-                                                                           target="_blank">BeVolunteer</a> and contributors
-
-                            - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
-                                    Rox</a> rev. <a
-                                        href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
-                                ({{ version_dt }})</em>
-                        </div>
                     </div>
                 </div>
+                <div class="bw-foot__groups">
+                    {% for group in _groups %}
+                        <section class="bw-foot__group js-footer-group">
+                            <h2 class="bw-foot__heading">
+                                <button type="button" class="bw-foot__heading-btn js-footer-toggle" aria-expanded="false" aria-controls="footer_{{ group.id }}">
+                                    <span>{{ group.title }}</span>
+                                    <span class="bw-foot__sign" aria-hidden="true"></span>
+                                </button>
+                            </h2>
+                            <ul class="bw-foot__links" id="footer_{{ group.id }}">
+                                {% for link in group.links %}
+                                    <li><a href="{{ link.href }}"{% if link.blank ?? false %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ link.label }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="bw-foot__bottom">
+                <p class="bw-foot__copy">&copy; 2007 &mdash; {{ 'now'|date('Y') }} <a href="https://www.bevolunteer.org/" target="_blank" rel="noopener noreferrer">BeVolunteer</a> {{ 'footer.contributors'|trans }}</p>
+                <p class="bw-foot__rev">
+                    <a href="https://github.com/bewelcome/rox" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> {{ 'footer.open.source'|trans }}</a>
+                    <span aria-hidden="true">·</span>
+                    <a href="https://github.com/BeWelcome/rox/commit/{{ version }}" target="_blank" rel="noopener noreferrer">BW Rox {{ version|slice(0, 9) }}</a>
+                    <span class="bw-foot__date"><span aria-hidden="true">·</span> {{ version_dt }}</span>
+                </p>
             </div>
         </div>
     </div>

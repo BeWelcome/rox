@@ -4,11 +4,32 @@ namespace App\Command;
 
 use App\Doctrine\AccommodationType;
 use App\Doctrine\DeleteRequestType;
+use App\Entity\Activity;
+use App\Entity\ActivityAttendee;
+use App\Entity\BroadcastMessage;
 use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
+use App\Entity\Donation;
+use App\Entity\Friend;
+use App\Entity\GroupMembership;
+use App\Entity\HostingRequest;
+use App\Entity\Leg;
 use App\Entity\Location;
+use App\Entity\LoginMessageAcknowledged;
 use App\Entity\Member;
+use App\Entity\MemberActivityNotificationSent;
+use App\Entity\MemberLegHidden;
+use App\Entity\MemberLegNotificationSent;
+use App\Entity\MemberPhoto;
+use App\Entity\MemberPreference;
+use App\Entity\MemberThreadSubscription;
 use App\Entity\MemberTranslation;
+use App\Entity\Message;
+use App\Entity\PasswordReset;
+use App\Entity\PostNotification;
+use App\Entity\ProfileNote;
+use App\Entity\ProfileVisit;
+use App\Entity\Trip;
 use App\Logger\Logger;
 use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
@@ -135,11 +156,19 @@ class DataRetentionCommand extends Command
                 $this->removeUserInfo($member);
                 $this->removeProfilePictures($member);
                 $this->removeGallery($member);
+                $this->removeNotes($member);
+                $this->removeRelations($member);
+                $this->removeActivityAnswers($member);
+                $this->anonymizeDonations($member);
                 $this->markConversationsAsPurged($member);
 
                 $member->setUsername('retired_' . $member->getId());
                 $entityManager->persist($member);
                 $entityManager->flush();
+                // after the rename: the conversations with members retired before, then the trips, whose stops may
+                // have lost their invitations with those conversations
+                $this->removeConversationsWithRetiredMembers($member);
+                $this->removeTrips($member);
                 // the profile's texts in all languages (after the flush, which stores the emptied ones)
                 $entityManager->createQuery('DELETE ' . MemberTranslation::class . ' t WHERE t.object = :member')
                     ->setParameter('member', $member)
@@ -235,6 +264,9 @@ class DataRetentionCommand extends Command
             ->setCreated($longAgo)
             ->setUpdated($longAgo)
             ->setPleaseBring(null)
+            ->setHouseRules(null)
+            ->setGettingThere(null)
+            ->setNewEmail(null)
             ->setPassword($client->generateId())
         ;
 
@@ -290,6 +322,172 @@ class DataRetentionCommand extends Command
     /**
      * The member's albums and pictures, in the database and on disk.
      */
+    /**
+     * The private notes the member wrote about others, with their categories (note_category goes with its note). Notes
+     * others wrote about the member are theirs and stay.
+     */
+    private function removeNotes(Member $member): void
+    {
+        $this->entityManager->createQuery('DELETE ' . ProfileNote::class . ' n WHERE n.owner = :member')
+            ->setParameter('member', $member)
+            ->execute();
+    }
+
+    /**
+     * What links the member to others or only served the member: friendships, group memberships (with the reason
+     * given for joining), profile visits both ways, profile photos, a password reset, preferences, forum
+     * subscriptions and notifications, hidden trip stops, sent trip and activity notifications, acknowledged login
+     * messages, newsletter and mass mail recipient rows.
+     */
+    private function removeRelations(Member $member): void
+    {
+        $deletes = [
+            Friend::class => 'e.left = :member OR e.right = :member OR e.requester = :member',
+            GroupMembership::class => 'e.member = :member',
+            ProfileVisit::class => 'e.member = :member OR e.visitor = :member',
+            MemberPhoto::class => 'e.member = :member',
+            PasswordReset::class => 'e.member = :member',
+            MemberPreference::class => 'e.member = :member',
+            MemberThreadSubscription::class => 'e.subscriber = :member',
+            PostNotification::class => 'e.receiver = :member',
+            MemberLegHidden::class => 'e.member = :member',
+            MemberLegNotificationSent::class => 'e.member = :member',
+            MemberActivityNotificationSent::class => 'e.member = :member',
+            LoginMessageAcknowledged::class => 'e.member = :member',
+            BroadcastMessage::class => 'e.receiver = :member',
+        ];
+        foreach ($deletes as $entity => $where) {
+            $this->entityManager->createQuery('DELETE ' . $entity . ' e WHERE ' . $where)
+                ->setParameter('member', $member)
+                ->execute();
+        }
+    }
+
+    /**
+     * The member's answers to activities: for activities that are over the answer stays (the number of attendees
+     * stays right), without the comment why; for activities still to come it goes completely.
+     */
+    private function removeActivityAnswers(Member $member): void
+    {
+        $now = new DateTime();
+        $this->entityManager->createQuery(
+            'DELETE ' . ActivityAttendee::class . ' a WHERE a.attendee = :member AND a.activity IN'
+            . ' (SELECT act.id FROM ' . Activity::class . ' act WHERE act.ends >= :now)'
+        )
+            ->setParameter('member', $member)
+            ->setParameter('now', $now)
+            ->execute();
+        $this->entityManager->createQuery(
+            'UPDATE ' . ActivityAttendee::class . " a SET a.comment = '' WHERE a.attendee = :member"
+        )
+            ->setParameter('member', $member)
+            ->execute();
+    }
+
+    /**
+     * The donations stay (amount and date) without who gave them: no member, address, name or comment of the donor.
+     */
+    private function anonymizeDonations(Member $member): void
+    {
+        $this->entityManager->createQuery(
+            'UPDATE ' . Donation::class . " d SET d.donor = NULL, d.email = '', d.nameGiven = '', d.memberComment = ''"
+            . ' WHERE d.donor = :member'
+        )
+            ->setParameter('member', $member)
+            ->execute();
+    }
+
+    /**
+     * Conversations of two retired members belong to nobody any more: their messages go, with the hosting requests
+     * and invitations they were about. Nothing else references a message (a reply's parent becomes null).
+     */
+    private function removeConversationsWithRetiredMembers(Member $member): void
+    {
+        $retired = 'o.username = CONCAT(\'retired_\', o.id)';
+        $messages = $this->entityManager->createQuery(
+            'SELECT m.id, IDENTITY(m.request) AS request FROM ' . Message::class . ' m JOIN ' . Member::class . ' o'
+            . ' WITH (m.sender = :member AND m.receiver = o) OR (m.receiver = :member AND m.sender = o)'
+            . ' WHERE ' . $retired
+        )
+            ->setParameter('member', $member)
+            ->getArrayResult();
+        if ([] === $messages) {
+            return;
+        }
+
+        $this->entityManager->createQuery('DELETE ' . Message::class . ' m WHERE m.id IN (:ids)')
+            ->setParameter('ids', array_column($messages, 'id'))
+            ->execute();
+        $requests = array_values(array_unique(array_filter(array_column($messages, 'request'))));
+        if ([] === $requests) {
+            return;
+        }
+        // a request still referenced by another message stays (never between other members, but to be safe)
+        $stillUsed = $this->entityManager->createQuery(
+            'SELECT DISTINCT IDENTITY(m.request) FROM ' . Message::class . ' m WHERE m.request IN (:ids)'
+        )
+            ->setParameter('ids', $requests)
+            ->getSingleColumnResult();
+        $unused = array_values(array_diff($requests, $stillUsed));
+        if ([] !== $unused) {
+            $this->entityManager->createQuery('DELETE ' . HostingRequest::class . ' r WHERE r.id IN (:ids)')
+                ->setParameter('ids', $unused)
+                ->execute();
+        }
+    }
+
+    /**
+     * The member's trips go, except the stops other members still have an invitation for: those stay with their
+     * trip, whose summary and description are emptied (the place, dates and number of travellers tell nobody who it
+     * was).
+     */
+    private function removeTrips(Member $member): void
+    {
+        $legs = $this->entityManager->createQuery(
+            'SELECT l.id, IDENTITY(l.trip) AS trip FROM ' . Leg::class . ' l JOIN l.trip t WHERE t.creator = :member'
+        )
+            ->setParameter('member', $member)
+            ->getArrayResult();
+        if ([] === $legs) {
+            return;
+        }
+
+        $invited = $this->entityManager->createQuery(
+            'SELECT DISTINCT IDENTITY(r.inviteForLeg) FROM ' . HostingRequest::class
+            . ' r WHERE r.inviteForLeg IN (:legs)'
+        )
+            ->setParameter('legs', array_column($legs, 'id'))
+            ->getSingleColumnResult();
+        $notInvited = array_values(array_diff(array_column($legs, 'id'), $invited));
+        if ([] !== $notInvited) {
+            $this->entityManager->createQuery('DELETE ' . Leg::class . ' l WHERE l.id IN (:ids)')
+                ->setParameter('ids', $notInvited)
+                ->execute();
+        }
+
+        // the trips left without stops go, the others stay without their texts
+        $keptTrips = [];
+        foreach ($legs as $leg) {
+            if (\in_array($leg['id'], $invited, false)) {
+                $keptTrips[$leg['trip']] = true;
+            }
+        }
+        $trips = array_values(array_unique(array_column($legs, 'trip')));
+        $gone = array_values(array_diff($trips, array_keys($keptTrips)));
+        if ([] !== $gone) {
+            $this->entityManager->createQuery('DELETE ' . Trip::class . ' t WHERE t.id IN (:ids)')
+                ->setParameter('ids', $gone)
+                ->execute();
+        }
+        if ([] !== $keptTrips) {
+            $this->entityManager->createQuery(
+                'UPDATE ' . Trip::class . " t SET t.summary = '', t.description = '' WHERE t.id IN (:ids)"
+            )
+                ->setParameter('ids', array_keys($keptTrips))
+                ->execute();
+        }
+    }
+
     private function removeGallery(Member $member): void
     {
         $connection = $this->entityManager->getConnection();

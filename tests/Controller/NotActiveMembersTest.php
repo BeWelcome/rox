@@ -91,6 +91,19 @@ class NotActiveMembersTest extends WebTestCase
         self::assertResponseStatusCodeSame(403, 'an answer to the activity (' . $status . ')');
     }
 
+    #[DataProvider('notActiveYet')]
+    public function testAMemberNotActiveYetWritesPrivateNotes(string $status, bool $detailsGiven): void
+    {
+        // private: open to every member who can log in
+        unset($detailsGiven);
+        $this->client->loginUser($this->memberWithStatus('member-2', $status));
+
+        $crawler = $this->client->request('GET', '/members/member-3/note/add');
+
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('main form'), 'no note form (' . $status . ')');
+    }
+
     public function testAnActiveMemberGetsTheForms(): void
     {
         $member = $this->memberWithStatus('member-2', MemberStatusType::ACTIVE);

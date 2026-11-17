@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
@@ -43,11 +42,7 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.note.not.active');
-
-            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
-        }
+        // notes are private: every member who can log in writes them, also before the account is active
 
         /** @var ProfileNoteRepository $noteRepository */
         $noteRepository = $this->entityManager->getRepository(ProfileNote::class);

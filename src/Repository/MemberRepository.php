@@ -6,6 +6,7 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -82,31 +83,23 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public function findByProfileInfoStartsWith($term)
     {
-        return $this->createQueryBuilder('u')
-            ->where('u.username like :term')
-            ->setParameter('term', $term . '%')
-            ->andWhere('u.status in (:status)')
-            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
-            ->setMaxResults(20)
+        return $this->createProfileInfoStartsWithQueryBuilder($term)
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Same members as findByProfileInfoStartsWith(), with their city joined: a member whose city
-     * no longer exists in geo__names gets null instead of a proxy that fails when the search
-     * results read it (#797).
+     * Same filter as findByProfileInfoStartsWith(), with the city and its country joined: a member
+     * whose city (or whose city's country) no longer exists in geo__names gets null instead of a
+     * proxy that fails when the search results read it (#797).
      */
     public function findForMemberSearch(string $term): array
     {
-        return $this->createQueryBuilder('u')
+        return $this->createProfileInfoStartsWithQueryBuilder($term)
             ->leftJoin('u.city', 'c')
             ->addSelect('c')
-            ->where('u.username like :term')
-            ->setParameter('term', $term . '%')
-            ->andWhere('u.status in (:status)')
-            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
-            ->setMaxResults(20)
+            ->leftJoin('c.country', 'cc')
+            ->addSelect('cc')
             ->getQuery()
             ->getResult();
     }
@@ -195,5 +188,15 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->setMaxResults($batchSize);
 
         return $qb->getQuery()->getResult();
+    }
+
+    private function createProfileInfoStartsWithQueryBuilder($term): QueryBuilder
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.username like :term')
+            ->setParameter('term', $term . '%')
+            ->andWhere('u.status in (:status)')
+            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->setMaxResults(20);
     }
 }

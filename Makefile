@@ -112,6 +112,10 @@ composer-audit:
 # fixed version exists. deepmerge only runs at build time (workbox-webpack-plugin > workbox-build >
 # @rollup/plugin-node-resolve, merging our own config) and is not part of the built assets. Remove the ignore there
 # once a fixed deepmerge or workbox without it is released.
+# It also ignores GHSA-fc5q-39xc-vjpf (high): picomatch <= 4.0.7, ReDoS through repeated extglobs; no fixed version
+# exists. picomatch only runs at build time (sass > @parcel/watcher, workbox-webpack-plugin > workbox-build >
+# @rollup/pluginutils, webpack-dev-server > tinyglobby and http-proxy-middleware > micromatch), matching globs of our
+# own build configuration, and is not part of the built assets. Remove the ignore once a fixed picomatch is released.
 bun-audit:
 	bun run audit
 

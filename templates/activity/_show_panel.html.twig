@@ -129,7 +129,7 @@
             {% set _org_name = _organizer.attendee.username %}
             <small>
                 {{ 'activities.panel.organised'|trans }}
-                <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}">{{ _org_name }}</a>
+                {% if _org_name is former_member %}<span>{{ member_name(_org_name) }}</span>{% else %}<a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}">{{ _org_name }}</a>{% endif %}
                 {% if member and _org_name == member.username %}<span class="p-act-you">{{ 'activities.panel.you'|trans }}</span>{% endif %}
                 {% if attendees.organizers|length > 1 %}<span class="p-act-more">+{{ attendees.organizers|length - 1 }}</span>{% endif %}
             </small>
@@ -159,9 +159,16 @@
                 {% set _nobody = false %}
                 {% set username = person.attendee.username %}
                 <li class="p-act-people__row">
+                    {# a former member (retired) is shown without a link #}
+                    {% if username is former_member %}
+                    <span aria-hidden="true"><img src="{{ path('avatar', { username: username, size: 72 }) }}" alt="" width="40" height="40" loading="lazy"></span>
+                    <div class="p-act-people__text">
+                        <span>{{ member_name(username) }}</span>
+                    {% else %}
                     <a class="js-act-member" href="{{ path('members_profile', { username: username }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: username }) }}" tabindex="-1" aria-hidden="true"><img src="{{ path('avatar', { username: username, size: 72 }) }}" alt="" width="40" height="40" loading="lazy"></a>
                     <div class="p-act-people__text">
                         <a class="js-act-member" href="{{ path('members_profile', { username: username }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: username }) }}">{{ username }}</a>
+                    {% endif %}
                         {% if person.comment %}<q>{{ person.comment }}</q>{% endif %}
                     </div>
                     <span class="p-act-state p-act-state--{{ state }}">

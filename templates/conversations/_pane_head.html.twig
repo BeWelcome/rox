@@ -15,6 +15,8 @@
     {% set hosting = correspondent.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
     {# Face and name open the member's preview in a drawer, as on the search (search/preview.js) #}
     {# in: the kind of conversation, so the drawer leaves out what would start the same one again (search/_preview.html.twig) #}
+    {# a former member (retired, Member::isRetired()) has no profile to open #}
+    {% set linked = linked and correspondent is not former_member %}
     {% set _current = current ?? null %}
     {% set _in = _current is null ? 'request' : (_current.request ? (_current.request.inviteForLeg ? 'invitation' : 'request') : 'message') %}
     {% set _preview = linked ? path('search_member_preview', { username: correspondent.username, in: _in }) : null %}
@@ -27,9 +29,9 @@
     <div class="c-inbox-head__who">
         <div class="c-inbox-head__line">
             {% if linked %}
-                <a class="c-inbox-head__name js-search-preview-open" href="{{ path('members_profile', { username: correspondent.username }) }}" data-preview="{{ _preview }}">{{ correspondent.username }}</a>
+                <a class="c-inbox-head__name js-search-preview-open" href="{{ path('members_profile', { username: correspondent.username }) }}" data-preview="{{ _preview }}">{{ member_name(correspondent) }}</a>
             {% else %}
-                <span class="c-inbox-head__name">{{ correspondent.username }}</span>
+                <span class="c-inbox-head__name">{{ member_name(correspondent) }}</span>
             {% endif %}
             {% set positive = member_positive_comments(correspondent) %}
             {% if positive > 0 %}

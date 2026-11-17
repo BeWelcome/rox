@@ -36,12 +36,12 @@
     {% endif %}
     {# One line: the camera, the message, Send. Change dates, the templates and Cancel: the "⋯" menu
        of the stay card above (request/_card_menu.html.twig). #}
-    {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: host.shortNameOrUsername ?? host.username } only %}
+    {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: (host is former_member ? member_name(host) : host.shortNameOrUsername ?? host.username) } only %}
     <div class="c-decide__foot c-decide__foot--inline">
         {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
         {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
         <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="1"
-                  placeholder="{{ 'conversation.write.to'|trans({ username: host.shortNameOrUsername ?? host.username }) }}" aria-label="{{ respond.message.vars.label|trans }}">
+                  placeholder="{{ 'conversation.write.to'|trans({ username: (host is former_member ? member_name(host) : host.shortNameOrUsername ?? host.username) }) }}" aria-label="{{ respond.message.vars.label|trans }}">
             {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
         </textarea>
         <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-decide__send">

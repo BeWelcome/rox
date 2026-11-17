@@ -47,7 +47,7 @@
         {{ addlink }}
     {% endif %}
     {% endset %}
-    {% set img %}<img class="{{ imgclasses }} avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
+    {% set img %}<img class="{{ imgclasses }} avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ member_name(username) }}" alt="{{ 'profile' | trans }}: {{ member_name(username) }}">{% endset %}
     {% if linked %}
         {{ macros.profilelink(username, img, linkclasses, newpage) }}
     {% else %}
@@ -58,7 +58,7 @@
 {# \todo align left/right depending on right parameter #}
 {% macro avatarstack(username, size = 50, right, displayname = true) %}
     {% import _self as macros %}
-    {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
+    {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ member_name(username) }}" alt="{{ 'profile' | trans }}: {{ member_name(username) }}">{% endset %}
     {{ macros.profilelink(username, img) }}
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>
     {% endif %}
@@ -67,18 +67,28 @@
 {# \new avatar for trip pages #}
 {% macro roundedavatarstack(username, size, displayname = true, link = false) %}
     {% import _self as macros %}
-    {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}" loading="lazy">{% endset %}
+    {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ member_name(username) }}" alt="{{ 'profile' | trans }}: {{ member_name(username) }}" loading="lazy">{% endset %}
     {% if link %}
         {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
     {% else %}
         <div class="o-avatar__img-wrapper o-avatar--shadow-s">{{ img }}</div>
     {% endif %}
     {% if displayname %}
-        {{ macros.profilelink(username, username, 'o-avatar__name u:break-all') }}
+        {{ macros.profilelink(username, member_name(username), 'o-avatar__name u:break-all') }}
     {% endif %}
 {% endmacro %}
 
+{# A member retired by data:retention (retired_<id>) is a former member: the name without a link to the profile #}
 {% macro profilelink(username, displayname = false, classes = false, newpage = false) %}
+    {% if username is former_member %}
+    <span {% if classes %} class="{{ classes }}" {% endif %}>
+        {% if displayname and displayname != username %}
+            {{ displayname }}
+        {% else %}
+            {{ member_name(username) }}
+        {% endif %}
+    </span>
+    {% else %}
     <a href="{{ path( 'members_profile', { 'username': username }) }}" {% if classes %} class="{{ classes }}" {% endif %} {% if newpage %} target="_blank" {% endif %}>
         {% if displayname %}
             {{ displayname }}
@@ -86,6 +96,7 @@
             {{ username }}
         {% endif %}
     </a>
+    {% endif %}
 {% endmacro %}
 
 {% macro link( route, type ) %}

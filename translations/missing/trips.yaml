@@ -241,3 +241,6 @@ trips.visitors.of:
 trips.visitors.coming:
     - '{count, plural, one {visitor coming} other {visitors coming}}'
     - Visitors page, after the number of trips near the member (4 visitors coming); the number is shown before it
+flash.trip.not.confirmed:
+    - 'You can plan trips once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member who hasn't confirmed the email address opens the new trip form (shown on the trips page).

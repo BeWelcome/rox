@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Dto\ActivityDto;
 use App\Entity\Activity;
 use App\Entity\Member;
@@ -13,6 +12,7 @@ use App\Form\ActivityType;
 use App\Model\ActivityModel;
 use App\Repository\ActivityRepository;
 use App\Security\ActivityVoter;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -41,6 +41,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 class ActivityController extends AbstractController
 {
+    use ActiveMemberTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
@@ -162,10 +163,8 @@ class ActivityController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.activity.not.confirmed');
-
-            return $this->redirectToRoute('activities_my_activities');
+        if ($refused = $this->refusedUntilActive($member, 'flash.activity.not.active', $this->redirectToRoute('activities_my_activities'))) {
+            return $refused;
         }
 
         $data = new ActivityDto();

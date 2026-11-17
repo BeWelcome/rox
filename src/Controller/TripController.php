@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\LegOptionsType;
-use App\Doctrine\MemberStatusType;
 use App\Dto\LegDto;
 use App\Dto\TripDto;
 use App\Entity\Leg;
@@ -13,6 +12,7 @@ use App\Form\TripRadiusType;
 use App\Form\TripType;
 use App\Model\TripModel;
 use App\Repository\LegRepository;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +30,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TripController extends AbstractController
 {
+    use ActiveMemberTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -81,10 +82,8 @@ class TripController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.trip.not.confirmed');
-
-            return $this->redirectToRoute('trips');
+        if ($refused = $this->refusedUntilActive($member, 'flash.trip.not.confirmed', $this->redirectToRoute('trips'))) {
+            return $refused;
         }
 
         $tripDto = new TripDto();

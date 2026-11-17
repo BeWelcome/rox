@@ -37,6 +37,7 @@ class PollVoterTest extends TestCase
             'admins edit open polls' => [PollVoter::EDIT, Poll::STATUS_OPEN, false, true, false, [], $granted],
             'members vote in open polls' => [PollVoter::VOTE, Poll::STATUS_OPEN, false, false, false, [], $granted],
             'members vote once' => [PollVoter::VOTE, Poll::STATUS_OPEN, false, false, true, [], $denied],
+            'members not active yet don\'t vote' => [PollVoter::VOTE, Poll::STATUS_OPEN, false, false, false, ['active' => false], $denied],
             'nobody votes in closed polls' => [PollVoter::VOTE, Poll::STATUS_CLOSED, false, false, false, [], $denied],
             'nobody votes past the end' => [PollVoter::VOTE, Poll::STATUS_OPEN, false, false, false, ['ended' => '-1 day'], $denied],
             'nobody votes in ordered polls' => [PollVoter::VOTE, Poll::STATUS_OPEN, false, false, false, ['type' => Poll::CHOICE_ORDERED], $denied],
@@ -54,6 +55,7 @@ class PollVoterTest extends TestCase
     public function testVote(string $attribute, string $status, bool $isCreator, bool $isAdmin, bool $voted, array $options, int $expected): void
     {
         $member = Mockery::mock(Member::class);
+        $member->allows('isActiveMember')->andReturn($options['active'] ?? true);
         $member->allows('getGroups')->andReturn([]);
         $token = Mockery::mock(TokenInterface::class, ['getUser' => $member]);
         $decisionManager = Mockery::mock(AccessDecisionManagerInterface::class);

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
-use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\CommentReport;
 use App\Entity\Member;
@@ -16,6 +15,7 @@ use App\Model\CommentModel;
 use App\Model\ProfileModel;
 use App\Security\MemberVoter;
 use App\Service\Mailer;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class CommentController extends AbstractController
 {
+    use ActiveMemberTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -141,10 +142,8 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.comment.not.active');
-
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        if ($refused = $this->refusedUntilActive($loggedInMember, 'flash.comment.not.active', $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]))) {
+            return $refused;
         }
 
         if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {

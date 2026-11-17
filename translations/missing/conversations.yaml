@@ -311,3 +311,6 @@ conversation.view.profile:
 conversation.answer.placeholder.short:
     - 'Add a message…'
     - Placeholder of the message on phones once the host picked Accept, Maybe or Decline (short, one line)
+flash.conversation.not.active:
+    - 'You can write to other members once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member who hasn't confirmed the email address opens a message, hosting request or invitation form (shown on the other member's profile).

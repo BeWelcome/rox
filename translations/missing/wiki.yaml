@@ -305,3 +305,6 @@ wiki.editor.blocker.heading:
 wiki.editor.blocker.image:
     - 'an image'
     - 'Wiki editor: what the visual mode can''t keep ([[Image:…]]), in wiki.editor.markup.only.at.'
+wiki.flash.not.active:
+    - 'You can edit the wiki once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet opens the wiki editor (shown on the wiki page).

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupType as DoctrineGroupType;
-use App\Doctrine\MemberStatusType;
 use App\Dto\GroupCategorySuggestion;
 use App\Entity\Group;
 use App\Entity\GroupCategory;
@@ -18,6 +17,7 @@ use App\Model\GroupModel;
 use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\GroupSubmenuTrait;
 use App\Utilities\MailLinkTrait;
 use App\Utilities\RedirectBackTrait;
@@ -52,6 +52,7 @@ use Throwable;
  */
 class GroupController extends AbstractController
 {
+    use ActiveMemberTrait;
     use GroupSubmenuTrait;
     use MailLinkTrait;
     use RedirectBackTrait;
@@ -122,8 +123,13 @@ class GroupController extends AbstractController
         /** @var GroupMembership $membership */
         $membership = $group->getGroupMembership($member);
         if (DoctrineGroupType::NEED_ACCEPTANCE === $group->getType()) {
-            // Check if a join request is currently open
+            // the group's admins couldn't see a member who isn't active yet: they ask once they are
+            $refused = $this->refusedUntilActive($member, 'flash.group.join.not.active', $this->redirectToRoute('group_start', ['group_id' => $group->getId()]));
+            if ($refused) {
+                return $refused;
+            }
 
+            // Check if a join request is currently open
             if (false !== $membership) {
                 $this->addTranslatedFlash('notice', 'flash.group.already.applied');
 
@@ -369,10 +375,8 @@ class GroupController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.group.not.confirmed');
-
-            return $this->redirectToRoute('groups_mygroups');
+        if ($refused = $this->refusedUntilActive($member, 'flash.group.not.confirmed', $this->redirectToRoute('groups_mygroups'))) {
+            return $refused;
         }
 
         $groupRequest = new GroupRequest();

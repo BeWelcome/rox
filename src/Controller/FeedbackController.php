@@ -92,8 +92,8 @@ class FeedbackController extends AboutBaseController
                 }
 
                 $data['host'] = $request->headers->get('Host');
+                // mailed to the team of the category only, not stored: nothing on the site shows it
                 $aboutModel->sendFeedbackEmail($data);
-                $aboutModel->addFeedback($data);
 
                 $this->addTranslatedFlash('notice', 'feedback.thank.you');
 

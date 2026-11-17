@@ -2,9 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Feedback;
 use App\Entity\FeedbackCategory;
-use App\Entity\Language;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mime\Address;
@@ -40,20 +38,5 @@ class AboutModel
         }
 
         $this->mailer->sendFeedbackEmail($feedbackEmail, $notifyEmail, $data);
-    }
-
-    public function addFeedback($data): void
-    {
-        $feedback = new Feedback();
-        if (null !== $data['member']) {
-            $feedback->setAuthor($data['member']);
-        }
-        $feedback->setDiscussion($data['FeedbackQuestion']);
-        $feedback->setCategory($data['IdCategory']);
-        $languageRepository = $this->entityManager->getRepository(Language::class);
-        $english = $languageRepository->find('en');
-        $feedback->setLanguage($english);
-        $this->entityManager->persist($feedback);
-        $this->entityManager->flush();
     }
 }

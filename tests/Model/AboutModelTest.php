@@ -2,14 +2,10 @@
 
 namespace App\Tests\Model;
 
-use App\Entity\Feedback;
 use App\Entity\FeedbackCategory;
-use App\Entity\Language;
-use App\Entity\Member;
 use App\Model\AboutModel;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -96,41 +92,5 @@ class AboutModelTest extends TestCase
 
         $aboutModel = new AboutModel($entityManager, $mailer);
         $aboutModel->sendFeedbackEmail($data);
-    }
-
-    public function testAddFeedbackPersistsData(): void
-    {
-        // Side-effect test: verify persistence.
-        $mailer = $this->createStub(Mailer::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-
-        // Stub repository to return a dummy language
-        $language = new Language();
-        $repository = $this->createMock(EntityRepository::class);
-        $repository->expects($this->once())->method('find')->with('en')->willReturn($language);
-        $entityManager->method('getRepository')->willReturn($repository);
-
-        $member = new Member();
-        $category = new FeedbackCategory();
-        $data = [
-            'member' => $member,
-            'FeedbackQuestion' => 'Question',
-            'IdCategory' => $category,
-        ];
-
-        $entityManager
-            ->expects($this->once())
-            ->method('persist')
-            ->with($this->callback(static function (Feedback $feedback) use ($member, $category, $language): bool {
-                return $member === $feedback->getAuthor()
-                    && 'Question' === $feedback->getDiscussion()
-                    && $category === $feedback->getCategory()
-                    && $language === $feedback->getLanguage();
-            }))
-        ;
-        $entityManager->expects($this->once())->method('flush');
-
-        $aboutModel = new AboutModel($entityManager, $mailer);
-        $aboutModel->addFeedback($data);
     }
 }

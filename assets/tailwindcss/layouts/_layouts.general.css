@@ -14348,3 +14348,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
 
 /* Visitors card: the trip's title a little darker than its text */
 .c-home-dash .c-home-visit__trip { color: #0f172a; font-weight: 600; }
+
+/* Visitors card: the nights in a small grey pill with a moon */
+.c-home-dash .c-home-visit__nights { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 600; line-height: 1.4; }
+.c-home-dash .c-home-visit__nights i, .c-home-dash .c-home-visit__nights svg { width: 0.65rem; height: 0.65rem; color: #94a3b8; }

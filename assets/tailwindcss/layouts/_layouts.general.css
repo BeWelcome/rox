@@ -14330,3 +14330,21 @@ a.c-home-trip__name:hover { color: #c2410c; }
 
 /* Activity panel title: up to 3 lines, never cut on one line (wins over .p-ped .p-ped-head__title) */
 .p-ped .p-ped-head__title.p-act-head__title { display: -webkit-box; overflow: hidden; line-height: 1.2; text-overflow: clip; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow-wrap: anywhere; }
+
+/* Visitors card, a row: the dates in orange, the nights in grey brackets, the title and text in grey */
+.c-home-dash .c-home-visit__when { gap: 0 0.4rem; }
+.c-home-dash .c-home-visit__when > span + span::before { content: none; }
+.c-home-dash .c-home-visit__when > span:nth-child(n+4) { display: inline; }
+.c-home-visit__dates { color: #c2410c; font-weight: 700; }
+.c-home-visit__nights { color: #94a3b8; }
+
+/* Visitors card: the trips closer together */
+.c-home-dash .c-home-visits { gap: 0; }
+.c-home-dash .c-home-visit { padding-top: 0.55rem; padding-bottom: 0.55rem; }
+
+/* Visitors and activities counts in orange, like Messages */
+.c-home-dash__card--trips .c-home-dash__count,
+.c-home-dash__card--activities .c-home-dash__count { background: #ea7a2e; color: #fff; }
+
+/* Visitors card: the trip's title a little darker than its text */
+.c-home-dash .c-home-visit__trip { color: #0f172a; font-weight: 600; }

@@ -1,0 +1,22 @@
+{#
+  The agora (group 0) pinned first in the groups lists: the logo on orange, its name with the official check, Pinned
+  and its latest topic. Needs agora and agoraThread.
+#}
+{% import 'forum/_macros.html.twig' as forum %}
+<a class="p-group-card p-group-card--pinned" href="{{ path('group_start', {group_id: agora.id}) }}">
+    <span class="p-group-card__picture p-group-card__agora" aria-hidden="true">
+        <img src="{{ asset('images/logo_icon_2025.svg') }}" alt="" width="30" height="35">
+    </span>
+    <span class="p-group-card__main">
+        <span class="p-group-card__title">
+            <span class="p-group-card__pinned-name">{{ agora.name }}</span>
+            <i class="fas fa-circle-check p-group-card__official" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ 'group.official'|trans }}</span>
+        </span>
+        <span class="p-group-card__meta p-group-card__pin">
+            <i class="fas fa-thumbtack" aria-hidden="true"></i>
+            <span>{{ 'group.list.pinned'|trans }}{% if agoraThread %} · “{{ forum.thread_title(agoraThread, app.request.locale)|striptags|trim }}”{% endif %}</span>
+        </span>
+    </span>
+    <i class="fas fa-chevron-right p-group-card__go" aria-hidden="true"></i>
+</a>

@@ -906,3 +906,12 @@ account.new.email.taken:
 member.mail.not.confirmed:
     - 'The current email address is not confirmed yet. Please confirm it before changing it.'
     - 'Change email address page, when the account''s current address still waits for its confirmation.'
+profile.contact.your.request:
+    - 'Your request'
+    - 'Profile, the band about the conversation with this member, when you asked them to host you.'
+profile.contact.your.invitation:
+    - 'Your invitation'
+    - 'Profile, the band about the conversation with this member, when you invited them to stay with you.'
+profile.contact.open:
+    - 'Open conversation'
+    - 'Profile, the link at the end of the band about the conversation with this member.'

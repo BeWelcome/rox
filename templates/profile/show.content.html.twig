@@ -46,7 +46,14 @@
       {% set spokenLanguages = member.levelLanguages %}
       {% if aboutMe|length > 0 or offerHosts|length > 0 or spokenLanguages|length > 0 %}
         <section class="p-pro-card">
-          <h2 class="p-pro-card__title">{{ 'profile.about.me'|trans({}, 'messages', profile_language)|raw }}</h2>
+          <div class="p-pro-card__head p-pro-about__head">
+            <h2 class="p-pro-card__title">{{ 'profile.about.me'|trans({}, 'messages', profile_language)|raw }}</h2>
+            {# Phones: how long they have been a member here, right of the title (no room on the facts line of the head) #}
+            <p class="p-pro-about__since">
+              <i class="far fa-calendar" aria-hidden="true"></i>
+              {{ 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}
+            </p>
+          </div>
           {% if aboutMe|length > 0 %}
             <div class="p-pro-about js-pro-about">{{ aboutMe|purify|nl2br }}</div>
             <button type="button" class="p-pro-about__more js-pro-about-more" hidden>{{ 'profile.read.more'|trans({}, 'messages', profile_language) }}</button>

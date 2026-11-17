@@ -9,11 +9,13 @@ if (locationName && location) {
     // On the groups pages a picked place, or the field emptied, searches at once (no Search button for it)
     const searchForm = locationName.closest('.js-group-search');
     const hadLocation = location.value !== '';
+    // In the filters sheet of the phones the place waits for Show groups
+    const searchesAtOnce = () => searchForm && !locationName.closest('.p-groups-sheet');
 
     initializeSingleAutoComplete('/suggest/locations/all', 'js-location-picker', (element, result) => {
         element.value = result.name.replaceAll('#', ', ');
         location.value = result.id;
-        if (searchForm) {
+        if (searchesAtOnce()) {
             searchForm.requestSubmit();
         }
     }, searchForm ? {
@@ -21,7 +23,7 @@ if (locationName && location) {
         clearButtonOnInitial: true,
         onReset: () => {
             location.value = '';
-            if (hadLocation) {
+            if (hadLocation && searchesAtOnce()) {
                 searchForm.requestSubmit();
             }
         },
@@ -30,7 +32,7 @@ if (locationName && location) {
     // Typing something else drops the picked location.
     locationName.addEventListener('input', () => {
         location.value = '';
-        if (searchForm && hadLocation && locationName.value.trim() === '') {
+        if (searchesAtOnce() && hadLocation && locationName.value.trim() === '') {
             searchForm.requestSubmit();
         }
     });

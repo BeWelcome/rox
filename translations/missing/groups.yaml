@@ -440,6 +440,30 @@ group.admin.members.invited:
 group.admin.members.withdraw:
     - 'Withdraw'
     - 'Group member administration: the button that takes an invitation back.'
+group.list.near:
+    - 'Near {place}'
+    - 'Groups page, the place filter when a place is picked, and the shortcut to the groups near the member''s own place.'
+group.list.filters:
+    - 'Filters'
+    - 'Groups page on phones, the button and the title of the sheet with the category and the place.'
+group.list.filters.clear:
+    - 'Clear'
+    - 'Groups page on phones, the link in the filters sheet that drops the category and the place.'
+group.list.filters.all:
+    - 'All'
+    - 'Groups page on phones, the chip of the filters sheet for every category.'
+group.list.filters.show:
+    - 'Show groups'
+    - 'Groups page on phones, the button of the filters sheet that shows the groups found.'
+group.list.pinned:
+    - 'Pinned'
+    - 'Groups list, under the name of the BeWelcome Agora, which always comes first.'
+group.list.type.approval:
+    - 'Joining needs an approval'
+    - 'Groups list, read by screen readers for the lock next to a group that approves its new members.'
+group.list.type.invite:
+    - 'Joining by invitation only'
+    - 'Groups list, read by screen readers for the lock next to a group that members join only when invited.'
 flash.group.not.confirmed:
     - 'You can create groups once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member who hasn't confirmed the email address opens the new group form (shown on their groups).

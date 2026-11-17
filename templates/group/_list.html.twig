@@ -1,18 +1,74 @@
 {#
-  The groups pages (my groups, all groups, subscriptions): the title and Create group, the search by name with the
-  category and the place; without a filter the agora pinned on top, the groups near the member and the categories;
-  then the tabs My groups / All groups / Subscriptions with their counts and the order, and the groups as cards (or
-  the subscriptions).
+  The groups pages (my groups, all groups, subscriptions): the title, one white search bar (the name, the category
+  as a dropdown, the place) and Create group; then the tabs My groups / All groups / Subscriptions / Archived as
+  pills with their counts and the order on the right, and the groups as cards, the agora pinned first (or the
+  subscriptions).
+  Phones: a round + for Create, the search with a filters button that opens a sheet from the bottom (the categories
+  as chips, the place, Show groups), the tabs scrolling sideways, the groups as a list.
   tab: 'mine', 'all', 'archived' (groups named "[Archived] ...", kept out of All groups) or 'subscriptions'.
-  Needs search, categories, categoryCounts, myCount, allCount, archivedCount, myGroupIds, agora, agoraDescription,
-  agoraThread, near, newSubscriptions, and groups (or, on the subscriptions tab, view, topics and notifiedGroups).
+  Needs search, categories, categoryCounts, myCount, allCount, archivedCount, myGroupIds, agora, agoraThread, near,
+  newSubscriptions, and groups (or, on the subscriptions tab, view, topics and notifiedGroups).
 #}
 {% set _route = tab == 'mine' ? 'groups_mygroups' : 'groups_search' %}
 {% set _orders = {actdesc: 'group.list.order.actdesc', nameasc: 'group.list.order.nameasc', membersdesc: 'group.list.order.membersdesc', createddesc: 'group.list.order.createddesc'} %}
 {% set _orderQuery = tab == 'mine' ? {} : search.toQuery(null, 1)|filter((value, key) => key not in ['order', 'page']) %}
+{% set _categoryQuery = search.toQuery(null, 1)|filter((value, key) => key not in ['category', 'page']) %}
+{% set _categories = categories|filter(category => (categoryCounts[category.id] ?? 0) > 0) %}
+{% set _category = categories|filter(category => category.id == search.category)|first %}
+{% set _place = search.location ? (search.locationName|split(',')|first|trim) : null %}
 <div class="p-groups">
-    <header class="p-groups__top">
+    <form class="p-groups__top js-group-search" action="{{ path('groups_search') }}" method="get">
         <h1 class="p-groups__title">{{ 'group.list.title'|trans }}</h1>
+
+        {# Searching goes to All groups #}
+        <div class="p-groups__search">
+            <label class="p-groups__field">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <span class="visually-hidden">{{ 'name'|trans }}</span>
+                <input type="search" name="name" value="{{ search.name }}" placeholder="{{ 'group.list.search'|trans }}">
+            </label>
+            <div class="p-groups__filters">
+                <div class="dropdown p-groups__cat">
+                    <button type="button" class="p-groups__filter{{ _category ? ' is-on' }}" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-folder" aria-hidden="true"></i>
+                        <span>{{ _category ? _category.name(app.request.locale) : 'group.search.category.all'|trans }}</span>
+                        <i class="fas fa-chevron-down p-groups__caret" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-groups__menu">
+                        <a class="{{ not _category ? 'is-active' }}" href="{{ path('groups_search', _categoryQuery) }}">{{ 'group.search.category.all'|trans }}</a>
+                        {% for category in _categories %}
+                            <a class="{{ category.id == search.category ? 'is-active' }}" href="{{ path('groups_search', _categoryQuery|merge({category: category.id})) }}">
+                                {{ category.name(app.request.locale) }} <span>{{ categoryCounts[category.id] }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <details class="p-groups__place">
+                    <summary class="p-groups__loc{{ _place ? ' is-on' }}">
+                        <i class="fas fa-location-dot" aria-hidden="true"></i>
+                        <span>{{ _place ? 'group.list.near'|trans({place: _place}) : 'location'|trans }}</span>
+                    </summary>
+                    <div class="p-groups__place-panel js-groups-place-slot">
+                        <div class="p-groups__place-field js-groups-place">
+                            <div class="auto-search-wrapper max-height">
+                                <input type="text" class="o-input js-location-picker" id="group_search_location_name" name="locationName" data-location-target="#group_search_location"
+                                       value="{{ search.locationName }}" autocomplete="off" placeholder="{{ 'group.list.place.placeholder'|trans }}">
+                            </div>
+                            <input type="hidden" id="group_search_location" name="location" value="{{ search.location }}">
+                        </div>
+                        {% if near and not search.location %}
+                            <a class="p-groups__near" href="{{ path('groups_search', search.toQuery(null, 1)|filter((value, key) => key not in ['location', 'locationName', 'page'])|merge({location: near.area.geonameId, locationName: near.area.name})) }}">
+                                <i class="fas fa-location-crosshairs" aria-hidden="true"></i> {{ 'group.list.near'|trans({place: near.area.name}) }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </details>
+            </div>
+            <button type="button" class="p-groups__sheet-open js-groups-sheet-open{{ _category or _place ? ' is-on' }}" aria-controls="groups-sheet" aria-expanded="false" aria-label="{{ 'group.list.filters'|trans }}">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+            </button>
+        </div>
+
         <div class="p-groups__top-actions">
             {% if profileBlock|default('')|trim %}
                 <button type="button" class="p-groups__cog js-groups-profile-toggle" aria-expanded="false" aria-controls="profile-groups-panel"
@@ -20,59 +76,45 @@
                     <i class="fas fa-cog" aria-hidden="true"></i>
                 </button>
             {% endif %}
-            <a class="p-groups__create" href="{{ path('new_group') }}">
+            <a class="p-groups__create" href="{{ path('new_group') }}" aria-label="{{ 'group.list.create'|trans }}">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <span class="p-groups__create-long">{{ 'group.list.create'|trans }}</span>
-                <span class="p-groups__create-short">{{ 'group.list.create.short'|trans }}</span>
             </a>
         </div>
-    </header>
-    {% if profileBlock|default('')|trim %}
-        <div class="p-groups__profile-panel" id="profile-groups-panel" hidden>{{ profileBlock }}</div>
-    {% endif %}
 
-    {# Searching goes to All groups #}
-    <form class="p-groups__search js-group-search" action="{{ path('groups_search') }}" method="get">
-        <label class="p-groups__field">
-            <i class="fas fa-search" aria-hidden="true"></i>
-            <span class="visually-hidden">{{ 'name'|trans }}</span>
-            <input type="search" name="name" value="{{ search.name }}" placeholder="{{ 'group.list.search'|trans }}">
-            <button class="p-groups__go" type="submit">{{ 'groupssearchsubmit'|trans }}</button>
-        </label>
-        <div class="p-groups__filters">
-            <label class="p-groups__pill p-groups__pill--select{{ search.category ? ' is-on' }}">
-                <i class="fas fa-folder" aria-hidden="true"></i>
-                <span class="visually-hidden">{{ 'group.search.category'|trans }}</span>
-                <select name="category" onchange="this.form.requestSubmit()">
-                    <option value="">{{ 'group.search.category.all'|trans }}</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}"{% if category.id == search.category %} selected{% endif %}>{{ category.name(app.request.locale) }}</option>
-                    {% endfor %}
-                </select>
-                <i class="fas fa-chevron-down p-groups__caret" aria-hidden="true"></i>
-            </label>
-            <details class="p-groups__place">
-                <summary class="p-groups__pill{{ search.location ? ' is-on' }}">
-                    <i class="fas fa-location-dot" aria-hidden="true"></i>
-                    <span>{{ search.location ? (search.locationName|split(',')|first|trim) : 'location'|trans }}</span>
-                </summary>
-                <div class="p-groups__place-panel">
-                    <div class="auto-search-wrapper max-height">
-                        <input type="text" class="o-input js-location-picker" id="group_search_location_name" name="locationName" data-location-target="#group_search_location"
-                               value="{{ search.locationName }}" autocomplete="off" placeholder="{{ 'group.list.place.placeholder'|trans }}">
-                    </div>
-                    <input type="hidden" id="group_search_location" name="location" value="{{ search.location }}">
+        {# Phones: the filters in a sheet from the bottom; the category as chips, the place, Show groups #}
+        <div class="p-groups-sheet" id="groups-sheet" hidden>
+            <div class="p-groups-sheet__backdrop js-groups-sheet-close"></div>
+            <div class="p-groups-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="groups-sheet-title">
+                <span class="p-groups-sheet__grip js-groups-sheet-close" aria-hidden="true"></span>
+                <div class="p-groups-sheet__head">
+                    <h2 class="p-groups-sheet__title" id="groups-sheet-title">{{ 'group.list.filters'|trans }}</h2>
+                    <a class="p-groups-sheet__clear" href="{{ path('groups_search') }}">{{ 'group.list.filters.clear'|trans }}</a>
                 </div>
-            </details>
+                <p class="p-groups-sheet__label">{{ 'group.search.category'|trans }}</p>
+                <div class="p-groups-sheet__chips">
+                    <label class="p-groups-sheet__chip">
+                        <input type="radio" name="category" value=""{% if not _category %} checked{% endif %}>
+                        <span>{{ 'group.list.filters.all'|trans }}</span>
+                    </label>
+                    {% for category in _categories %}
+                        <label class="p-groups-sheet__chip">
+                            <input type="radio" name="category" value="{{ category.id }}"{% if category.id == search.category %} checked{% endif %}>
+                            <span>{{ category.name(app.request.locale) }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+                <p class="p-groups-sheet__label">{{ 'location'|trans }}</p>
+                <div class="p-groups-sheet__place js-groups-sheet-place"></div>
+                <button type="submit" class="p-groups-sheet__show">{{ 'group.list.filters.show'|trans }}</button>
+            </div>
         </div>
+
         {% if tab != 'mine' %}<input type="hidden" name="order" value="{{ search.order }}">{% endif %}
         {% if tab == 'archived' %}<input type="hidden" name="archived" value="1">{% endif %}
     </form>
-
-    {% if tab != 'archived' and not search.filtered %}
-        {% if agora %}{% include 'group/_agora_banner.html.twig' %}{% endif %}
-        {% if near %}{% include 'group/_near.html.twig' %}{% endif %}
-        {% include 'group/_categories.html.twig' %}
+    {% if profileBlock|default('')|trim %}
+        <div class="p-groups__profile-panel" id="profile-groups-panel" hidden>{{ profileBlock }}</div>
     {% endif %}
 
     <div class="p-groups__bar">
@@ -85,13 +127,13 @@
             </a>
             {% if app.user %}
                 <a class="p-groups__tab{{ tab == 'subscriptions' ? ' is-active' }}" href="{{ path('groups_subscriptions') }}"{% if tab == 'subscriptions' %} aria-current="page"{% endif %}>
-                    <i class="far fa-bell" aria-hidden="true"></i> {{ 'group.list.subscriptions'|trans }}
+                    {{ 'group.list.subscriptions'|trans }}
                     {% if newSubscriptions > 0 %}<span class="p-groups__count p-groups__count--new">{{ 'group.list.subscriptions.new'|trans({count: newSubscriptions}) }}</span>{% endif %}
                 </a>
             {% endif %}
             {% if archivedCount|default(0) > 0 %}
                 <a class="p-groups__tab p-groups__tab--archived{{ tab == 'archived' ? ' is-active' }}" href="{{ path('groups_search', {archived: 1}) }}"{% if tab == 'archived' %} aria-current="page"{% endif %}>
-                    <i class="fas fa-box-archive" aria-hidden="true"></i> {{ 'group.list.archived'|trans }} <span class="p-groups__count">{{ archivedCount }}</span>
+                    {{ 'group.list.archived'|trans }} <span class="p-groups__count">{{ archivedCount }}</span>
                 </a>
             {% endif %}
         </nav>
@@ -105,28 +147,33 @@
             </a>
         </nav>
         {% else %}
-        <details class="p-groups__order">
-            <summary>
+        <div class="dropdown p-groups__order">
+            <button type="button" class="p-groups__order-btn" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-arrow-down-wide-short" aria-hidden="true"></i>
-                {{ (_orders[search.order] ?? 'group.list.order.nameasc')|trans }}
-            </summary>
-            <div class="p-groups__menu">
+                <span>{{ (_orders[search.order] ?? 'group.list.order.nameasc')|trans }}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end p-groups__menu">
                 {% for order, label in _orders %}
                     <a class="{{ search.order == order ? 'is-active' }}" href="{{ path(_route, _orderQuery|merge({order: order})) }}">{{ label|trans }}</a>
                 {% endfor %}
             </div>
-        </details>
+        </div>
         {% endif %}
     </div>
 
+    {% set _pinned = agora and tab in ['mine', 'all'] and not search.filtered and (groups.currentPage ?? 1) == 1 %}
     {% if tab == 'subscriptions' %}
         {% include 'group/_subscriptions.html.twig' %}
-    {% elseif groups.nbResults > 0 %}
+    {% elseif groups.nbResults > 0 or _pinned %}
         <div class="p-groups__list">
+            {% if _pinned %}{% include 'group/_agora_card.html.twig' %}{% endif %}
             {% for row in groups %}
                 {% include 'group/_card.html.twig' %}
             {% endfor %}
         </div>
+        {% if groups.nbResults == 0 and tab == 'mine' %}
+            <p class="p-groups__empty">{{ 'groupsmygroupsnoresults'|trans|format('<a href="' ~ path('groups_search') ~ '">', '</a>', '<a href="' ~ path('new_group') ~ '">', '</a>')|raw }}</p>
+        {% endif %}
         {% if groups.haveToPaginate %}
             <div class="p-groups__pages">
                 {{ pagerfanta(groups, 'rounded_pagination', tab == 'mine'
@@ -154,12 +201,36 @@
             button.classList.toggle('is-on', !panel.hidden);
         });
     });
-    // The order and the place close on a click elsewhere
+    // The place closes on a click elsewhere
     document.addEventListener('click', function (event) {
-        document.querySelectorAll('.p-groups__order[open], .p-groups__place[open]').forEach(function (menu) {
+        document.querySelectorAll('.p-groups__place[open]').forEach(function (menu) {
             if (!menu.contains(event.target) && !event.target.closest('.auto-results-wrapper')) {
                 menu.removeAttribute('open');
             }
         });
     });
+    // Phones: the filters sheet; the place field moves into it while it is open
+    (function () {
+        var sheet = document.getElementById('groups-sheet');
+        var open = document.querySelector('.js-groups-sheet-open');
+        var place = document.querySelector('.js-groups-place');
+        if (!sheet || !open || !place) {
+            return;
+        }
+        var setOpen = function (isOpen) {
+            (isOpen ? sheet.querySelector('.js-groups-sheet-place') : document.querySelector('.js-groups-place-slot')).prepend(place);
+            sheet.hidden = !isOpen;
+            open.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            document.body.classList.toggle('p-groups-sheet-open', isOpen);
+        };
+        open.addEventListener('click', function () { setOpen(true); });
+        sheet.querySelectorAll('.js-groups-sheet-close').forEach(function (element) {
+            element.addEventListener('click', function () { setOpen(false); });
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && !sheet.hidden) {
+                setOpen(false);
+            }
+        });
+    })();
 </script>

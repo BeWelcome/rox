@@ -9,7 +9,6 @@
 {% set _groups = [] %}
 {% if app.user %}
     {% set _groups = _groups|merge([{ id: 'community', title: 'communitymenu'|trans, links: [
-        { href: path('groups_redirect'), label: 'landing.tab.forum'|trans },
         { href: path('groups_mygroups'), label: 'landing.button.mygroups'|trans },
         { href: path('activities'), label: 'activities'|trans },
         { href: path('wiki_front_page'), label: 'wiki'|trans },

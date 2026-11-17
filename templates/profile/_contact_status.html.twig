@@ -1,16 +1,25 @@
 {#
-  Next to "Send" and "Request stay", when the logged-in member already talks with this member:
-  the latest conversation in one line (a message, or a hosting request / invitation with its
-  dates and where it stands). A click opens it in the side panel, like "Send".
-  Expects conversation (InboxFolders::getConversationWith) and member; place (head, bar, preview)
-  and link_class (the class that opens the side panel, js-contact-open by default).
+  When the logged-in member already talks with this member: the latest conversation in one line (a message, or a
+  hosting request / invitation with its dates and where it stands, "Your request" when they sent it). A click opens
+  it in the side panel, like "Send".
+  place: strip (large screens, a band under the profile head: an icon tile, the nights, Open conversation), bar
+  (phones, above Send and Request stay) or preview (the search preview).
+  Expects conversation (InboxFolders::getConversationWith) and member; link_class (the class that opens the side
+  panel, js-contact-open by default).
 #}
 {% set _m = conversation %}
 {% set _stay = _m.request %}
+{% set _strip = (place ?? '') == 'strip' %}
 {% set _unread = _m.receiver == app.user and (_m.firstRead is null or _m.firstRead == '0000-00-00 00:00.00') %}
 {% if _stay %}
     {% set _state = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[_stay.status] ?? 'open' %}
     {% set _tone = { accepted: 'success', declined: 'danger', cancelled: 'danger', tentatively: 'maybe' }[_state] ?? 'pending' %}
+    {# Who started it: the conversation's initiator (no load of the request's messages) #}
+    {% set _mine = _m.initiator == app.user %}
+    {% set _invite = _stay.inviteForLeg is not null %}
+    {% set _label = _invite
+        ? (_mine ? 'profile.contact.your.invitation' : 'conversations.invitation')
+        : (_mine ? 'profile.contact.your.request' : 'conversations.request') %}
 {% else %}
     {% set _tone = 'message' %}
 {% endif %}
@@ -18,19 +27,26 @@
 <a class="p-pro-contact-status p-pro-contact-status--{{ _tone }} {{ link_class ?? 'js-contact-open' }}{{ _unread ? ' is-unread' : '' }}{{ place is defined ? ' p-pro-contact-status--' ~ place : '' }}"
    href="{{ path('conversation_view', { id: _m.id }) }}"
    data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+    <span class="p-pro-contact-status__icon" aria-hidden="true">
+        <i class="fas {{ _stay ? (_invite ? 'fa-handshake' : 'fa-bed') : 'fa-envelope' }}"></i>
+    </span>
     {% if _stay %}
-        <i class="fas {{ _stay.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' }}" aria-hidden="true"></i>
         <span class="p-pro-contact-status__text">
-            {{ _stay.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}
+            <strong>{{ _label|trans }}</strong>
             · {{ _stay.arrival|format_date(pattern='d MMM') }}{% if _stay.departure %} – {{ _stay.departure|format_date(pattern='d MMM') }}{% endif %}
+            {%- if _strip and _stay.departure and _stay.departure > _stay.arrival %} · {{ 'contact.trip.nights'|trans({count: _stay.arrival.startOfDay.diffInDays(_stay.departure.startOfDay)|round}) }}{% endif %}
         </span>
-        <span class="p-pro-contact-status__state">{{ ('request.status.' ~ _state)|trans }}</span>
+        <span class="p-pro-contact-status__state">
+            {% if _strip %}<i class="fas {{ { success: 'fa-check', danger: 'fa-xmark', maybe: 'fa-question' }[_tone] ?? 'fa-hourglass-half' }}" aria-hidden="true"></i>{% endif %}
+            {{ ('request.status.' ~ _state)|trans }}
+        </span>
     {% else %}
-        <i class="fas fa-envelope" aria-hidden="true"></i>
         <span class="p-pro-contact-status__text">
-            {{ 'profile.contact.conversation'|trans }} · {{ _sent|format_date(pattern=(_sent|date('Y') == 'now'|date('Y') ? 'd MMM' : 'd MMM y')) }}
+            <strong>{{ 'profile.contact.conversation'|trans }}</strong>
+            · {{ _sent|format_date(pattern=(_sent|date('Y') == 'now'|date('Y') ? 'd MMM' : 'd MMM y')) }}
         </span>
     {% endif %}
     {% if _unread %}<span class="p-pro-contact-status__dot" aria-label="{{ 'conversations.unread'|trans }}"></span>{% endif %}
+    {% if _strip %}<span class="p-pro-contact-status__open">{{ 'profile.contact.open'|trans }}</span>{% endif %}
     <i class="fas fa-chevron-right p-pro-contact-status__arrow" aria-hidden="true"></i>
 </a>

@@ -17,6 +17,7 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -159,6 +160,7 @@ class PasswordController extends AbstractController
         ProfileSubmenu $profileSubmenu,
         PasswordModel $passwordModel,
         ChangeProfilePictureGlobals $globals,
+        Security $security,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -179,7 +181,11 @@ class PasswordController extends AbstractController
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
 
-                return $this->redirectToRoute('_logout_main');
+                // Stay signed in (a changed password would end the session) and go back to the dashboard
+                $security->login($member, 'form_login');
+                $this->addTranslatedFlash('notice', 'flash.password.changed');
+
+                return $this->redirectToRoute('homepage');
             }
 
             // Say why nothing happened instead of showing the form again as it was

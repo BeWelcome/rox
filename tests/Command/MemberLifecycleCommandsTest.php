@@ -109,6 +109,11 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
     {
         $this->setMember('member-2', MemberStatusType::ASKED_TO_LEAVE, lastActive: '-2 years');
         $memberId = (int) $this->member('member-2')['id'];
+        $otherId = (int) $this->member('member-3')['id'];
+        // a private note of the member, with a category, and one another member wrote about them
+        $note = $this->note($memberId, $otherId);
+        $this->connection->executeStatement("INSERT INTO note_category (note_id, name) VALUES (?, 'zztest')", [$note]);
+        $noteAbout = $this->note($otherId, $memberId);
         $this->connection->executeStatement(
             "INSERT INTO member_translation (object_id, locale, field, content)
              VALUES (?, 'de', 'aboutMe', 'Über mich')",
@@ -130,6 +135,9 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
             self::assertSame(0, $this->rows('gallery WHERE user_id_foreign = ?', [$memberId]));
             self::assertSame(0, $this->rows('gallery_items WHERE user_id_foreign = ?', [$memberId]));
             self::assertSame(0, $this->rows('member_translation WHERE object_id = ?', [$memberId]));
+            self::assertSame(0, $this->rows('mycontacts WHERE IdMember = ?', [$memberId]), 'the member\'s notes stayed');
+            self::assertSame(0, $this->rows('note_category WHERE note_id = ?', [$note]), 'the note\'s categories stayed');
+            self::assertSame(1, $this->rows('mycontacts WHERE id = ?', [$noteAbout]), 'a note about the member went');
             self::assertSame(0, $this->rows(
                 "message WHERE (sender_id = :id AND FIND_IN_SET('senderpurged', IFNULL(delete_request, '')) = 0)
                  OR (receiver_id = :id AND FIND_IN_SET('receiverpurged', IFNULL(delete_request, '')) = 0)",
@@ -140,6 +148,124 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         } finally {
             $filesystem->remove([$avatars . $memberId . '_30_30', $avatars . $memberId . '9999_30_30']);
         }
+    }
+
+    public function testTheRetentionRemovesWhatTiesTheMemberToOthersAndKeepsTheContributions(): void
+    {
+        $this->setMember('member-2', MemberStatusType::ASKED_TO_LEAVE, lastActive: '-2 years');
+        $memberId = (int) $this->member('member-2')['id'];
+        $otherId = (int) $this->member('member-3')['id'];
+        $activeId = (int) $this->member('member-4')['id'];
+        $now = new DateTime()->format('Y-m-d H:i:s');
+        $connection = $this->connection;
+
+        // what ties the member to others or only served them
+        $connection->executeStatement('INSERT INTO friend (left_id, right_id, requester_id, created) VALUES (?, ?, ?, NOW())', [$memberId, $otherId, $memberId]);
+        $connection->executeStatement('INSERT INTO profilesvisits (IdMember, IdVisitor, created, updated) VALUES (?, ?, NOW(), NOW()), (?, ?, NOW(), NOW())', [$memberId, $otherId, $otherId, $memberId]);
+        $connection->executeStatement("INSERT INTO member_photo (member_id, FilePath, created) VALUES (?, 'zztest.jpg', NOW())", [$memberId]);
+        $connection->executeStatement("INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) SELECT ?, id, 'zztest', NOW(), NOW() FROM preferences ORDER BY id LIMIT 1", [$memberId]);
+        $connection->executeStatement("INSERT INTO passwordreset (member_id, token, generated) VALUES (?, 'zztest-token', NOW())", [$memberId]);
+        $connection->executeStatement("INSERT INTO members_threads_subscribed (IdSubscriber, IdThread, ActionToWatch, UnSubscribeKey, notificationsEnabled, created) SELECT ?, id, 'replies', 'zztestkey', 1, NOW() FROM forum_thread ORDER BY id LIMIT 1", [$memberId]);
+        $connection->executeStatement("INSERT INTO posts_notificationqueue (IdMember, IdPost, IdSubscription, TableSubscription, Status, Type, created) SELECT ?, id, 0, 'NotSet', 'ToSend', 'reply', NOW() FROM forum_post ORDER BY id LIMIT 1", [$memberId]);
+        $connection->executeStatement('INSERT INTO member_activity_notification_sent (member_id, activity_id, created) SELECT ?, id, NOW() FROM activity ORDER BY id LIMIT 1', [$memberId]);
+        $memberships = $this->rows('group_membership WHERE member_id = ?', [$memberId]);
+        self::assertGreaterThan(0, $memberships, 'the fixtures give member-2 group memberships');
+
+        // answers to an activity that is over and to one still to come
+        [$past, $future] = array_map('intval', $connection->fetchFirstColumn('SELECT id FROM activity ORDER BY id LIMIT 2'));
+        $connection->executeStatement('UPDATE activity SET starts = ? - INTERVAL 3 DAY, ends = ? - INTERVAL 2 DAY WHERE id = ?', [$now, $now, $past]);
+        $connection->executeStatement('UPDATE activity SET starts = ? + INTERVAL 3 DAY, ends = ? + INTERVAL 4 DAY WHERE id = ?', [$now, $now, $future]);
+        $connection->executeStatement('DELETE FROM activity_attendee WHERE attendee_id = ? AND activity_id IN (?, ?)', [$memberId, $past, $future]);
+        $connection->executeStatement("INSERT INTO activity_attendee (activity_id, attendee_id, organizer, status, comment) VALUES (?, ?, 0, 1, 'I come with my friend Anna Smith'), (?, ?, 0, 1, 'See you')", [$past, $memberId, $future, $memberId]);
+
+        // a donation
+        $connection->executeStatement("INSERT INTO donation (donor_id, email, status_private, created, amount, money, name_given, reference_paypal, member_comment, system_comment) VALUES (?, 'zztest@example.org', 'showamountonly', NOW(), '10.00', 'EUR', 'Zztest Name', 'zztestref', 'For the servers', '')", [$memberId]);
+
+        // a conversation with a member retired before (a hosting request), and one with an active member
+        $connection->executeStatement("UPDATE member SET Username = CONCAT('retired_', id), Status = ? WHERE id = ?", [MemberStatusType::ASKED_TO_LEAVE, $otherId]);
+        $connection->executeStatement('INSERT INTO request (arrival, number_of_travellers, status, created) VALUES (NOW() + INTERVAL 10 DAY, 1, 0, NOW())');
+        $request = (int) $connection->lastInsertId();
+        $retiredConversation = $this->message($memberId, $otherId, $request);
+        $activeConversation = $this->message($memberId, $activeId, null);
+
+        // a trip with a stop another member invited to, and one without invitations
+        $connection->executeStatement("INSERT INTO trip (creator_id, summary, description, count_of_travellers, invitation_radius, created, additional_info) VALUES (?, 'Zztest trip of Anna', 'Find me on @anna', 1, 0, NOW(), 'none')", [$memberId]);
+        $trip = (int) $connection->lastInsertId();
+        $location = (int) $connection->fetchOne('SELECT location_id FROM leg ORDER BY id LIMIT 1');
+        $connection->executeStatement('INSERT INTO leg (trip_id, location_id, arrival, departure) VALUES (?, ?, NOW() + INTERVAL 5 DAY, NOW() + INTERVAL 6 DAY), (?, ?, NOW() + INTERVAL 7 DAY, NOW() + INTERVAL 8 DAY)', [$trip, $location, $trip, $location]);
+        [$invitedLeg, $otherLeg] = array_map('intval', $connection->fetchFirstColumn('SELECT id FROM leg WHERE trip_id = ? ORDER BY id', [$trip]));
+        $connection->executeStatement('INSERT INTO request (arrival, number_of_travellers, status, created, invite_for_leg) VALUES (NOW() + INTERVAL 5 DAY, 1, 0, NOW(), ?)', [$invitedLeg]);
+        $invitation = (int) $connection->lastInsertId();
+        $this->message($activeId, $memberId, $invitation);
+        // a trip without any invitation
+        $connection->executeStatement("INSERT INTO trip (creator_id, summary, description, count_of_travellers, invitation_radius, created, additional_info) VALUES (?, 'Zztest trip 2', '', 1, 0, NOW(), 'none')", [$memberId]);
+        $gone = (int) $connection->lastInsertId();
+        $connection->executeStatement('INSERT INTO leg (trip_id, location_id, arrival, departure) VALUES (?, ?, NOW() + INTERVAL 5 DAY, NOW() + INTERVAL 6 DAY)', [$gone, $location]);
+
+        $this->execute('data:retention');
+
+        $removed = [
+            'friend WHERE left_id = :id OR right_id = :id OR requester_id = :id',
+            'group_membership WHERE member_id = :id',
+            'profilesvisits WHERE IdMember = :id OR IdVisitor = :id',
+            'member_photo WHERE member_id = :id',
+            'memberspreferences WHERE IdMember = :id',
+            'passwordreset WHERE member_id = :id',
+            'members_threads_subscribed WHERE IdSubscriber = :id',
+            'posts_notificationqueue WHERE IdMember = :id',
+            'member_activity_notification_sent WHERE member_id = :id',
+        ];
+        foreach ($removed as $from) {
+            self::assertSame(0, $this->rows($from, ['id' => $memberId]), $from);
+        }
+        self::assertNull($connection->fetchOne('SELECT NewEmail FROM member WHERE id = ?', [$memberId]) ?: null);
+
+        // the answer to the activity that is over stays without its comment, the one to come goes
+        self::assertSame('', $connection->fetchOne('SELECT comment FROM activity_attendee WHERE activity_id = ? AND attendee_id = ?', [$past, $memberId]));
+        self::assertSame(0, $this->rows('activity_attendee WHERE activity_id = ? AND attendee_id = ?', [$future, $memberId]));
+
+        // the donation stays without who gave it
+        $donation = $connection->fetchAssociative("SELECT donor_id, email, name_given, member_comment, amount FROM donation WHERE reference_paypal = 'zztestref'");
+        self::assertSame([null, '', '', '', '10.00'], [$donation['donor_id'], $donation['email'], $donation['name_given'], $donation['member_comment'], $donation['amount']]);
+
+        // the conversation with the retired member goes with its request, the other one stays
+        self::assertSame(0, $this->rows('message WHERE id = ?', [$retiredConversation]));
+        self::assertSame(0, $this->rows('request WHERE id = ?', [$request]));
+        self::assertSame(1, $this->rows('message WHERE id = ?', [$activeConversation]));
+
+        // the invited stop stays with its trip, without the trip's texts; the others go
+        self::assertSame(1, $this->rows('leg WHERE id = ?', [$invitedLeg]));
+        self::assertSame(0, $this->rows('leg WHERE id = ?', [$otherLeg]));
+        self::assertSame(['', ''], array_values($connection->fetchAssociative('SELECT summary, description FROM trip WHERE id = ?', [$trip])));
+        self::assertSame(0, $this->rows('trip WHERE id = ?', [$gone]));
+    }
+
+    /**
+     * @return int the id of a message from $sender to $receiver, about the request if one is given
+     */
+    private function message(int $sender, int $receiver, ?int $request): int
+    {
+        $this->connection->executeStatement(
+            "INSERT INTO message (sender_id, receiver_id, initiator_id, request_id, message, created, status, folder, spam_info)
+             VALUES (?, ?, ?, ?, 'Zztest message', NOW(), 'Sent', 'Normal', 'NotSpam')",
+            [$sender, $receiver, $sender, $request],
+        );
+
+        return (int) $this->connection->lastInsertId();
+    }
+
+    /**
+     * @return int the id of a private note by $owner about $about
+     */
+    private function note(int $owner, int $about): int
+    {
+        $this->connection->executeStatement(
+            "INSERT INTO mycontacts (IdMember, IdContact, Category, Comment, created, updated)
+             VALUES (?, ?, 'zztest', 'Zztest note', NOW(), NOW())",
+            [$owner, $about],
+        );
+
+        return (int) $this->connection->lastInsertId();
     }
 
     private function execute(string $command): void

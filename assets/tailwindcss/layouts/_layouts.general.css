@@ -14360,3 +14360,26 @@ a.c-home-trip__name:hover { color: #c2410c; }
   body:has(.p-group-head--sub) #main_menu { display: none; }
   body:has(.p-group-head--sub) main { margin-top: 0; padding-top: 0; }
 }
+
+/* Inbox on phones: the list head and the conversation head in orange, white text, light round buttons */
+@media (max-width: 767.98px) {
+  .c-inbox-list__head,
+  .c-inbox__list .c-inbox-list__head { margin-bottom: 0.75rem; background: #f37000; }
+  .c-inbox__list .c-inbox-list__title { color: #fff; }
+  .c-inbox__list .c-inbox-list__back,
+  .c-inbox__list .c-inbox-list__back:hover,
+  .c-inbox__list .c-inbox-list__select,
+  .c-inbox__list .c-inbox-list__select:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__list .c-inbox-list.is-selecting .c-inbox-list__select.js-inbox-select,
+  .c-inbox__list .c-inbox-more[open] > .c-inbox-list__select { background: #fff; color: #c2410c; box-shadow: none; }
+  .c-inbox__list .c-inbox-list.is-selecting .c-inbox-more__toggle { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__pane .c-inbox-head { border-bottom: 0; background: #f37000; }
+  .c-inbox__pane .c-inbox-head__back,
+  .c-inbox__pane .c-inbox-head__back:hover,
+  .c-inbox__pane .c-inbox-head__name,
+  .c-inbox__pane .c-inbox-head__name:hover { color: #fff; }
+  .c-inbox__pane .c-inbox-head h1.c-inbox-head__subject { color: rgba(255, 255, 255, 0.85); }
+  .c-inbox__pane .c-inbox-head__menu summary,
+  .c-inbox__pane .c-inbox-head__menu summary:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__pane .c-inbox-head .c-inbox-avatar--l { box-shadow: 0 0 0 2px #fff; }
+}

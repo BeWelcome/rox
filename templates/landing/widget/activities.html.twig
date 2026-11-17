@@ -24,11 +24,15 @@
                 <span class="c-home-activity__title">{{ activity.title }}</span>
                 <span class="c-home-activity__meta">
                     <span class="c-home-activity__soon{{ _days <= 1 ? ' c-home-activity__soon--now' }}">{{ _soon }}</span>
-                    {%- if activity.online -%}
-                        <i class="fas fa-video" aria-hidden="true"></i> {{ 'landing.dash.online'|trans }}
-                    {%- else -%}
-                        <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.name }}
-                    {%- endif %} · {{ activity.starts|format_time('short') -}}
+                    {#- Phones: In 3 days · 7:00 PM · Berlin (the order and the dots come from the CSS) -#}
+                    <span class="c-home-activity__place">
+                        {%- if activity.online -%}
+                            <i class="fas fa-video" aria-hidden="true"></i> {{ 'landing.dash.online'|trans }}
+                        {%- else -%}
+                            <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.name }}
+                        {%- endif -%}
+                    </span>
+                    <span class="c-home-activity__time">{{ activity.starts|format_time('short') }}</span>
                 </span>
             </span>
             {% if _coming %}

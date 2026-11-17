@@ -40,7 +40,7 @@
                 </button>
                 {% if stops|length > 0 %}
                     <span class="c-contact-tripview__route">
-                        <i class="fas fa-route" aria-hidden="true"></i>
+                        <i class="fas fa-plane" aria-hidden="true"></i>
                         {{ (stops|first).location.name }}{% if stops|length > 1 %} → {{ (stops|last).location.name }}{% endif %}
                     </span>
                 {% endif %}

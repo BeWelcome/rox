@@ -25,29 +25,45 @@
         <h1 class="c-embed-sent__title">{{ 'trip.created.title'|trans }}</h1>
         <p class="c-embed-sent__text">{{ 'trip.created.text'|trans }}</p>
 
-        {# The trip: its title, from the first arrival to the last departure, how many stops #}
-        {% set first_day = null %}{% set last_day = null %}
-        {% for leg in trip.legs %}
-            {% if leg.arrival and (first_day is null or leg.arrival < first_day) %}{% set first_day = leg.arrival %}{% endif %}
-            {% if leg.departure and (last_day is null or leg.departure > last_day) %}{% set last_day = leg.departure %}{% endif %}
-        {% endfor %}
-        <div class="c-embed-sent__card">
-            <span class="c-embed-sent__avatar c-embed-sent__avatar--icon" aria-hidden="true"><i class="fas fa-route"></i></span>
-            <div class="c-embed-sent__card-text">
-                <strong class="c-embed-sent__subject">{{ trip.summary }}</strong>
-                <span class="c-embed-sent__stay">
-                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                    {% if first_day and last_day %}
-                        {% set sameYear = first_day|date('Y') == last_day|date('Y') %}
-                        {{ first_day|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }} – {{ last_day|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }} ·
-                    {% endif %}
-                    {{ 'contact.trip.stops'|trans({ count: trip.legs|length }) }}
-                </span>
+        {# The trip as hosts see it: plane tile, title, travellers and how far hosts can be; the stops in
+           order (number, town, dates, nights, what the traveller looks for there); View trip at the bottom #}
+        {% set first_place = (trip.legs|first) ? (trip.legs|first).location : null %}
+        <div class="c-embed-sent__trip">
+            <div class="c-embed-sent__trip-head">
+                <span class="c-embed-sent__avatar c-embed-sent__avatar--icon" aria-hidden="true"><i class="fas fa-plane"></i></span>
+                <div class="c-embed-sent__card-text">
+                    <strong class="c-embed-sent__subject">{{ trip.summary }}</strong>
+                    <span class="c-embed-sent__stay">
+                        <i class="fas fa-user-group" aria-hidden="true"></i> {{ 'trip.review.travellers'|trans({ count: trip.countOfTravellers }) }}
+                        · <i class="fas fa-bullseye" aria-hidden="true"></i> {{ trip.invitationRadius }} km
+                    </span>
+                </div>
             </div>
+            <ol class="c-embed-sent__stops">
+                {% for leg in trip.legs %}
+                    {% set _nights = leg.arrival and leg.departure ? date(leg.departure|date('Y-m-d')).diff(date(leg.arrival|date('Y-m-d'))).days : 0 %}
+                    <li class="c-embed-sent__stop">
+                        <span class="c-embed-sent__stop-num">{{ loop.index }}</span>
+                        <span class="c-embed-sent__stop-text">
+                            <strong>{{ leg.location ? leg.location.name : '' }}</strong>
+                            <span>
+                                {%- if leg.arrival -%}
+                                    {{ leg.arrival|format_date(pattern='d MMM') }}{% if leg.departure %} – {{ leg.departure|format_date(pattern='d MMM') }}{% endif %}
+                                {%- endif -%}
+                                {%- if _nights > 0 %} · {{ 'contact.trip.nights'|trans({ count: _nights }) }}{% endif -%}
+                            </span>
+                        </span>
+                        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                            <span class="c-embed-sent__stop-tag"><i class="fas fa-house" aria-hidden="true"></i> {{ 'landing.dash.needs.host'|trans }}</span>
+                        {% elseif constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+                            <span class="c-embed-sent__stop-tag c-embed-sent__stop-tag--plain"><i class="fas fa-users" aria-hidden="true"></i> {{ 'trip.option.meet.locals'|trans }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+            <a class="c-embed-sent__trip-link" href="{{ path('trip_show', { id: trip.id }) }}" target="_top">{{ 'trip.created.view'|trans }} <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
         </div>
 
-        {# The first stop's town: its members, searched around it (the search page, out of the panel) #}
-        {% set first_place = (trip.legs|first) ? (trip.legs|first).location : null %}
         <div class="c-embed-sent__actions">
             {% if first_place %}
                 {# Posted like the home page's place search (the search form checks its token, a plain link is refused) #}
@@ -64,22 +80,14 @@
                     } %}
                         <input type="hidden" name="tiny[{{ _name }}]" value="{{ _value }}">
                     {% endfor %}
-                    <button type="submit" class="c-embed-sent__search">
-                        <span class="c-embed-sent__search-icon" aria-hidden="true"><i class="fas fa-magnifying-glass-location"></i></span>
-                        <span class="c-embed-sent__search-text">
-                            <strong>{{ 'trip.created.search'|trans({ place: first_place.name }) }}</strong>
-                            <span>{{ 'trip.created.search.hint'|trans }}</span>
-                        </span>
-                        <i class="fas fa-arrow-right c-embed-sent__search-go" aria-hidden="true"></i>
+                    <button type="submit" class="c-embed-sent__btn c-embed-sent__btn--primary">
+                        <i class="fas fa-magnifying-glass-location" aria-hidden="true"></i> {{ 'trip.created.search'|trans({ place: first_place.name }) }}
                     </button>
                 </form>
             {% endif %}
             <button type="button" class="c-embed-sent__btn{{ first_place ? '' : ' c-embed-sent__btn--primary' }} js-embed-sent-close">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'contact.sent.back.home'|trans }}
             </button>
-            <a class="c-embed-sent__btn" href="{{ path('trip_show', { id: trip.id }) }}" target="_top">
-                <i class="fas fa-route" aria-hidden="true"></i> {{ 'trip.created.see'|trans }}
-            </a>
         </div>
     </div>
     <script>

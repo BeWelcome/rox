@@ -25,7 +25,7 @@
 <section class="p-trips__body">
   {% if trips.nbResults != 0 %}
     <div class="p-trips__toolbar">
-      <p class="p-trips__count"><i class="fa fa-route" aria-hidden="true"></i> {{ trips.nbResults }}</p>
+      <p class="p-trips__count"><i class="fa fa-plane" aria-hidden="true"></i> {{ trips.nbResults }}</p>
     </div>
 
     <div class="p-trips__list">
@@ -33,7 +33,7 @@
         {% set first = trip.legs|first %}
         {% set last = trip.legs|last %}
         <article class="p-trips-trip{% if trip.isExpired %} is-over{% endif %}">
-          <span class="p-trips-trip__icon" aria-hidden="true"><i class="fa fa-route"></i></span>
+          <span class="p-trips-trip__icon" aria-hidden="true"><i class="fa fa-plane"></i></span>
           <div class="p-trips-trip__body">
             <p class="p-trips-trip__head">
               <a class="p-trips-trip__title" href="{{ path('trip_show', { id: trip.id }) }}">{{ trip.summary }}</a>

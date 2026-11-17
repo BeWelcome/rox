@@ -502,10 +502,10 @@ function initTripsSlider(list) {
     }
     const position = document.querySelector('.js-home-trips-position');
     const track = list ? list.querySelector('.js-home-trips-track') : null;
-    const count = track ? track.children.length : 0;
+    const count = list ? Number(list.dataset.count || 0) : 0;
     // How many come, in the card's head
     if (position) {
-        position.hidden = count < 2;
+        position.hidden = count < 1;
         position.textContent = count;
     }
     if (!track) {

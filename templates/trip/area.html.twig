@@ -36,7 +36,8 @@
           {% endif %}
         {% endfor %}
       </span>
-      {% if _city %}<span class="p-trips__radius-city">{{ 'trips.visitors.of'|trans }} <strong>{{ _city }}</strong></span>{% endif %}
+      {# Large screens: "of Berlin" after the distances; phones: "Near Berlin" with a pin, above them #}
+      {% if _city %}<span class="p-trips__radius-city"><i class="fas fa-location-dot p-trips__radius-pin" aria-hidden="true"></i> <span class="p-trips__radius-of">{{ 'trips.visitors.of'|trans }}</span><span class="p-trips__radius-near">{{ 'landing.visitors.near'|trans }}</span> <strong>{{ _city }}</strong></span>{% endif %}
       {% do radiusForm.radius.setRendered %}
       {{ form_rest(radiusForm) }}
     {{ form_end(radiusForm) }}

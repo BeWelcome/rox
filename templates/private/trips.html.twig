@@ -7,7 +7,7 @@
 {% block content %}
     {{ my.head({group: 'you', title: 'mydata.trips.headline'|trans, abstract: 'mydata.trips.abstract'|trans}) }}
     {% if trips|length == 0 %}
-        {{ my.empty('fa-route', 'mydata.trips.no.trips'|trans) }}
+        {{ my.empty('fa-plane', 'mydata.trips.no.trips'|trans) }}
     {% else %}
         <div class="c-mydata-grid">
             {% for trip in trips %}

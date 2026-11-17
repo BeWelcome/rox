@@ -61,14 +61,11 @@
         <div class="p-act-facts__text">
             {#- Over several days: both days on the first line, both times under -#}
             {% if sameDay %}
-                <strong>{{ activity.starts|format_date(pattern='EEEE, d MMMM') }}</strong>
+                <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} · {{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}</strong>
             {% else %}
                 <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} <i class="fas fa-arrow-right p-act-facts__to" aria-hidden="true"></i> {{ activity.ends|format_date(pattern='EEE d MMM') }}</strong>
+                <small>{{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}</small>
             {% endif %}
-            <small>
-                {{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}
-                {% if activity.over %} · {{ 'activities.over'|trans }}{% endif %}
-            </small>
         </div>
         {% if not activity.cancelled %}
             {#- Google and Outlook open the event already filled in; Apple and the others take the .ics file -#}
@@ -77,7 +74,7 @@
             {% set _cal_place = activity.online ? 'landing.dash.online'|trans : ((activity.address ? activity.address ~ ', ' : '') ~ activity.location.fullname) %}
             {% set _cal_details = url('activities_show', { id: activity.id }) %}
             <div class="p-act-menu">
-                <button type="button" class="p-act-chip js-act-menu" aria-haspopup="true" aria-expanded="false"><i class="fas fa-calendar-plus" aria-hidden="true"></i> {{ 'activities.panel.calendar'|trans }}</button>
+                <button type="button" class="p-act-chip p-act-chip--icon js-act-menu" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'activities.panel.calendar'|trans }}"><i class="far fa-calendar-plus" aria-hidden="true"></i></button>
                 <div class="p-act-menu__list" hidden>
                     <a class="p-act-menu__item" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text={{ activity.title|url_encode }}&amp;dates={{ _cal_start }}/{{ _cal_end }}&amp;details={{ _cal_details|url_encode }}&amp;location={{ _cal_place|url_encode }}"><i class="fab fa-google" aria-hidden="true"></i> Google Calendar</a>
                     <a class="p-act-menu__item" target="_blank" rel="noopener" href="https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&amp;rru=addevent&amp;subject={{ activity.title|url_encode }}&amp;startdt={{ activity.starts|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}&amp;enddt={{ activity.ends|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}&amp;body={{ _cal_details|url_encode }}&amp;location={{ _cal_place|url_encode }}"><i class="fab fa-microsoft" aria-hidden="true"></i> Outlook</a>
@@ -96,34 +93,49 @@
         {% else %}
             <span class="p-act-facts__icon" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
             <div class="p-act-facts__text">
-                <strong>{{ activity.address ?: activity.location.name }}</strong>
-                <small>
+                {#- The flag and the place; under it the rest of the place's full name (Land Berlin, Germany) -#}
+                {% set _rest = activity.location.fullname %}
+                {% if not activity.address and _rest starts with activity.location.name ~ ', ' %}{% set _rest = _rest|slice((activity.location.name ~ ', ')|length) %}{% endif %}
+                <strong>
                     {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" aria-hidden="true"></i>{% endif %}
-                    {{ activity.location.fullname }}
-                </small>
+                    {{ activity.address ?: activity.location.name }}
+                </strong>
+                <small>{{ _rest }}</small>
             </div>
             {% if activity.location.latitude is not null %}
                 {% set _lat = activity.location.latitude %}
                 {% set _lng = activity.location.longitude %}
-                <a class="p-act-chip" href="https://www.openstreetmap.org/?mlat={{ _lat }}&amp;mlon={{ _lng }}#map=15/{{ _lat }}/{{ _lng }}" target="_blank" rel="noopener"><i class="far fa-map" aria-hidden="true"></i> {{ 'activities.panel.map'|trans }}</a>
+                {#- Google Maps: the street address when there is one, else the place's point -#}
+                {% set _query = activity.address ? activity.address ~ ', ' ~ activity.location.fullname : _lat ~ ',' ~ _lng %}
+                <a class="p-act-chip p-act-chip--icon" href="https://www.google.com/maps/search/?api=1&amp;query={{ _query|url_encode }}" target="_blank" rel="noopener" aria-label="{{ 'activities.panel.map'|trans }}"><i class="far fa-map" aria-hidden="true"></i></a>
             {% endif %}
         {% endif %}
     </div>
-    {% if _organizer %}
-        {% set _org_name = _organizer.attendee.username %}
-        <div class="p-act-facts__row">
-            <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}" tabindex="-1" aria-hidden="true"><img class="p-act-facts__avatar" src="{{ path('avatar', { username: _org_name, size: 72 }) }}" alt="" width="36" height="36" loading="lazy"></a>
-            <div class="p-act-facts__text">
-                <small>{{ 'activities.panel.organised'|trans }}</small>
-                <strong>
-                    <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}">{{ _org_name }}</a>
-                    {% if member and _org_name == member.username %}<span class="p-act-you">{{ 'activities.panel.you'|trans }}</span>{% endif %}
-                    {% if attendees.organizers|length > 1 %}<span class="p-act-more">+{{ attendees.organizers|length - 1 }}</span>{% endif %}
-                </strong>
-            </div>
-        </div>
-    {% endif %}
 </section>
+
+{#- Who goes: a few faces, the count, and who organises it -#}
+{% set _yes = attendees.yes %}
+<div class="p-act-who">
+    {% if _yes|length > 0 %}
+        <span class="p-act-who__faces" aria-hidden="true">
+            {%- for person in _yes|slice(0, 3) -%}
+                <img src="{{ path('avatar', { username: person.attendee.username, size: 72 }) }}" alt="" width="40" height="40" loading="lazy">
+            {%- endfor -%}
+        </span>
+    {% endif %}
+    <div class="p-act-who__text">
+        <strong>{{ _yes|length > 0 ? 'activities.panel.going.count'|trans({ count: _yes|length }) : 'activities.panel.going'|trans({ count: 0 }) }}</strong>
+        {% if _organizer %}
+            {% set _org_name = _organizer.attendee.username %}
+            <small>
+                {{ 'activities.panel.organised'|trans }}
+                <a class="js-act-member" href="{{ path('members_profile', { username: _org_name }) }}" target="_top" data-preview="{{ path('search_member_preview', { username: _org_name }) }}">{{ _org_name }}</a>
+                {% if member and _org_name == member.username %}<span class="p-act-you">{{ 'activities.panel.you'|trans }}</span>{% endif %}
+                {% if attendees.organizers|length > 1 %}<span class="p-act-more">+{{ attendees.organizers|length - 1 }}</span>{% endif %}
+            </small>
+        {% endif %}
+    </div>
+</div>
 
 {% if _can_edit %}{{ _actions }}{% endif %}
 

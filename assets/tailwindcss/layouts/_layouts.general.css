@@ -14131,23 +14131,255 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .p-trips-review__when > span:first-child { white-space: nowrap; }
 .p-trips-review__nights { margin-top: 0; padding: 0.1rem 0.5rem; font-size: 0.6875rem; }
 
-/* Trip created: "Find hosts in Berlin", the main way on, a white card button with the place
-   search icon in an orange disc, a hint under it and an arrow; a soft halo calls for it */
-.c-embed-sent--trip .c-embed-sent__actions { max-width: 21rem; }
-.c-embed-sent__search-form { margin: 0 0 0.35rem; }
-.c-embed-sent__search { position: relative; display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.85rem 1rem 0.85rem 0.85rem; border: 0; border-radius: 1.1rem; background: #fff; color: #0f172a; text-align: left; box-shadow: 0 12px 28px rgba(120, 40, 0, 0.3); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; animation: bw-trip-search-halo 2.4s ease-out 2.3s 2; }
-.c-embed-sent__search:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(120, 40, 0, 0.35); }
-.c-embed-sent__search:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.8); outline-offset: 3px; }
-.c-embed-sent__search-icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: #f37000; color: #fff; }
-.c-embed-sent__search-icon i, .c-embed-sent__search-icon svg { width: 1.15rem; height: 1.15rem; }
-.c-embed-sent__search-text { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.25; }
-.c-embed-sent__search-text strong { color: #0f172a; font-size: 1.0625rem; font-weight: 800; }
-.c-embed-sent__search-text span { margin-top: 0.15rem; color: #64748b; font-size: 0.8125rem; font-weight: 500; }
-.c-embed-sent__search-go { flex-shrink: 0; width: 1rem; height: 1rem; color: #f37000; transition: transform 0.15s ease; }
-.c-embed-sent__search:hover .c-embed-sent__search-go { transform: translateX(3px); }
-@keyframes bw-trip-search-halo {
-  0% { box-shadow: 0 12px 28px rgba(120, 40, 0, 0.3), 0 0 0 0 rgba(255, 255, 255, 0.7); }
-  70% { box-shadow: 0 12px 28px rgba(120, 40, 0, 0.3), 0 0 0 14px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 12px 28px rgba(120, 40, 0, 0.3), 0 0 0 0 rgba(255, 255, 255, 0); }
+/* Home cards: See all always last, at the top right; the radius just before it; the + of the
+   activities right next to the title */
+.c-home-dash .c-home-dash__head .c-home-dash__radius-wrap { margin-left: auto; }
+.c-home-dash .c-home-dash__head .c-home-dash__radius-wrap ~ .c-home-dash__seeall { margin-left: 0.75rem; }
+.c-home-dash .c-home-dash__head .c-home-dash__add { width: 2rem; height: 2rem; margin-left: 0; font-size: 0.8rem; }
+.c-home-dash .c-home-dash__head .c-home-dash__add ~ .c-home-dash__seeall { margin-left: auto; }
+
+/* Coming to…: one row per trip (landing/widget/_leg_row): face, name + what they look for, how
+   soon · dates · nights · travellers, the title and text on one line, a round chevron; the row opens the trip */
+.c-home-dash .c-home-visits { gap: 0.25rem; padding: 0.25rem 0.75rem 1rem; }
+.c-home-visit { position: relative; display: flex; align-items: center; gap: 1rem; padding: 0.8rem 0.75rem; border-radius: 1rem; transition: background-color 0.15s ease; }
+.c-home-visit:hover { background: #fafafa; }
+.c-home-visit__cover { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.c-home-visit__cover:focus-visible { outline: 2px solid #ea7a2e; outline-offset: 2px; }
+.c-home-visit__avatar { flex-shrink: 0; width: 3.25rem; height: 3.25rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
+.c-home-visit__body { flex: 1; min-width: 0; }
+.c-home-visit__body p { margin: 0; }
+.c-home-visit__top { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+.c-home-visit__name { overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.0625rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-visit__tag { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem; border-radius: 0.5rem; background: #e8f6ea; color: #2f7d3a; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
+.c-home-visit__tag i, .c-home-visit__tag svg { width: 0.75rem; height: 0.75rem; }
+.c-home-visit__tag--done { background: #dcfce7; color: #166534; }
+.c-home-visit__tag--plain { background: #f1f5f9; color: #475569; }
+.c-home-visit__when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0; margin-top: 0.3rem !important; color: #334155; font-size: 0.9375rem; }
+.c-home-visit__when > span + span::before { content: "·"; margin: 0 0.55rem; color: #cbd5e1; font-weight: 700; }
+.c-home-visit__soon { color: #0f172a; font-weight: 700; }
+.c-home-visit__soon.is-soon { color: #c2410c; }
+.c-home-visit__text { margin-top: 0.2rem !important; overflow: hidden; color: #94a3b8; font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 767.98px) {
+  .c-home-dash .c-home-visits { padding: 0 0.4rem 0.75rem; }
+  .c-home-visit { gap: 0.75rem; padding: 0.7rem 0.6rem; }
+  .c-home-visit__avatar { width: 2.75rem; height: 2.75rem; }
+  .c-home-visit__when { flex-wrap: nowrap; overflow: hidden; font-size: 0.875rem; white-space: nowrap; }
+  .c-home-visit__when > span + span::before { margin: 0 0.35rem; }
+  .c-home-visit__when > span:nth-child(n+4) { display: none; }
+  .c-home-visit__text { font-size: 0.875rem; }
 }
-@media (prefers-reduced-motion: reduce) { .c-embed-sent__search { animation: none; } }
+
+/* The trip title before its text, darker and bold */
+.c-home-visit__title { color: #334155; font-weight: 700; }
+
+/* Visitors rows: the sizes of the Messages card (name 15px, lines 14px, text 13px, same avatar) */
+.c-home-dash .c-home-visit__name { font-family: inherit; font-size: 0.9375rem; font-weight: 700; }
+.c-home-dash .c-home-visit__tag { padding: 0.15rem 0.5rem; font-size: 0.75rem; }
+.c-home-dash .c-home-visit__when { font-size: 0.875rem; }
+.c-home-dash .c-home-visit__text { font-size: 0.8125rem; }
+.c-home-dash .c-home-visit__avatar { width: 3.5rem; height: 3.5rem; }
+@media (max-width: 767.98px) {
+  .c-home-dash .c-home-visit__avatar { width: 3.25rem; height: 3.25rem; }
+}
+
+/* Confirmation pages of the side panel (request or message sent, trip or activity created...):
+   white, the same animation in green, the card in light grey, the main action as an orange
+   button in a bar at the bottom with the other ways on as quiet links under it */
+.c-embed-sent { justify-content: center; padding: 3.5rem 2rem 9.5rem; background: #fff; color: #0f172a; }
+.c-embed-sent .c-embed-sent__close { top: 1.1rem; right: 1.1rem; background: #f1f5f9; color: #334155; }
+.c-embed-sent .c-embed-sent__close:hover { background: #e2e8f0; }
+.c-embed-sent__scene { width: 8rem; height: 8rem; margin-bottom: 1.25rem; }
+.c-embed-sent__scene::before { content: ""; position: absolute; inset: 0.5rem; border-radius: 50%; background: #f0faf2; transform: scale(0); animation: bw-sent-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s both; }
+.c-embed-sent__plane { color: #ea7a2e; filter: none; font-size: 2.6rem; }
+.c-embed-sent__check { inset: 1.6rem; width: calc(100% - 3.2rem); height: calc(100% - 3.2rem); }
+.c-embed-sent__disc { fill: #dff3e3; filter: none; }
+.c-embed-sent__tick { stroke: #3f8f4f; stroke-width: 5; }
+.c-embed-sent__ring { inset: 0.5rem; border-color: rgba(63, 167, 90, 0.45); }
+.c-embed-sent__spark--1, .c-embed-sent__spark--6 { --c: #fbbf77; }
+.c-embed-sent__spark--2, .c-embed-sent__spark--7 { --c: #f37000; }
+.c-embed-sent__spark--3, .c-embed-sent__spark--8 { --c: #86d39a; }
+.c-embed-sent__spark--4, .c-embed-sent__spark--9 { --c: #3fa75a; }
+.c-embed-sent__spark--5, .c-embed-sent__spark--10 { --c: #fcd9b6; }
+.c-embed-sent .c-embed-sent__title { color: #0f172a; text-shadow: none; font-size: 1.6rem; }
+.c-embed-sent .c-embed-sent__text { max-width: 21rem; color: #475569; }
+
+.c-embed-sent__card { gap: 0.85rem; max-width: 27rem; margin-top: 1.6rem; padding: 0.85rem 1rem; border: 1px solid #eef0f3; border-radius: 1rem; background: #f8fafc; }
+.c-embed-sent__avatar { width: 3rem; height: 3rem; border: 0; background: #f1f5f9; }
+.c-embed-sent__avatar--icon { border-radius: 0.8rem; background: #fff1e6; color: #ea7a2e; font-size: 1.1rem; }
+.c-embed-sent__card-text { flex: 1; }
+.c-embed-sent .c-embed-sent__subject { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1rem; }
+.c-embed-sent__stay { overflow: hidden; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.c-embed-sent__stay i, .c-embed-sent__stay svg { color: #94a3b8; }
+.c-embed-sent__card-link, .c-embed-sent__card-link:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.c-embed-sent__card-link:hover { text-decoration: underline; }
+.c-embed-sent__card-link i, .c-embed-sent__card-link svg { width: 0.6rem; height: 0.6rem; }
+
+.c-embed-sent__actions { position: fixed; right: 0; bottom: 0; left: 0; z-index: 2; align-items: center; gap: 0.35rem; max-width: none; margin: 0; padding: 1rem 2rem 1.1rem; border-top: 1px solid #f1f5f9; background: #fff; }
+.c-embed-sent__actions > * { width: 100%; max-width: 27rem; }
+.c-embed-sent__search-form { margin: 0; }
+.c-embed-sent__btn,
+.c-embed-sent__btn:hover { width: auto; padding: 0.5rem 1rem; border: 0; border-radius: 999px; background: none; box-shadow: none; color: #475569; font-size: 0.9375rem; font-weight: 700; }
+.c-embed-sent__btn:hover { color: #0f172a; }
+.c-embed-sent__btn i, .c-embed-sent__btn svg { width: 0.8rem; height: 0.8rem; }
+.c-embed-sent__actions .c-embed-sent__btn:not(.c-embed-sent__btn--primary) { align-self: center; width: auto; }
+.c-embed-sent__btn--primary,
+.c-embed-sent__btn--primary:hover { width: 100%; padding: 0.9rem 1.25rem; background: #f37000; color: #fff; font-size: 1rem; box-shadow: 0 8px 18px rgba(243, 112, 0, 0.25); }
+.c-embed-sent__btn--primary:hover { background: #d9661a; color: #fff; }
+.c-embed-sent__actions > form .c-embed-sent__btn--primary { width: 100%; }
+@media (max-width: 767.98px) {
+  .c-embed-sent { padding: 3rem 1.25rem 9rem; }
+  .c-embed-sent__actions { padding: 0.9rem 1.25rem 1rem; }
+}
+.c-embed-sent, .c-embed-sent *, .c-embed-sent *::before { box-sizing: border-box; }
+.c-embed-sent { padding-bottom: 12rem; }
+@media (max-width: 767.98px) { .c-embed-sent { padding-bottom: 11rem; } }
+
+/* Trip created: the trip as hosts see it, head (plane tile, title, travellers, radius), the stops
+   on a dashed line with dates, nights and what the traveller looks for, View trip at the bottom */
+.c-embed-sent__trip { width: 100%; max-width: 27rem; margin-top: 1.6rem; overflow: hidden; border: 1px solid #eef0f3; border-radius: 1.1rem; background: #fff; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06); text-align: left; animation: bw-sent-up 0.5s ease-out 1.48s both; }
+.c-embed-sent__trip-head { display: flex; align-items: center; gap: 0.85rem; padding: 0.9rem 1rem; background: linear-gradient(180deg, #fff7ef 0%, #fff 100%); border-bottom: 1px solid #f1f5f9; }
+.c-embed-sent__trip .c-embed-sent__stay { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; white-space: normal; }
+.c-embed-sent__trip .c-embed-sent__stay i, .c-embed-sent__trip .c-embed-sent__stay svg { width: 0.75rem; height: 0.75rem; margin: 0; }
+.c-embed-sent__stops { display: flex; flex-direction: column; margin: 0; padding: 0.85rem 1rem 0.35rem; list-style: none; }
+.c-embed-sent__stop { position: relative; display: flex; align-items: flex-start; gap: 0.7rem; padding-bottom: 0.8rem; }
+.c-embed-sent__stop:not(:last-child)::before { content: ""; position: absolute; top: 1.65rem; bottom: 0.2rem; left: calc(0.75rem - 1px); border-left: 2px dashed #f7cfa6; }
+.c-embed-sent__stop-num { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: #f37000; color: #fff; font-size: 0.75rem; font-weight: 800; }
+.c-embed-sent__stop-text { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.3; }
+.c-embed-sent__stop-text strong { overflow: hidden; color: #0f172a; font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
+.c-embed-sent__stop-text span { color: #64748b; font-size: 0.8125rem; font-weight: 500; }
+.c-embed-sent__stop-tag { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; margin-top: 0.1rem; padding: 0.15rem 0.5rem; border-radius: 0.5rem; background: #e8f6ea; color: #2f7d3a; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.c-embed-sent__stop-tag--plain { background: #f1f5f9; color: #475569; }
+.c-embed-sent__stop-tag i, .c-embed-sent__stop-tag svg { width: 0.7rem; height: 0.7rem; }
+.c-embed-sent__trip-link, .c-embed-sent__trip-link:hover { display: flex; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.75rem 1rem; border-top: 1px solid #f1f5f9; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.c-embed-sent__trip-link:hover { background: #fff7ef; }
+.c-embed-sent__trip-link i, .c-embed-sent__trip-link svg { width: 0.6rem; height: 0.6rem; }
+
+/* Visitors page: "of Berlin" on large screens; on phones one white bar, "Near Berlin" with a pin and
+   the count on the first line, the distances as a full-width segmented control under them */
+.p-trips__radius-pin, .p-trips__radius-near { display: none; }
+@media (max-width: 767.98px) {
+  .p-trips .p-trips__toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.85rem; border: 1px solid #eef0f3; border-radius: 1rem; background: #fff; }
+  .p-trips .p-trips__toolbar .p-trips__radius { display: contents; }
+  .p-trips .p-trips__radius .p-trips__radius-label, .p-trips__radius-of { display: none; }
+  .p-trips__radius-city { display: inline-flex; grid-row: 1; grid-column: 1; align-items: center; gap: 0.35rem; min-width: 0; overflow: hidden; color: #64748b; font-size: 0.9375rem; white-space: nowrap; }
+  .p-trips__radius-city strong { overflow: hidden; text-overflow: ellipsis; }
+  .p-trips__radius-pin, .p-trips__radius-near { display: inline; }
+  .p-trips__radius-city .p-trips__radius-pin, .p-trips__radius-city svg.p-trips__radius-pin { display: inline-block; width: 0.8rem; height: 0.8rem; color: #ea7a2e; }
+  .p-trips .p-trips__toolbar .p-trips__count { grid-row: 1; grid-column: 2; font-size: 0.8125rem; white-space: nowrap; }
+  .p-trips__radius-options { display: flex; grid-row: 2; grid-column: 1 / -1; padding: 0.2rem; border: 0; background: #f1f5f9; }
+  .p-trips__radius-option { flex: 1; padding: 0.5rem 0.25rem; text-align: center; }
+  .p-trips__radius-option:hover { background: transparent; }
+  .p-trips__radius-option.is-active, .p-trips__radius-option.is-active:hover { background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); color: #0f172a; }
+}
+
+/* Card heads on phones: icon, title, See all as text at the top right;
+   the activities card's + takes the place of its count, the visitors card says "Visitors" with a compact distance pill */
+@media (max-width: 575.98px) {
+  .c-home-dash .c-home-dash__head { gap: 0.5rem; }
+  .c-home-dash .c-home-dash__head .c-home-dash__icon { width: 2.1rem; height: 2.1rem; font-size: 0.9rem; }
+  .c-home-dash .c-home-dash__head .c-home-dash__title,
+  .c-home-dash__card--trips .c-home-dash__head .c-home-dash__title { flex: 0 1 auto; font-size: 1.1rem; }
+  .c-home-dash .c-home-dash__head .c-home-dash__seeall,
+  .c-home-dash .c-home-dash__head .c-home-dash__radius-wrap ~ .c-home-dash__seeall,
+  .c-home-dash .c-home-dash__head .c-home-dash__add ~ .c-home-dash__seeall { margin-left: auto; padding-left: 0.25rem; font-size: 0.8125rem; }
+  .c-home-dash__card--activities .c-home-dash__head .c-home-dash__count { display: none; }
+  .c-home-dash .c-home-dash__head .c-home-dash__add,
+  .c-home-dash .c-home-dash__head .c-home-dash__add:hover { width: 1.9rem; height: 1.9rem; margin-left: 0; font-size: 0.75rem; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__title-long { display: none; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__title-short { display: inline; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__head .c-home-dash__count { display: none; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__head .c-home-dash__radius-wrap { margin-left: auto; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__head .c-home-dash__radius-wrap ~ .c-home-dash__seeall { margin-left: 0.25rem; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__radius { gap: 0.25rem; padding: 0.3rem 0.55rem; font-size: 0.75rem; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__radius > i,
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__radius > svg { font-size: 0.65rem; }
+  .c-home-dash .c-home-dash__card--trips .c-home-dash__radius .c-home-dash__radius-chevron { font-size: 0.55rem; }
+}
+
+/* Date tiles: border in the month band's orange, a quieter day number */
+.c-date-tile { border-color: #ea7a2e; }
+.c-date-tile .c-date-tile__day { color: #334155; font-weight: 600; }
+.c-home-activity .c-date-tile .c-date-tile__day { font-size: 1.15rem; }
+@media (max-width: 575.98px) {
+  .c-home-activity .c-date-tile .c-date-tile__day { font-size: 1.05rem; }
+}
+
+/* Upcoming activities, a row: place then "· time" on large screens;
+   phones: title, "In 3 days · 7:00 PM · Berlin" (orange words, no pill, no icon), the faces under it, no chevron */
+.c-home-activity .c-home-activity__time::before { content: "·"; margin-right: 0.3rem; }
+@media (max-width: 575.98px) {
+  .c-home-activity { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "tile body" "tile going"; column-gap: 0.9rem; row-gap: 0; align-items: start; }
+  .c-home-activity > .c-date-tile { grid-area: tile; align-self: start; }
+  .c-home-dash .c-home-list a.c-home-activity.c-home-item { row-gap: 0; }
+  .c-home-activity > .c-home-item__body { gap: 0.1rem; padding-top: 0; }
+  .c-home-activity .c-home-activity__meta { margin-top: 0; }
+  .c-home-activity > .c-home-item__body { grid-area: body; }
+  .c-home-activity > .c-home-activity__going { grid-area: going; justify-self: start; margin-top: 0.3rem; }
+  .c-home-activity .c-home-activity__meta { gap: 0.1rem 0.3rem; }
+  .c-home-activity .c-home-activity__meta .c-home-activity__soon,
+  .c-home-activity .c-home-activity__meta .c-home-activity__soon--now { order: 0; margin: 0; padding: 0; background: none; color: #c2410c; font-size: 0.9rem; font-weight: 700; }
+  .c-home-activity .c-home-activity__time { order: 1; }
+  .c-home-activity .c-home-activity__place { order: 2; }
+  .c-home-activity .c-home-activity__place { display: inline-flex; gap: 0.3rem; }
+  .c-home-activity .c-home-activity__place::before { content: "·"; }
+  .c-home-activity .c-home-activity__place i,
+  .c-home-activity .c-home-activity__place svg { display: none; }
+  .c-home-activity .c-home-activity__going-count { font-size: 0.875rem; }
+  .c-home-activity .c-home-activity__title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; -webkit-line-clamp: none; }
+}
+
+/* Activity panel title: up to 3 lines, never cut on one line (wins over .p-ped .p-ped-head__title) */
+.p-ped .p-ped-head__title.p-act-head__title { display: -webkit-box; overflow: hidden; line-height: 1.2; text-overflow: clip; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow-wrap: anywhere; }
+
+/* Visitors card, a row: the dates in orange, the nights in grey brackets, the title and text in grey */
+.c-home-dash .c-home-visit__when { gap: 0 0.4rem; }
+.c-home-dash .c-home-visit__when > span + span::before { content: none; }
+.c-home-dash .c-home-visit__when > span:nth-child(n+4) { display: inline; }
+.c-home-visit__dates { color: #c2410c; font-weight: 700; }
+.c-home-visit__nights { color: #94a3b8; }
+
+/* Visitors card: the trips closer together */
+.c-home-dash .c-home-visits { gap: 0; }
+.c-home-dash .c-home-visit { padding-top: 0.55rem; padding-bottom: 0.55rem; }
+
+/* Visitors and activities counts in orange, like Messages */
+.c-home-dash__card--trips .c-home-dash__count,
+.c-home-dash__card--activities .c-home-dash__count { background: #ea7a2e; color: #fff; }
+
+/* Visitors card: the trip's title a little darker than its text */
+.c-home-dash .c-home-visit__trip { color: #0f172a; font-weight: 600; }
+
+/* Visitors card: the nights in a small grey pill with a moon */
+.c-home-dash .c-home-visit__nights { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 600; line-height: 1.4; }
+.c-home-dash .c-home-visit__nights i, .c-home-dash .c-home-visit__nights svg { width: 0.65rem; height: 0.65rem; color: #94a3b8; }
+
+/* Group pages with the orange bar on phones (forum, a topic, every tab but the overview): no site
+   header, the bar takes its place as on the inbox and trips pages; its back button leads out */
+@media (max-width: 767.98px) {
+  body:has(.p-group-head--sub) { --bw-topbar-offset: 0px; }
+  body:has(.p-group-head--sub) #main_menu { display: none; }
+  body:has(.p-group-head--sub) main { margin-top: 0; padding-top: 0; }
+}
+
+/* Inbox on phones: the list head and the conversation head in orange, white text, light round buttons */
+@media (max-width: 767.98px) {
+  .c-inbox-list__head,
+  .c-inbox__list .c-inbox-list__head { margin-bottom: 0.75rem; background: #f37000; }
+  .c-inbox__list .c-inbox-list__title { color: #fff; }
+  .c-inbox__list .c-inbox-list__back,
+  .c-inbox__list .c-inbox-list__back:hover,
+  .c-inbox__list .c-inbox-list__select,
+  .c-inbox__list .c-inbox-list__select:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__list .c-inbox-list.is-selecting .c-inbox-list__select.js-inbox-select,
+  .c-inbox__list .c-inbox-more[open] > .c-inbox-list__select { background: #fff; color: #c2410c; box-shadow: none; }
+  .c-inbox__list .c-inbox-list.is-selecting .c-inbox-more__toggle { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__pane .c-inbox-head { padding: 0.75rem 0.75rem 0.85rem; border-bottom: 0; background: #f37000; }
+  .c-inbox__pane .c-inbox-head__back,
+  .c-inbox__pane .c-inbox-head__back:hover,
+  .c-inbox__pane .c-inbox-head__name,
+  .c-inbox__pane .c-inbox-head__name:hover { color: #fff; }
+  .c-inbox__pane .c-inbox-head h1.c-inbox-head__subject { color: rgba(255, 255, 255, 0.85); }
+  .c-inbox__pane .c-inbox-head__menu summary,
+  .c-inbox__pane .c-inbox-head__menu summary:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .c-inbox__pane .c-inbox-head .c-inbox-avatar--l { box-shadow: 0 0 0 2px #fff; }
+}

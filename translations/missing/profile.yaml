@@ -915,3 +915,12 @@ profile.contact.your.invitation:
 profile.contact.open:
     - 'Open conversation'
     - 'Profile, the link at the end of the band about the conversation with this member.'
+profile.password.change.intro:
+    - 'Once your new password is saved, you are signed out. Sign in again with the new one.'
+    - 'Change password page, the line at the top of the form.'
+profile.password.change.help:
+    - 'At least 8 characters. The bars turn green when the password is strong.'
+    - 'Change password page, the hint under the new password and its strength bars.'
+profile.password.current.wrong:
+    - 'This is not your current password.'
+    - 'Change password page, the error under the current password when it does not match.'

@@ -14383,3 +14383,18 @@ a.c-home-trip__name:hover { color: #c2410c; }
   .c-inbox__pane .c-inbox-head__menu summary:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
   .c-inbox__pane .c-inbox-head .c-inbox-avatar--l { box-shadow: 0 0 0 2px #fff; }
 }
+
+/* Change password (profile/change.password.html.twig): a line on what happens, then the current
+   and the new password in the account page's sections, the strength bars under the new one */
+.p-pw-form { display: flex; flex-direction: column; gap: 0.875rem; }
+.p-pw-intro { display: flex; align-items: center; gap: 0.85rem; padding: 0.9rem 1rem; border-radius: 0.875rem; background: #fff7ed; color: #7c2d12; font-size: 0.9rem; line-height: 1.45; }
+.p-pw-intro p { margin: 0; }
+.p-pw-intro__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: #fff; color: #ea7a2e; }
+.p-pw-intro__icon i, .p-pw-intro__icon svg { width: 1rem; height: 1rem; }
+.p-pw-form .c-login-form__input { border-color: #e2e8f0; }
+.p-pw-meter { display: flex; gap: 0.35rem; margin: 0.5rem 0 0; }
+.p-pw-meter > div { flex: 1; }
+.p-pw-form .p-account-section__help { margin-bottom: 0; }
+.p-pw-form .p-edit-subpage__actions { margin-top: 0.4rem; }
+.p-pw-form .p-edit-subpage__actions .o-button i,
+.p-pw-form .p-edit-subpage__actions .o-button svg { width: 0.85rem; height: 0.85rem; }

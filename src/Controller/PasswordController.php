@@ -181,6 +181,9 @@ class PasswordController extends AbstractController
 
                 return $this->redirectToRoute('_logout_main');
             }
+
+            // Say why nothing happened instead of showing the form again as it was
+            $form->get('current')->addError(new FormError($this->translator->trans('profile.password.current.wrong')));
         }
 
         return $this->render('profile/change.password.html.twig', [

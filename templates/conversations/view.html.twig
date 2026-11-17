@@ -28,7 +28,7 @@
     {% if current.subject %}
         {% set subject = current.subject.subject %}
     {% else %}
-        {% set subject = 'conversation.with'|trans({ username: correspondent.username }) %}
+        {% set subject = 'conversation.with'|trans({ username: member_name(correspondent) }) %}
     {% endif %}
 
     {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
@@ -75,8 +75,8 @@
                     {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: correspondent.username } only %}
                     {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
                     <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
-                              placeholder="{{ 'conversation.write.to'|trans({ username: correspondent.username }) }}"
-                              aria-label="{{ 'conversation.write.to'|trans({ username: correspondent.username }) }}" required></textarea>
+                              placeholder="{{ 'conversation.write.to'|trans({ username: member_name(correspondent) }) }}"
+                              aria-label="{{ 'conversation.write.to'|trans({ username: member_name(correspondent) }) }}" required></textarea>
                     {% do reply_form.message.setRendered %}
                     {% do reply_form.subject.setRendered %}
                     {{ form_rest(reply_form) }}
@@ -87,7 +87,7 @@
                 {{ form_end(reply_form) }}
             {% else %}
             <a class="c-inbox-reply" href="{{ path('conversation_reply', (folder == 'conversations' ? { id: current.id } : { id: current.id, folder: folder })|merge(listParams)) }}">
-                <span class="c-inbox-reply__field">{{ 'conversation.write.to'|trans({ username: correspondent.username }) }}</span>
+                <span class="c-inbox-reply__field">{{ 'conversation.write.to'|trans({ username: member_name(correspondent) }) }}</span>
                 <span class="c-inbox-reply__btn">
                     <i class="fas fa-paper-plane" aria-hidden="true"></i>
                     <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>

@@ -17,7 +17,7 @@
                 <span class="c-home-talk__title">{{ forum.thread_title(thread, app.request.locale) }}</span>
                 <span class="c-home-talk__meta">
                     {%- if not thread.agora %}{{ thread.group.name }} · {% endif -%}
-                    {{ thread.lastPost.author ? thread.lastPost.author.username : 'forum.former.member'|trans }} · {{ thread.lastPost.updated.diffForHumans }}
+                    {{ thread.lastPost.author ? member_name(thread.lastPost.author) : 'forum.former.member'|trans }} · {{ thread.lastPost.updated.diffForHumans }}
                 </span>
             </span>
             <span class="c-home-talk__replies" aria-label="{{ 'landing.thread.replies'|trans({ count: replies }) }}"><i class="far fa-comment" aria-hidden="true"></i> {{ replies }}</span>

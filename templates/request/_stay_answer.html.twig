@@ -12,7 +12,7 @@
     {% set current = current ?? thread|first %}
     {% set S = 'App\\Entity\\HostingRequest::' %}
     {% set asker = current.initiator %}
-    {% set askerName = asker.shortNameOrUsername ?? asker.username %}
+    {% set askerName = (asker is former_member ? member_name(asker) : asker.shortNameOrUsername ?? asker.username) %}
     {% set choices = [] %}
     {% if stay.status != constant(S ~ 'REQUEST_ACCEPTED') and respond.accept is defined %}
         {% set choices = choices|merge([{ key: 'accept', button: respond.accept, icon: 'fa fa-check' }]) %}

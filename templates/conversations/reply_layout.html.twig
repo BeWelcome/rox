@@ -21,7 +21,7 @@
     {% if newest.subject %}
         {% set subject = newest.subject.subject %}
     {% else %}
-        {% set subject = 'conversation.with'|trans({ username: correspondent.username }) %}
+        {% set subject = 'conversation.with'|trans({ username: member_name(correspondent) }) %}
     {% endif %}
     {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
     {% set viewParams = (folder == 'conversations' ? { id: newest.id } : { id: newest.id, folder: folder })|merge(listParams) %}

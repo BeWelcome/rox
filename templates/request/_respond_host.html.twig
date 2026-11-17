@@ -17,7 +17,7 @@
 {% set flexible = fields.flexible is defined %}
 {% set guest = current.initiator %}
 {% set isInvitation = request.inviteForLeg is not null %}
-{% set guestName = guest.shortNameOrUsername ?? guest.username %}
+{% set guestName = (guest is former_member ? member_name(guest) : guest.shortNameOrUsername ?? guest.username) %}
 
 {% set awaitingAnswer = request.status == constant(S ~ 'REQUEST_OPEN') %}
 

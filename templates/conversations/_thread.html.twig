@@ -55,7 +55,7 @@
                     {% set _count = _parts.photos|length %}
                     {# Who, when and the text, for the viewer that opens on a click (contact/photos.js) #}
                     <div class="c-bubble-photos c-bubble-photos--{{ _count > 2 ? 'grid' : _count }}{{ deleted ? ' is-deleted' : '' }}"
-                         data-author="{{ own ? 'you'|trans|capitalize : message.sender.username }}"
+                         data-author="{{ own ? 'you'|trans|capitalize : member_name(message.sender) }}"
                          data-avatar="{{ path('avatar', { username: message.sender.username, size: 96 }) }}"
                          data-when="{{ message.created|date('c') }}"
                          data-caption="{{ _parts.text|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim }}">

@@ -32,9 +32,15 @@
         {#- Left: who travels, then the stops; right: the map alone, as tall as the column allows -#}
         <div class="p-trip-main">
             <section class="p-trips-card p-trip-hero">
+                {# the trip of a former member (retired): no profile to open, nobody to write to #}
+                {% set _former = trip.creator is former_member %}
+                {% if _former %}
+                <span class="p-trip-hero__avatar"><img src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="" width="64" height="64"></span>
+                {% else %}
                 <a class="p-trip-hero__avatar" href="{{ path('members_profile', { username: trip.creator.username }) }}">
                     <img src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="" width="64" height="64">
                 </a>
+                {% endif %}
                 <div class="p-trip-hero__body">
                     <p class="p-trip-hero__who">{{ macros.profilelink(trip.creator.username, false, 'p-trips-leg__name') }}</p>
                     <p class="p-trips-leg__meta p-trip-hero__meta">
@@ -122,7 +128,7 @@
                                                     </a>
                                                 {% endif %}
                                             {% endif %}
-                                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+                                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options and not _former %}
                                                 <a class="p-trips-btn" href="{{ path('message_new', { username: trip.creator.username }) }}" title="{{ 'message.write_to'|trans|format(trip.creator.username) }}">
                                                     <i class="fa fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
                                                 </a>

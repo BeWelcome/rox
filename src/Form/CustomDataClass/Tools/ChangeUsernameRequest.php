@@ -19,5 +19,7 @@ class ChangeUsernameRequest
     #[Assert\NotBlank(message: 'admin.tools.change_username.error.empty')]
     #[Assert\Regex(pattern: self::PATTERN, message: 'admin.tools.change_username.error.invalid')]
     #[Assert\NotIdenticalTo(propertyPath: 'oldUsername', message: 'admin.tools.change_username.error.same')]
+    // data:retention renames retired members retired_<id>, who are shown as former members
+    #[Assert\Regex(pattern: '/^retired_/i', match: false, message: 'admin.tools.change_username.error.reserved')]
     public ?string $newUsername = null;
 }

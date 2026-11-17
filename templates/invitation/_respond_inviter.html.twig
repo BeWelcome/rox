@@ -8,7 +8,7 @@
 {% set S = 'App\\Entity\\HostingRequest::' %}
 {% set declined = current.request.status == constant(S ~ 'REQUEST_DECLINED') %}
 {% set guest = current.sender == app.user ? current.receiver : current.sender %}
-{% set guestName = guest.shortNameOrUsername ?? guest.username %}
+{% set guestName = (guest is former_member ? member_name(guest) : guest.shortNameOrUsername ?? guest.username) %}
 
 {{ form_start(respond, { action: path('conversation_reply', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})), attr: { id: 'js-respond-form', class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}

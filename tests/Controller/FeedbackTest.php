@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Feedback;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,13 +9,13 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Feedback a member sends is stored in English and mailed to the address of its category, where the volunteers read
- * it (the volunteer tools no longer list it).
+ * Feedback a member sends is mailed to the address of its category, where the volunteers read it; it isn't stored,
+ * nothing on the site shows it.
  */
 #[Group('integration')]
 class FeedbackTest extends WebTestCase
 {
-    public function testSentFeedbackIsStoredAndMailedToItsCategory(): void
+    public function testSentFeedbackIsMailedToItsCategory(): void
     {
         $client = static::createClient();
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
@@ -32,10 +31,6 @@ class FeedbackTest extends WebTestCase
         ]);
 
         $this->assertResponseRedirects('/feedback/received');
-        $feedback = $entityManager->getRepository(Feedback::class)->findOneBy(['author' => $member], ['id' => 'DESC']);
-        self::assertSame('<p>zztest feedback question</p>', $feedback->getDiscussion());
-        self::assertSame('en', $feedback->getLanguage()->getShortCode());
-        self::assertSame($category->getId(), $feedback->getCategory()->getId());
 
         $this->assertEmailCount(1);
         $mail = $this->getMailerMessage();

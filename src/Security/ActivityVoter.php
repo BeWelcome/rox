@@ -39,7 +39,8 @@ class ActivityVoter extends Voter
         }
 
         if (self::ATTEND === $attribute) {
-            return !$activity->isCancelled();
+            // only active members answer (Member::isActiveMember())
+            return !$activity->isCancelled() && $member->isActiveMember();
         }
 
         return $activity->isOrganizer($member);

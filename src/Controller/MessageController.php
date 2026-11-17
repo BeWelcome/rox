@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\MessageToMemberType;
@@ -10,6 +9,7 @@ use App\Model\ConversationModel;
 use App\Security\MemberVoter;
 use App\Service\InboxFolders;
 use App\Service\MessageSender;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
@@ -33,6 +33,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class MessageController extends AbstractController
 {
+    use ActiveMemberTrait;
     use ContactPanelTrait;
     use RedirectBackTrait;
     use TranslatedFlashTrait;
@@ -64,10 +65,9 @@ class MessageController extends AbstractController
             return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $sender->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
-
-            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]));
+        $refused = $this->refusedUntilActive($sender, 'flash.conversation.not.active', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]));
+        if ($refused) {
+            return $this->notAllowedInPanel($request, $receiver, 'message', $refused);
         }
 
         if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $receiver)) {

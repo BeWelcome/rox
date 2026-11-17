@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Leg;
 use App\Entity\Member;
@@ -19,6 +18,7 @@ use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
 use App\Service\Mailer;
+use App\Utilities\ActiveMemberTrait;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class InvitationController extends BaseRequestAndInvitationController
 {
+    use ActiveMemberTrait;
     use ContactPanelTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
@@ -83,10 +84,9 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('homepage'));
         }
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED === $host->getStatus()) {
-            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
-
-            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
+        $refused = $this->refusedUntilActive($host, 'flash.conversation.not.active', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
+        if ($refused) {
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $refused);
         }
 
         if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $guest)) {

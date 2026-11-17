@@ -51,6 +51,13 @@ trait WikiPagesTrait
      */
     private function wikiEditPage(Request $request, WikiScope $scope, bool $create, WikiModel $wikiModel, WikiIndexModel $wikiIndexModel, string $template, array $view): Response
     {
+        // only active members edit (WikiScope::$canEdit): the others read the page
+        if (!$scope->canEdit) {
+            $this->addTranslatedFlash('notice', 'wiki.flash.not.active');
+
+            return $this->redirectToRoute($scope->routes['read'], $scope->params);
+        }
+
         $page = $wikiModel->getPage($scope->pageName);
         if ($create && null !== $page) {
             return $this->redirectToRoute($scope->routes['edit'], $scope->params);

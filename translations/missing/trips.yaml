@@ -292,3 +292,6 @@ trip.stop.title:
 trip.created.search.hint:
     - 'See who can host you there'
     - Small line under "Find hosts in (city)" on the confirmation shown once a trip has been created
+flash.trip.not.confirmed:
+    - 'You can plan trips once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member who hasn't confirmed the email address opens the new trip form (shown on the trips page).

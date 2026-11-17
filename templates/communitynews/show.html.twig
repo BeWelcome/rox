@@ -21,6 +21,11 @@
       <section class="c-cnews-comments" aria-labelledby="c-cnews-comments-title">
         <h2 class="c-cnews-comments__title" id="c-cnews-comments-title">{{ 'communitynews.comments.count'|trans({count: comments_count}) }}</h2>
 
+        {# only active members comment and reply (Member::isActiveMember()) #}
+        {% set _can_comment = app.user.activeMember %}
+        {% if not _can_comment %}
+          <p class="c-cnews-card c-cnews-write">{{ 'flash.communitynews.comment.not.active'|trans }}</p>
+        {% else %}
         {{ form_start(form, {attr: {class: 'c-cnews-card c-cnews-write', novalidate: 'novalidate', 'data-comment-form': ''}}) }}
           <img class="c-cnews-write__avatar" src="{{ path('avatar', {username: app.user.username, size: 96}) }}" alt="" width="40" height="40">
           <div class="c-cnews-write__main">
@@ -33,6 +38,7 @@
             </div>
           </div>
         {{ form_end(form) }}
+        {% endif %}
 
         {% if thread is not empty %}
           <ol class="c-cnews-card c-cnews-thread">
@@ -54,7 +60,7 @@
                     {% endif %}
                     <div class="c-cnews-comment__text">{{ cn.text(comment.text) }}</div>
                     <div class="c-cnews-comment__actions">
-                      <button type="button" class="c-cnews-action c-cnews-action--reply" data-reply-to="{{ comment.id }}" data-reply-name="{{ _author }}"><i class="fas fa-reply" aria-hidden="true"></i>{{ 'communitynews.comment.reply'|trans }}</button>
+                      {% if _can_comment %}<button type="button" class="c-cnews-action c-cnews-action--reply" data-reply-to="{{ comment.id }}" data-reply-name="{{ _author }}"><i class="fas fa-reply" aria-hidden="true"></i>{{ 'communitynews.comment.reply'|trans }}</button>{% endif %}
                       {% if comment.author != app.user %}
                         {% if reported[comment.id] is defined %}
                           <span class="c-cnews-action c-cnews-action--reported"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'communitynews.report.thanks'|trans }}</span>
@@ -73,6 +79,7 @@
     </div>
 
     {# the reply box: the script moves it under the comment answered and sets the parent #}
+    {% if _can_comment %}
     <form method="post" action="{{ path('communitynews_show', {id: communityNews.id}) }}" class="c-cnews-reply" hidden data-reply-form novalidate>
       <input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}">
       <input type="hidden" name="{{ form.parent.vars.full_name }}" value="" data-reply-parent>
@@ -87,6 +94,7 @@
         </div>
       </div>
     </form>
+    {% endif %}
 
     {% include 'communitynews/_report_dialog.html.twig' %}
   </main>

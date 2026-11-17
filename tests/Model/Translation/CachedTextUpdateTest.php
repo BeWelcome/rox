@@ -111,6 +111,31 @@ class CachedTextUpdateTest extends KernelTestCase
         self::assertSame(['en' => self::CODE, 'de' => self::CODE, 'fr' => self::CODE], $this->shown());
     }
 
+    public function testQuotesBackslashesAndLineBreaksStayAsWritten(): void
+    {
+        $text = "It's a host's \\ backslash\non two lines";
+        $this->word('en', $text);
+        $this->translationModel->updateCachedText(self::CODE, 'en');
+
+        self::assertSame(['en' => $text, 'de' => $text, 'fr' => $text], $this->shown());
+    }
+
+    public function testACatalogueNotWrittenAsExpectedIsBuiltAgain(): void
+    {
+        // the catalogues are changed as text: one that isn't written as var_export() writes it is removed instead
+        $files = glob(static::getContainer()->getParameter('kernel.cache_dir') . '/translations/catalogue.fr.*.php');
+        self::assertNotEmpty($files);
+        $file = $files[0];
+        file_put_contents($file, preg_replace('/^  \),$/m', '  ) ,', (string) file_get_contents($file), 1));
+        $this->word('en', 'Stay with hosts');
+
+        $this->translationModel->updateCachedText(self::CODE, 'en');
+
+        self::assertFileDoesNotExist($file);
+        // built again from the database when it's used
+        self::assertSame(['en' => 'Stay with hosts', 'de' => 'Stay with hosts', 'fr' => 'Stay with hosts'], $this->shown());
+    }
+
     /**
      * @return array<string, string> what the next request shows, by locale
      */

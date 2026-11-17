@@ -464,3 +464,9 @@ group.list.type.approval:
 group.list.type.invite:
     - 'Joining by invitation only'
     - 'Groups list, read by screen readers for the lock next to a group that members join only when invited.'
+flash.group.not.confirmed:
+    - 'You can create groups once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member who hasn't confirmed the email address opens the new group form (shown on their groups).
+flash.group.join.not.active:
+    - 'You can ask to join this group once your account is active: please fill in all required details and confirm your email address.'
+    - Notice when a member whose account isn't active yet asks to join a group that needs approval (shown on the group page).

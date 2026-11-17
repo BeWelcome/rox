@@ -132,7 +132,7 @@
 {#
   The four cards of the dashboard: messages, members coming to the member's area (one trip at a
   time, previous and next), upcoming activities and the discussions of the member's groups.
-  Each card has its title, a count and See all at the top right (no footer row); the lists are loaded by landing.js.
+  Each card has its title, a count, its own control (radius, +) and See all always last at the top right (no footer row); the lists are loaded by landing.js.
 #}
 {% set loading %}
     <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
@@ -152,14 +152,14 @@
         </div>
     </section>
 
-    {# Trips to the member's area: one at a time, the distance in a pill (landing.js reloads the list) #}
+    {# Trips to the member's area: one row per trip, the distance in a pill (landing.js reloads the list) #}
     {% set _radius = radiusForm.radius.vars.value|default('') %}
     {# Hidden when nobody comes (landing.js checks again once the list is loaded) #}
     <section class="c-home-card c-home-dash__card c-home-dash__card--trips js-home-trips" aria-labelledby="home_trips_title"{% if not visitorsCount %} hidden{% endif %}>
         <header class="c-home-dash__head">
             <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
             <h2 class="c-home-dash__title" id="home_trips_title">
-                {# Phones: just "Visitors", the long title doesn't fit next to the count and the radius #}
+                {# Phones: just "Visitors", the long title doesn't fit next to the count, the radius and See all #}
                 <a href="{{ url('visitors') }}">{% if homeCity %}<span class="c-home-dash__title-long">{{ 'landing.dash.coming.to'|trans({ city: homeCity }) }}</span><span class="c-home-dash__title-short">{{ 'landing.tab.visitors'|trans }}</span>{% else %}{{ 'landing.tab.visitors'|trans }}{% endif %}</a>
             </h2>
             <span class="c-home-dash__count js-home-trips-position" hidden></span>
@@ -187,6 +187,7 @@
                 </ul>
             </div>
             <input type="hidden" id="trips_radius" value="{{ _radius }}">
+            <a class="c-home-dash__seeall" href="{{ url('visitors') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
@@ -199,8 +200,8 @@
             <span class="c-home-dash__icon" aria-hidden="true"><i class="far fa-calendar"></i></span>
             <h2 class="c-home-dash__title" id="home_activities_title">{{ 'landing.dash.activities'|trans }}</h2>
             {% if activityCount %}<span class="c-home-dash__count">{{ activityCount }}</span>{% endif %}
-            <a class="c-home-dash__seeall" href="{{ path('activities') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
             <a class="c-home-dash__add js-contact-open" href="{{ path('activities_create') }}" data-title="{{ 'activitiescreate'|trans }}" aria-label="{{ 'landing.activities.create'|trans }}"><i class="fas fa-plus" aria-hidden="true"></i></a>
+            <a class="c-home-dash__seeall" href="{{ path('activities') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
             <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>

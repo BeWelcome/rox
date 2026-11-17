@@ -289,9 +289,9 @@ trip.created.search:
 trip.stop.title:
     - 'Stop'
     - Plan a public trip, title over each stop of the itinerary; the number of the stop is added after it (Stop 1, Stop 2)
-trip.created.search.hint:
-    - 'See who can host you there'
-    - Small line under "Find hosts in (city)" on the confirmation shown once a trip has been created
+trip.created.view:
+    - 'View trip'
+    - Link on the right of the trip's card on the confirmation shown once a trip has been created; opens the trip page
 flash.trip.not.confirmed:
     - 'You can plan trips once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member who hasn't confirmed the email address opens the new trip form (shown on the trips page).

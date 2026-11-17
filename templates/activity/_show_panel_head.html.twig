@@ -1,22 +1,21 @@
 {#
-  Head of an activity in the side panel of the home page: the date card, the title, who goes (a few
-  faces and the count) and the X.
+  Head of an activity in the side panel of the home page: the date card, the title, how soon
+  (In 3 days) and the X.
 #}
-{% set _going = attendees.yes %}
 <header class="p-ped-head p-act-head">
     {{ include('activity/_date_tile.html.twig', { date: activity.starts, size: 'lg' }) }}
     <div class="p-ped-head__text">
         <h1 class="p-ped-head__title p-act-head__title">{{ activity.title }}</h1>
-        <p class="p-act-head__going">
-            {% if _going|length > 0 %}
-                <span class="p-act-head__faces" aria-hidden="true">
-                    {% for person in _going|slice(0, 3) %}
-                        <img src="{{ path('avatar', { username: person.attendee.username, size: 48 }) }}" alt="" width="24" height="24" loading="lazy">
-                    {% endfor %}
-                </span>
-            {% endif %}
-            <span>{% if _going|length > 0 %}<strong>{{ _going|length }}</strong> {% endif %}{{ 'activities.panel.going'|trans({ count: _going|length }) }}</span>
-        </p>
+        {#- How soon, in words, as in the Upcoming activities card of the home page -#}
+        {% set _days = ((activity.starts|date('Y-m-d')|date('U')) - ('today'|date('U'))) // 86400 %}
+        {% if activity.over %}{% set _soon = 'activities.over'|trans %}
+        {% elseif _days <= 0 %}{% set _soon = 'landing.dash.when.today'|trans %}
+        {% elseif _days == 1 %}{% set _soon = 'landing.dash.when.tomorrow'|trans %}
+        {% elseif _days < 7 %}{% set _soon = 'landing.dash.when.days'|trans({ count: _days }) %}
+        {% elseif _days < 30 %}{% set _soon = 'landing.dash.when.weeks'|trans({ count: _days // 7 }) %}
+        {% else %}{% set _soon = 'landing.dash.when.months'|trans({ count: _days // 30 }) %}
+        {% endif %}
+        <p class="p-act-head__soon{{ activity.over ? ' is-over' }}">{{ _soon }}</p>
     </div>
     <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
         <i class="fas fa-times" aria-hidden="true"></i>

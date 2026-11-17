@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[Group('integration')]
 class HomeTripsCardTest extends WebTestCase
 {
-    public function testTheCardHasADistanceMenuAndAllVisitors(): void
+    public function testTheCardHasADistanceMenuAndSeeAllInItsHead(): void
     {
         $client = static::createClient();
         $client->loginUser(static::getContainer()->get(MemberRepository::class)->loadUserByIdentifier('member-2'));
@@ -33,8 +33,9 @@ class HomeTripsCardTest extends WebTestCase
             self::assertSame($current, $active->attr('data-value'));
             self::assertSame(trim($active->text()), trim($card->filter('.js-home-trips-radius-label')->text()));
         }
-        // All visitors is under the trip (landing/widget/triplegs), not in the head nor in a footer row
-        self::assertCount(0, $card->filter('.c-home-dash__head a.c-home-dash__seeall'));
+        // See all is in the head, as on the other cards, with the distance; no footer row
+        self::assertCount(1, $card->filter('.c-home-dash__head a.c-home-dash__seeall'));
+        self::assertCount(1, $card->filter('.c-home-dash__head .js-home-trips-radius'));
         self::assertCount(0, $card->filter('.c-home-pane__footer--more'));
     }
 }

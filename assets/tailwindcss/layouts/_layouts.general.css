@@ -14373,7 +14373,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
   .c-inbox__list .c-inbox-list.is-selecting .c-inbox-list__select.js-inbox-select,
   .c-inbox__list .c-inbox-more[open] > .c-inbox-list__select { background: #fff; color: #c2410c; box-shadow: none; }
   .c-inbox__list .c-inbox-list.is-selecting .c-inbox-more__toggle { background: rgba(255, 255, 255, 0.2); color: #fff; }
-  .c-inbox__pane .c-inbox-head { border-bottom: 0; background: #f37000; }
+  .c-inbox__pane .c-inbox-head { padding: 0.75rem 0.75rem 0.85rem; border-bottom: 0; background: #f37000; }
   .c-inbox__pane .c-inbox-head__back,
   .c-inbox__pane .c-inbox-head__back:hover,
   .c-inbox__pane .c-inbox-head__name,

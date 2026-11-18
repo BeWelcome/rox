@@ -927,3 +927,12 @@ profile.password.current.wrong:
 flash.password.changed:
     - 'Your password has been changed.'
     - 'Home page, the message after the member changed their password.'
+profile.comments.latest:
+    - 'Latest comments'
+    - Title of the comments block on a profile, with Add comment next to it
+profile.comment.add.button:
+    - 'Add comment'
+    - Outlined button at the top right of the comments block of a profile (only a + on phones), opens the comment form in the side panel
+profile.comments.see.others:
+    - '{count, plural, one {See the other comment} other {See the # other comments}}'
+    - Link under the latest comments of a profile, to the comments tab; count is the number of comments not shown

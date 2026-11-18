@@ -24,7 +24,7 @@
       </p>
       <p class="p-polls-card__meta">
         {% if poll.creator %}
-          <span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ poll.creator.username }}</span>
+          <span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ member_name(poll.creator) }}</span>
         {% endif %}
         <span class="p-polls-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'polls.voters'|trans({ count: poll.votes|length }) }}</span>
         {% if not poll.draft and poll.endsAt %}

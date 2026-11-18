@@ -52,15 +52,15 @@
                   <img class="c-cnews-comment__avatar" src="{{ path('avatar', {username: _author, size: 96}) }}" alt="" width="40" height="40" loading="lazy">
                   <div class="c-cnews-comment__main">
                     <p class="c-cnews-comment__head">
-                      <a class="c-cnews-comment__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>
+                      {% if _author is former_member %}<span class="c-cnews-comment__author">{{ member_name(_author) }}</span>{% else %}<a class="c-cnews-comment__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>{% endif %}
                       · <span class="c-cnews-comment__date">{{ comment.created.diffForHumans }}</span>
                     </p>
                     {% if item.depth > item.indent and comment.parent and not comment.parent.deleted %}
-                      <p class="c-cnews-comment__to"><i class="fas fa-reply fa-rotate-180" aria-hidden="true"></i>{{ 'communitynews.comment.to'|trans }} <a href="#comment-{{ comment.parent.id }}">{{ comment.parent.author.username }}</a></p>
+                      <p class="c-cnews-comment__to"><i class="fas fa-reply fa-rotate-180" aria-hidden="true"></i>{{ 'communitynews.comment.to'|trans }} <a href="#comment-{{ comment.parent.id }}">{{ member_name(comment.parent.author) }}</a></p>
                     {% endif %}
                     <div class="c-cnews-comment__text">{{ cn.text(comment.text) }}</div>
                     <div class="c-cnews-comment__actions">
-                      {% if _can_comment %}<button type="button" class="c-cnews-action c-cnews-action--reply" data-reply-to="{{ comment.id }}" data-reply-name="{{ _author }}"><i class="fas fa-reply" aria-hidden="true"></i>{{ 'communitynews.comment.reply'|trans }}</button>{% endif %}
+                      {% if _can_comment %}<button type="button" class="c-cnews-action c-cnews-action--reply" data-reply-to="{{ comment.id }}" data-reply-name="{{ member_name(_author) }}"><i class="fas fa-reply" aria-hidden="true"></i>{{ 'communitynews.comment.reply'|trans }}</button>{% endif %}
                       {% if comment.author != app.user %}
                         {% if reported[comment.id] is defined %}
                           <span class="c-cnews-action c-cnews-action--reported"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'communitynews.report.thanks'|trans }}</span>

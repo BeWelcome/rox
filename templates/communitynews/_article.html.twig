@@ -11,11 +11,11 @@
     <img class="c-cnews-article__avatar" src="{{ path('avatar', {username: _author, size: 96}) }}" alt="" width="48" height="48">
     <div>
       <p class="c-cnews-article__by">
-        <a class="c-cnews-article__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>
+        {% if _author is former_member %}<span class="c-cnews-article__author">{{ member_name(_author) }}</span>{% else %}<a class="c-cnews-article__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>{% endif %}
         · <span>{{ news and news.createdAt ? news.createdAt.diffForHumans : 'communitynews.just.now'|trans }}</span>
       </p>
       {% if news and news.updatedBy and news.updatedAt and news.updatedBy != news.createdBy %}
-        <p class="c-cnews-article__updated">{{ 'communitynews.updated.by'|trans({username: news.updatedBy.username, date: news.updatedAt.diffForHumans}) }}</p>
+        <p class="c-cnews-article__updated">{{ 'communitynews.updated.by'|trans({username: member_name(news.updatedBy), date: news.updatedAt.diffForHumans}) }}</p>
       {% endif %}
     </div>
   </div>

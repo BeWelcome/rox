@@ -33,7 +33,7 @@
       <ul class="p-poll-comments">
         {% for vote in results.comments %}
           <li class="p-poll-comments__item">
-            {% if vote.member %}<strong>{{ vote.member.username }}</strong>{% endif %}
+            {% if vote.member %}<strong>{{ member_name(vote.member) }}</strong>{% endif %}
             <p>{{ vote.comment }}</p>
           </li>
         {% endfor %}

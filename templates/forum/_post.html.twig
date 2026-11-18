@@ -6,7 +6,8 @@
   The viewer's own posts are cream.
   replyUrl, replyTitle: Reply in the side panel, when the viewer may reply. replies: the number of replies.
   starter: the thread's oldest post (id, author id), or null.
-  Posts of members who aren't on BeWelcome any more have no author: a former member with the empty avatar.
+  Posts of members who aren't on BeWelcome any more have no author, or a retired one (Member::isRetired()): a former
+  member with the empty avatar.
   moderator: a shield that opens the moderation panel on the post, the tags Deleted and Editing locked, and the
   reports about the post (reports) as chips under it. selected: the post is the one in the moderation panel.
 #}
@@ -18,7 +19,8 @@
 {% set _day = post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') %}
 {% set _panelUrl = app.request.baseUrl ~ app.request.pathInfo ~ '?moderate=' ~ post.id ~ '#post' ~ post.id %}
 <article class="p-thread-post{{ _starter ? ' p-thread-post--starter' }}{{ _isMe ? ' is-mine' }}{{ _deleted ? ' is-deleted' }}{{ selected|default(false) ? ' is-moderated' }}" id="post{{ post.id }}">
-    {% if post.author %}
+    {% set _known = post.author and post.author is not former_member %}
+    {% if _known %}
         <a class="p-thread-post__photo" href="{{ path('members_profile', {username: post.author.username}) }}">
             <img width="56" height="56" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 72}) }}">
         </a>
@@ -30,7 +32,7 @@
     <div class="p-thread-post__main">
         <div class="p-thread-post__head">
             <div class="p-thread-post__who">
-                {% if post.author %}
+                {% if _known %}
                     <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
                 {% else %}
                     <span class="p-thread-post__name">{{ 'forum.former.member'|trans }}</span>

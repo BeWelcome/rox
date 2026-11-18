@@ -14,7 +14,7 @@
   <section class="p-polls-panel p-poll-hero">
     <p class="p-polls-card__meta">
       {{ poll_macros.status(poll) }}
-      {% if poll.creator %}<span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ poll.creator.username }}</span>{% endif %}
+      {% if poll.creator %}<span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ member_name(poll.creator) }}</span>{% endif %}
       <span class="p-polls-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'polls.voters'|trans({ count: poll.votes|length }) }}</span>
       {% if not poll.draft and poll.endsAt %}
         <span class="p-polls-chip"><i class="far fa-calendar" aria-hidden="true"></i>

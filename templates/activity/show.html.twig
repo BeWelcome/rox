@@ -149,9 +149,12 @@
               {% for person in attendees[group] %}
                 {% set username = person.attendee.username %}
                 <li class="p-activity-attendees__item">
-                  <a href="{{ path('members_profile', { username: username }) }}" title="{{ username }}{% if person.comment %}: {{ person.comment }}{% endif %}">
-                    <img src="{{ path('avatar', { username: username, size: 48 }) }}" alt="{{ username }}" width="40" height="40" loading="lazy">
-                  </a>
+                  {% set _img %}<img src="{{ path('avatar', { username: username, size: 48 }) }}" alt="{{ member_name(username) }}" width="40" height="40" loading="lazy">{% endset %}
+                  {% if username is former_member %}
+                  <span title="{{ member_name(username) }}">{{ _img }}</span>
+                  {% else %}
+                  <a href="{{ path('members_profile', { username: username }) }}" title="{{ username }}{% if person.comment %}: {{ person.comment }}{% endif %}">{{ _img }}</a>
+                  {% endif %}
                 </li>
               {% endfor %}
             </ul>

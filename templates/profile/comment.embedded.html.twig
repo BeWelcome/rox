@@ -108,7 +108,9 @@
                      "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
                      "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.comment|nl2br|purify }}</div>
 
-            {% if canAnswer %}
+
+            {# no comment back to a former member (retired) #}
+            {% if canAnswer and comment.fromMember is not former_member %}
                 <div class="p-comment__actions">
                     <a class="p-comment__action" href="{{ url('add_comment', { username: comment.fromMember.Username }) }}">
                         <i class="fas fa-reply" aria-hidden="true"></i>

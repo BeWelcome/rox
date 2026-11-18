@@ -39,6 +39,8 @@ class SignupFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(message: 'signup.error.username'),
                     new Regex($this->usernamePattern, 'signup.error.username.pattern'),
+                    // data:retention renames retired members retired_<id>, who are shown as former members
+                    new Regex(pattern: '/^retired_/i', match: false, message: 'signup.error.username.reserved'),
                 ],
             ])
             ->add('email', EmailType::class, [

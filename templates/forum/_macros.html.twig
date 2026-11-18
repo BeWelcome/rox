@@ -9,9 +9,9 @@
 
 {% macro thread_title(thread, locale) %}{{ (thread.titles[locale] ?? thread.title)|striptags }}{% endmacro %}
 
-{# The author of a post, linked to the profile; posts of members who aren't on BeWelcome any more have none. #}
+{# The author of a post, linked to the profile; posts of members who aren't on BeWelcome any more have none or a retired one. #}
 {% macro author(post, link = true) %}
-    {%- if post.author is null -%}
+    {%- if post.author is null or post.author is former_member -%}
         {{ 'forum.former.member'|trans }}
     {%- elseif link -%}
         <a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>

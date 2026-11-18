@@ -34,8 +34,8 @@
                 {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: correspondent.username } only %}
                 {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
                 <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
-                          placeholder="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}"
-                          aria-label="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}" required></textarea>
+                          placeholder="{{ 'conversation.reply.to'|trans({ username: member_name(correspondent) }) }}"
+                          aria-label="{{ 'conversation.reply.to'|trans({ username: member_name(correspondent) }) }}" required></textarea>
                 {% do reply_form.message.setRendered %}
                 {% do reply_form.subject.setRendered %}
                 {{ form_rest(reply_form) }}
@@ -49,7 +49,7 @@
         {# An expired request, a member who can't write yet: the reply page explains why #}
         <div class="c-contact__foot c-contact__foot--reply">
             <a class="c-inbox-reply" href="{{ path('conversation_reply', { id: current.id }) }}" target="_top">
-                <span class="c-inbox-reply__field">{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}</span>
+                <span class="c-inbox-reply__field">{{ 'conversation.reply.to'|trans({ username: member_name(correspondent) }) }}</span>
                 <span class="c-inbox-reply__btn">
                     <i class="fas fa-paper-plane" aria-hidden="true"></i>
                     <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>

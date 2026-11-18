@@ -1126,6 +1126,15 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         return $askedToLeave;
     }
 
+    /**
+     * Retired by data:retention (the account renamed retired_<id>, the profile emptied): shown to members as a former
+     * member, without a link to the profile.
+     */
+    public function isRetired(): bool
+    {
+        return isset($this->id) && 'retired_' . $this->id === $this->username;
+    }
+
     public function isBanned(): bool
     {
         return MemberStatusType::BANNED === $this->status;

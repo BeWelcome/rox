@@ -915,3 +915,24 @@ profile.contact.your.invitation:
 profile.contact.open:
     - 'Open conversation'
     - 'Profile, the link at the end of the band about the conversation with this member.'
+profile.password.change.intro.stay:
+    - 'You stay signed in. Next time, sign in with your new password.'
+    - 'Change password page, the line at the top of the form.'
+profile.password.change.help:
+    - 'At least 8 characters. The bars turn green when the password is strong.'
+    - 'Change password page, the hint under the new password and its strength bars.'
+profile.password.current.wrong:
+    - 'This is not your current password.'
+    - 'Change password page, the error under the current password when it does not match.'
+flash.password.changed:
+    - 'Your password has been changed.'
+    - 'Home page, the message after the member changed their password.'
+profile.comments.latest:
+    - 'Latest comments'
+    - Title of the comments block on a profile, with Add comment next to it
+profile.comment.add.button:
+    - 'Add comment'
+    - Outlined button at the top right of the comments block of a profile (only a + on phones), opens the comment form in the side panel
+profile.comments.see.others:
+    - '{count, plural, one {See the other comment} other {See the # other comments}}'
+    - Link under the latest comments of a profile, to the comments tab; count is the number of comments not shown

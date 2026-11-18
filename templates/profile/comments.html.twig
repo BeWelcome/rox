@@ -60,17 +60,19 @@
           {% endif %}
         </div>
 
-        {# Only "add a comment": an own comment already has its small edit button. #}
+        {# Only "add a comment": an own comment already has its small edit button. The guidelines for those who
+           write a comment (not on the member's own comments) go right above the button, else under the list. #}
+        {% set _guidelines = member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') and app.user != member %}
         {% if submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
           <div class="p-comments-cta">
+            {% if _guidelines %}
+              <p class="p-comments-cta__rules">{{ 'commentguidlineslink'|trans|raw }}</p>
+            {% endif %}
             <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary js-contact-open" data-title="{{ submenu.items.comment.key|lower|trans|striptags }}">
               <i class="fas fa-comment p-comments-cta__icon" aria-hidden="true"></i><i class="fas fa-pen p-comments-cta__icon p-comments-cta__icon--phone" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
             </a>
           </div>
-        {% endif %}
-
-        {# the guidelines for those who write a comment, not on the member's own comments #}
-        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') and app.user != member %}
+        {% elseif _guidelines %}
           <p class="p-comments-page__guidelines"><i class="fas fa-info-circle" aria-hidden="true"></i> <span>{{ 'commentguidlineslink'|trans|raw }}</span></p>
         {% endif %}
       </div>

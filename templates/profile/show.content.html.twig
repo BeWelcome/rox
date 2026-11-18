@@ -191,12 +191,19 @@
         {% endif %}
       </section>
 
-      {# ── Comments: the latest ones; the counts are in the profile head, the total on Show all ── #}
+      {# ── Comments: the latest ones, then "See the N other comments" (the comments tab; the counts are in the profile head); Add comment in the head
+         (a round + on phones; not for one's own profile nor once written: an own comment has its pencil) ── #}
+      {% set _canAdd = submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
       <section class="p-pro-card p-pro-card--comments">
-        <div class="p-pro-card__head">
-          <h2 class="p-pro-card__title">
-            {{ 'profile.comments'|trans({}, 'messages', profile_language) }}
-          </h2>
+        <div class="p-pro-card__head p-cmts-head">
+          <h2 class="p-pro-card__title">{{ 'profile.comments.latest'|trans({}, 'messages', profile_language) }}</h2>
+          <span class="p-cmts-head__end">
+            {% if _canAdd %}
+              <a class="p-cmts-head__add js-contact-open" href="{{ submenu.items.comment.url }}" data-title="{{ submenu.items.comment.key|lower|trans|striptags }}">
+                <i class="fas fa-plus" aria-hidden="true"></i><span class="p-cmts-head__add-label">{{ 'profile.comment.add.button'|trans({}, 'messages', profile_language) }}</span>
+              </a>
+            {% endif %}
+          </span>
         </div>
 
         {% for comment in comments %}
@@ -207,24 +214,11 @@
             <p>{{ 'profile.no.comments'|trans({}, 'messages', profile_language) }}</p>
           </div>
         {% endfor %}
-
-        {% if has_more_comments|default(false) %}
-          <div class="p-comments-more">
-            {# A secondary button with the total, so it shows there are more comments than the latest ones #}
-            <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-more__btn">
-              {{ 'showallcomments'|trans({}, 'messages', profile_language) }}
-              <span class="p-comments-more__count">{{ comments_count.total }}</span>
-              <i class="fas fa-chevron-right" aria-hidden="true"></i>
-            </a>
-          </div>
-        {% endif %}
-        {# Only "add a comment": an own comment already has its small edit button. #}
-        {% if submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
-          <div class="p-comments-cta">
-            <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary js-contact-open" data-title="{{ submenu.items.comment.key|lower|trans|striptags }}">
-              <i class="fas fa-comment" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
-            </a>
-          </div>
+        {% set _others = comments_count.total - comments|length %}
+        {% if has_more_comments|default(false) and _others > 0 %}
+          <a class="p-cmts-more" href="{{ url('profile_comments', {username: member.username}) }}">
+            {{ 'profile.comments.see.others'|trans({ count: _others }, 'messages', profile_language) }} <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </a>
         {% endif %}
       </section>
 

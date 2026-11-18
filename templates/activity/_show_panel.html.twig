@@ -10,16 +10,13 @@
 {% set _can_edit = is_granted('ACTIVITY_EDIT', activity) %}
 {% set _can_cancel = is_granted('ACTIVITY_CANCEL', activity) %}
 {% set _can_leave = attendee and not activity.organizer(member) %}
-{#- The organiser's buttons under the facts; for the others, Share and ⋯ alone go to the end -#}
+{#- The organiser's buttons under the facts; for the others, ⋯ alone goes to the end (Share is in the head, by the cross) -#}
+{% set _has_actions = _can_edit or _can_cancel or _can_leave %}
 {% set _actions %}
 <div class="p-act-actions{{ _can_edit ? '' : ' p-act-actions--end' }}">
     {% if _can_edit %}
         <a class="p-act-btn p-act-btn--wide" href="{{ path('activities_edit', { id: activity.id }|merge(_embed)) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activities.panel.edit'|trans }}</a>
     {% endif %}
-    <button type="button" class="p-act-btn p-act-btn--round js-act-share" data-url="{{ url('activities_show', { id: activity.id }) }}" data-title="{{ activity.title }}" aria-label="{{ 'activities.panel.share'|trans }}">
-        <i class="fas fa-share-nodes" aria-hidden="true"></i>
-    </button>
-    <span class="p-act-share-done js-act-share-done" role="status" hidden>{{ 'activities.panel.copied'|trans }}</span>
     {% if (_can_cancel) or _can_leave %}
         <div class="p-act-menu">
             <button type="button" class="p-act-btn p-act-btn--round js-act-menu" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'activities.panel.more'|trans }}">
@@ -184,7 +181,7 @@
     {% endif %}
 </section>
 
-{% if not _can_edit %}{{ _actions }}{% endif %}
+{% if not _can_edit and _has_actions %}{{ _actions }}{% endif %}
 
 {% if answerForm %}
     {% form_theme answerForm 'activity/_form_theme.html.twig' %}

@@ -14398,3 +14398,58 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .p-pw-form .p-edit-subpage__actions { margin-top: 0.4rem; }
 .p-pw-form .p-edit-subpage__actions .o-button i,
 .p-pw-form .p-edit-subpage__actions .o-button svg { width: 0.85rem; height: 0.85rem; }
+
+/* Trip in the side panel (trip/leg_panel.html.twig): Hide this trip and the cross, a big title with
+   where and when, the traveller in a grey card with Profile, the text with Read more, the itinerary
+   as a timeline (this leg's number dark, its dates orange), a round Message and Invite to stay */
+.c-tripv .c-tripv__body { gap: 1.25rem; padding: 1.1rem 1.4rem 1.5rem; }
+.c-tripv__top { display: flex; align-items: center; gap: 0.75rem; min-height: 2.75rem; }
+.c-tripv__hide-form { margin: 0; }
+.c-tripv__hide { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0; border: 0; background: none; color: #94a3b8; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.c-tripv__hide:hover { color: #64748b; }
+.c-tripv__hide i, .c-tripv__hide svg { width: 0.85rem; height: 0.85rem; }
+.c-tripv__close { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; margin-left: auto; border: 0; border-radius: 50%; background: #f1f5f9; color: #334155; cursor: pointer; }
+.c-tripv__close:hover { background: #e2e8f0; }
+.c-tripv .c-tripv__head { margin-top: -0.6rem; }
+.c-tripv__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.75rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+.c-tripv__sub { margin: 0.4rem 0 0; color: #64748b; font-size: 0.9375rem; }
+.c-tripv__who, .c-tripv__who:hover { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 1rem; border-radius: 1rem; background: #f8fafc; color: inherit; text-decoration: none; }
+.c-tripv__who:hover { background: #f1f5f9; }
+.c-tripv__face { flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+.c-tripv__who-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.c-tripv__who-text strong { overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-tripv__who-text small { color: #64748b; font-size: 0.875rem; }
+.c-tripv__profile { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; color: #334155; font-size: 0.9rem; font-weight: 700; }
+.c-tripv__profile i, .c-tripv__profile svg { width: 0.55rem; height: 0.55rem; color: #94a3b8; }
+.c-tripv__about { display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+.c-tripv__text { color: #334155; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.c-tripv__text.is-clamped { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.c-tripv__more { padding: 0; border: 0; background: none; color: #334155; font-size: 0.9375rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.c-tripv__more[hidden] { display: none; }
+.c-tripv__h2 { margin: 0 0 0.9rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.2rem; font-weight: 700; }
+.c-tripv__list { margin: 0; padding: 0; list-style: none; }
+.c-tripv__stop { position: relative; display: flex; gap: 0.9rem; padding-bottom: 1.25rem; }
+.c-tripv__stop:last-child { padding-bottom: 0; }
+/* the line between the numbers */
+.c-tripv__stop:not(:last-child)::before { content: ""; position: absolute; top: 2.1rem; bottom: 0.1rem; left: calc(1.1rem - 1px); width: 2px; background: #e8edf3; }
+.c-tripv__num { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: #f1f5f9; color: #334155; font-size: 0.875rem; font-weight: 700; }
+.c-tripv__stop.is-current .c-tripv__num { background: #0f172a; color: #fff; }
+.c-tripv__stop-body { flex: 1; min-width: 0; padding-top: 0.15rem; }
+.c-tripv__stop-body p { margin: 0; }
+.c-tripv__place { display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0.45rem; }
+.c-tripv__place strong { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; }
+.c-tripv .c-tripv__flag { width: 1.1rem; height: 0.8rem; border-radius: 2px; box-shadow: none; }
+.c-tripv__country { color: #94a3b8; font-size: 0.875rem; }
+.c-tripv__dates { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.35rem; margin-top: 0.3rem !important; font-size: 0.9375rem; }
+.c-tripv__when { color: #334155; font-weight: 600; }
+.c-tripv__stop.is-current .c-tripv__when { color: #c2410c; font-weight: 700; }
+.c-tripv__nights { color: #94a3b8; }
+.c-tripv__tags { margin-top: 0.5rem !important; }
+.c-tripv__tag { display: inline-flex; padding: 0.25rem 0.75rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 700; }
+/* the foot: Message round on the left, Invite to stay across the rest */
+.c-tripv .c-contact__foot--row .c-tripv__msg { flex: 0 0 auto; width: 3.1rem; padding: 0; border-radius: 50%; }
+.c-tripv .c-contact__foot--row .c-tripv__msg .c-contact__send-label { display: none; }
+@media (max-width: 575.98px) {
+  .c-tripv .c-tripv__body { padding: 1rem 1.1rem 1.25rem; }
+  .c-tripv__title { font-size: 1.5rem; }
+}

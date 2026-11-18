@@ -295,3 +295,12 @@ trip.created.view:
 flash.trip.not.confirmed:
     - 'You can plan trips once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member who hasn't confirmed the email address opens the new trip form (shown on the trips page).
+trip.panel.solo:
+    - 'Travelling solo'
+    - 'Trip in the side panel, under the traveller''s name when they travel alone.'
+trip.panel.itinerary:
+    - 'Itinerary'
+    - 'Trip in the side panel, the title above the stops.'
+trip.panel.profile:
+    - 'Profile'
+    - 'Trip in the side panel, the link on the traveller''s card that opens their profile preview.'

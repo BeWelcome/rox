@@ -28,8 +28,9 @@ final class CommentRelationsTest extends WebTestCase
         $crawler = $client->request('GET', '/members/member-2/comments');
 
         self::assertResponseIsSuccessful();
-        self::assertGreaterThan(0, $crawler->filter('.p-comment__relation--stay')->count());
-        // the test environment shows translation keys
-        self::assertStringContainsString('profile.comment.relation.chatted', $crawler->filter('.p-comment__relations')->first()->text());
+        // the test environment shows translation keys; hosting is said from the reader's side
+        $relations = $crawler->filter('.p-cmt__relation')->each(static fn ($relation): string => trim($relation->text()));
+        self::assertContains('comment.relation.shown.hosted_me', $relations);
+        self::assertContains('profile.comment.relation.chatted', $relations);
     }
 }

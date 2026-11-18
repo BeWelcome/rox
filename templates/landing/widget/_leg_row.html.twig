@@ -24,8 +24,12 @@
                 <span class="c-home-visit__tag c-home-visit__tag--plain">{{ 'trip.option.meet.locals'|trans }}</span>
             {% endif %}
         </p>
-        {#- The dates in orange (Thu 19 – Sun 22 Nov), the nights in a small grey pill with a moon -#}
+        {#- The dates in orange (Thu 19 – Sun 22 Nov), or only Today / Tomorrow in an orange pill; the nights in a small grey pill with a moon -#}
+        {% set _days = date(_arrival).diff(date('today')).days %}
         <p class="c-home-visit__when">
+            {% if _arrival >= 'now'|date('Y-m-d') and _days <= 1 %}
+            <span class="c-home-visit__soon">{{ (_days == 0 ? 'landing.visitors.today' : 'landing.visitors.tomorrow')|trans }}</span>
+            {% else %}
             <span class="c-home-visit__dates">
                 {%- if leg.departure|date('Y-m-d') == _arrival -%}
                     {{ leg.arrival|format_date(pattern='EEE d MMM') }}
@@ -35,6 +39,7 @@
                     {{ leg.arrival|format_date(pattern='EEE d MMM') }} – {{ leg.departure|format_date(pattern='EEE d MMM') }}
                 {%- endif -%}
             </span>
+            {% endif %}
             {% if _nights > 0 %}<span class="c-home-visit__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: _nights }) }}</span>{% endif %}
         </p>
         <p class="c-home-visit__text"><span class="c-home-visit__trip">{{ _title }}{% if _excerpt %} :{% endif %}</span>{% if _excerpt %} {{ _excerpt }}{% endif %}</p>

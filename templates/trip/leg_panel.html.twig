@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 {#
-  One leg of a trip in the side panel (home page and visitors page, ?embed=1): Hide this trip
-  and the cross, the title with where and when, the traveller (Profile opens their preview in
-  the panel), the text (cut, with Read more), the itinerary as a timeline with this leg's
-  number dark and its dates in orange. At the bottom a round Message and Invite to stay: they
-  open their form in the same panel, and its back arrow comes back here (?back=).
+  One leg of a trip in the side panel (home page and visitors page, ?embed=1): the traveller
+  at the top (opens their preview in the panel) and the cross, the title with when, the text
+  (cut after 10 lines, with Read more), the itinerary as a timeline with this leg's number dark and its dates
+  in orange (Today / Tomorrow before them). At the bottom Hide this trip, centred, over a round Message
+  and Invite to stay: they open their form in the same panel, and its back arrow comes back here (?back=).
 #}
 {% set traveller = trip.creator %}
 {% set myself = app.user %}
@@ -30,44 +30,33 @@
     {% endif %}
     <div class="c-contact c-contact--trip c-tripv">
         <div class="c-contact__body c-tripv__body">
-            {# Hide this trip on the left (not on one's own trip), the cross on the right #}
+            {# The traveller (face, name, who travels: opens their preview in the same panel, its back arrow comes back here) and the cross #}
             <div class="c-tripv__top">
-                {% if trip.creator != app.user %}
-                    {# Not for me: hides this trip from my visitors list; the page around the panel reloads without it #}
-                    <form class="c-tripv__hide-form" method="post" action="{{ path('trip_hide', { id: leg.id }) }}" target="_top">
-                        <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
-                        <input type="hidden" name="redirectTo" value="{{ from == 'visitors' ? 'visitors' : 'homepage' }}">
-                        <button type="submit" class="c-tripv__hide"><i class="fa fa-eye-slash" aria-hidden="true"></i> {{ 'trip.hide'|trans }}</button>
-                    </form>
-                {% endif %}
+                <a class="c-tripv__who" href="{{ path('search_member_preview', { username: traveller.username, embed: 1, leg: leg.id, from: from, back: back }) }}">
+                    <img class="c-tripv__face" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="">
+                    <span class="c-tripv__who-text">
+                        <strong>{{ traveller.shortNameOrUsername }} <i class="fas fa-chevron-right" aria-hidden="true"></i></strong>
+                        <small>{{ _who }}</small>
+                    </span>
+                </a>
                 <button type="button" class="c-tripv__close js-trip-close" aria-label="{{ 'close'|trans }}">
                     <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
 
-            {# The title, then where and when: the place for one stop, the number of stops otherwise #}
+            {# The title, then where and when: the dates for one stop (the place is ours), the number of stops otherwise #}
             <header class="c-tripv__head">
                 <h1 class="c-tripv__title">{{ trip.summary ?: (_first ? _first.location.name : '') }}</h1>
                 {% if _first %}
                     <p class="c-tripv__sub">
                         {%- if stops|length == 1 -%}
-                            {{ _first.location.name }} · {{ _first.arrival|format_date(pattern='EEE d') }}{% if _first.departure|date('Y-m-d') != _first.arrival|date('Y-m-d') %} – {{ _first.departure|format_date(pattern='EEE d MMM') }}{% else %} {{ _first.arrival|format_date(pattern='MMM') }}{% endif %}
+                            {{ _first.arrival|format_date(pattern='EEE d') }}{% if _first.departure|date('Y-m-d') != _first.arrival|date('Y-m-d') %} – {{ _first.departure|format_date(pattern='EEE d MMM') }}{% else %} {{ _first.arrival|format_date(pattern='MMM') }}{% endif %}
                         {%- else -%}
                             {{ 'contact.trip.stops'|trans({ count: stops|length }) }} · {{ _first.arrival|format_date(pattern='d MMM') }} – {{ _last.departure|format_date(pattern='d MMM') }}
                         {%- endif %} · {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) -}}
                     </p>
                 {% endif %}
             </header>
-
-            {# The traveller: face, name, who travels; Profile opens their preview in the same panel (its back arrow comes back here) #}
-            <a class="c-tripv__who" href="{{ path('search_member_preview', { username: traveller.username, embed: 1, leg: leg.id, from: from, back: back }) }}">
-                <img class="c-tripv__face" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="">
-                <span class="c-tripv__who-text">
-                    <strong>{{ traveller.shortNameOrUsername }}</strong>
-                    <small>{{ _who }}</small>
-                </span>
-                <span class="c-tripv__profile">{{ 'trip.panel.profile'|trans }} <i class="fas fa-chevron-right" aria-hidden="true"></i></span>
-            </a>
 
             {% if trip.description %}
                 <section class="c-tripv__about">
@@ -93,6 +82,11 @@
                                     {% if stop.location.country %}<span class="c-tripv__country">{{ stop.location.country.name }}</span>{% endif %}
                                 </p>
                                 <p class="c-tripv__dates">
+                                    {#- Today or Tomorrow (this leg) says it all: no dates then, the nights still -#}
+                                    {% set _days = date(_from).diff(date('today')).days %}
+                                    {% if isThis and _from >= 'now'|date('Y-m-d') and _days <= 1 %}
+                                        <span class="c-tripv__soon">{{ (_days == 0 ? 'landing.visitors.today' : 'landing.visitors.tomorrow')|trans }}</span>
+                                    {% else %}
                                     <span class="c-tripv__when">
                                         {%- if stop.departure|date('Y-m-d') == _from -%}
                                             {{ stop.arrival|format_date(pattern='EEE d MMM') }}
@@ -102,7 +96,8 @@
                                             {{ stop.arrival|format_date(pattern='EEE d MMM') }} – {{ stop.departure|format_date(pattern='EEE d MMM') }}
                                         {%- endif -%}
                                     </span>
-                                    {% if nights > 0 %}<span class="c-tripv__nights">({{ 'contact.trip.nights'|trans({ count: nights }) }})</span>{% endif %}
+                                    {% endif %}
+                                    {% if nights > 0 %}<span class="c-tripv__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>{% endif %}
                                 </p>
                                 {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in stop.options %}
                                     <p class="c-tripv__tags"><span class="c-tripv__tag">{{ 'trip.option.meet.locals'|trans }}</span></p>
@@ -113,6 +108,15 @@
                 </ol>
             </section>
         </div>
+
+        {% if trip.creator != app.user %}
+            {# Not for me (centred above the buttons): hides this trip from my visitors list; the page around the panel reloads without it #}
+            <form class="c-tripv__hide-form" method="post" action="{{ path('trip_hide', { id: leg.id }) }}" target="_top">
+                <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
+                <input type="hidden" name="redirectTo" value="{{ from == 'visitors' ? 'visitors' : 'homepage' }}">
+                <button type="submit" class="c-tripv__hide"><i class="fa fa-eye-slash" aria-hidden="true"></i> {{ 'trip.hide'|trans }}</button>
+            </form>
+        {% endif %}
 
         {# Message (round) is always there, also to agree on the dates before inviting #}
         <div class="c-contact__foot c-contact__foot--row">

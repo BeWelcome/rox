@@ -416,3 +416,10 @@
   .p-act-facts { padding: 0.1rem 0.9rem; }
   .p-act-chip.p-act-chip--icon, .p-act-chip.p-act-chip--icon:hover { width: 2.5rem; height: 2.5rem; }
 }
+
+/* Activity panel: Share is a round button by the cross in the head (no row of its own) */
+.p-act-head__tools { position: relative; display: flex; flex-shrink: 0; align-items: center; gap: 0.5rem; }
+.p-act-head .p-act-head__tools .p-ped-head__close { display: inline-flex; }
+.p-act-head .p-act-head__share i, .p-act-head .p-act-head__share svg { width: 0.9rem; height: 0.9rem; }
+.p-act-head .p-act-head__copied { position: absolute; top: calc(100% + 0.4rem); right: 0; z-index: 2; padding: 0.3rem 0.65rem; border-radius: 999px; background: #0f172a; color: #fff; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.p-act-head .p-act-head__copied[hidden] { display: none; }

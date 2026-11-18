@@ -1,6 +1,6 @@
 {#
   Head of an activity in the side panel of the home page: the date card, the title, how soon
-  (In 3 days) and the X.
+  (In 3 days), then Share (the phone's share sheet, else the link copied) and the X.
 #}
 <header class="p-ped-head p-act-head">
     {{ include('activity/_date_tile.html.twig', { date: activity.starts, size: 'lg' }) }}
@@ -17,7 +17,13 @@
         {% endif %}
         <p class="p-act-head__soon{{ activity.over ? ' is-over' }}">{{ _soon }}</p>
     </div>
-    <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
-        <i class="fas fa-times" aria-hidden="true"></i>
-    </button>
+    <div class="p-act-head__tools">
+        <button type="button" class="p-ped-head__close p-act-head__share js-act-share" data-url="{{ url('activities_show', { id: activity.id }) }}" data-title="{{ activity.title }}" aria-label="{{ 'activities.panel.share'|trans }}">
+            <i class="fas fa-share-nodes" aria-hidden="true"></i>
+        </button>
+        <span class="p-act-share-done p-act-head__copied js-act-share-done" role="status" hidden>{{ 'activities.panel.copied'|trans }}</span>
+        <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
 </header>

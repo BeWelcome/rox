@@ -14336,7 +14336,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-home-dash .c-home-visit__when > span + span::before { content: none; }
 .c-home-dash .c-home-visit__when > span:nth-child(n+4) { display: inline; }
 .c-home-visit__dates { color: #c2410c; font-weight: 700; }
-.c-home-visit__soon { display: inline-flex; align-items: center; padding: 0.1rem 0.55rem; border-radius: 999px; background: #e8762d; color: #fff; font-size: 0.75rem; font-weight: 700; line-height: 1.4; }
+.c-home-visit__soon { display: inline-flex; align-items: center; padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-size: 0.75rem; font-weight: 700; line-height: 1.4; }
 .c-home-visit__nights { color: #94a3b8; }
 
 /* Visitors card: the trips closer together */
@@ -14424,7 +14424,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-tripv__who-text strong i, .c-tripv__who-text strong svg { width: 0.5rem; height: 0.5rem; margin-left: 0.3rem; color: #94a3b8; vertical-align: 0.1rem; }
 .c-tripv__who:hover .c-tripv__who-text strong { text-decoration: underline; text-underline-offset: 3px; }
 .c-tripv__stops { padding-top: 1.25rem; border-top: 1px solid #eef1f5; }
-.c-tripv__soon { display: inline-flex; align-self: center; padding: 0.15rem 0.6rem; border-radius: 999px; background: #e8762d; color: #fff; font-size: 0.8125rem; font-weight: 700; }
+.c-tripv__soon { display: inline-flex; align-self: center; padding: 0.15rem 0.6rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
 .c-tripv__who-text small { margin-top: 0.1rem; color: #64748b; font-size: 1rem; }
 .c-tripv__about { display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
 .c-tripv__text { color: #334155; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }

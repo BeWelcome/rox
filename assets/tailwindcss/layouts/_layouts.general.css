@@ -14414,6 +14414,9 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-tripv .c-tripv__head { margin-top: 0.2rem; }
 .c-tripv__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.75rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
 .c-tripv__sub { margin: 0.4rem 0 0; color: #64748b; font-size: 0.9375rem; }
+.c-tripv__subdate { color: #c2410c; font-weight: 700; }
+.c-tripv__sub--one { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.45rem; }
+.c-tripv__head .c-tripv__tags { margin: 0.6rem 0 0 !important; }
 .c-tripv__who, .c-tripv__who:hover { display: flex; flex: 1; align-items: center; gap: 1rem; min-width: 0; color: inherit; text-decoration: none; }
 .c-tripv__face { flex-shrink: 0; width: 3.75rem; height: 3.75rem; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
 .c-tripv__who-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
@@ -14426,6 +14429,8 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-tripv__about { display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
 .c-tripv__text { color: #334155; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
 .c-tripv__text.is-clamped { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 10; }
+/* one stop: no itinerary, so more of the text before Read more */
+.c-tripv:not(:has(.c-tripv__stops)) .c-tripv__text.is-clamped { -webkit-line-clamp: 16; }
 .c-tripv__more { padding: 0; border: 0; background: none; color: #334155; font-size: 0.9375rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .c-tripv__more[hidden] { display: none; }
 .c-tripv__h2 { margin: 0 0 0.9rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.2rem; font-weight: 700; }

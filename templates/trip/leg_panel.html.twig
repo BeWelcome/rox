@@ -44,17 +44,32 @@
                 </button>
             </div>
 
-            {# The title, then where and when: the dates for one stop (the place is ours), the number of stops otherwise #}
+            {# The title, then when: for one stop (the place is ours) the dates or Today / Tomorrow and the nights,
+               as no itinerary is shown then; for several, the number of stops and the whole span #}
             <header class="c-tripv__head">
                 <h1 class="c-tripv__title">{{ trip.summary ?: (_first ? _first.location.name : '') }}</h1>
                 {% if _first %}
-                    <p class="c-tripv__sub">
-                        {%- if stops|length == 1 -%}
-                            {{ _first.arrival|format_date(pattern='EEE d') }}{% if _first.departure|date('Y-m-d') != _first.arrival|date('Y-m-d') %} – {{ _first.departure|format_date(pattern='EEE d MMM') }}{% else %} {{ _first.arrival|format_date(pattern='MMM') }}{% endif %}
-                        {%- else -%}
-                            {{ 'contact.trip.stops'|trans({ count: stops|length }) }} · {{ _first.arrival|format_date(pattern='d MMM') }} – {{ _last.departure|format_date(pattern='d MMM') }}
-                        {%- endif %} · {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) -}}
-                    </p>
+                    {% if stops|length == 1 %}
+                        {% set _from = _first.arrival|date('Y-m-d') %}
+                        {% set _days = date(_from).diff(date('today')).days %}
+                        {% set nights = date(_first.departure|date('Y-m-d')).diff(date(_from)).days %}
+                        <p class="c-tripv__sub c-tripv__sub--one">
+                            {% if _from >= 'now'|date('Y-m-d') and _days <= 1 %}
+                                <span class="c-tripv__soon">{{ (_days == 0 ? 'landing.visitors.today' : 'landing.visitors.tomorrow')|trans }}</span>
+                            {% else %}
+                                <span class="c-tripv__subdate">{{ _first.arrival|format_date(pattern='EEE d') }}{% if _first.departure|date('Y-m-d') != _from %} – {{ _first.departure|format_date(pattern='EEE d MMM') }}{% else %} {{ _first.arrival|format_date(pattern='MMM') }}{% endif %}</span>
+                            {% endif %}
+                            {% if nights > 0 %}<span class="c-tripv__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>{% endif %}
+                            <span>· {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
+                        </p>
+                        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in _first.options %}
+                            <p class="c-tripv__tags"><span class="c-tripv__tag">{{ 'trip.option.meet.locals'|trans }}</span></p>
+                        {% endif %}
+                    {% else %}
+                        <p class="c-tripv__sub">
+                            {{- 'contact.trip.stops'|trans({ count: stops|length }) }} · {{ _first.arrival|format_date(pattern='d MMM') }} – {{ _last.departure|format_date(pattern='d MMM') }} · {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) -}}
+                        </p>
+                    {% endif %}
                 {% endif %}
             </header>
 
@@ -65,7 +80,8 @@
                 </section>
             {% endif %}
 
-            {# The stops as a timeline: this leg's number dark and its dates in orange #}
+            {# The stops as a timeline (only with several: one stop is said under the title): this leg's number dark and its dates in orange #}
+            {% if stops|length > 1 %}
             <section class="c-tripv__stops">
                 <h2 class="c-tripv__h2">{{ 'trip.panel.itinerary'|trans }}</h2>
                 <ol class="c-tripv__list">
@@ -107,6 +123,7 @@
                     {% endfor %}
                 </ol>
             </section>
+            {% endif %}
         </div>
 
         {% if trip.creator != app.user %}

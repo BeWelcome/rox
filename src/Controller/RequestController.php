@@ -271,6 +271,11 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
+        // A declined or cancelled request stays so: the guest can only write (no new dates, no cancelling)
+        if ($this->isClosed($hostingRequest)) {
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
+        }
+
         [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
@@ -316,6 +321,11 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
+        // The guest cancelled: accepting or declining means nothing any more, the host can only write
+        if (HostingRequest::REQUEST_CANCELLED === $hostingRequest->getRequest()->getStatus()) {
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
+        }
+
         [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
@@ -353,6 +363,15 @@ class RequestController extends BaseRequestAndInvitationController
             'form' => $requestForm->createView(),
             'thread' => $thread,
         ] + $this->inboxFolders->getContext($request, $this->getUser()));
+    }
+
+    private function isClosed(Message $hostingRequest): bool
+    {
+        return \in_array(
+            $hostingRequest->getRequest()->getStatus(),
+            [HostingRequest::REQUEST_DECLINED, HostingRequest::REQUEST_CANCELLED],
+            true,
+        );
     }
 
     private function sendGuestReplyNotification(

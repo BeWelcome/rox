@@ -14611,3 +14611,11 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .c-tripv .c-tripv__meet { display: flex; align-items: flex-start; gap: 0.65rem; margin: 0.8rem 0 0 !important; padding: 0.7rem 0.9rem; border: 1px solid #fde2cc; border-radius: 0.85rem; background: #fff7f0; color: #7c2d12; font-size: 0.875rem; line-height: 1.45; }
 .c-tripv .c-tripv__meet i,
 .c-tripv .c-tripv__meet svg { flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.1rem; color: #ea7a2e; }
+
+/* Search preview drawer: Can host and the reply rate smaller and the same height, on every screen */
+.p-search-preview__tiles .p-search-preview__chip,
+.p-search-preview__tiles .c-reply-rate--chip { box-sizing: border-box; height: 1.9rem; padding: 0 0.75rem; font-size: 0.8125rem; line-height: 1; }
+.p-search-preview__tiles .c-reply-rate--chip { gap: 0.35rem; padding-left: 0.3rem; }
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge { width: 1.3rem; height: 1.3rem; }
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > i,
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > svg:not(.c-reply-ring) { font-size: 0.5rem; }

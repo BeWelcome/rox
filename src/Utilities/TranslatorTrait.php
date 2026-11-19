@@ -29,12 +29,9 @@ trait TranslatorTrait
      */
     protected function setTranslatorLocale(Member $receiver): void
     {
-        $language = $receiver->getPreferredLanguage();
-
         /** @var Translator $translator */
         $translator = $this->getTranslator();
-        // members without a preferred language get English
-        $translator->setLocale(null === $language ? 'en' : $language->getShortCode());
+        $translator->setLocale($receiver->getLocale());
 
         $this->translator = $translator;
     }

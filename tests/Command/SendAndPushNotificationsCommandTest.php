@@ -9,7 +9,6 @@ use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
-use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
@@ -425,14 +424,13 @@ class SendAndPushNotificationsCommandTest extends TestCase
      */
     private function createThreadedNotifications(): array
     {
-        $language = new Language()->setShortCode('en');
         $receiver = new Member()
             ->setId(7)
             ->setUsername('receiver')
             ->setEmail('receiver@example.org')
             ->setStatus(MemberStatusType::ACTIVE)
+            ->setLocale('en')
         ;
-        new ReflectionProperty($receiver, 'preferredLanguage')->setValue($receiver, $language);
         $author = new Member()->setId(8)->setUsername('author');
         $thread = new ForumThread()->setId(42)->setTitle('Forum topic');
         $post = new ForumPost()
@@ -488,17 +486,12 @@ class SendAndPushNotificationsCommandTest extends TestCase
 
     private function member(string $username): Member
     {
-        $language = new Language()
-            ->setShortCode('en')
-            ->setName('English')
-        ;
         $member = new Member()
             ->setUsername($username)
             ->setStatus(MemberStatusType::ACTIVE)
             ->setLocale('en')
         ;
         $this->setPrivateProperty($member, 'id', $this->nextMemberId++);
-        $this->setPrivateProperty($member, 'preferredLanguage', $language);
 
         return $member;
     }

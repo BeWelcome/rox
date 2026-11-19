@@ -14619,3 +14619,9 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge { width: 1.3rem; height: 1.3rem; }
 .p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > i,
 .p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > svg:not(.c-reply-ring) { font-size: 0.5rem; }
+
+/* Home hello card on phones: Not hosting smaller and on one line */
+@media (max-width: 767.98px) {
+  .l-hello .l-hello__status { font-size: 0.8125rem; white-space: nowrap; }
+  .l-hello .l-hello__where .l-hello__city { min-width: 0; }
+}

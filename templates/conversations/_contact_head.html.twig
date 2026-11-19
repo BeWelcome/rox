@@ -12,7 +12,7 @@
   open the member's preview in the panel, its back arrow comes back to the conversation.
 #}
 {# A trip: the traveller is looking for a host, so whether they host isn't shown #}
-{% set _hosting = kind not in ['trip', 'preview'] and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
+{% set _hosting = kind not in ['trip', 'preview', 'conversation'] and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
 {# A real way back (the member's preview from a trip, or ?back=): the arrow on the left. Otherwise the
    panel closes: a cross on the right, like any drawer. #}
 {% set _goesBack = kind == 'preview' or app.request.query.get('back') %}

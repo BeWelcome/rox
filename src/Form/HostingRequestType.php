@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
+use DateTimeInterface;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -18,11 +20,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HostingRequestType extends AbstractType
 {
-    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer $legTransformer)
-    {
+    public function __construct(
+        private readonly DateTransformer $dateTimeTransformer,
+        private readonly LegTransformer $legTransformer,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -59,6 +65,25 @@ class HostingRequestType extends AbstractType
             }
         });
 
+        // No stay in the past: a request (or an invitation) whose arrival has passed can only be answered by a message
+        // (BaseRequestModel::hasExpired). Checked for new dates only, so a message on a request keeps its dates.
+        $arrivalBefore = null;
+        $builder->addEventListener(FormEvents::POST_SET_DATA, static function (FormEvent $event) use (&$arrivalBefore) {
+            $data = $event->getData();
+            $arrivalBefore = $data instanceof HostingRequest ? $data->getArrival()?->format('Y-m-d') : null;
+        });
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use (&$arrivalBefore) {
+            $arrival = $event->getForm()->get('arrival')->getData();
+            if (!$arrival instanceof DateTimeInterface) {
+                return;
+            }
+            $day = $arrival->format('Y-m-d');
+            if ($day < date('Y-m-d') && $day !== $arrivalBefore) {
+                $form = $event->getForm();
+                $field = $form->has('duration') ? $form->get('duration') : $form;
+                $field->addError(new FormError($this->translator->trans('request.error.arrival.past')));
+            }
+        });
         // The duration field only mirrors the two dates (filled by requests.js). Fill it here
         // too, so that a request with both dates never fails on "Please set a duration".
         $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {

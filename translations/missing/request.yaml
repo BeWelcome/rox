@@ -1,6 +1,9 @@
 label.decline.no.message:
     - 'Decline without message'
     - Button label in case someone wants to decline a request/invitation without giving a reason
+request.error.arrival.past:
+    - 'The arrival can''t be in the past.'
+    - Error message shown when a request (or an invitation) is sent or changed with an arrival before today
 request.error.duration:
     - 'Please set a duration'
     - Error message shown when no duration was selected in a request

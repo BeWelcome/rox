@@ -7796,8 +7796,7 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-card__country,
   .p-pro__country-part { display: none; }
   .p-search-card__foot { align-self: start; margin-top: 0.3rem; font-size: 0.875rem; }
-  .p-search-card__login-label,
-  .p-search-card__activity.is-since-only { display: none; }
+  .p-search-card__login-label { display: none; }
   .p-search-card .p-search-card__about { margin-top: 0.85rem; }
   .p-search-card__comments-pill { margin-left: 0.5rem; padding: 0.3rem 0.7rem; }
 
@@ -14567,4 +14566,18 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .p-search-results .p-search-card__meta,
   .p-search-results .p-search-card__foot { margin-top: 0.15rem; font-size: 0.875rem; }
   .p-search-results .p-search-card .p-search-card__about { margin-top: 0.7rem; font-size: 0.875rem; line-height: 1.5; }
+}
+
+/* Search results on phones: more compact rows too (64px photo, smaller name, tighter text) */
+@media (max-width: 767.98px) {
+  .p-search-results .p-search-card { grid-template-columns: 4rem minmax(0, 1fr) auto; column-gap: 0.85rem; padding: 0.85rem 1rem 0.8rem; }
+  .p-search-results .p-search-card__avatar img { width: 4rem; height: 4rem; }
+  .p-search-results .p-search-card__avatar .p-search-card__host { width: 1.5rem; height: 1.5rem; font-size: 0.6rem; }
+  .p-search-results .p-search-card__name,
+  .p-search-results .p-search-card__name:hover { font-size: 1.05rem; }
+  .p-search-results .p-search-card .p-search-card__occupation { margin-top: 0.05rem; font-size: 0.8125rem; }
+  .p-search-results .p-search-card__meta,
+  .p-search-results .p-search-card__foot { margin-top: 0.1rem; font-size: 0.8125rem; }
+  .p-search-results .p-search-card .p-search-card__about { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.45; }
+  .p-search-results .p-search-card__comments-pill { padding: 0.2rem 0.55rem; font-size: 0.8125rem; }
 }

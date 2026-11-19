@@ -159,8 +159,7 @@
         <header class="c-home-dash__head">
             <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
             <h2 class="c-home-dash__title" id="home_trips_title">
-                {# Phones: just "Visitors", the long title doesn't fit next to the count, the radius and See all #}
-                <a href="{{ url('visitors') }}">{% if homeCity %}<span class="c-home-dash__title-long">{{ 'landing.dash.coming.to'|trans({ city: homeCity }) }}</span><span class="c-home-dash__title-short">{{ 'landing.tab.visitors'|trans }}</span>{% else %}{{ 'landing.tab.visitors'|trans }}{% endif %}</a>
+                <a href="{{ url('visitors') }}">{{ 'landing.tab.visitors'|trans }}</a>
             </h2>
             <span class="c-home-dash__count js-home-trips-position" hidden></span>
             {# The distance: a pill that opens the site's dropdown menu (landing.js sets #trips_radius and reloads) #}

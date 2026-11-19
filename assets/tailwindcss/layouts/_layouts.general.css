@@ -14635,3 +14635,15 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 767.98px) {
   .p-trips .p-trips__top .p-trips__title .p-trips__title-count { min-width: 1.6rem; height: 1.6rem; margin-left: 0.3rem; padding: 0 0.5rem; background: rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.8125rem; vertical-align: 0.15em; }
 }
+
+/* Trip page head as in the side panel: the traveller and Edit / Copy, when, then the text across the card */
+.p-trips .p-trip-hero { display: block; }
+.p-trip-hero__top { display: flex; align-items: center; gap: 1rem; }
+.p-trip-hero__top .p-trip-hero__actions { flex-shrink: 0; margin-left: auto; }
+.p-trips .p-trip-hero .p-trip-hero__when { margin: 1rem 0 0; }
+.p-trip-hero__when i, .p-trip-hero__when svg { width: 0.8rem; height: 0.8rem; color: #94a3b8; }
+.p-trips .p-trip-hero .p-trip-hero__text { margin-top: 0.85rem; color: #334155; font-size: 1rem; line-height: 1.6; }
+@media (max-width: 767.98px) {
+  .p-trip-hero__top { flex-wrap: wrap; }
+  .p-trip-hero__top .p-trip-hero__actions { width: 100%; margin-left: 0; justify-content: flex-start; }
+}

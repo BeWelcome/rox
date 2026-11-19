@@ -14581,3 +14581,8 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .p-search-results .p-search-card .p-search-card__about { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.45; }
   .p-search-results .p-search-card__comments-pill { padding: 0.2rem 0.55rem; font-size: 0.8125rem; }
 }
+
+/* Trip panel: Meet locals as an orange note: info icon and the sentence */
+.c-tripv .c-tripv__meet { display: flex; align-items: flex-start; gap: 0.65rem; margin: 0.8rem 0 0 !important; padding: 0.7rem 0.9rem; border: 1px solid #fde2cc; border-radius: 0.85rem; background: #fff7f0; color: #7c2d12; font-size: 0.875rem; line-height: 1.45; }
+.c-tripv .c-tripv__meet i,
+.c-tripv .c-tripv__meet svg { flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.1rem; color: #ea7a2e; }

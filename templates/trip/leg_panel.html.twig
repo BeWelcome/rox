@@ -63,7 +63,7 @@
                             <span>· {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
                         </p>
                         {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in _first.options %}
-                            <p class="c-tripv__tags"><span class="c-tripv__tag">{{ 'trip.option.meet.locals'|trans }}</span></p>
+                            <p class="c-tripv__meet"><i class="fas fa-info-circle" aria-hidden="true"></i> <span>{{ 'trip.panel.meet.locals.note'|trans({ name: member_display_name(traveller) }) }}</span></p>
                         {% endif %}
                     {% else %}
                         <p class="c-tripv__sub">
@@ -116,7 +116,7 @@
                                     {% if nights > 0 %}<span class="c-tripv__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>{% endif %}
                                 </p>
                                 {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in stop.options %}
-                                    <p class="c-tripv__tags"><span class="c-tripv__tag">{{ 'trip.option.meet.locals'|trans }}</span></p>
+                                    <p class="c-tripv__meet"><i class="fas fa-info-circle" aria-hidden="true"></i> <span>{{ 'trip.panel.meet.locals.note'|trans({ name: member_display_name(traveller) }) }}</span></p>
                                 {% endif %}
                             </div>
                         </li>

@@ -304,3 +304,6 @@ trip.panel.itinerary:
 trip.panel.profile:
     - 'Profile'
     - 'Trip in the side panel, the link on the traveller''s card that opens their profile preview.'
+trip.panel.meet.locals.note:
+    - '{name} would like to meet locals.'
+    - 'Trip in the side panel, the orange note on a stop where the traveller ticked Meet locals. {name} is the traveller.'

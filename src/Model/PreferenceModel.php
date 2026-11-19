@@ -16,11 +16,8 @@ class PreferenceModel
     public function getPreferences(): array
     {
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        $preferences = $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
 
-        return array_filter($preferences, static function ($preference) {
-            return Preference::LOCALE !== $preference->getCodename();
-        });
+        return $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
     }
 
     public function getMemberPreferences(Member $member, array $preferences): array

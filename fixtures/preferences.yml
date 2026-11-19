@@ -1,13 +1,4 @@
 App\Entity\Preference:
-    LOCALE:
-        codename: 'PreferenceLanguage'
-        position: 10
-        codeDescription: 'PreferenceLanguageDesc'
-        Description: 'This preference will be used for language preference.\r\nIt is initially set to the language the member has choosen at first profile update \r\nMembers.Preferences.Value will contain the corresponding IdLanguage'
-        DefaultValue: 0
-        PossibleValues: ''
-        created: <DateTime()>
-        Status: 'Normal'
     TIMEZONE:
         codename: 'PreferenceLocalTime'
         position: 10

@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\MemberPreference;
-use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,25 +23,10 @@ class LocaleController extends AbstractController
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         EntityManagerInterface $entityManager,
     ): RedirectResponse {
-        /** @var Member $member */
+        // A member keeps the language: the login and the mails sent to them use it (Member::locale)
         $member = $this->getUser();
-        if ($member) {
-            $preference = $entityManager->getRepository(Preference::class)->findOneBy([
-                'codename' => Preference::LOCALE,
-            ]);
-            $memberPreference = $entityManager->getRepository(MemberPreference::class)->findOneBy([
-                'preference' => $preference,
-                'member' => $member,
-            ]);
-            if (null === $memberPreference) {
-                $memberPreference = new MemberPreference();
-                $memberPreference
-                    ->setMember($member)
-                    ->setPreference($preference)
-                ;
-            }
-            $memberPreference->setValue($language->getShortCode());
-            $entityManager->persist($memberPreference);
+        if ($member instanceof Member) {
+            $member->setLocale($language->getShortCode());
             $entityManager->flush();
         }
 

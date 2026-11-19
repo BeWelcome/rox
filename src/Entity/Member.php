@@ -248,8 +248,6 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
     #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private Collection $addresses;
 
-    private ?Language $preferredLanguage = null;
-
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -1343,11 +1341,6 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         }
 
         return $value;
-    }
-
-    public function getPreferredLanguage(): ?Language
-    {
-        return $this->preferredLanguage;
     }
 
     public function getPreferences(): Collection

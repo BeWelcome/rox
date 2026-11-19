@@ -1197,6 +1197,22 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         return $this->username;
     }
 
+    /**
+     * The name shown to other members in lists: the short name when set, else the name unless the member hides
+     * it, else the username.
+     */
+    public function getDisplayName(): string
+    {
+        if ($this->isShortNameVisible()) {
+            return (string) $this->shortName;
+        }
+        if ($this->isNameVisible() && null !== $this->name && '' !== trim($this->name)) {
+            return trim($this->name);
+        }
+
+        return $this->username;
+    }
+
     public function getLanguageLevels(): array
     {
         $languageLevels = array_filter(

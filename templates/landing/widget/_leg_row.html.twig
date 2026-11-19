@@ -17,7 +17,7 @@
     <img class="c-home-visit__avatar" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="" loading="lazy">
     <div class="c-home-visit__body">
         <p class="c-home-visit__top">
-            <span class="c-home-visit__name">{{ traveller.shortNameOrUsername }}</span>
+            <span class="c-home-visit__name">{{ member_display_name(traveller) }}</span>
             {% if invited %}
                 <span class="c-home-visit__tag c-home-visit__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
             {% elseif constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}

@@ -18,7 +18,7 @@
     <img class="c-home-item__avatar" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="" loading="lazy">
     <div class="c-home-item__body">
         <span class="c-home-item__top">
-            <span class="c-home-item__name">{{ traveller.shortNameOrUsername }}</span>
+            <span class="c-home-item__name">{{ member_display_name(traveller) }}</span>
             {% if leg.trip.summary %}<span class="c-home-item__title">{{ leg.trip.summary }}</span>{% endif %}
         </span>
         {% set _excerpt = leg.trip.description|striptags|trim %}

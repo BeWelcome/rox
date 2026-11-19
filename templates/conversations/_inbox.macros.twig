@@ -101,7 +101,7 @@
             </span>
             <div class="c-inbox-item__body">
                 <div class="c-inbox-item__top">
-                    <span class="c-inbox-item__name">{{ member_name(otherMember) }}</span>
+                    <span class="c-inbox-item__name">{{ member_display_name(otherMember) }}</span>
                     <span class="c-inbox-item__date">{{ when }}</span>
                 </div>
                 {# The subject, and for a request or invitation its dates on the right, coloured by where it stands #}
@@ -110,7 +110,7 @@
                         {%- if message.subject -%}
                             {{ message.subject.subject|striptags }}
                         {%- else -%}
-                            {{ 'conversation.with'|trans({ username: member_name(otherMember) }) }}
+                            {{ 'conversation.with'|trans({ username: member_display_name(otherMember) }) }}
                         {%- endif -%}
                     </div>
                     {% if message.request %}{% include 'conversations/_request_state.html.twig' with { request: message.request, unread: unread, part: 'pill' } only %}{% endif %}

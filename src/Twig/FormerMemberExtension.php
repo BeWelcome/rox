@@ -30,6 +30,7 @@ class FormerMemberExtension extends AbstractExtension
     {
         return [
             new TwigFunction('member_name', $this->memberName(...)),
+            new TwigFunction('member_display_name', $this->memberDisplayName(...)),
         ];
     }
 
@@ -56,5 +57,18 @@ class FormerMemberExtension extends AbstractExtension
         }
 
         return $member instanceof Member ? $member->getUsername() : $member;
+    }
+
+    /**
+     * The short name, else the name unless hidden, else the username (Member::getDisplayName()), or "Former
+     * member" for a retired member.
+     */
+    public function memberDisplayName(Member|string|null $member): string
+    {
+        if ($member instanceof Member && !$this->isFormerMember($member)) {
+            return $member->getDisplayName();
+        }
+
+        return $this->memberName($member);
     }
 }

@@ -12,6 +12,11 @@
   {{ 'trips.mytrips' | trans }}
 {% endblock %}
 
+{# The number of trips next to the title #}
+{% block page_title %}
+  {{- block('title')|trim|raw }}{% if trips.nbResults %} <span class="p-trips__title-count">{{ trips.nbResults }}</span>{% endif -%}
+{% endblock %}
+
 {% block stylesheets %}
   {{ encore_entry_link_tags('tailwind') }}
   {{ encore_entry_link_tags('trips') }}
@@ -24,10 +29,6 @@
 {% block content %}
 <section class="p-trips__body">
   {% if trips.nbResults != 0 %}
-    <div class="p-trips__toolbar">
-      <p class="p-trips__count"><i class="fa fa-plane" aria-hidden="true"></i> {{ trips.nbResults }}</p>
-    </div>
-
     <div class="p-trips__list">
       {% for trip in trips %}
         {% set first = trip.legs|first %}

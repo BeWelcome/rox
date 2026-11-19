@@ -13741,7 +13741,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
 /* A trip: who travels and the stops in the left column, the map alone in the right one, sticky and tall */
 .p-trip-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
 .p-trip-main { min-width: 0; }
-.p-trips .p-trip-map__map { height: calc(100vh - 2rem - 1rem); min-height: 480px; max-height: 760px; }
+.p-trips .p-trip-map__map { height: 360px; min-height: 0; max-height: none; }
 @media (max-width: 767.98px) {
   .p-trip-layout { grid-template-columns: minmax(0, 1fr); }
   .p-trip-main { display: contents; }
@@ -14624,4 +14624,14 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 767.98px) {
   .l-hello .l-hello__status { font-size: 0.8125rem; white-space: nowrap; }
   .l-hello .l-hello__where .l-hello__city { min-width: 0; }
+}
+
+/* My trips: trips that are over clearly greyed (a bit less on hover) */
+.p-trips .p-trips-trip.is-over { background: #f8fafc; opacity: 0.55; filter: grayscale(1); transition: opacity 0.15s ease; }
+.p-trips .p-trips-trip.is-over:hover,
+.p-trips .p-trips-trip.is-over:focus-within { opacity: 0.85; }
+/* My trips: the number of trips as a small pill next to the title */
+.p-trips .p-trips__title .p-trips__title-count { display: inline-flex; align-items: center; justify-content: center; min-width: 1.9rem; height: 1.9rem; margin-left: 0.4rem; padding: 0 0.6rem; border-radius: 999px; background: #e9edf2; color: #475569; font-family: inherit; font-size: 0.9375rem; font-weight: 700; line-height: 1; vertical-align: 0.3em; }
+@media (max-width: 767.98px) {
+  .p-trips .p-trips__top .p-trips__title .p-trips__title-count { min-width: 1.6rem; height: 1.6rem; margin-left: 0.3rem; padding: 0 0.5rem; background: rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.8125rem; vertical-align: 0.15em; }
 }

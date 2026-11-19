@@ -423,3 +423,16 @@
 .p-act-head .p-act-head__share i, .p-act-head .p-act-head__share svg { width: 0.9rem; height: 0.9rem; }
 .p-act-head .p-act-head__copied { position: absolute; top: calc(100% + 0.4rem); right: 0; z-index: 2; padding: 0.3rem 0.65rem; border-radius: 999px; background: #0f172a; color: #fff; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
 .p-act-head .p-act-head__copied[hidden] { display: none; }
+
+/* Date and place block in light orange, like the date tile */
+.p-act-facts { background: #fff5ec; }
+.p-act-facts .p-act-facts__row + .p-act-facts__row { border-top-color: #fde2cc; }
+.p-act-facts .p-act-facts__icon { color: #ea7a2e; }
+.p-act-facts .p-act-chip.p-act-chip--icon, .p-act-facts .p-act-chip.p-act-chip--icon:hover { border-color: #fbd3b2; color: #c2410c; }
+.p-act-facts .p-act-chip.p-act-chip--icon:hover { background: #fff1e4; }
+/* The place on one line: Berlin, then the rest of its name in grey (cut with … when too long) */
+.p-act-facts .p-act-facts__text strong.p-act-facts__place { flex-wrap: nowrap; min-width: 0; }
+.p-act-facts__place-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.p-act-facts__rest { color: #64748b; font-weight: 400; }
+/* The time lighter than the day */
+.p-act-facts__time { font-weight: 500; }

@@ -22,7 +22,7 @@
         {% endif %}
         {# Opens in the side panel of the home page, like Send on a profile (contact/drawer.js) #}
         <a class="c-home-item c-home-msg js-contact-open js-home-message{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}"
-           data-title="{{ message.sender ? (message.sender.shortNameOrUsername ?? message.sender.username) : 'BeWelcome' }}">
+           data-title="{{ message.sender ? member_display_name(message.sender) : 'BeWelcome' }}">
             {% if message.sender %}
                 <span class="c-home-item__avatar-wrap">
                     <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 96 }) }}" alt="" loading="lazy">
@@ -33,7 +33,7 @@
             {% endif %}
             <span class="c-home-item__body">
                 <span class="c-home-item__top">
-                    <span class="c-home-item__name">{{ message.sender ? message.sender.username : 'BeWelcome' }}</span>
+                    <span class="c-home-item__name">{{ message.sender ? member_display_name(message.sender) : 'BeWelcome' }}</span>
                     <span class="c-home-item__time">{{ message.created.diffForHumans }}{% if unread %}<span class="c-home-item__dot" aria-hidden="true"></span>{% endif %}</span>
                 </span>
                 <span class="c-home-msg__line{% if toAnswer %} c-home-msg__line--wait{% endif %}">

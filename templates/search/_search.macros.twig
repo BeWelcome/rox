@@ -69,7 +69,7 @@
 {% macro map_popup(result) %}
     {% import _self as search %}
     {% set member = result.member %}
-    {% set displayName = member.name is empty ? member.username : member.name %}
+    {% set displayName = member_display_name(member) %}
     {% set address = member.activeAddress %}
     {% set facts = [] %}
     {% if member.isAgeVisible %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}

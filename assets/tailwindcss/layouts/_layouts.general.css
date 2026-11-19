@@ -7796,8 +7796,7 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-card__country,
   .p-pro__country-part { display: none; }
   .p-search-card__foot { align-self: start; margin-top: 0.3rem; font-size: 0.875rem; }
-  .p-search-card__login-label,
-  .p-search-card__activity.is-since-only { display: none; }
+  .p-search-card__login-label { display: none; }
   .p-search-card .p-search-card__about { margin-top: 0.85rem; }
   .p-search-card__comments-pill { margin-left: 0.5rem; padding: 0.3rem 0.7rem; }
 
@@ -10198,10 +10197,10 @@ body.is-embedded { background: #fff; }
 .p-search-contact:not(.is-loaded)::after { position: absolute; top: 50%; left: 50%; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 3px solid #fde6d2; border-top-color: #ea7a2e; border-radius: 50%; animation: p-search-preview-spin 0.8s linear infinite; content: ""; }
 @media (min-width: 768px) { .p-contact-drawer { width: min(460px, 100%); } }
 .c-contact { display: flex; flex-direction: column; height: 100vh; background: #fff; color: #0f172a; }
-.c-contact-head { display: flex; flex-shrink: 0; align-items: center; gap: 0.75rem; padding: 1.1rem 1.25rem 0.6rem; }
+.c-contact-head { display: flex; flex-shrink: 0; align-items: center; gap: 0.75rem; padding: 0.65rem 1.25rem 0.6rem; }
 .c-contact-head__back { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.9rem; }
 .c-contact-head__back:hover { border-color: #cbd5e1; background: #f8fafc; }
-.c-contact-head__photo { position: relative; flex-shrink: 0; width: 3rem; height: 3rem; }
+.c-contact-head__photo { position: relative; flex-shrink: 0; width: 3.75rem; height: 3.75rem; }
 .c-contact-head__photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
 .c-contact-head__photo--yes img { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3fa75a; }
 .c-contact-head__photo--no img { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #cbd5e1; }
@@ -13742,7 +13741,7 @@ a.c-home-trip__name:hover { color: #c2410c; }
 /* A trip: who travels and the stops in the left column, the map alone in the right one, sticky and tall */
 .p-trip-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
 .p-trip-main { min-width: 0; }
-.p-trips .p-trip-map__map { height: calc(100vh - 2rem - 1rem); min-height: 480px; max-height: 760px; }
+.p-trips .p-trip-map__map { height: 360px; min-height: 0; max-height: none; }
 @media (max-width: 767.98px) {
   .p-trip-layout { grid-template-columns: minmax(0, 1fr); }
   .p-trip-main { display: contents; }
@@ -14543,4 +14542,108 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   body:has(.p-pro--compact) .p-comments-page .p-comments-page__filter.p-pro-filter.p-pro-filter { margin: 0 !important; padding: 1.1rem 0 1.1rem !important; }
   body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__rules.p-comments-cta__rules { margin: 0 0 0.5rem; text-align: center; font-size: 0.75rem; }
   body:has(.p-pro--compact):has(.p-comments-cta__rules) { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
+}
+
+/* Home dashboard, Group discussions: the group's picture (or letter) as a rounded square, not a circle */
+.c-home-dash .c-home-talk .c-home-item__avatar { border-radius: 0.5rem; }
+
+/* Conversations list: bigger faces, there is room (as on the home Messages card) */
+.c-inbox__list .c-inbox-item__avatar .c-inbox-avatar { width: 3.5rem; height: 3.5rem; }
+@media (max-width: 767.98px) {
+  .c-inbox__list .c-inbox-item__avatar .c-inbox-avatar { width: 3.25rem; height: 3.25rem; }
+}
+
+/* Search results on larger screens: one compact list (smaller photo, tighter text), about 5 on a 13" screen */
+@media (min-width: 768px) {
+  /* With the map: the results column is white, the rows' lines go from the page edge to the map, the content lines up with the search field */
+  .p-search:not(.is-map-off) .p-search-results { padding: 0.9rem 0 2rem; background: #fff; }
+  .p-search:not(.is-map-off) .p-search-results__head { margin-bottom: 0.5rem; padding: 0 1.5rem 0 var(--p-search-gutter); }
+  .p-search:not(.is-map-off) .p-search-results__foot { padding: 0 1.5rem 0 var(--p-search-gutter); }
+  /* The lines between rows only under the content, from the photo to the right margin */
+  .p-search:not(.is-map-off) .p-search-results .p-search-results__cards { gap: 0; border-top: 0; border-bottom: 0; background: #fff; }
+  .p-search:not(.is-map-off) .p-search-results .p-search-card + .p-search-card::before { position: absolute; top: 0; right: 1.5rem; left: var(--p-search-gutter); height: 1px; background: #e8edf3; content: ""; }
+  /* The photo alone in its column: "About me" stays in the text column, not under the photo */
+  .p-search-results .p-search-card {
+    grid-template-rows: auto auto auto auto auto 1fr;
+    grid-template-areas:
+      "avatar title pill"
+      "avatar occupation occupation"
+      "avatar meta meta"
+      "avatar foot foot"
+      "avatar about about"
+      "avatar . .";
+  }
+  .p-search-results .p-search-card__avatar { align-self: start; }
+  .p-search-results .p-search-card__title { align-self: center; }
+  /* The photos line up with the search field above */
+  .p-search:not(.is-map-off) .p-search-results .p-search-card { padding-right: 1.5rem; padding-left: var(--p-search-gutter); }
+  /* As on phones: white rows split by a thin grey line, no cards and no rounded corners */
+  .p-search-results .p-search-results__cards { gap: 1px; overflow: visible; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 0; background: #e2e8f0; box-shadow: none; }
+  .p-search-results .p-search-results__cards .p-search-card { border-radius: 0; box-shadow: none; }
+  .p-search-results .p-search-results__cards .p-search-card:hover { background: #fafbfc; box-shadow: none; }
+  .p-search-results .p-search-card { grid-template-columns: 4.5rem minmax(0, 1fr) auto; column-gap: 1.1rem; padding: 1rem 1.25rem 0.95rem; }
+  .p-search-results .p-search-card__avatar img { width: 4.5rem; height: 4.5rem; }
+  .p-search-results .p-search-card__avatar .p-search-card__host { width: 1.6rem; height: 1.6rem; font-size: 0.65rem; }
+  .p-search-results .p-search-card__name,
+  .p-search-results .p-search-card__name:hover { font-size: 1.15rem; }
+  .p-search-results .p-search-card__username { font-size: 0.875rem; }
+  .p-search-results .p-search-card .p-search-card__occupation { margin-top: 0.1rem; font-size: 0.875rem; }
+  .p-search-results .p-search-card__meta,
+  .p-search-results .p-search-card__foot { margin-top: 0.15rem; font-size: 0.875rem; }
+  .p-search-results .p-search-card .p-search-card__about { margin-top: 0.7rem; font-size: 0.875rem; line-height: 1.5; }
+}
+
+/* Search results on phones: more compact rows too (64px photo, smaller name, tighter text) */
+@media (max-width: 767.98px) {
+  .p-search-results .p-search-card { grid-template-columns: 4rem minmax(0, 1fr) auto; column-gap: 0.85rem; padding: 0.85rem 1rem 0.8rem; }
+  .p-search-results .p-search-card__avatar img { width: 4rem; height: 4rem; }
+  .p-search-results .p-search-card__avatar .p-search-card__host { width: 1.5rem; height: 1.5rem; font-size: 0.6rem; }
+  .p-search-results .p-search-card__name,
+  .p-search-results .p-search-card__name:hover { font-size: 1.05rem; }
+  .p-search-results .p-search-card .p-search-card__occupation { margin-top: 0.05rem; font-size: 0.8125rem; }
+  .p-search-results .p-search-card__meta,
+  .p-search-results .p-search-card__foot { margin-top: 0.1rem; font-size: 0.8125rem; }
+  .p-search-results .p-search-card .p-search-card__about { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.45; }
+  .p-search-results .p-search-card__comments-pill { padding: 0.2rem 0.55rem; font-size: 0.8125rem; }
+}
+
+/* Trip panel: Meet locals as an orange note: info icon and the sentence */
+.c-tripv .c-tripv__meet { display: flex; align-items: flex-start; gap: 0.65rem; margin: 0.8rem 0 0 !important; padding: 0.7rem 0.9rem; border: 1px solid #fde2cc; border-radius: 0.85rem; background: #fff7f0; color: #7c2d12; font-size: 0.875rem; line-height: 1.45; }
+.c-tripv .c-tripv__meet i,
+.c-tripv .c-tripv__meet svg { flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.1rem; color: #ea7a2e; }
+
+/* Search preview drawer: Can host and the reply rate smaller and the same height, on every screen */
+.p-search-preview__tiles .p-search-preview__chip,
+.p-search-preview__tiles .c-reply-rate--chip { box-sizing: border-box; height: 1.9rem; padding: 0 0.75rem; font-size: 0.8125rem; line-height: 1; }
+.p-search-preview__tiles .c-reply-rate--chip { gap: 0.35rem; padding-left: 0.3rem; }
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge { width: 1.3rem; height: 1.3rem; }
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > i,
+.p-search-preview__tiles .c-reply-rate--chip .c-reply-rate__gauge > svg:not(.c-reply-ring) { font-size: 0.5rem; }
+
+/* Home hello card on phones: Not hosting smaller and on one line */
+@media (max-width: 767.98px) {
+  .l-hello .l-hello__status { font-size: 0.8125rem; white-space: nowrap; }
+  .l-hello .l-hello__where .l-hello__city { min-width: 0; }
+}
+
+/* My trips: trips that are over clearly greyed (a bit less on hover) */
+.p-trips .p-trips-trip.is-over { background: #f8fafc; opacity: 0.55; filter: grayscale(1); transition: opacity 0.15s ease; }
+.p-trips .p-trips-trip.is-over:hover,
+.p-trips .p-trips-trip.is-over:focus-within { opacity: 0.85; }
+/* My trips: the number of trips as a small pill next to the title */
+.p-trips .p-trips__title .p-trips__title-count { display: inline-flex; align-items: center; justify-content: center; min-width: 1.9rem; height: 1.9rem; margin-left: 0.4rem; padding: 0 0.6rem; border-radius: 999px; background: #e9edf2; color: #475569; font-family: inherit; font-size: 0.9375rem; font-weight: 700; line-height: 1; vertical-align: 0.3em; }
+@media (max-width: 767.98px) {
+  .p-trips .p-trips__top .p-trips__title .p-trips__title-count { min-width: 1.6rem; height: 1.6rem; margin-left: 0.3rem; padding: 0 0.5rem; background: rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.8125rem; vertical-align: 0.15em; }
+}
+
+/* Trip page head as in the side panel: the traveller and Edit / Copy, when, then the text across the card */
+.p-trips .p-trip-hero { display: block; }
+.p-trip-hero__top { display: flex; align-items: center; gap: 1rem; }
+.p-trip-hero__top .p-trip-hero__actions { flex-shrink: 0; margin-left: auto; }
+.p-trips .p-trip-hero .p-trip-hero__when { margin: 1rem 0 0; }
+.p-trip-hero__when i, .p-trip-hero__when svg { width: 0.8rem; height: 0.8rem; color: #94a3b8; }
+.p-trips .p-trip-hero .p-trip-hero__text { margin-top: 0.85rem; color: #334155; font-size: 1rem; line-height: 1.6; }
+@media (max-width: 767.98px) {
+  .p-trip-hero__top { flex-wrap: wrap; }
+  .p-trip-hero__top .p-trip-hero__actions { width: 100%; margin-left: 0; justify-content: flex-start; }
 }

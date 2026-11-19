@@ -14,7 +14,7 @@
 {% set _status = app.user ? group.membership(app.user).status|default(null) : null %}
 {% set _joined = _status == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}
 {% set _topic = group_head_topic ?? null %}
-{% set _picture = _agora ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
+{% set _picture = _agora ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) : asset('images/icons/group.png')) %}
 
 {# The button: New topic for those who may post, Join for the others who may join (not those banned from the
    group, waiting to be let in, or when it is by invitation only) #}

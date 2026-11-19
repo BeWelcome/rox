@@ -31,36 +31,53 @@
     <div class="p-trip-layout">
         {#- Left: who travels, then the stops; right: the map alone, as tall as the column allows -#}
         <div class="p-trip-main">
+            {#- As in the side panel: the traveller (face, name, who travels) with Edit / Copy on the right, under it
+                when (the dates, the nights for one stop, else the number of stops), then the text across the card -#}
+            {% set _former = trip.creator is former_member %}
+            {% set _info = trip.additionalInfo %}
+            {% if _info == constant('App\\Doctrine\\TripAdditionalInfoType::SINGLE') or (_info == constant('App\\Doctrine\\TripAdditionalInfoType::NONE') and trip.countOfTravellers <= 1) %}
+                {% set _who = 'trip.panel.solo'|trans %}
+            {% elseif _info != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+                {% set _who = ('trip.additional.info.' ~ _info)|lower|trans %}
+            {% else %}
+                {% set _who = 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) %}
+            {% endif %}
+            {% set _stops = own ? trip.legs : trip.legs|filter(stop => constant('App\\Doctrine\\LegOptionsType::PRIVATE') not in stop.options)|merge([]) %}
+            {% set _first = _stops|first %}
+            {% set _last = _stops|last %}
             <section class="p-trips-card p-trip-hero">
-                {# the trip of a former member (retired): no profile to open, nobody to write to #}
-                {% set _former = trip.creator is former_member %}
-                {% if _former %}
-                <span class="p-trip-hero__avatar"><img src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="" width="64" height="64"></span>
-                {% else %}
-                <a class="p-trip-hero__avatar" href="{{ path('members_profile', { username: trip.creator.username }) }}">
-                    <img src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="" width="64" height="64">
-                </a>
-                {% endif %}
-                <div class="p-trip-hero__body">
-                    <p class="p-trip-hero__who">{{ macros.profilelink(trip.creator.username, false, 'p-trips-leg__name') }}</p>
-                    <p class="p-trips-leg__meta p-trip-hero__meta">
-                        <span class="p-trips-leg__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
-                        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-                            <span class="p-trips-leg__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
-                        {% endif %}
-                        <span class="p-trips-leg__chip" title="{{ 'trip.invitation.radius'|trans }}"><i class="fa fa-bullseye" aria-hidden="true"></i> {{ trip.invitationRadius|trans }}</span>
-                    </p>
-                    {% if trip.description %}
-                        <div class="p-trip-hero__text">{{ trip.description|nl2br }}</div>
+                <div class="p-trip-hero__top">
+                    {% if _former %}<span class="c-tripv__who">{% else %}<a class="c-tripv__who" href="{{ path('members_profile', { username: trip.creator.username }) }}">{% endif %}
+                        <img class="c-tripv__face" src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="">
+                        <span class="c-tripv__who-text">
+                            <strong>{{ member_display_name(trip.creator) }}{% if not _former %} <i class="fas fa-chevron-right" aria-hidden="true"></i>{% endif %}</strong>
+                            <small>{{ _who }}</small>
+                        </span>
+                    {% if _former %}</span>{% else %}</a>{% endif %}
+                    {% if own %}
+                        <div class="p-trip-hero__actions">
+                            {% if expired == false %}
+                                <a class="p-trips-btn" href="{{ path('trip_edit', { id: trip.id }) }}"><i class="fa fa-edit" aria-hidden="true"></i> {{ 'trip.edit'|trans }}</a>
+                            {% endif %}
+                            <a class="p-trips-btn" href="{{ path('trip_copy', { id: trip.id }) }}"><i class="fa fa-copy" aria-hidden="true"></i> {{ 'trip.copy'|trans }}</a>
+                        </div>
                     {% endif %}
                 </div>
-                {% if own %}
-                    <div class="p-trip-hero__actions">
-                        {% if expired == false %}
-                            <a class="p-trips-btn" href="{{ path('trip_edit', { id: trip.id }) }}"><i class="fa fa-edit" aria-hidden="true"></i> {{ 'trip.edit'|trans }}</a>
+                {% if _first %}
+                    <p class="c-tripv__sub c-tripv__sub--one p-trip-hero__when">
+                        {% set _from = _first.arrival|date('Y-m-d') %}
+                        <span class="c-tripv__subdate">{{ _first.arrival|format_date(pattern='EEE d MMM') }}{% if _last.departure|date('Y-m-d') != _from %} – {{ _last.departure|format_date(pattern='EEE d MMM') }}{% endif %}</span>
+                        {% if _stops|length == 1 %}
+                            {% set nights = date(_first.departure|date('Y-m-d')).diff(date(_from)).days %}
+                            {% if nights > 0 %}<span class="c-tripv__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>{% endif %}
+                        {% else %}
+                            <span>· {{ 'contact.trip.stops'|trans({ count: _stops|length }) }}</span>
                         {% endif %}
-                        <a class="p-trips-btn" href="{{ path('trip_copy', { id: trip.id }) }}"><i class="fa fa-copy" aria-hidden="true"></i> {{ 'trip.copy'|trans }}</a>
-                    </div>
+                        {% if own %}<span>· <i class="fa fa-bullseye" aria-hidden="true"></i> {{ trip.invitationRadius|trans }}</span>{% endif %}
+                    </p>
+                {% endif %}
+                {% if trip.description %}
+                    <div class="p-trip-hero__text">{{ trip.description|nl2br }}</div>
                 {% endif %}
             </section>
 

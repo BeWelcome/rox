@@ -305,7 +305,7 @@
             {% for group in member.profileGroups|slice(0, 5) %}
               <li>
                 <a class="p-pro-group" href="{{ url('group_start', {group_id: group.id}) }}">
-                  <img class="p-pro-group__img" width="40" height="40" alt="" src="{{ url('group_thumbimg', {group_id: group.id}) }}">
+                  <img class="p-pro-group__img" width="40" height="40" alt="" src="{{ url('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) }}">
                   <span class="p-pro-group__name">{{ group.name }}</span>
                   <i class="fas fa-chevron-right p-pro-group__go" aria-hidden="true"></i>
                 </a>

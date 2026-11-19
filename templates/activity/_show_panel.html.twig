@@ -58,7 +58,7 @@
         <div class="p-act-facts__text">
             {#- Over several days: both days on the first line, both times under -#}
             {% if sameDay %}
-                <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} · {{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}</strong>
+                <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} <span class="p-act-facts__time">· {{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}</span></strong>
             {% else %}
                 <strong>{{ activity.starts|format_date(pattern='EEE d MMM') }} <i class="fas fa-arrow-right p-act-facts__to" aria-hidden="true"></i> {{ activity.ends|format_date(pattern='EEE d MMM') }}</strong>
                 <small>{{ activity.starts|format_time('short') }} – {{ activity.ends|format_time('short') }}</small>
@@ -90,14 +90,13 @@
         {% else %}
             <span class="p-act-facts__icon" aria-hidden="true"><i class="fas fa-location-dot"></i></span>
             <div class="p-act-facts__text">
-                {#- The flag and the place; under it the rest of the place's full name (Land Berlin, Germany) -#}
+                {#- The flag and the place, then on the same line the rest of the place's full name (Land Berlin, Germany) -#}
                 {% set _rest = activity.location.fullname %}
                 {% if not activity.address and _rest starts with activity.location.name ~ ', ' %}{% set _rest = _rest|slice((activity.location.name ~ ', ')|length) %}{% endif %}
-                <strong>
+                <strong class="p-act-facts__place">
                     {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" aria-hidden="true"></i>{% endif %}
-                    {{ activity.address ?: activity.location.name }}
+                    <span class="p-act-facts__place-name">{{ activity.address ?: activity.location.name }}{% if _rest %}<span class="p-act-facts__rest">, {{ _rest }}</span>{% endif %}</span>
                 </strong>
-                <small>{{ _rest }}</small>
             </div>
             {% if activity.location.latitude is not null %}
                 {% set _lat = activity.location.latitude %}

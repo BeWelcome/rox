@@ -25,7 +25,7 @@
         {% for group in groups.currentPageResults %}
             {% set _name = archived ? group.name|replace({'[Archived] ': ''}) : group.name %}
             <div class="p-gadmin__group p-gadmin__archive-row">
-                <img width="40" height="40" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+                <img width="40" height="40" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) : asset('images/icons/group.png') }}">
                 <div class="p-gadmin__group-text">
                     <a href="{{ path('group_start', {group_id: group.id}) }}">{{ _name }}</a>
                     <span>{{ 'group.list.members'|trans({count: member_counts[group.id] ?? 0}) }} · {{ 'admin.groups.created'|trans({date: group.created|format_date('medium')}) }}</span>

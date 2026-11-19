@@ -13,7 +13,7 @@
                 <li class="p-group-pick__row">
                     <a class="p-group-pick__group" href="{{ path('group_start', {group_id: candidate.id}) }}">
                         <img width="40" height="40" alt="" loading="lazy"
-                             src="{{ candidate.picture ? path('group_thumbimg', {group_id: candidate.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+                             src="{{ candidate.picture ? path('group_thumbimg', {group_id: candidate.id, v: candidate.picture|slice(0, 8)}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
                         <span>{{ candidate.name }}</span>
                     </a>
                     <form method="post" action="{{ path('relatedgroup_add', {group_id: group.id, related_id: candidate.id}) }}">

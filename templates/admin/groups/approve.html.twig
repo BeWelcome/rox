@@ -17,7 +17,7 @@
         {% set _creator = group.members|first %}
         <article class="p-group-panel p-gadmin-request">
             <img class="p-gadmin-request__picture" width="64" height="64" alt="" loading="lazy"
-                 src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+                 src="{{ group.picture ? path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) : asset('images/icons/group.png') }}">
             <div class="p-gadmin-request__main">
                 <h2 class="p-gadmin-request__name">
                     <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>

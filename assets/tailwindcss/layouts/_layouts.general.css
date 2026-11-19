@@ -14553,9 +14553,34 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .c-inbox__list .c-inbox-item__avatar .c-inbox-avatar { width: 3.25rem; height: 3.25rem; }
 }
 
-/* Search results on larger screens: more compact cards (smaller photo, tighter text), about 5 on a 13" screen */
+/* Search results on larger screens: one compact list (smaller photo, tighter text), about 5 on a 13" screen */
 @media (min-width: 768px) {
-  .p-search-results .p-search-results__cards { gap: 0.75rem; }
+  /* With the map: the results column is white, the rows' lines go from the page edge to the map, the content lines up with the search field */
+  .p-search:not(.is-map-off) .p-search-results { padding: 0.9rem 0 2rem; background: #fff; }
+  .p-search:not(.is-map-off) .p-search-results__head { margin-bottom: 0.5rem; padding: 0 1.5rem 0 var(--p-search-gutter); }
+  .p-search:not(.is-map-off) .p-search-results__foot { padding: 0 1.5rem 0 var(--p-search-gutter); }
+  /* The lines between rows only under the content, from the photo to the right margin */
+  .p-search:not(.is-map-off) .p-search-results .p-search-results__cards { gap: 0; border-top: 0; border-bottom: 0; background: #fff; }
+  .p-search:not(.is-map-off) .p-search-results .p-search-card + .p-search-card::before { position: absolute; top: 0; right: 1.5rem; left: var(--p-search-gutter); height: 1px; background: #e8edf3; content: ""; }
+  /* The photo alone in its column: "About me" stays in the text column, not under the photo */
+  .p-search-results .p-search-card {
+    grid-template-rows: auto auto auto auto auto 1fr;
+    grid-template-areas:
+      "avatar title pill"
+      "avatar occupation occupation"
+      "avatar meta meta"
+      "avatar foot foot"
+      "avatar about about"
+      "avatar . .";
+  }
+  .p-search-results .p-search-card__avatar { align-self: start; }
+  .p-search-results .p-search-card__title { align-self: center; }
+  /* The photos line up with the search field above */
+  .p-search:not(.is-map-off) .p-search-results .p-search-card { padding-right: 1.5rem; padding-left: var(--p-search-gutter); }
+  /* As on phones: white rows split by a thin grey line, no cards and no rounded corners */
+  .p-search-results .p-search-results__cards { gap: 1px; overflow: visible; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 0; background: #e2e8f0; box-shadow: none; }
+  .p-search-results .p-search-results__cards .p-search-card { border-radius: 0; box-shadow: none; }
+  .p-search-results .p-search-results__cards .p-search-card:hover { background: #fafbfc; box-shadow: none; }
   .p-search-results .p-search-card { grid-template-columns: 4.5rem minmax(0, 1fr) auto; column-gap: 1.1rem; padding: 1rem 1.25rem 0.95rem; }
   .p-search-results .p-search-card__avatar img { width: 4.5rem; height: 4.5rem; }
   .p-search-results .p-search-card__avatar .p-search-card__host { width: 1.6rem; height: 1.6rem; font-size: 0.65rem; }

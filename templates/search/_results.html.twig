@@ -6,7 +6,7 @@
 <div class="p-search-results__cards">
     {% for result in members.currentPageResults %}
         {% set member = result.member %}
-        {% set displayName = member.name is empty ? member.username : member.name %}
+        {% set displayName = member_display_name(member) %}
         {% set address = member.activeAddress %}
         {# "About me" in the reader's language, else the first language it was written in (the list always starts with an empty "en"). #}
         {% set translations = member.translations %}
@@ -50,7 +50,7 @@
                             {%- if age %}<span>{{ age }}</span><span class="visually-hidden"> {{ 'searchyearsold'|trans|format('')|striptags|trim }}</span>{% endif -%}
                         </span>
                     {% endif %}
-                    {% if member.name is not empty and member.name != member.username %}<span class="p-search-card__username">{{ member.username }}</span>{% endif %}
+                    {% if displayName != member.username %}<span class="p-search-card__username">{{ member.username }}</span>{% endif %}
                     {% if hosting %}
                         {# Hosting shows as the ring around the picture; the words are kept for screen readers. #}
                         <span class="visually-hidden">{{ ('member.hosting.' ~ hosting)|trans }}</span>

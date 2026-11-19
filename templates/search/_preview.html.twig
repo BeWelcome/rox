@@ -10,7 +10,7 @@
 {% set _leg = trip_leg ?? null %}
 {% set _panel = in_panel ?? false %}
 {% set _panelParams = _panel ? { embed: 1, from: app.request.query.get('from') ?: 'home', back: app.request.requestUri } : {} %}
-{% set displayName = member.name is empty ? member.username : member.name %}
+{% set displayName = member_display_name(member) %}
 {% set translations = member.translations %}
 {# "About me" in the reader's language, else in the first language the member wrote it in
    (the list of languages always starts with an empty "en"). #}

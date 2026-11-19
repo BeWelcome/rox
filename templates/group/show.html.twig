@@ -99,7 +99,7 @@
                         {% for related in relatedGroups %}
                             <a class="p-group-person" href="{{ path('group_start', {group_id: related.id}) }}">
                                 <img width="32" height="32" alt="" loading="lazy"
-                                     src="{{ related.picture ? path('group_thumbimg', {group_id: related.id}) : asset('images/icons/group.png') }}">
+                                     src="{{ related.picture ? path('group_thumbimg', {group_id: related.id, v: related.picture|slice(0, 8)}) : asset('images/icons/group.png') }}">
                                 <span>{{ related.name }}</span>
                             </a>
                         {% endfor %}

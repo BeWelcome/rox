@@ -15,7 +15,7 @@
                 {% set group = membership.group %}
                 <div class="p-groups-subs__row">
                     <img class="p-groups-subs__picture" alt="" loading="lazy" width="52" height="52"
-                         src="{{ group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) }}"
+                         src="{{ group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) : asset('images/icons/group.png')) }}"
                          {% if group.beWelcome %}data-agora{% endif %}>
                     <a class="p-groups-subs__title" href="{{ path('group_start', {group_id: group.id}) }}">
                         {{ group.name }}{% if group.beWelcome %} <i class="fas fa-circle-check p-groups-subs__official" aria-label="{{ 'group.official'|trans }}"></i>{% endif %}

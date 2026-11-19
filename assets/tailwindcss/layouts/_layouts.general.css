@@ -14544,3 +14544,6 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__rules.p-comments-cta__rules { margin: 0 0 0.5rem; text-align: center; font-size: 0.75rem; }
   body:has(.p-pro--compact):has(.p-comments-cta__rules) { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
 }
+
+/* Home dashboard, Group discussions: the group's picture (or letter) as a rounded square, not a circle */
+.c-home-dash .c-home-talk .c-home-item__avatar { border-radius: 0.5rem; }

@@ -1,6 +1,6 @@
 {#
   The latest discussions in the member's groups, in the Group discussions card of the home page (the
-  BeWelcome group's agora included): the starter's avatar, the title, then the group, who wrote last
+  BeWelcome group's agora included): the group's picture (or letter), the title, then the group, who wrote last
   and when, and the replies on the right. The row opens the thread. None: find or start a group.
 #}
 {% import 'forum/_macros.html.twig' as forum %}
@@ -8,10 +8,13 @@
     {% for thread in threads %}
         {% set replies = thread.replies|default(0) %}
         <a class="c-home-item c-home-talk" href="{{ forum.thread_url(thread) }}">
-            {% if thread.firstPost.author %}
-                <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
+            {#- The group's picture, else its first letter on a colour (as in the groups list); the agora: a speech bubble -#}
+            {% if thread.agora or not thread.group %}
+                <span class="c-home-item__avatar c-home-item__avatar--icon" aria-hidden="true"><i class="fas fa-comments"></i></span>
+            {% elseif thread.group.picture %}
+                <img class="c-home-item__avatar" src="{{ path('group_thumbimg', { group_id: thread.group.id, v: thread.group.picture|slice(0, 8) }) }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
             {% else %}
-                <img class="c-home-item__avatar" src="{{ asset('images/empty_avatar_72_72.png') }}" alt="" loading="lazy">
+                <span class="c-home-item__avatar p-group-card__letter p-group-card__letter--{{ thread.group.id % 6 }}" aria-hidden="true">{{ thread.group.name|first|upper }}</span>
             {% endif %}
             <span class="c-home-item__body">
                 <span class="c-home-talk__title">{{ forum.thread_title(thread, app.request.locale) }}</span>

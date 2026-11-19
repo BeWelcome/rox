@@ -13,7 +13,7 @@
 <a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
     {% if group.picture %}
         <img class="p-group-card__picture" width="56" height="56" alt="" loading="lazy"
-             src="{{ path('group_thumbimg', {group_id: group.id}) }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+             src="{{ path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
     {% else %}
         <span class="p-group-card__picture p-group-card__letter p-group-card__letter--{{ group.id % 6 }}" aria-hidden="true">{{ _name|first|upper }}</span>
     {% endif %}

@@ -9,7 +9,7 @@
 {% set group_head_hidden = true %}
 
 {% block group_content %}
-    {% set _picture = group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
+    {% set _picture = group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id, v: group.picture|slice(0, 8)}) : asset('images/icons/group.png')) %}
     <div class="p-forum-new">
         <header class="p-forum-new__page-head">
             <span class="p-forum-new__picture{{ group.beWelcome ? ' is-agora' }}"><img width="64" height="64" alt="" src="{{ _picture }}"></span>

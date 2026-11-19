@@ -14547,3 +14547,9 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Home dashboard, Group discussions: the group's picture (or letter) as a rounded square, not a circle */
 .c-home-dash .c-home-talk .c-home-item__avatar { border-radius: 0.5rem; }
+
+/* Conversations list: bigger faces, there is room (as on the home Messages card) */
+.c-inbox__list .c-inbox-item__avatar .c-inbox-avatar { width: 3.5rem; height: 3.5rem; }
+@media (max-width: 767.98px) {
+  .c-inbox__list .c-inbox-item__avatar .c-inbox-avatar { width: 3.25rem; height: 3.25rem; }
+}

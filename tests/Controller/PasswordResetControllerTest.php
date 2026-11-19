@@ -5,10 +5,13 @@ namespace App\Tests\Controller;
 use App\Entity\Member;
 use App\Entity\PasswordReset;
 use App\Model\PasswordModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The password reset as a visitor uses it: both forms are submitted as the page renders them, CSRF token
@@ -54,6 +57,27 @@ class PasswordResetControllerTest extends WebTestCase
         $member = $this->member('bwadmin');
         self::assertTrue(
             static::getContainer()->get(UserPasswordHasherInterface::class)->isPasswordValid($member, 'a-new-password-1')
+        );
+    }
+
+    public function testAnExpiredLinkShowsTheTranslatedMessage(): void
+    {
+        $client = static::createClient();
+        $member = $this->member('bwadmin');
+        $token = static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($member);
+        $this->entityManager()->getConnection()->executeStatement(
+            'UPDATE passwordreset SET `generated` = ? WHERE token = ?',
+            [new DateTime('-3 days')->format('Y-m-d H:i:s'), $token],
+        );
+
+        $client->request('GET', '/resetpassword/bwadmin/' . $token);
+
+        $this->assertResponseRedirects('/resetpassword');
+        $session = $client->getRequest()->getSession();
+        self::assertInstanceOf(FlashBagAwareSessionInterface::class, $session);
+        self::assertSame(
+            [static::getContainer()->get(TranslatorInterface::class)->trans('flash.reset.password.invalid')],
+            $session->getFlashBag()->peek('error'),
         );
     }
 

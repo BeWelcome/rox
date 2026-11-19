@@ -3,8 +3,12 @@
 # with a comment: package, fixed version, and when to remove the line.
 # The image refreshes apk packages daily (APK_REFRESH), so a fixed package is
 # picked up on the next day's build.
-# CVE-2026-92392, CVE-2026-92388: curl/libcurl 8.22.0-r0; the fix (8.23.0-r0) is only in Alpine edge and not yet in Alpine 3.24.
-# Track: https://pkgs.alpinelinux.org/packages?name=curl&branch=v3.24
-# Remove once Alpine 3.24 ships curl >= 8.23.0-r0.
-CVE-2026-92392
-CVE-2026-92388
+# CVE-2026-86144: libxml2 2.13.9-r2; the fix (2.13.9-r3) is only in Alpine edge and not yet in Alpine 3.24.
+# Track: https://pkgs.alpinelinux.org/packages?name=libxml2&branch=v3.24
+# Remove once Alpine 3.24 ships libxml2 >= 2.13.9-r3.
+CVE-2026-86144
+# CVE-2026-107891: musl, musl-utils 1.2.6-r3; Trivy expects 1.2.6-r6, the version that fixes it in Alpine edge.
+# Alpine 3.24 lists the CVE as fixed in 1.2.6-r3 (https://secdb.alpinelinux.org/v3.24/main.json), which the image has.
+# Track: https://pkgs.alpinelinux.org/packages?name=musl&branch=v3.24
+# Remove once Alpine 3.24 ships musl >= 1.2.6-r6, or Trivy stops reporting it for 1.2.6-r3.
+CVE-2026-107891

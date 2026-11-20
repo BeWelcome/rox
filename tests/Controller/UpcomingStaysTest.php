@@ -63,7 +63,8 @@ class UpcomingStaysTest extends WebTestCase
 
         // Another month doesn't have it
         $crawler = $client->request('GET', '/stays', ['month' => $arrival->copy()->addMonths(2)->format('Y-m')]);
-        self::assertCount(0, $crawler->filter('a[href="/conversation/' . $stay->getId() . '"]'));
+        // The top bar menu lists the upcoming stays on every page: only the calendar counts here
+        self::assertCount(0, $crawler->filter('.p-stays a[href="/conversation/' . $stay->getId() . '"]'));
     }
 
     public function testOneStayCanBeAddedToACalendar(): void

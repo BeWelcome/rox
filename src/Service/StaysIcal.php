@@ -49,13 +49,11 @@ class StaysIcal
         $events = [];
         foreach ($stays as $stay) {
             $request = $stay['request'];
-            $arrival = new Date(DateTimeImmutable::createFromInterface($request->getArrival()));
-            $departure = null === $request->getDeparture()
-                ? null
-                : new Date(DateTimeImmutable::createFromInterface($request->getDeparture()));
-            $occurrence = null === $departure || $departure == $arrival
-                ? new SingleDay($arrival)
-                : new MultiDay($arrival, $departure);
+            $first = DateTimeImmutable::createFromInterface($request->getArrival());
+            $last = DateTimeImmutable::createFromInterface($request->getDeparture() ?? $request->getArrival());
+            $occurrence = $last->format('Y-m-d') === $first->format('Y-m-d')
+                ? new SingleDay(new Date($first))
+                : new MultiDay(new Date($first), new Date($last));
             $summary = $this->translator->trans(
                 $stay['hosting'] ? 'stays.export.hosting' : 'stays.export.guest',
                 ['username' => $stay['other']->getUsername()]

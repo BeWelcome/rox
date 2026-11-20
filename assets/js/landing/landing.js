@@ -379,12 +379,13 @@ function initHelloMemberSearch(input, list) {
 }
 
 /**
- * Phones: fold the welcome banner panel (hosting switch and counters) or
- * unfold it; CSS animates it. The choice is kept in localStorage, and read
+ * Phones: fold the welcome banner panel (hosting switch, counters and the
+ * search) or unfold it. The choice is kept in localStorage, and read
  * again by an inline script in the template so the page does not jump on load.
  */
 function initHelloToggle(banner, button) {
     const storageKey = 'bw.hello.collapsed';
+    const phone = window.matchMedia('(max-width: 575.98px)');
 
     const sync = () => {
         const collapsed = banner.classList.contains('is-collapsed');
@@ -395,33 +396,42 @@ function initHelloToggle(banner, button) {
         button.removeAttribute('title');
     };
 
-    // The panel under the name (hosting switch) slides up and down with an
-    // ease-in-out on its real height, measured before and after the change.
-    const panel = banner.querySelector('.l-hello__me .l-hosting');
+    // The panel under the name (hosting switch) and the search slide up and down
+    // with an ease-in-out on their real height, measured before and after the change.
+    const parts = [banner.querySelector('.l-hello__me .l-hosting'), banner.querySelector('.js-hello-search')]
+        .filter((part) => part);
     const easing = 'cubic-bezier(0.65, 0, 0.35, 1)';
-    let running = null;
-    const box = () => {
-        const style = getComputedStyle(panel);
-        return { height: `${panel.getBoundingClientRect().height}px`, marginTop: style.marginTop, opacity: style.opacity };
+    let running = [];
+    const box = (part) => {
+        const style = getComputedStyle(part);
+        return {
+            height: `${part.getBoundingClientRect().height}px`,
+            marginTop: style.marginTop,
+            paddingTop: style.paddingTop,
+            paddingBottom: style.paddingBottom,
+            opacity: style.opacity,
+        };
     };
 
     const toggle = () => {
-        const animate = panel && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-            && panel.getBoundingClientRect().width > 0;
-        const from = animate ? box() : null;
-        if (running) {
-            running.cancel();
-        }
+        const animate = phone.matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        running.forEach((animation) => animation.cancel());
+        running = [];
+        const from = animate ? parts.map(box) : [];
         const collapsed = banner.classList.toggle('is-collapsed');
         if (animate) {
-            const to = box();
+            const to = parts.map(box);
             banner.classList.add('is-animating');
-            running = panel.animate([from, to], { duration: 420, easing });
-            running.onfinish = () => {
-                banner.classList.remove('is-animating');
-                running = null;
+            const batch = parts.map((part, index) => part.animate([from[index], to[index]], { duration: 420, easing }));
+            running = batch;
+            // A click during the slide cancels this one and starts another: only the last one ends the slide
+            const done = () => {
+                if (running === batch) {
+                    banner.classList.remove('is-animating');
+                    running = [];
+                }
             };
-            running.oncancel = () => banner.classList.remove('is-animating');
+            Promise.all(batch.map((animation) => animation.finished)).then(done, done);
         }
         try {
             localStorage.setItem(storageKey, collapsed ? '1' : '0');
@@ -436,7 +446,6 @@ function initHelloToggle(banner, button) {
 
     // On phones the whole identity line (avatar, name, city) opens and closes
     // the panel too; the hosting switch inside it keeps its own action.
-    const phone = window.matchMedia('(max-width: 575.98px)');
     const identity = banner.querySelector('.js-hello-me');
     if (identity) {
         identity.addEventListener('click', (event) => {

@@ -9394,7 +9394,7 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   .l-hosting-switch.is-on .l-hosting-switch__thumb { transform: translateX(1.25rem); }
 
   /* Search: Place / Member as tabs, no title, round loupe button */
-  /* Order on phones: identity line, then the panel (counters), then the search, always shown */
+  /* Order on phones: identity line, then the panel (counters), then the search (folds with the panel) */
   .l-hello { display: flex; flex-direction: column; }
   .l-hello__top { display: contents; }
   .l-hello__me { order: 1; padding: 1rem; cursor: pointer; }
@@ -13461,6 +13461,9 @@ body:has(.l-hello) main { background: #fffaf4; }
   .l-hello .l-hello__me .l-hosting,
   .l-hello.is-collapsed .l-hello__me .l-hosting { overflow: hidden; transition: none; }
   .l-hello.is-animating .l-hello__me .l-hosting { visibility: visible; }
+  /* The search folds with the panel (landing.js animates its height) */
+  .l-hello.is-collapsed .l-hello__search { height: 0; padding-top: 0; padding-bottom: 0; border-top-color: transparent; overflow: hidden; opacity: 0; visibility: hidden; }
+  .l-hello.is-animating .l-hello__search { overflow: hidden; visibility: visible; }
   .l-hello__toggle svg, .l-hello__toggle i { transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1); }
 }
 

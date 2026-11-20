@@ -2,6 +2,7 @@
 {# the members' home keeps the footer on phones too #}
 {% set footer_on_mobile = true %}
 {% import 'macros.twig' as macros %}
+{% import _self as dash %}
 
 {% block stylesheets %}
   {{ encore_entry_link_tags('leaflet') }}
@@ -134,9 +135,6 @@
   time, previous and next), upcoming activities and the discussions of the member's groups.
   Each card has its title, a count, its own control (radius, +) and See all always last at the top right (no footer row); the lists are loaded by landing.js.
 #}
-{% set loading %}
-    <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
-{% endset %}
 <div class="c-home-blocks c-home-dash">
 
     {# Messages: the unread count in orange #}
@@ -148,7 +146,7 @@
             <a class="c-home-dash__seeall" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="conversationsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
 
@@ -189,7 +187,7 @@
             <a class="c-home-dash__seeall" href="{{ url('visitors') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="legsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
 
@@ -203,7 +201,7 @@
             <a class="c-home-dash__seeall" href="{{ path('activities') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="activitiesdisplay" class="c-home-list">{{ dash.loading('tile') }}</div>
         </div>
     </section>
 
@@ -215,7 +213,7 @@
             <a class="c-home-dash__seeall" href="{{ path('groups_mygroups') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="groupsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
 </div>
@@ -369,3 +367,15 @@
 <div class="js-places-preview" data-from="home" hidden></div>
 {{ include('search/_preview_drawer.html.twig') }}
 {% endblock content %}
+
+{#- Grey rows while a list loads: a round photo, or the square date of an activity (shape 'tile') -#}
+{% macro loading(shape = 'round', rows = 3) %}
+    <div class="c-home-skeleton" aria-hidden="true">
+        {% for i in 1..rows %}
+            <div class="c-home-skeleton__row">
+                <span class="c-home-skeleton__lead c-home-skeleton__lead--{{ shape }}"></span>
+                <span class="c-home-skeleton__lines"><span></span><span></span></span>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

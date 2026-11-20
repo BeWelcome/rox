@@ -14701,3 +14701,20 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 767.98px) {
   .c-inbox-search { margin: 0 1rem 0.75rem; }
 }
+
+/* Dashboard: grey rows while a card's list loads (landing/landing.html.twig, loading()) */
+.c-home-skeleton__row { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 0; }
+.c-home-skeleton__lead { flex-shrink: 0; width: 3.25rem; height: 3.25rem; border-radius: 50%; }
+.c-home-skeleton__lead--tile { border-radius: 0.75rem; }
+.c-home-skeleton__lines { display: flex; flex: 1; flex-direction: column; gap: 0.5rem; }
+.c-home-skeleton__lines span { height: 0.75rem; border-radius: 999px; }
+.c-home-skeleton__lines span:first-child { width: 45%; }
+.c-home-skeleton__lines span:last-child { width: 80%; }
+.c-home-skeleton__row:nth-child(2) .c-home-skeleton__lines span:last-child { width: 65%; }
+.c-home-skeleton__row:nth-child(3) .c-home-skeleton__lines span:first-child { width: 35%; }
+.c-home-skeleton__lead,
+.c-home-skeleton__lines span { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: c-inbox-skeleton 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .c-home-skeleton__lead,
+  .c-home-skeleton__lines span { animation: none; }
+}

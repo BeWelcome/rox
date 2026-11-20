@@ -12,6 +12,7 @@ use App\Repository\RequestRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
@@ -68,6 +69,12 @@ class HostingRequest
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'request')]
     private Collection $messages;
+
+    public function __construct()
+    {
+        // A request just created has no messages loaded yet: the conversation lists read them (conversations/_request_state.html.twig)
+        $this->messages = new ArrayCollection();
+    }
 
     /**
      * Get id.

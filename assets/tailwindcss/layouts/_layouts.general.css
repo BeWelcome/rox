@@ -12889,6 +12889,13 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-stay2__just-write { flex-basis: 100%; align-self: flex-start; padding: 0; border: 0; background: none; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
 .c-stay2__just-write:hover { color: #334155; }
 .c-stay2__just-write[hidden] { display: none; }
+/* Only the answers (message closed): no gap under them, the row sits in the middle of the container */
+.c-inbox-compose--respond:has(.c-decide--pick-first:not(.is-open)) .c-stay2__answer--compose { margin-bottom: 0; }
+@media (min-width: 768px) {
+  .c-inbox-compose.c-inbox-compose--respond:has(.c-decide--pick-first:not(.is-open)) { padding-top: 0.85rem; padding-bottom: 0.85rem; }
+  /* The question, the answers and "Or just write a message" centred in the container */
+  .c-stay2__answer--compose .c-stay2__ask { justify-content: center; }
+}
 @media (min-width: 768px) {
   .c-stay2__just-write { flex-basis: auto; align-self: center; margin-left: 0.25rem; }
 }

@@ -1,5 +1,5 @@
 {#
-  Accept, Maybe and Decline in the stay card, for the member who decides (the host of a
+  Accept, Maybe and Decline above the answer field (compose), for the member who decides (the host of a
   hosting request, the invited member of an invitation). A pick sends nothing: it sets the
   answer of the form at the bottom (request/_respond_host.html.twig, requests.js), whose
   Send then reads "Send & accept"… Once answered, a coloured line says what was answered
@@ -26,7 +26,7 @@
     {% set awaiting = stay.status == constant(S ~ 'REQUEST_OPEN') %}
 
     {% if choices|length > 0 and stay.status != constant(S ~ 'REQUEST_CANCELLED') %}
-        <div class="c-stay2__answer js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
+        <div class="c-stay2__answer{{ compose ?? false ? ' c-stay2__answer--compose' : '' }} js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
             {% if not awaiting and answer_label ?? null %}
                 {# Answered: what was answered, and "Change" shows the answers again (requests.js) #}
                 <div class="c-stay2__band js-stay-band">
@@ -46,6 +46,9 @@
                         </button>
                     {% endfor %}
                 </div>
+                {% if (compose ?? false) and awaiting %}
+                    <button type="button" class="c-stay2__just-write js-stay-write">{{ 'request.decide.just.write'|trans }}</button>
+                {% endif %}
             </div>
         </div>
     {% endif %}

@@ -12100,6 +12100,8 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-req-kind { position: absolute; right: -0.3rem; bottom: -0.2rem; display: inline-flex; align-items: center; justify-content: center; width: 1.35rem; height: 1.35rem; border: 2px solid #fff; border-radius: 50%; color: #fff; font-size: 0.6rem; }
 .c-req-pill--new { background: #fdeedd; color: #c2410c; }
 .c-req-kind--new { background: #ea7a2e; }
+.c-req-pill--answer { background: #fff1e3; color: #c2410c; }
+.c-req-kind--answer { background: #ea7a2e; }
 .c-req-pill--pending { background: #eef2f7; color: #475569; }
 .c-req-kind--pending { background: #94a3b8; }
 .c-req-pill--maybe { background: #fdf1c5; color: #a16207; }
@@ -12133,7 +12135,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-req-tip.is-shown { opacity: 1; transform: none; }
 .c-req-tip__title { font-weight: 700; }
 .c-req-tip__title::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.4rem; border-radius: 50%; background: #94a3b8; vertical-align: 0.05rem; }
-.c-req-tip--new .c-req-tip__title::before { background: #ea7a2e; }
+.c-req-tip--new .c-req-tip__title::before, .c-req-tip--answer .c-req-tip__title::before { background: #ea7a2e; }
 .c-req-tip--maybe .c-req-tip__title::before { background: #f59e0b; }
 .c-req-tip--success .c-req-tip__title::before { background: #4ade80; }
 .c-req-tip--closed .c-req-tip__title::before { background: #64748b; }
@@ -12143,6 +12145,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 /* The request's state in words, under its date pill */
 .c-req-status { flex-shrink: 0; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
 .c-req-status--new { color: #c2410c; }
+.c-req-status--answer { color: #c2410c; }
 .c-req-status--pending { color: #475569; }
 .c-req-status--maybe { color: #a16207; }
 .c-req-status--success { color: #3f8a4a; }
@@ -12868,6 +12871,41 @@ body:has(.l-hello) main { background: #fffaf4; }
 /* Answered: a coloured line with what was answered, "Change" on its right */
 .c-stay2__band { display: flex; align-items: center; gap: 0.6rem; margin: 1.1rem 0 0; padding: 0.55rem 0.55rem 0.55rem 1rem; border-radius: 1rem; background: #fdeee0; color: #c2410c; font-size: 0.9375rem; font-weight: 700; }
 .c-stay2__answer .c-stay2__band { margin-top: 0; }
+/* Above the answer field under the messages: the question, then the three answers */
+.c-stay2__answer--compose { margin: 0 0 0.75rem; padding-top: 0; border-top: 0; }
+.c-stay2__answer--compose .c-stay2__ask { justify-content: flex-start; }
+/* Not answered yet: only the answers; a pick (or "Just write a message") opens the message (requests.js) */
+.c-decide--pick-first:not(.is-open) { display: none; }
+/* The three answers in soft colours (green, amber, red) */
+.c-stay2__pick.c-stay2__pick--accept { border-color: transparent; background: #e3f6e8; color: #2f8a49; }
+.c-stay2__pick.c-stay2__pick--accept:hover { background: #d2f0db; }
+.c-stay2__pick.c-stay2__pick--maybe { border-color: transparent; background: #fdf3d7; color: #b7791f; }
+.c-stay2__pick.c-stay2__pick--maybe:hover { background: #fbeabd; }
+.c-stay2__pick.c-stay2__pick--decline { border-color: transparent; background: #fde8e8; color: #d33a3a; }
+.c-stay2__pick.c-stay2__pick--decline:hover { background: #fbd5d5; }
+.c-stay2__pick--accept i, .c-stay2__pick--accept svg,
+.c-stay2__pick--maybe i, .c-stay2__pick--maybe svg,
+.c-stay2__pick--decline i, .c-stay2__pick--decline svg { color: inherit; }
+.c-stay2__just-write { flex-basis: 100%; align-self: flex-start; padding: 0; border: 0; background: none; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.c-stay2__just-write:hover { color: #334155; }
+.c-stay2__just-write[hidden] { display: none; }
+@media (min-width: 768px) {
+  .c-stay2__just-write { flex-basis: auto; align-self: center; margin-left: 0.25rem; }
+}
+/* Pick-first: the picked answer band has the height of the pills it replaces */
+.c-decide--pick-first .c-decide__write .c-decide__picked { gap: 0.6rem; min-height: 0; padding: 0.3rem 0.3rem 0.3rem 0.3rem; border-radius: 999px; }
+.c-decide--pick-first .c-decide__picked-icon { width: 1.9rem; height: 1.9rem; font-size: 0.85rem; }
+.c-decide--pick-first .c-decide__picked-text { flex-direction: row; align-items: baseline; gap: 0.5rem; }
+.c-decide--pick-first .c-decide__picked-text strong { font-size: 0.9375rem; line-height: 1.2; }
+.c-decide--pick-first .c-decide__picked-text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-decide--pick-first .c-decide__write .c-decide__picked .c-decide__repick { padding: 0.35rem 0.75rem; }
+@media (max-width: 767.98px) {
+  .c-decide--pick-first .c-decide__picked-text span { display: none; }
+}
+/* Picked by mistake: a quiet "Change" on the picked answer, back to the three answers */
+.c-decide__write .c-decide__picked .c-decide__repick { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.35rem; margin-left: auto; padding: 0.3rem 0.7rem; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.7); color: #475569; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.c-decide__write .c-decide__picked .c-decide__repick:hover { background: #fff; color: #0f172a; }
+.c-decide__repick i, .c-decide__repick svg { font-size: 0.7rem; }
 .c-stay2__answer:has(.c-stay2__band:not([hidden])) { padding-top: 0; border-top: 0; }
 .c-stay2__band[hidden] { display: none; }
 .c-stay2__band > span { flex: 1; min-width: 0; padding: 0.3rem 0; }

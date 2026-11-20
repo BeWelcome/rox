@@ -55,9 +55,6 @@
     </ul>
     {{ warning|default('')|raw }}
 
-    {% if status.key not in ['expired', 'cancelled'] and decider %}
-        {# Accept, Maybe, Decline (hidden once answered: the edit button next to the status shows them).
-           Nothing for the member who asked: the status says where it stands. #}
-        {% include 'request/_stay_answer.html.twig' with { stay: stay, answer_label: null, collapsed: status.key in ['tentatively', 'accepted', 'declined'] } %}
-    {% endif %}
+    {# Accept, Maybe, Decline: above the answer field under the messages (request/_respond_host.html.twig);
+       once answered, the edit button next to the status shows them again there. #}
 </section>

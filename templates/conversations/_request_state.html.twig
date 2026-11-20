@@ -4,7 +4,8 @@
   - part 'kind': the round icon on the avatar;
   - part 'pill': the dates in a pill of the same colour, on the right (no icon, the avatar has it);
   - part 'status': the state in words under the pill (Waiting, Maybe, Accepted, Declined, Cancelled, Expired; nothing while new and unread).
-  New (not read yet): orange with the bed (or handshake for an invitation); waiting: grey hourglass;
+  New (not read yet): orange with the bed (or handshake for an invitation); read, to answer: orange clock;
+  waiting for the other one: grey hourglass;
   maybe: amber ?; accepted: green ✓; declined: light red ×, the dates crossed out; cancelled: light grey ×, the dates crossed out;
   expired (no answer before the arrival): grey calendar ×.
   On a computer, hovering the pill names the kind and where it stands (Request, Pending).
@@ -14,10 +15,18 @@
 {# Waiting (or maybe) once the arrival has passed: nobody can answer any more (BaseRequestModel::hasExpired) #}
 {% if _status in ['open', 'tentatively'] and request.arrival|date('Y-m-d') < 'now'|date('Y-m-d') %}{% set _status = 'expired' %}{% endif %}
 {% set _isInvitation = request.inviteForLeg is not null %}
+{# Read but still waiting for the member's own answer (they did not start it, the last message is not theirs):
+   orange "To answer", like the home Messages card (landing/widget/conversations.html.twig) #}
+{% set _toAnswer = false %}
+{% if _status == 'open' and not unread and app.user %}
+    {% set _first = request.messages|reduce((first, one) => first is null or one.id < first.id ? one : first) %}
+    {% set _last = request.messages|reduce((last, one) => last is null or one.id > last.id ? one : last) %}
+    {% set _toAnswer = _first is not null and _first.initiator.id != app.user.id and _last.sender.id != app.user.id %}
+{% endif %}
 {% set _look = {
     open: unread
         ? { tone: 'new', icon: _isInvitation ? 'fas fa-handshake' : 'fas fa-bed' }
-        : { tone: 'pending', icon: 'fas fa-hourglass-half' },
+        : (_toAnswer ? { tone: 'answer', icon: 'fas fa-clock' } : { tone: 'pending', icon: 'fas fa-hourglass-half' }),
     tentatively: { tone: 'maybe', icon: 'fas fa-question' },
     accepted: { tone: 'success', icon: 'fas fa-check' },
     declined: { tone: 'declined', icon: 'fas fa-times' },
@@ -25,7 +34,7 @@
     expired: { tone: 'expired', icon: 'fas fa-calendar-xmark' },
 }[_status] %}
 {% set _label = (_isInvitation ? 'conversations.invitation' : 'conversations.request')|trans ~ ' · ' ~ ('request.status.' ~ _status)|trans %}
-{% set _word = _status == 'open' ? 'conversations.state.waiting' : 'request.status.' ~ _status %}
+{% set _word = _status == 'open' ? (_toAnswer ? 'request.status.to.answer' : 'conversations.state.waiting') : 'request.status.' ~ _status %}
 {% if part == 'status' %}
     {# Not for a new one: the unread background says it already #}
     {% if not (_status == 'open' and unread) %}<span class="c-req-status c-req-status--{{ _look.tone }}">{{ _word|trans }}</span>{% endif %}

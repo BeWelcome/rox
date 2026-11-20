@@ -161,35 +161,55 @@ export function initRequests() {
             }
         };
 
-        // Accept, Maybe and Decline are in the stay card above the messages (request/_stay_answer.html.twig)
+        // Accept, Maybe and Decline are right above the answer field (request/_stay_answer.html.twig)
         const stayAnswer = document.querySelector('.js-stay-answer');
         const stayPicks = document.querySelectorAll('.js-stay-pick');
         const resetStayAnswer = () => {
             stayPicks.forEach((other) => other.classList.remove('is-picked'));
         };
+        const stayChoices = stayAnswer ? stayAnswer.querySelector('.js-stay-choices') : null;
+        // Not answered yet, the message opens under the answers once one is picked (c-decide--pick-first)
+        const openMessage = () => {
+            form.classList.add('is-open');
+            if (message) {
+                message.focus();
+            }
+        };
         stayPicks.forEach((pick) => {
             pick.addEventListener('click', () => {
-                // A second click on the picked answer takes it back: a plain message again
-                if (pick.classList.contains('is-picked')) {
-                    choose('reply');
-                    resetStayAnswer();
-                    return;
-                }
                 choose(pick.dataset.choice, pick.dataset.button);
                 show('write');
                 stayPicks.forEach((other) => other.classList.toggle('is-picked', other === pick));
-                if (message) {
-                    message.focus();
+                // The picked answer shows on top of the message, with "Change" to pick again
+                if (stayChoices) {
+                    stayChoices.hidden = true;
                 }
+                openMessage();
             });
         });
-        // The cross on the picked answer: back to a plain message
+        // "Change" on the picked answer: Accept, Maybe and Decline again
         form.querySelectorAll('.js-decide-change').forEach((change) => {
             change.addEventListener('click', () => {
                 choose('reply');
                 resetStayAnswer();
+                if (stayChoices) {
+                    stayChoices.hidden = false;
+                    stayChoices.querySelectorAll('.js-stay-write').forEach((justWrite) => { justWrite.hidden = false; });
+                }
+                form.classList.remove('is-open');
             });
         });
+        // "Just write a message": the message without an answer
+        if (stayAnswer) {
+            stayAnswer.querySelectorAll('.js-stay-write').forEach((justWrite) => {
+                justWrite.addEventListener('click', () => {
+                    choose('reply');
+                    resetStayAnswer();
+                    justWrite.hidden = true;
+                    openMessage();
+                });
+            });
+        }
         if (write) {
             choose(write.dataset.choice);
         }
@@ -309,7 +329,8 @@ export function initRequests() {
     // Declined: the edit button next to the status does it (a second click hides them again)
     document.querySelectorAll('.js-stay-change').forEach((change) => {
         change.addEventListener('click', () => {
-            const answer = change.closest('.c-stay2').querySelector('.js-stay-answer');
+            // Above the answer field (request/_respond_host.html.twig), the edit button is in the stay card
+            const answer = change.closest('.js-stay-answer') || document.querySelector('.js-stay-answer');
             if (!answer) {
                 return;
             }
@@ -322,6 +343,9 @@ export function initRequests() {
             }
             choices.hidden = !choices.hidden;
             change.setAttribute('aria-expanded', String(!choices.hidden));
+            if (!choices.hidden) {
+                answer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         });
     });
 }

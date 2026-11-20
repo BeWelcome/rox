@@ -53,6 +53,14 @@ class RequestStateListTest extends WebTestCase
         self::assertCount(1, $item->filter('.c-req-kind--new'));
         self::assertStringContainsString('10–14 Nov', $item->filter('.c-req-pill--new')->text());
 
+        // Read but not answered yet: still the host's to answer, in orange
+        static::getContainer()->get(Connection::class)
+            ->executeStatement('UPDATE message SET first_read = NOW() WHERE id = ?', [$message->getId()]);
+        $item = $client->request('GET', '/conversations/')
+            ->filter('.c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]');
+        self::assertCount(1, $item->filter('.c-req-kind--answer'));
+        self::assertStringContainsString('request.status.to.answer', $item->filter('.c-req-status--answer')->text());
+
         // the guest sent it, so for them it waits
         $client->loginUser($guest);
         $item = $client->request('GET', '/conversations/')

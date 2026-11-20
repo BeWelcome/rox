@@ -14740,9 +14740,6 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .c-home-stays__item:hover { background: #f8fafc; }
 .c-home-stays__avatar-wrap { position: relative; flex-shrink: 0; }
 .c-home-stays__avatar { display: block; width: 2.9rem; height: 2.9rem; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06); }
-.c-home-stays__role { position: absolute; right: -0.2rem; bottom: -0.2rem; display: inline-flex; align-items: center; justify-content: center; width: 1.3rem; height: 1.3rem; border: 2px solid #fff; border-radius: 50%; color: #fff; font-size: 0.55rem; }
-.c-home-stays__role--host { background: #4e8a3a; }
-.c-home-stays__role--guest { background: #f37000; }
 .c-home-stays__body { display: flex; flex: 1; flex-direction: column; gap: 0.15rem; min-width: 0; }
 .c-home-stays__name { overflow: hidden; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .c-home-stays__line { overflow: hidden; color: #64748b; font-size: 0.8125rem; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,6 +1,6 @@
 {#
-  One stay (App\Service\UpcomingStays): the other member with a badge (house: they stay with the member, suitcase:
-  the member stays with them), how soon and who they are, and the dates. Opens the conversation in the side panel.
+  One stay (App\Service\UpcomingStays): the other member, how soon and who they are (guest or host), and the dates.
+  Opens the conversation in the side panel.
   Home page (landing/_stays.html.twig) and stays calendar (stays/calendar.html.twig).
 #}
 {% set request = stay.request %}
@@ -18,7 +18,6 @@
 <a class="c-home-stays__item js-contact-open" href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}">
     <span class="c-home-stays__avatar-wrap">
         <img class="c-home-stays__avatar" src="{{ path('avatar', { username: stay.other.username, size: 96 }) }}" alt="" loading="lazy">
-        <span class="c-home-stays__role c-home-stays__role--{{ stay.hosting ? 'host' : 'guest' }}" aria-hidden="true"><i class="fas {{ stay.hosting ? 'fa-home' : 'fa-suitcase-rolling' }}"></i></span>
     </span>
     <span class="c-home-stays__body">
         <span class="c-home-stays__name">{{ member_display_name(stay.other) }}</span>

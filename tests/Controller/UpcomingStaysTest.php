@@ -38,12 +38,11 @@ class UpcomingStaysTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.c-home-stays a[href="/conversation/' . $accepted->getId() . '"]'));
         self::assertCount(0, $crawler->filter('.c-home-stays a[href="/conversation/' . $declined->getId() . '"]'));
         self::assertCount(0, $crawler->filter('.c-home-stays a[href="/conversation/' . $past->getId() . '"]'));
-        self::assertCount(1, $crawler->filter('.c-home-stays a[href="/conversation/' . $accepted->getId() . '"] .c-home-stays__role--guest'));
 
-        // The host sees the same stay, as host
+        // The host sees the same stay
         $client->loginUser($host);
         $crawler = $client->request('GET', '/');
-        self::assertCount(1, $crawler->filter('.c-home-stays a[href="/conversation/' . $accepted->getId() . '"] .c-home-stays__role--host'));
+        self::assertCount(1, $crawler->filter('.c-home-stays a[href="/conversation/' . $accepted->getId() . '"]'));
     }
 
     public function testTheCalendarShowsTheStaysOfTheMonth(): void

@@ -1,0 +1,31 @@
+{#
+  One stay (App\Service\UpcomingStays): the other member with a badge (house: they stay with the member, suitcase:
+  the member stays with them), how soon and who they are, and the dates. Opens the conversation in the side panel.
+  Home page (landing/_stays.html.twig) and stays calendar (stays/calendar.html.twig).
+#}
+{% set request = stay.request %}
+{% set _from = request.arrival|date('Y-m-d') %}
+{% set _days = ((_from|date('U')) - ('today'|date('U'))) // 86400 %}
+{% set _to = (request.departure ?? request.arrival)|date('Y-m-d') %}
+{% if _to < 'today'|date('Y-m-d') %}{% set _soon = 'landing.stays.past'|trans %}
+{% elseif _days < 0 %}{% set _soon = 'landing.stays.now'|trans %}
+{% elseif _days == 0 %}{% set _soon = 'landing.dash.when.today'|trans %}
+{% elseif _days == 1 %}{% set _soon = 'landing.dash.when.tomorrow'|trans %}
+{% elseif _days < 7 %}{% set _soon = 'landing.dash.when.days'|trans({ count: _days }) %}
+{% elseif _days < 30 %}{% set _soon = 'landing.dash.when.weeks'|trans({ count: _days // 7 }) %}
+{% else %}{% set _soon = 'landing.dash.when.months'|trans({ count: _days // 30 }) %}
+{% endif %}
+<a class="c-home-stays__item js-contact-open" href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}">
+    <span class="c-home-stays__avatar-wrap">
+        <img class="c-home-stays__avatar" src="{{ path('avatar', { username: stay.other.username, size: 96 }) }}" alt="" loading="lazy">
+        <span class="c-home-stays__role c-home-stays__role--{{ stay.hosting ? 'host' : 'guest' }}" aria-hidden="true"><i class="fas {{ stay.hosting ? 'fa-home' : 'fa-suitcase-rolling' }}"></i></span>
+    </span>
+    <span class="c-home-stays__body">
+        <span class="c-home-stays__name">{{ member_display_name(stay.other) }}</span>
+        <span class="c-home-stays__line">
+            <span class="c-home-stays__soon{{ _days <= 1 and _to >= 'today'|date('Y-m-d') ? ' is-now' : '' }}">{{ _soon }}</span>
+            · {{ (stay.hosting ? 'landing.stays.hosting' : 'landing.stays.guest')|trans }}
+        </span>
+    </span>
+    {% include 'conversations/_request_state.html.twig' with { request: request, unread: false, part: 'pill' } only %}
+</a>

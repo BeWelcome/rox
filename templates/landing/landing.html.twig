@@ -218,9 +218,16 @@
     </section>
 </div>
 
-{% if countries is not empty %}
-    {% include 'landing/_countries.html.twig' %}
-{% endif %}
+{# The member's upcoming stays (none: no card), and next to them on a computer Explore by country #}
+{% set stays = upcoming_stays(5) %}
+<div class="c-home-explore-row{{ stays is empty or countries is empty ? ' is-alone' : '' }}">
+    {% if stays is not empty %}
+        {% include 'landing/_stays.html.twig' %}
+    {% endif %}
+    {% if countries is not empty %}
+        {% include 'landing/_countries.html.twig' %}
+    {% endif %}
+</div>
 
 {# Be involved: donate, volunteer, and the transparency links #}
 {% set goalReached = campaign.yearDonated >= campaign.yearNeeded %}

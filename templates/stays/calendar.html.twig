@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+{% import _self as cal %}
+
+{#
+  The calendar of the member's stays (StaysController, App\Service\UpcomingStays::getMonth()): one month, Monday
+  first, each stay a bar across its days in the colour of the other member (the same in the list), at most three under
+  one another and "+N" on the days with more. Next to it on a computer (under it on phones), the stays of the month
+  as on the home page. The filters (All, Guests, Hosts) and a picked day narrow both (assets/js/stays-calendar.js).
+  A stay opens its conversation in the side panel.
+#}
+
+{% block title %}{{ 'landing.stays.title'|trans }}{% endblock %}
+
+{% macro nav(month, previous, next, isThisMonth, variant) %}
+    <div class="p-stays__nav p-stays__nav--{{ variant }}">
+        <a class="p-stays__arrow" href="{{ path('stays', { month: previous }) }}" aria-label="{{ 'stays.month.previous'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
+        <span class="p-stays__month">{{ month|format_date(pattern='LLLL y')|capitalize }}</span>
+        <a class="p-stays__arrow" href="{{ path('stays', { month: next }) }}" aria-label="{{ 'stays.month.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+        {% if not isThisMonth %}<a class="p-stays__today" href="{{ path('stays') }}">{{ 'stays.today'|trans }}</a>{% endif %}
+    </div>
+{% endmacro %}
+
+{% block content %}
+{% set hosting = stays|filter(stay => stay.hosting)|length %}
+{# Each member a colour of their own, the same in the calendar and the list (by member, so it stays from month to month) #}
+{% set palette = ['#7c3aed', '#0284c7', '#059669', '#d97706', '#db2777', '#4f46e5', '#0d9488', '#dc2626', '#65a30d', '#9333ea', '#0369a1', '#be185d'] %}
+<section class="p-stays js-stays">
+    <header class="p-stays__head">
+        <a class="p-stays__back" href="{{ path('landingpage') }}" aria-label="{{ 'back'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
+        <h1 class="p-stays__title">{{ 'landing.stays.title'|trans }}</h1>
+        <div class="p-stays__filters" role="group">
+            <button type="button" class="p-stays__filter is-active js-stays-filter" data-role="all" aria-pressed="true">{{ 'stays.filter.all'|trans }} <span>{{ stays|length }}</span></button>
+            {% if hosting > 0 %}
+            <button type="button" class="p-stays__filter js-stays-filter" data-role="host" aria-pressed="false"><span class="p-stays__dot p-stays__dot--host" aria-hidden="true"></span>{{ 'stays.filter.guests'|trans }} <span>{{ hosting }}</span></button>
+            {% endif %}
+            {% if hosting < stays|length %}
+            <button type="button" class="p-stays__filter js-stays-filter" data-role="guest" aria-pressed="false"><span class="p-stays__dot p-stays__dot--guest" aria-hidden="true"></span>{{ 'stays.filter.hosts'|trans }} <span>{{ stays|length - hosting }}</span></button>
+            {% endif %}
+        </div>
+        {{ cal.nav(month, previous, next, isThisMonth, 'head') }}
+    </header>
+
+    <div class="p-stays__layout">
+        <div class="p-stays__card">
+            {{ cal.nav(month, previous, next, isThisMonth, 'card') }}
+            <div class="p-stays__weekdays" aria-hidden="true">
+                {% for day in weeks[0].days %}<span>{{ day|format_date(pattern='EEE') }}</span>{% endfor %}
+            </div>
+            {% set today = 'today'|date('Y-m-d') %}
+            {% for week in weeks %}
+                <div class="p-stays__week">
+                    <div class="p-stays__days">
+                        {% for day in week.days %}
+                            {% set _d = day|date('Y-m-d') %}
+                            {% set _other = day|date('m') != month|date('m') %}
+                            <button type="button" class="p-stays__day js-stays-day{{ _other ? ' is-other' : '' }}{{ _d == today ? ' is-today' : '' }}{{ _d < today ? ' is-past' : '' }}"
+                                    data-date="{{ _d }}" data-label="{{ day|format_date(pattern='d MMM') }}"{% if _other %} tabindex="-1"{% endif %}>
+                                <span class="p-stays__date">{{ day|date('j') }}</span>
+                                {% if week.more[loop.index] > 0 %}<span class="p-stays__more">+{{ week.more[loop.index] }}</span>{% endif %}
+                            </button>
+                        {% endfor %}
+                    </div>
+                    <div class="p-stays__bars">
+                        {% for bar in week.bars %}
+                            {% set stay = bar.stay %}
+                            <a class="p-stays__bar{{ bar.before ? ' is-cont-before' : '' }}{{ bar.after ? ' is-cont-after' : '' }} js-contact-open js-stays-item"
+                               href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
+                               style="--stay-color: {{ palette[stay.other.id % palette|length] }}; grid-column: {{ bar.column }} / span {{ bar.span }}; grid-row: {{ bar.lane }}">
+                                <img class="p-stays__bar-avatar" src="{{ path('avatar', { username: stay.other.username, size: 48 }) }}" alt="" loading="lazy">
+                                <span class="p-stays__bar-name">{{ member_display_name(stay.other) }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            {% if stays is empty %}<p class="p-stays__none">{{ 'stays.month.none'|trans }}</p>{% endif %}
+        </div>
+
+        <div class="c-home-card p-stays__list"{% if stays is empty %} hidden{% endif %}>
+            <div class="p-stays__list-head">
+                <h2 class="p-stays__list-title js-stays-list-title" data-default="{{ 'stays.month.list'|trans({ month: month|format_date(pattern='LLLL')|capitalize }) }}"
+                    data-one="{{ 'stays.count'|trans({ count: 1 }) }}" data-other="{{ 'stays.count'|trans({ count: 99 })|replace({ '99': '__COUNT__' }) }}">
+                    {{- 'stays.month.list'|trans({ month: month|format_date(pattern='LLLL')|capitalize }) -}}
+                </h2>
+                <button type="button" class="p-stays__clear js-stays-clear" hidden><i class="fas fa-times" aria-hidden="true"></i> {{ 'stays.day.clear'|trans }}</button>
+            </div>
+            {% for stay in stays %}
+                <div class="p-stays__row js-stays-item" style="--stay-color: {{ palette[stay.other.id % palette|length] }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
+                     data-from="{{ stay.request.arrival|date('Y-m-d') }}" data-to="{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') }}">
+                    {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+                </div>
+            {% endfor %}
+            <p class="p-stays__none js-stays-none" hidden>{{ 'stays.day.none'|trans }}</p>
+        </div>
+    </div>
+</section>
+
+{% include 'conversations/_contact_drawer.html.twig' with { from: 'stays' } %}
+{% endblock %}

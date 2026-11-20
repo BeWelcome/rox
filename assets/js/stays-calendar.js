@@ -1,0 +1,66 @@
+/*
+ * Stays calendar (templates/stays/calendar.html.twig): the filters (all, guests, hosts) and a picked day narrow the
+ * bars and the list; a second click on the day, or Clear, shows the whole month again.
+ */
+export function initStaysCalendar(page) {
+    const title = page.querySelector('.js-stays-list-title');
+    const clear = page.querySelector('.js-stays-clear');
+    const none = page.querySelector('.js-stays-none');
+    let role = 'all';
+    let day = null;
+
+    const update = () => {
+        let shown = 0;
+        page.querySelectorAll('.js-stays-item').forEach((item) => {
+            const roleOk = role === 'all' || item.dataset.role === role;
+            // The list follows the picked day; the bars stay, the day is marked
+            const dayOk = !day || !item.dataset.from || (item.dataset.from <= day && item.dataset.to >= day);
+            item.hidden = !(roleOk && dayOk);
+            if (item.dataset.from && !item.hidden) {
+                shown++;
+            }
+        });
+        page.querySelectorAll('.js-stays-day').forEach((cell) => {
+            cell.classList.toggle('is-picked', cell.dataset.date === day);
+            cell.setAttribute('aria-pressed', cell.dataset.date === day ? 'true' : 'false');
+        });
+        if (title) {
+            if (day) {
+                const cell = page.querySelector(`.js-stays-day[data-date="${day}"]`);
+                const count = shown === 1 ? title.dataset.one : title.dataset.other.replace('__COUNT__', shown);
+                title.textContent = `${cell ? cell.dataset.label : day} · ${count}`;
+            } else {
+                title.textContent = title.dataset.default;
+            }
+        }
+        if (clear) {
+            clear.hidden = !day;
+        }
+        if (none) {
+            none.hidden = shown > 0;
+        }
+    };
+
+    page.querySelectorAll('.js-stays-filter').forEach((button) => {
+        button.addEventListener('click', () => {
+            role = button.dataset.role;
+            page.querySelectorAll('.js-stays-filter').forEach((other) => {
+                other.classList.toggle('is-active', other === button);
+                other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+            });
+            update();
+        });
+    });
+    page.querySelectorAll('.js-stays-day').forEach((cell) => {
+        cell.addEventListener('click', () => {
+            day = day === cell.dataset.date ? null : cell.dataset.date;
+            update();
+        });
+    });
+    if (clear) {
+        clear.addEventListener('click', () => {
+            day = null;
+            update();
+        });
+    }
+}

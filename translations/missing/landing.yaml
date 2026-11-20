@@ -234,3 +234,18 @@ landing.messages.none.find:
 landing.dash.see.trip.details:
     - 'See trip details'
     - 'Button at the bottom of a trip in the Visitors card of the home page, opens the trip in the side panel'
+landing.stays.title:
+    - 'Upcoming stays'
+    - 'Home page: title of the card with the accepted hosting requests and invitations still to come, as host or guest.'
+landing.stays.hosting:
+    - 'Your guest'
+    - 'Home page, Upcoming stays: under the name of a member who will stay at the member''s place.'
+landing.stays.guest:
+    - 'Your host'
+    - 'Home page, Upcoming stays: under the name of a member the member will stay with.'
+landing.stays.now:
+    - 'Now'
+    - 'Home page, Upcoming stays: label of a stay that has started and isn''t over yet.'
+landing.stays.past:
+    - 'Past'
+    - 'Upcoming stays and stays calendar, label of a stay that is over.'

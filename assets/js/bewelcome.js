@@ -43,6 +43,14 @@ if (document.querySelector('.p-group-head [data-tabs-scroller]')) {
 if (document.querySelector('.js-contact-drawer[data-from="forum"]')) {
     import('./contact/drawer').then(({initContactDrawer}) => initContactDrawer('forum'));
 }
+// Stays calendar (templates/stays/calendar.html.twig): filters and days, a stay opens its conversation in the side panel
+if (document.querySelector('.js-contact-drawer[data-from="stays"]')) {
+    import('./contact/drawer').then(({initContactDrawer}) => initContactDrawer('stays'));
+}
+const staysPage = document.querySelector('.js-stays');
+if (staysPage) {
+    import('./stays-calendar').then(({initStaysCalendar}) => initStaysCalendar(staysPage));
+}
 // A member's preview alone in the side panel (from a trip): Read more and the pictures
 const previewPanel = document.querySelector('.js-preview-panel');
 if (previewPanel) {

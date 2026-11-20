@@ -1,7 +1,8 @@
 {#
   One stay (App\Service\UpcomingStays): the other member, how soon and who they are (guest or host), and the dates.
   Opens the conversation in the side panel.
-  Home page (landing/_stays.html.twig) and stays calendar (stays/calendar.html.twig).
+  Home page (landing/_stays.html.twig), stays calendar (stays/calendar.html.twig) and the top bar menu,
+  where a stay answered "maybe" says so (layout/_stays_nav.html.twig).
 #}
 {% set request = stay.request %}
 {% set _from = request.arrival|date('Y-m-d') %}
@@ -23,7 +24,8 @@
         <span class="c-home-stays__name">{{ member_display_name(stay.other) }}</span>
         <span class="c-home-stays__line">
             <span class="c-home-stays__soon{{ _days <= 1 and _to >= 'today'|date('Y-m-d') ? ' is-now' : '' }}">{{ _soon }}</span>
-            · {{ (stay.hosting ? 'landing.stays.hosting' : 'landing.stays.guest')|trans }}
+            {%- if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %} <span class="c-home-stays__maybe">{{ 'request.status.tentatively'|trans }}</span>{% endif %}
+            <span class="c-home-stays__role">· {{ (stay.hosting ? 'landing.stays.hosting' : 'landing.stays.guest')|trans }}</span>
         </span>
     </span>
     {% include 'conversations/_request_state.html.twig' with { request: request, unread: false, part: 'pill' } only %}

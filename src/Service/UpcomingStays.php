@@ -26,15 +26,16 @@ class UpcomingStays
     }
 
     /**
-     * Twig: upcoming_stays(limit). For each stay: the first message of the request (what opens the conversation),
-     * the request, the other member, and whether the member hosts.
+     * Twig: upcoming_stays(limit, withMaybe). For each stay: the first message of the request (what opens the
+     * conversation), the request, the other member, and whether the member hosts. With $withMaybe, the stays
+     * answered "maybe" too (the top bar menu).
      *
      * @return list<array{message: Message, request: HostingRequest, other: Member, hosting: bool}>
      */
     #[AsTwigFunction('upcoming_stays')]
-    public function getUpcomingStays(int $limit = 5): array
+    public function getUpcomingStays(int $limit = 5, bool $withMaybe = false): array
     {
-        return $this->getStays(Carbon::today(), null, $limit);
+        return $this->getStays(Carbon::today(), null, $limit, null, $withMaybe);
     }
 
     /**
@@ -60,7 +61,8 @@ class UpcomingStays
         $last = $month->copy()->endOfMonth()->startOfDay();
         $start = $first->copy()->startOfWeek(Carbon::MONDAY);
         $end = $last->copy()->endOfWeek(Carbon::SUNDAY)->startOfDay();
-        $stays = $this->getStays($start, $end, 200);
+        // The stays answered "maybe" too, striped (stays/calendar.html.twig)
+        $stays = $this->getStays($start, $end, 200, null, true);
 
         $weeks = [];
         for ($weekStart = $start->copy(); $weekStart <= $end; $weekStart->addWeek()) {
@@ -119,12 +121,12 @@ class UpcomingStays
     }
 
     /**
-     * The member's accepted stays that aren't over before $from (and start by $to, or are the stay of
-     * $requestId, when given), soonest first.
+     * The member's accepted stays (and maybe ones with $withMaybe) that aren't over before $from (and start
+     * by $to, or are the stay of $requestId, when given), soonest first.
      *
      * @return list<array{message: Message, request: HostingRequest, other: Member, hosting: bool}>
      */
-    private function getStays(?Carbon $from, ?Carbon $to, int $limit, ?int $requestId = null): array
+    private function getStays(?Carbon $from, ?Carbon $to, int $limit, ?int $requestId = null, bool $withMaybe = false): array
     {
         $member = $this->security->getUser();
         if (!$member instanceof Member) {
@@ -137,9 +139,11 @@ class UpcomingStays
             ->join('m.request', 'r')
             ->where('m.id IN (SELECT MIN(f.id) FROM ' . Message::class . ' f'
                 . ' WHERE f.request IS NOT NULL AND (f.sender = :member OR f.receiver = :member) GROUP BY f.request)')
-            ->andWhere('r.status = :accepted')
+            ->andWhere('r.status IN (:statuses)')
             ->setParameter('member', $member)
-            ->setParameter('accepted', HostingRequest::REQUEST_ACCEPTED)
+            ->setParameter('statuses', $withMaybe
+                ? [HostingRequest::REQUEST_ACCEPTED, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED]
+                : [HostingRequest::REQUEST_ACCEPTED])
             ->orderBy('r.arrival', 'ASC')
             ->setMaxResults($limit);
         if (null !== $from) {

@@ -1,10 +1,13 @@
 {#
   The member's upcoming stays in the top bar (main_navigation): a calendar with how many, and under it
-  the next ones and a link to the stays calendar. Only there when there are some (App\Service\UpcomingStays).
+  the next ones and a link to the stays calendar. Only there when there are some (App\Service\UpcomingStays);
+  otherwise an empty hidden item, so assets/js/stays-nav.js can put it back after an answer in the side panel
+  (route stays_nav renders this alone).
 #}
-{% set _navStays = upcoming_stays(50) %}
+{# The stays answered "maybe" too, marked in their row #}
+{% set _navStays = upcoming_stays(50, true) %}
 {% if _navStays is not empty %}
-    <li class="nav-item dropdown topbar-notices topbar-stays">
+    <li class="nav-item dropdown topbar-notices topbar-stays js-topbar-stays" data-refresh="{{ path('stays_nav') }}">
         <a id="stays_menu_toggle" href="#stays_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
            data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
            aria-label="{{ 'landing.stays.title'|trans }}">
@@ -13,14 +16,29 @@
         </a>
         <div id="stays_menu" class="dropdown-menu dropdown-menu-end c-topbar-notices c-topbar-stays">
             <p class="c-topbar-notices__title">{{ 'landing.stays.title'|trans }}</p>
+            {# The confirmed stays, then the ones answered "maybe" under their own title #}
+            {% set _maybes = _navStays|filter(stay => stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED')) %}
+            {% set _confirmed = _navStays|filter(stay => stay.request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED')) %}
+            {% if _confirmed is not empty %}
             <div class="c-topbar-stays__list">
-                {% for stay in _navStays|slice(0, 4) %}
+                {% for stay in _confirmed|slice(0, 4) %}
                     {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
                 {% endfor %}
             </div>
+            {% endif %}
+            {% if _maybes is not empty %}
+                <p class="c-topbar-stays__group{{ _confirmed is empty ? ' is-first' : '' }}"><span class="c-home-stays__maybe">{{ 'request.status.tentatively'|trans }}</span> {{ 'stays.group.maybe'|trans }}</p>
+                <div class="c-topbar-stays__list c-topbar-stays__list--maybe">
+                    {% for stay in _maybes|slice(0, 3) %}
+                        {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+                    {% endfor %}
+                </div>
+            {% endif %}
             <a class="c-topbar-stays__all" href="{{ path('stays') }}">
                 {{ 'stays.nav.all'|trans }} <i class="fas fa-arrow-right c-topbar-stays__chevron" aria-hidden="true"></i>
             </a>
         </div>
     </li>
+{% else %}
+    <li class="nav-item topbar-stays js-topbar-stays" data-refresh="{{ path('stays_nav') }}" hidden></li>
 {% endif %}

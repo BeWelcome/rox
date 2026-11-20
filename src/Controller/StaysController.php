@@ -36,6 +36,16 @@ class StaysController extends AbstractController
     }
 
     /**
+     * The stays item of the top bar alone, to refresh it after an answer in the side panel (assets/js/stays-nav.js).
+     */
+    #[Route(path: '/stays/nav', name: 'stays_nav')]
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
+    public function navigation(): Response
+    {
+        return $this->render('layout/_stays_nav.html.twig');
+    }
+
+    /**
      * One stay as an .ics file (Add to calendar of a stay, Apple and other calendar apps).
      */
     #[Route(path: '/stays/{id}/calendar.ics', name: 'stay_export', requirements: ['id' => '\d+'])]

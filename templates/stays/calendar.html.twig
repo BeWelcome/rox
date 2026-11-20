@@ -5,7 +5,7 @@
   The calendar of the member's stays (StaysController, App\Service\UpcomingStays::getMonth()): one month, Monday
   first, each stay a bar across its days in the colour of the other member (the same in the list), at most three under
   one another and "+N" on the days with more. Next to it on a computer (under it on phones), the stays of the month
-  as on the home page. The filters (All, Guests, Hosts, when there are both) and a picked day narrow both (assets/js/stays-calendar.js).
+  as on the home page. The filters (All, Guests, Hosts, Maybe, when there is more than one kind) and a picked day narrow both (assets/js/stays-calendar.js).
   A stay opens its conversation in the side panel.
 #}
 
@@ -22,18 +22,40 @@
 
 {% block content %}
 {% set hosting = stays|filter(stay => stay.hosting)|length %}
+{% set maybeCount = stays|filter(stay => stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED'))|length %}
 {# Each member a colour of their own, the same in the calendar and the list (by member, so it stays from month to month) #}
 {% set palette = ['#7c3aed', '#0284c7', '#059669', '#d97706', '#db2777', '#4f46e5', '#0d9488', '#dc2626', '#65a30d', '#9333ea', '#0369a1', '#be185d'] %}
 <section class="p-stays js-stays">
     <header class="p-stays__head">
         <a class="p-stays__back" href="{{ path('landingpage') }}" aria-label="{{ 'back'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
         <h1 class="p-stays__title">{{ 'landing.stays.title'|trans }}</h1>
-        {# The filters only when there are both guests and hosts #}
-        {% if hosting > 0 and hosting < stays|length %}
-        <div class="p-stays__filters" role="group">
-            <button type="button" class="p-stays__filter is-active js-stays-filter" data-role="all" aria-pressed="true">{{ 'stays.filter.all'|trans }} <span>{{ stays|length }}</span></button>
-            <button type="button" class="p-stays__filter js-stays-filter" data-role="host" aria-pressed="false"><span class="p-stays__dot p-stays__dot--host" aria-hidden="true"></span>{{ 'stays.filter.guests'|trans }} <span>{{ hosting }}</span></button>
-            <button type="button" class="p-stays__filter js-stays-filter" data-role="guest" aria-pressed="false"><span class="p-stays__dot p-stays__dot--guest" aria-hidden="true"></span>{{ 'stays.filter.hosts'|trans }} <span>{{ stays|length - hosting }}</span></button>
+        {# The filters in one Filter button and its menu (room), only when there is something to tell apart
+           (guests and hosts, or maybe stays). The button says the picked one (assets/js/stays-calendar.js). #}
+        {% if (hosting > 0 and hosting < stays|length) or maybeCount > 0 %}
+        {% set _filters = [{ role: 'all', label: 'stays.filter.all', count: stays|length, dot: null }] %}
+        {% if hosting > 0 %}{% set _filters = _filters|merge([{ role: 'host', label: 'stays.filter.guests', count: hosting, dot: 'host' }]) %}{% endif %}
+        {% if hosting < stays|length %}{% set _filters = _filters|merge([{ role: 'guest', label: 'stays.filter.hosts', count: stays|length - hosting, dot: 'guest' }]) %}{% endif %}
+        {% if maybeCount > 0 %}{% set _filters = _filters|merge([{ role: 'maybe', label: 'request.status.tentatively', count: maybeCount, dot: 'maybe' }]) %}{% endif %}
+        <div class="dropdown p-stays__filters">
+            <button type="button" class="p-stays__filter-toggle js-stays-filter-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                <span class="p-stays__dot js-stays-filter-dot" aria-hidden="true" hidden></span>
+                <span class="js-stays-filter-label" data-default="{{ 'stays.filter'|trans }}">{{ 'stays.filter'|trans }}</span>
+                <i class="fas fa-chevron-down p-stays__filter-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end p-hero__dropdown c-home-radius-menu p-stays__filter-menu">
+                {% for filter in _filters %}
+                    <button type="button" class="dropdown-item p-hero__dropdown-item c-home-radius-menu__item p-stays__filter js-stays-filter{{ loop.first ? ' is-active' : '' }}"
+                            data-role="{{ filter.role }}" data-dot="{{ filter.dot }}" aria-pressed="{{ loop.first ? 'true' : 'false' }}">
+                        <span class="p-stays__filter-name">
+                            {% if filter.dot %}<span class="p-stays__dot p-stays__dot--{{ filter.dot }}" aria-hidden="true"></span>{% endif %}
+                            <span class="js-stays-filter-name">{{ filter.label|trans }}</span>
+                            <span class="p-stays__filter-count">{{ filter.count }}</span>
+                        </span>
+                        <i class="fas fa-check c-home-radius-menu__check" aria-hidden="true"></i>
+                    </button>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
         {{ cal.nav(month, previous, next, isThisMonth, 'head') }}
@@ -62,8 +84,8 @@
                     <div class="p-stays__bars">
                         {% for bar in week.bars %}
                             {% set stay = bar.stay %}
-                            <a class="p-stays__bar{{ bar.before ? ' is-cont-before' : '' }}{{ bar.after ? ' is-cont-after' : '' }}{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }} js-contact-open js-stays-item"
-                               href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
+                            <a class="p-stays__bar{{ bar.before ? ' is-cont-before' : '' }}{{ bar.after ? ' is-cont-after' : '' }}{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }}{{ stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') ? ' is-maybe' : '' }} js-contact-open js-stays-item"
+                               href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}" data-maybe="{{ stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') ? 1 : 0 }}"
                                style="--stay-color: {{ palette[stay.other.id % palette|length] }}; grid-column: {{ bar.column }} / span {{ bar.span }}; grid-row: {{ bar.lane }}">
                                 <img class="p-stays__bar-avatar" src="{{ path('avatar', { username: stay.other.username, size: 48 }) }}" alt="" loading="lazy">
                                 <span class="p-stays__bar-name">{{ member_display_name(stay.other) }}</span>
@@ -87,10 +109,18 @@
                 </div>
                 <button type="button" class="p-stays__clear js-stays-clear" aria-label="{{ 'stays.day.clear'|trans }}" hidden><i class="fas fa-times" aria-hidden="true"></i></button>
             </div>
-            {% for stay in stays %}
-                <div class="p-stays__row{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }} js-stays-item" style="--stay-color: {{ palette[stay.other.id % palette|length] }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
+            {# The stays answered "maybe" together at the end, under their own title #}
+            {% set _maybes = stays|filter(stay => stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED')) %}
+            {% set _confirmed = stays|filter(stay => stay.request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED')) %}
+            {% for stay in _confirmed|merge(_maybes) %}
+                {% if _maybes is not empty and loop.index == _confirmed|length + 1 %}
+                    <h3 class="p-stays__group js-stays-group"><span class="c-home-stays__maybe">{{ 'request.status.tentatively'|trans }}</span> {{ 'stays.group.maybe'|trans }}</h3>
+                {% endif %}
+                <div class="p-stays__row{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }}{{ stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') ? ' is-maybe' : '' }} js-stays-item" style="--stay-color: {{ palette[stay.other.id % palette|length] }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}" data-maybe="{{ stay.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') ? 1 : 0 }}"
                      data-from="{{ stay.request.arrival|date('Y-m-d') }}" data-to="{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') }}">
                     {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+                    {# Not for a stay answered "maybe": only a confirmed one goes in a calendar #}
+                    {% if stay.request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
                     <div class="p-stays__add dropdown">
                         <button type="button" class="p-stays__add-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'stays.export.one'|trans }}">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -104,6 +134,10 @@
                             {% include 'stays/_calendar_links.html.twig' with { stay: stay } only %}
                         </div>
                     </div>
+                    {% else %}
+                    {# The same room as the button, so the date pills stay aligned #}
+                    <span class="p-stays__add p-stays__add--none" aria-hidden="true"></span>
+                    {% endif %}
                 </div>
             {% endfor %}
             <p class="p-stays__none js-stays-none" hidden>{{ 'stays.day.none'|trans }}</p>

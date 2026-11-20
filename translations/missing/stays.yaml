@@ -46,3 +46,9 @@ stays.export.ics:
 stays.nav.all:
     - 'See all in the calendar'
     - 'Top bar, menu of the upcoming stays, link to the stays calendar page.'
+stays.group.maybe:
+    - 'still to confirm'
+    - 'Stays calendar, list: the title over the stays answered maybe, after a Maybe label.'
+stays.filter:
+    - 'Filter'
+    - 'Stays calendar, the button that opens the filters (All, Guests, Hosts, Maybe).'

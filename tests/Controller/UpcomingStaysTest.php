@@ -94,6 +94,22 @@ class UpcomingStaysTest extends WebTestCase
         $this->assertResponseStatusCodeSame(404);
     }
 
+    public function testTheTopBarStaysCanBeFetchedAgain(): void
+    {
+        $client = static::createClient();
+        $members = static::getContainer()->get(EntityManagerInterface::class)->getRepository(Member::class);
+        $guest = $members->findOneBy(['username' => 'member-2']);
+        $host = $members->findOneBy(['username' => 'member-5']);
+        $accepted = $this->request($guest, $host, HostingRequest::REQUEST_ACCEPTED, Carbon::today()->addDays(4));
+
+        $client->loginUser($host);
+        $crawler = $client->request('GET', '/stays/nav');
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.js-topbar-stays[data-refresh="/stays/nav"]'));
+        self::assertCount(1, $crawler->filter('#stays_menu a[href="/conversation/' . $accepted->getId() . '"]'));
+    }
+
     private function request(Member $guest, Member $host, int $status, Carbon $arrival): Message
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);

@@ -61,6 +61,14 @@
 #stays_menu .c-home-stays__line { color: #a1a1aa; }
 #stays_menu .c-home-stays__soon { color: #e4e4e7; }
 #stays_menu .c-home-stays__soon.is-now { color: #fb923c; }
+/* The menu: no "Your guest / host" (room), a stay answered maybe in an amber label */
+#stays_menu .c-home-stays__role { display: none; }
+#stays_menu .c-home-stays__maybe { display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.5rem; border-radius: 999px; background: rgba(251, 191, 36, 0.18); color: #fcd34d; font-size: 0.75rem; font-weight: 700; line-height: 1.4; vertical-align: 0.05rem; }
+#stays_menu .c-topbar-stays__group { display: flex; align-items: center; gap: 0.4rem; margin: 0.5rem 0 0.15rem; padding: 0.6rem 0 0 0.25rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: #a1a1aa; font-size: 0.8125rem; font-weight: 600; }
+#stays_menu .c-topbar-stays__group .c-home-stays__maybe { margin: 0; }
+#stays_menu .c-topbar-stays__group.is-first { margin-top: 0; padding-top: 0; border-top: 0; }
+/* Under the Maybe title, the rows don't need their own label */
+#stays_menu .c-topbar-stays__list--maybe .c-home-stays__maybe { display: none; }
 #stays_menu .c-req-pill.c-req-pill { background: rgba(255, 255, 255, 0.08); color: #e4e4e7; }
 #main_menu #stays_menu .c-topbar-stays__all,
 #main_menu #stays_menu .c-topbar-stays__all:hover,

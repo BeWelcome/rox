@@ -59,7 +59,9 @@
 #stays_menu .c-home-stays__avatar { width: 2.6rem; height: 2.6rem; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12); }
 #stays_menu .c-home-stays__name { color: #fff; }
 #stays_menu .c-home-stays__line { color: #a1a1aa; }
-#stays_menu .c-home-stays__soon { color: #e4e4e7; }
+/* How soon, small and grey under the name (orange today or now) */
+#stays_menu .c-home-stays__line { font-size: 0.8125rem; }
+#stays_menu .c-home-stays__soon { color: #a1a1aa; font-weight: 500; }
 #stays_menu .c-home-stays__soon.is-now { color: #fb923c; }
 /* The menu: no "Your guest / host" (room), a stay answered maybe in an amber label */
 #stays_menu .c-home-stays__role { display: none; }

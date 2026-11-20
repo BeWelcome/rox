@@ -9,8 +9,8 @@
 {% set _days = ((_from|date('U')) - ('today'|date('U'))) // 86400 %}
 {% set _to = (request.departure ?? request.arrival)|date('Y-m-d') %}
 {% if _to < 'today'|date('Y-m-d') %}{% set _soon = 'landing.stays.past'|trans %}
-{% elseif _days < 0 %}{% set _soon = 'landing.stays.now'|trans %}
-{% elseif _days == 0 %}{% set _soon = 'landing.dash.when.today'|trans %}
+{# Under way (arrived before today) or arriving today: "Today", clearer than "Now" #}
+{% elseif _days <= 0 %}{% set _soon = 'landing.dash.when.today'|trans %}
 {% elseif _days == 1 %}{% set _soon = 'landing.dash.when.tomorrow'|trans %}
 {% elseif _days < 7 %}{% set _soon = 'landing.dash.when.days'|trans({ count: _days }) %}
 {% elseif _days < 30 %}{% set _soon = 'landing.dash.when.weeks'|trans({ count: _days // 7 }) %}

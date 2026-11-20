@@ -243,9 +243,6 @@ landing.stays.hosting:
 landing.stays.guest:
     - 'Your host'
     - 'Home page, Upcoming stays: under the name of a member the member will stay with.'
-landing.stays.now:
-    - 'Now'
-    - 'Home page, Upcoming stays: label of a stay that has started and isn''t over yet.'
 landing.stays.past:
     - 'Past'
     - 'Upcoming stays and stays calendar, label of a stay that is over.'

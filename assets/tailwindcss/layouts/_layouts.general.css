@@ -13878,9 +13878,8 @@ a.c-home-trip__name:hover { color: #c2410c; }
 .c-home-dash__seeall:hover { text-decoration: none; }
 .c-home-dash__seeall:hover .c-home-dash__seeall-chevron, .c-home-dash__seeall:hover svg { transform: translateX(2px); }
 .c-home-dash__seeall + .c-home-dash__add { margin-left: 0.75rem; }
-.c-home-dash__card:has(.c-home-pane.is-empty) .c-home-dash__seeall,
-.c-home-dash__card--activities.is-empty .c-home-dash__seeall { display: none; }
-.c-home-dash__card--activities.is-empty .c-home-dash__seeall + .c-home-dash__add { margin-left: auto; }
+/* No See all on an empty card, except Upcoming activities: it shows the next three months, /activities all of them */
+.c-home-dash__card:not(.c-home-dash__card--activities):has(.c-home-pane.is-empty) .c-home-dash__seeall { display: none; }
 /* Phones: Invite is a round button with the house only, like Message next to it */
 @media (max-width: 575.98px) {
   .c-home-trip__invite, .c-home-trip__invite:hover { justify-content: center; width: 2.4rem; padding: 0; }

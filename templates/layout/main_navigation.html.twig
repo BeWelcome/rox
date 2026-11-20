@@ -120,11 +120,6 @@
                         <span class="member-menu__label">{{ 'trips.mytrips' | trans }}</span>
                         <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
                     </a></li>
-                    <li><a class="member-menu__item" href="{{ path('stays') }}">
-                        <span class="member-menu__icon member-menu__icon--warm" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
-                        <span class="member-menu__label">{{ 'landing.stays.title' | trans }}</span>
-                        <i class="fas fa-chevron-right member-menu__chevron" aria-hidden="true"></i>
-                    </a></li>
                     {# My groups and Activities (the community menu of the top bar before) #}
                     {% include 'layout/_community_nav_links.html.twig' only %}
                     <li class="member-menu__sep" role="separator"></li>

@@ -49,11 +49,23 @@
   #main_menu .c-topbar-notices.dropdown-menu { position: absolute; top: 100%; right: 0; left: auto; width: min(22rem, calc(100vw - 1.5rem)); }
 }
 
-/* Upcoming stays (layout/_stays_nav.html.twig): the same card, with the next stays and a link to the calendar */
-#main_menu .c-topbar-stays.dropdown-menu { width: min(24rem, calc(100vw - 1.5rem)); }
-.c-topbar-stays__list { margin: 0 -0.5rem; }
-#main_menu .c-topbar-stays .c-home-stays__item { padding: 0.6rem 1.1rem; color: #0f172a; }
-#main_menu .c-topbar-stays__all { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 0.5rem 0 0; padding: 0.7rem 1rem; border-radius: 0.85rem; background: #fff4e8; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; transition: background 0.15s, color 0.15s; }
-#main_menu .c-topbar-stays__all:hover, #main_menu .c-topbar-stays__all:focus { background: #f37000; color: #fff; }
-.c-topbar-stays__chevron { font-size: 0.7rem; transition: transform 0.15s; }
-#main_menu .c-topbar-stays__all:hover .c-topbar-stays__chevron { transform: translateX(3px); }
+/* Upcoming stays (layout/_stays_nav.html.twig): a dark card like the member menu, with the next stays
+   and a button to the calendar */
+#main_menu #stays_menu.dropdown-menu { width: min(24rem, calc(100vw - 1.5rem)); padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.08); background: #1c1e22; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); }
+#stays_menu .c-topbar-notices__title { padding: 0.2rem 0.5rem 0.45rem; color: #a1a1aa; }
+#main_menu #stays_menu .c-home-stays__item,
+#main_menu #stays_menu .c-home-stays__item:hover { gap: 0.75rem; padding: 0.55rem 0.5rem; border-radius: 0.65rem; color: #f4f4f5; }
+#main_menu #stays_menu .c-home-stays__item:hover { background: rgba(255, 255, 255, 0.07); }
+#stays_menu .c-home-stays__avatar { width: 2.6rem; height: 2.6rem; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12); }
+#stays_menu .c-home-stays__name { color: #fff; }
+#stays_menu .c-home-stays__line { color: #a1a1aa; }
+#stays_menu .c-home-stays__soon { color: #e4e4e7; }
+#stays_menu .c-home-stays__soon.is-now { color: #fb923c; }
+#stays_menu .c-req-pill.c-req-pill { background: rgba(255, 255, 255, 0.08); color: #e4e4e7; }
+#main_menu #stays_menu .c-topbar-stays__all,
+#main_menu #stays_menu .c-topbar-stays__all:hover,
+#main_menu #stays_menu .c-topbar-stays__all:focus { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.6rem; padding: 0.7rem 1rem; border-radius: 0.75rem; background: #ea7a2e; color: #fff; font-size: 0.875rem; font-weight: 700; text-decoration: none; transition: background 0.15s; }
+#main_menu #stays_menu .c-topbar-stays__all:hover,
+#main_menu #stays_menu .c-topbar-stays__all:focus { background: #dc6b1f; }
+.c-topbar-stays__chevron { font-size: 0.75rem; transition: transform 0.15s; }
+#stays_menu .c-topbar-stays__all:hover .c-topbar-stays__chevron { transform: translateX(3px); }

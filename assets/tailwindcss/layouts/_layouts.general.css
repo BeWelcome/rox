@@ -14761,7 +14761,7 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 
 /* Stays calendar (stays/calendar.html.twig): filters, the month with a bar per stay, the stays of the month beside */
-.p-stays { --stays-host: #4e9a3c; --stays-guest: #f37000; max-width: 76rem; margin: 1.25rem auto 2.5rem; }
+.p-stays { --stays-host: #4e9a3c; --stays-guest: #f37000; margin: 1.25rem 0 2.5rem; }
 .p-stays [hidden] { display: none !important; }
 .p-stays__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 1.25rem; }
 .p-stays__back,

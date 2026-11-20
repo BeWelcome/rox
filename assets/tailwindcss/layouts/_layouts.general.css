@@ -14820,6 +14820,10 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-stays__row > .c-home-stays__item { flex: 1; min-width: 0; padding-right: 0.6rem; }
 .p-stays__row > .c-home-stays__item:hover { background: transparent; }
 .p-stays__add { flex-shrink: 0; margin-right: 1.25rem; }
+/* The Add to calendar menu goes over the card's edge and over the next rows */
+.p-stays__list.c-home-card { overflow: visible; }
+.p-stays__row:has(.dropdown-menu.show) { position: relative; z-index: 20; }
+.p-stays__add .dropdown-menu { z-index: 1050; }
 .p-stays__add-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #64748b; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
 .p-stays__add-btn:hover, .p-stays__add-btn:focus-visible, .p-stays__add-btn[aria-expanded="true"] { border-color: #f37000; background: #f37000; color: #fff; }
 .p-stays__add-btn svg { display: block; }

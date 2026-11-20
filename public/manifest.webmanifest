@@ -65,22 +65,22 @@
       {
         "src": "images/screenshots/home.jpg",
         "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
+        "type": "image/jpeg",
+        "form_factor": "narrow",
         "label": "Home screen of app"
       },
       {
         "src": "images/screenshots/search.jpg",
-        "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
+        "sizes": "347x592",
+        "type": "image/jpeg",
+        "form_factor": "narrow",
         "label": "Search function of the app"
       },
       {
         "src": "images/screenshots/profile.jpg",
         "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
+        "type": "image/jpeg",
+        "form_factor": "narrow",
         "label": "Profile section of the app"
       }
   ]

@@ -66,6 +66,33 @@ class UpcomingStaysTest extends WebTestCase
         self::assertCount(0, $crawler->filter('a[href="/conversation/' . $stay->getId() . '"]'));
     }
 
+    public function testOneStayCanBeAddedToACalendar(): void
+    {
+        $client = static::createClient();
+        $members = static::getContainer()->get(EntityManagerInterface::class)->getRepository(Member::class);
+        $guest = $members->findOneBy(['username' => 'member-2']);
+        $host = $members->findOneBy(['username' => 'member-5']);
+        $stranger = $members->findOneBy(['username' => 'member-3']);
+        $stay = $this->request($guest, $host, HostingRequest::REQUEST_ACCEPTED, Carbon::today()->addDays(4));
+        $requestId = $stay->getRequest()->getId();
+
+        $client->loginUser($guest);
+        $crawler = $client->request('GET', '/stays');
+        self::assertCount(1, $crawler->filter('.p-stays__add a[href="/stays/' . $requestId . '/calendar.ics"]'));
+
+        $client->request('GET', '/stays/' . $requestId . '/calendar.ics');
+        $this->assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('Content-Type', 'text/calendar; charset=utf-8');
+        $ics = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('UID:stay-' . $requestId . '@bewelcome.org', $ics);
+        self::assertStringContainsString('/conversation/' . $stay->getId(), $ics);
+
+        // Not a stay of theirs
+        $client->loginUser($stranger);
+        $client->request('GET', '/stays/' . $requestId . '/calendar.ics');
+        $this->assertResponseStatusCodeSame(404);
+    }
+
     private function request(Member $guest, Member $host, int $status, Carbon $arrival): Message
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);

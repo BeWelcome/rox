@@ -5,6 +5,7 @@
 export function initStaysCalendar(page) {
     const title = page.querySelector('.js-stays-list-title');
     const clear = page.querySelector('.js-stays-clear');
+    const picked = page.querySelector('.js-stays-picked');
     const none = page.querySelector('.js-stays-none');
     let role = 'all';
     let day = null;
@@ -25,12 +26,21 @@ export function initStaysCalendar(page) {
             cell.setAttribute('aria-pressed', cell.dataset.date === day ? 'true' : 'false');
         });
         if (title) {
-            if (day) {
+            // A picked day shows the long date and the count instead of the month title
+            title.hidden = !!day;
+            if (picked) {
+                picked.hidden = !day;
+            }
+            if (day && picked) {
                 const cell = page.querySelector(`.js-stays-day[data-date="${day}"]`);
-                const count = shown === 1 ? title.dataset.one : title.dataset.other.replace('__COUNT__', shown);
-                title.textContent = `${cell ? cell.dataset.label : day} · ${count}`;
-            } else {
-                title.textContent = title.dataset.default;
+                const set = (selector, text) => {
+                    const el = picked.querySelector(selector);
+                    if (el) {
+                        el.textContent = text;
+                    }
+                };
+                set('.js-stays-picked-day', cell ? cell.dataset.weekday : day);
+                set('.js-stays-picked-count', shown === 1 ? title.dataset.one : title.dataset.other.replace('__COUNT__', shown));
             }
         }
         if (clear) {

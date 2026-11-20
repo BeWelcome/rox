@@ -31,3 +31,15 @@ stays.day.clear:
 stays.day.none:
     - 'No stays on this day.'
     - 'Stays calendar, list of a picked day without stays.'
+stays.export.hosting:
+    - '{username} stays with you'
+    - 'Calendar file of the stays, title of a stay where the member hosts (username of the guest).'
+stays.export.guest:
+    - 'Staying with {username}'
+    - 'Calendar file of the stays, title of a stay where the member is the guest (username of the host).'
+stays.export.one:
+    - 'Add to calendar'
+    - 'A stay (stays calendar list, menu of the stay card in the conversation), title of the menu with Google, Outlook and the .ics file.'
+stays.export.ics:
+    - 'Apple / other (.ics)'
+    - 'Add to calendar menu of a stay, item that downloads the .ics file.'

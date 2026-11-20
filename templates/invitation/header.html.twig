@@ -21,7 +21,7 @@
 {% endif %}
 {% set nights = date(invitation.departure|date('Y-m-d')).diff(date(invitation.arrival|date('Y-m-d'))).days %}
 
-{% set _menu %}{% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false } %}{% endset %}
+{% set _menu %}{% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false, calendar: { message: original, request: invitation, other: original.Initiator.Username == myself.Username ? original.Receiver : original.Initiator, hosting: side == 'host' } } %}{% endset %}
 {% set _warning %}
     {% if invitation.status != constant(S ~ 'REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
         <p class="c-stay2__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>

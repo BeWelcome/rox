@@ -14753,12 +14753,12 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 
 /* Stays calendar (stays/calendar.html.twig): filters, the month with a bar per stay, the stays of the month beside */
-.p-stays { --stays-host: #4e9a3c; --stays-guest: #f37000; max-width: 76rem; margin: 1.75rem auto 2.5rem; }
+.p-stays { --stays-host: #4e9a3c; --stays-guest: #f37000; max-width: 76rem; margin: 1.25rem auto 2.5rem; }
 .p-stays [hidden] { display: none !important; }
 .p-stays__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 1.25rem; }
 .p-stays__back,
 .p-stays__back:hover { display: none; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: #fff; color: #334155; text-decoration: none; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1); }
-.p-stays__title { margin: 0 0.5rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.p-stays__title { margin: 0 0.5rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2rem; font-weight: 700; line-height: 1; }
 .p-stays__filters { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .p-stays__filter { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.875rem; font-weight: 700; line-height: 1.2; cursor: pointer; }
 .p-stays__filter > span:last-child { color: #94a3b8; font-weight: 600; }
@@ -14777,6 +14777,9 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-stays__arrow:hover { background: #f1f5f9; }
 .p-stays__today,
 .p-stays__today:hover { padding: 0.35rem 0.85rem; border-radius: 999px; background: #f1f5f9; color: #0f172a; font-size: 0.8125rem; font-weight: 700; text-decoration: none; }
+/* Stays already over: faded in the calendar and the list, full again on hover */
+.p-stays__bar.is-past, .p-stays__row.is-past > .c-home-stays__item, .p-stays__row.is-past .p-stays__add-btn { opacity: 0.4; filter: grayscale(0.4); transition: opacity 0.15s, filter 0.15s; }
+.p-stays__bar.is-past:hover, .p-stays__row.is-past:hover > .c-home-stays__item, .p-stays__row.is-past:hover .p-stays__add-btn { opacity: 0.8; filter: none; }
 .p-stays__layout { display: grid; gap: 1.5rem; align-items: start; }
 @media (min-width: 992px) {
   .p-stays__layout { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
@@ -14792,7 +14795,7 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-stays__day.is-other { visibility: hidden; }
 .p-stays__date { display: inline-flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #0f172a; font-size: 1rem; font-weight: 700; }
 .p-stays__day.is-past .p-stays__date { color: #94a3b8; font-weight: 600; }
-.p-stays__day.is-today .p-stays__date { box-shadow: inset 0 0 0 2px #f37000; }
+.p-stays__day.is-today .p-stays__date { color: #f37000; font-weight: 800; }
 .p-stays__day.is-picked .p-stays__date,
 .p-stays__day.is-picked:hover .p-stays__date { background: #0f172a; color: #fff; }
 .p-stays__more { margin-top: auto; margin-bottom: 0.2rem; color: #64748b; font-size: 0.6875rem; font-weight: 700; }
@@ -14808,23 +14811,40 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-stays__bar-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-stays__list { padding: 0.4rem 0 0.6rem; }
 /* The member's colour, as on their bars: a ring around the photo and the dates */
+/* The row: the stay (opens the conversation), then Add to calendar */
+.p-stays__row { display: flex; align-items: center; }
+.p-stays__row:hover { background: #f8fafc; }
+.p-stays__row > .c-home-stays__item { flex: 1; min-width: 0; padding-right: 0.6rem; }
+.p-stays__row > .c-home-stays__item:hover { background: transparent; }
+.p-stays__add { flex-shrink: 0; margin-right: 1.25rem; }
+.p-stays__add-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #64748b; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.p-stays__add-btn:hover, .p-stays__add-btn:focus-visible, .p-stays__add-btn[aria-expanded="true"] { border-color: #f37000; background: #f37000; color: #fff; }
+.p-stays__add-btn svg { display: block; }
 .p-stays__row .c-home-stays__avatar { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--stay-color); }
 .p-stays__row .c-req-pill.c-req-pill { background: color-mix(in srgb, var(--stay-color) 12%, #fff); color: var(--stay-color); }
 .p-stays__list-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem 0.4rem; }
 .p-stays__list-title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.2rem; font-weight: 700; }
-.p-stays__clear { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.35rem; padding: 0.35rem 0.85rem; border: 0; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
-.p-stays__clear:hover { background: #e2e8f0; }
+.p-stays__clear { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #64748b; font-size: 0.9rem; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.p-stays__clear:hover, .p-stays__clear:focus-visible { border-color: #fed7aa; background: #fff4e8; color: #f37000; }
+.p-stays__picked { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.65rem; min-width: 0; }
+.p-stays__picked-day { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.2rem; font-weight: 700; line-height: 1.25; }
+.p-stays__picked-count { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 999px; background: #fff4e8; color: #c25700; font-size: 0.8125rem; font-weight: 700; line-height: 1.2; white-space: nowrap; }
 .p-stays__none { margin: 0; padding: 0.75rem 1.5rem 1rem; color: #64748b; font-size: 0.875rem; text-align: center; }
 @media (max-width: 767px) {
-  .p-stays { margin-top: 1rem; }
-  .p-stays__back, .p-stays__back:hover { display: inline-flex; }
-  .p-stays__title { font-size: 1.6rem; }
+  .p-stays { margin-top: 0; }
+  .p-stays__head { gap: 0.5rem 0.6rem; margin-bottom: 0.9rem; }
+  .p-stays__back, .p-stays__back:hover { display: inline-flex; width: 2rem; height: 2rem; font-size: 0.85rem; }
+  .p-stays__title { font-size: 1.3rem; line-height: 1; }
   .p-stays__filters { width: 100%; }
   .p-stays__nav--head { display: none; }
-  .p-stays__nav--card { display: flex; justify-content: center; margin-bottom: 0.4rem; }
-  .p-stays__nav--card .p-stays__today { position: absolute; right: 0; }
-  .p-stays__nav--card { position: relative; }
-  .p-stays__card { padding: 0.9rem 0.75rem 1rem; border-radius: 1rem; }
+  /* Phones: month on the left, Today and the arrows on the right, so nothing overlaps */
+  .p-stays__nav--card { display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.2rem; padding: 0 0.25rem; }
+  .p-stays__nav--card .p-stays__arrow { width: 1.9rem; height: 1.9rem; }
+  .p-stays__nav--card .p-stays__today { padding: 0.25rem 0.7rem; font-size: 0.75rem; }
+  .p-stays__nav--card .p-stays__month { flex: 1; order: 0; min-width: 0; font-size: 1rem; text-align: left; }
+  .p-stays__nav--card .p-stays__today { order: 1; margin-right: 0.15rem; }
+  .p-stays__nav--card .p-stays__arrow { order: 2; }
+  .p-stays__card { padding: 0.6rem 0.6rem 0.8rem; border-radius: 1rem; }
   .p-stays__weekdays span { padding: 0.4rem 0 0.5rem; font-size: 0.6875rem; }
   .p-stays__week { min-height: 3.6rem; }
   .p-stays__date { width: 2.3rem; height: 2.3rem; font-size: 0.9375rem; }
@@ -14834,4 +14854,5 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .p-stays__bar, .p-stays__bar:hover { margin: 0 0.2rem; padding: 0; }
   .p-stays__bar-avatar, .p-stays__bar-name { display: none; }
   .p-stays__list-head { padding: 1rem 1.1rem 0.4rem; }
+  .p-stays__add { margin-right: 0.85rem; }
 }

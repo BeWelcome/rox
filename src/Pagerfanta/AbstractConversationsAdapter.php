@@ -93,41 +93,6 @@ abstract class AbstractConversationsAdapter
         return $conversations;
     }
 
-    /**
-     * @return array<string, int|string>
-     */
-    private function getParameters(): array
-    {
-        $parameters = ['memberId' => $this->member->getId()];
-        if (null !== $this->searchWords) {
-            $parameters['searchWords'] = '%' . addcslashes($this->searchWords, '%_\\') . '%';
-        }
-
-        return $parameters;
-    }
-
-    private function getSearchCondition(): string
-    {
-        if (null === $this->searchWords) {
-            return '1 = 1';
-        }
-
-        $conditions = [];
-        if ([] !== $this->searchSubjectIds) {
-            $conditions[] = 'm.subject_id IN (' . implode(',', $this->searchSubjectIds) . ')';
-        }
-        if ([] !== $this->searchMessageIds) {
-            $conditions[] = 'm.id IN (' . implode(',', $this->searchMessageIds) . ')';
-        }
-        // The other member, by username, short name or name when it isn't hidden
-        $conditions[] = 'EXISTS (SELECT 1 FROM member o'
-            . ' WHERE o.id = IF(m.sender_id = :memberId, m.receiver_id, m.sender_id)'
-            . ' AND (o.Username LIKE :searchWords OR o.ShortName LIKE :searchWords'
-            . ' OR ((o.HideAttribute & ' . Member::NAME_HIDDEN . ') = 0 AND o.Name LIKE :searchWords)))';
-
-        return '(' . implode(' OR ', $conditions) . ')';
-    }
-
     protected function getUnreadCondition(): string
     {
         if ($this->unreadOnly) {
@@ -184,4 +149,39 @@ abstract class AbstractConversationsAdapter
     }
 
     abstract protected function getConversationsQuery(): string;
+
+    /**
+     * @return array<string, int|string>
+     */
+    private function getParameters(): array
+    {
+        $parameters = ['memberId' => $this->member->getId()];
+        if (null !== $this->searchWords) {
+            $parameters['searchWords'] = '%' . addcslashes($this->searchWords, '%_\\') . '%';
+        }
+
+        return $parameters;
+    }
+
+    private function getSearchCondition(): string
+    {
+        if (null === $this->searchWords) {
+            return '1 = 1';
+        }
+
+        $conditions = [];
+        if ([] !== $this->searchSubjectIds) {
+            $conditions[] = 'm.subject_id IN (' . implode(',', $this->searchSubjectIds) . ')';
+        }
+        if ([] !== $this->searchMessageIds) {
+            $conditions[] = 'm.id IN (' . implode(',', $this->searchMessageIds) . ')';
+        }
+        // The other member, by username, short name or name when it isn't hidden
+        $conditions[] = 'EXISTS (SELECT 1 FROM member o'
+            . ' WHERE o.id = IF(m.sender_id = :memberId, m.receiver_id, m.sender_id)'
+            . ' AND (o.Username LIKE :searchWords OR o.ShortName LIKE :searchWords'
+            . ' OR ((o.HideAttribute & ' . Member::NAME_HIDDEN . ') = 0 AND o.Name LIKE :searchWords)))';
+
+        return '(' . implode(' OR ', $conditions) . ')';
+    }
 }

@@ -6,13 +6,17 @@
   the thread (requests.js): the templates fill its message, Change dates opens its dates card, and
   Cancel submits it (form="js-respond-form", after the confirm dialog of assets/js/confirm.js,
   which asks for the reason and writes it into the message).
-  Expects stay (the HostingRequest), confirm (the question before cancelling) and dates (bool).
+  An accepted stay also gets Add to calendar (stays/_calendar_links.html.twig), for both members.
+  Expects stay (the HostingRequest), confirm (the question before cancelling), dates (bool) and
+  calendar (the stay as UpcomingStays gives it: message, request, other, hosting).
 #}
 {% set rf = request_form ?? null %}
 {% set S = 'App\\Entity\\HostingRequest::' %}
-{% if rf and rf.message is defined %}
+{% set _answer = rf and rf.message is defined %}
+{% set _calendar = calendar is defined and calendar and stay.status == constant(S ~ 'REQUEST_ACCEPTED') %}
+{% if _answer or _calendar %}
     {% set closed = stay.status in [constant(S ~ 'REQUEST_CANCELLED'), constant(S ~ 'REQUEST_DECLINED')] %}
-    {% set canCancel = rf.cancel is defined and not closed %}
+    {% set canCancel = _answer and rf.cancel is defined and not closed %}
     {% set conversation_templates = [
         { label: 'conversation.reply.template.interested.label', body: 'conversation.reply.template.interested.body', icon: 'fa-check' },
         { label: 'conversation.reply.template.need_details.label', body: 'conversation.reply.template.need_details.body', icon: 'fa-question' },
@@ -24,13 +28,20 @@
             <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-end c-compose-tools__menu">
-            {% if dates and stay.status != constant(S ~ 'REQUEST_DECLINED') %}
+            {# An accepted stay: add it to a calendar #}
+            {% if _calendar %}
+                <h6 class="dropdown-header c-compose-tools__header"><i class="far fa-calendar-plus" aria-hidden="true"></i> {{ 'stays.export.one'|trans }}</h6>
+                {% include 'stays/_calendar_links.html.twig' with { stay: calendar } only %}
+                {% if _answer %}<div class="dropdown-divider"></div>{% endif %}
+            {% endif %}
+            {% if _answer and dates and stay.status != constant(S ~ 'REQUEST_DECLINED') %}
                 <button type="button" class="dropdown-item c-compose-tools__item js-respond-stay-toggle" aria-expanded="false">
                     <i class="fa fa-calendar" aria-hidden="true"></i>
                     <span>{{ 'request.respond.change'|trans }}</span>
                 </button>
                 <div class="dropdown-divider c-compose-tools__after-dates"></div>
             {% endif %}
+            {% if _answer %}
             {# The reply templates: not on phones #}
             <div class="c-compose-tools__templates">
             <h6 class="dropdown-header c-compose-tools__header"><i class="far fa-file-alt" aria-hidden="true"></i> {{ 'conversation.reply.templates'|trans }}</h6>
@@ -43,6 +54,7 @@
                 </button>
             {% endfor %}
             </div>
+            {% endif %}
             {% if canCancel %}
                 <div class="dropdown-divider c-compose-tools__before-cancel"></div>
                 <button type="submit" form="js-respond-form" name="{{ rf.cancel.vars.full_name }}" class="dropdown-item c-compose-tools__item c-compose-tools__item--danger"

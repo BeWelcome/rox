@@ -53,7 +53,7 @@
                             {% set _d = day|date('Y-m-d') %}
                             {% set _other = day|date('m') != month|date('m') %}
                             <button type="button" class="p-stays__day js-stays-day{{ _other ? ' is-other' : '' }}{{ _d == today ? ' is-today' : '' }}{{ _d < today ? ' is-past' : '' }}"
-                                    data-date="{{ _d }}" data-label="{{ day|format_date(pattern='d MMM') }}"{% if _other %} tabindex="-1"{% endif %}>
+                                    data-date="{{ _d }}" data-label="{{ day|format_date(pattern='d MMM') }}" data-weekday="{{ day|format_date(pattern='EEEE d MMMM')|capitalize }}"{% if _other %} tabindex="-1"{% endif %}>
                                 <span class="p-stays__date">{{ day|date('j') }}</span>
                                 {% if week.more[loop.index] > 0 %}<span class="p-stays__more">+{{ week.more[loop.index] }}</span>{% endif %}
                             </button>
@@ -62,7 +62,7 @@
                     <div class="p-stays__bars">
                         {% for bar in week.bars %}
                             {% set stay = bar.stay %}
-                            <a class="p-stays__bar{{ bar.before ? ' is-cont-before' : '' }}{{ bar.after ? ' is-cont-after' : '' }} js-contact-open js-stays-item"
+                            <a class="p-stays__bar{{ bar.before ? ' is-cont-before' : '' }}{{ bar.after ? ' is-cont-after' : '' }}{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }} js-contact-open js-stays-item"
                                href="{{ path('conversation_view', { id: stay.message.id }) }}" data-title="{{ member_display_name(stay.other) }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
                                style="--stay-color: {{ palette[stay.other.id % palette|length] }}; grid-column: {{ bar.column }} / span {{ bar.span }}; grid-row: {{ bar.lane }}">
                                 <img class="p-stays__bar-avatar" src="{{ path('avatar', { username: stay.other.username, size: 48 }) }}" alt="" loading="lazy">
@@ -81,12 +81,29 @@
                     data-one="{{ 'stays.count'|trans({ count: 1 }) }}" data-other="{{ 'stays.count'|trans({ count: 99 })|replace({ '99': '__COUNT__' }) }}">
                     {{- 'stays.month.list'|trans({ month: month|format_date(pattern='LLLL')|capitalize }) -}}
                 </h2>
-                <button type="button" class="p-stays__clear js-stays-clear" hidden><i class="fas fa-times" aria-hidden="true"></i> {{ 'stays.day.clear'|trans }}</button>
+                <div class="p-stays__picked js-stays-picked" hidden>
+                    <strong class="p-stays__picked-day js-stays-picked-day"></strong>
+                    <span class="p-stays__picked-count js-stays-picked-count"></span>
+                </div>
+                <button type="button" class="p-stays__clear js-stays-clear" aria-label="{{ 'stays.day.clear'|trans }}" hidden><i class="fas fa-times" aria-hidden="true"></i></button>
             </div>
             {% for stay in stays %}
-                <div class="p-stays__row js-stays-item" style="--stay-color: {{ palette[stay.other.id % palette|length] }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
+                <div class="p-stays__row{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') < 'today'|date('Y-m-d') ? ' is-past' : '' }} js-stays-item" style="--stay-color: {{ palette[stay.other.id % palette|length] }}" data-role="{{ stay.hosting ? 'host' : 'guest' }}"
                      data-from="{{ stay.request.arrival|date('Y-m-d') }}" data-to="{{ (stay.request.departure ?? stay.request.arrival)|date('Y-m-d') }}">
                     {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+                    <div class="p-stays__add dropdown">
+                        <button type="button" class="p-stays__add-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'stays.export.one'|trans }}">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/>
+                                <path d="M8 3v4M16 3v4M3.5 10h17"/>
+                                <path d="M12 12.8v5M9.5 15.3h5"/>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end c-compose-tools__menu">
+                            <h6 class="dropdown-header c-compose-tools__header">{{ 'stays.export.one'|trans }}</h6>
+                            {% include 'stays/_calendar_links.html.twig' with { stay: stay } only %}
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
             <p class="p-stays__none js-stays-none" hidden>{{ 'stays.day.none'|trans }}</p>

@@ -30,9 +30,11 @@ class MessageSearch
     /**
      * Every word must be there, as a word or the start of one ("berl" finds "Berlin").
      *
-     * @return array{subjectIds: list<int>, messageIds: list<int>, hits: array<string, array{id: int, count: int}>} the conversations
-     *     with a match, the matching messages that have no conversation, and for each one its newest matching
-     *     message and how many match ('s' and the subject id, or 'm' and the message id for a message without one)
+     * Returns the conversations with a match, the matching messages that have no conversation, and for each one its
+     * newest matching message and how many match ('s' and the subject id, or 'm' and the message id for a message
+     * without one).
+     *
+     * @return array{subjectIds: list<int>, messageIds: list<int>, hits: array<string, array{id: int, count: int}>}
      */
     public function find(Member $member, string $words): array
     {

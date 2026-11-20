@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Service\StaysIcal;
 use App\Service\UpcomingStays;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,5 +33,32 @@ class StaysController extends AbstractController
             'next' => $month->copy()->addMonth()->format('Y-m'),
             'isThisMonth' => $month->format('Y-m') === Carbon::today()->format('Y-m'),
         ]);
+    }
+
+    /**
+     * One stay as an .ics file (Add to calendar of a stay, Apple and other calendar apps).
+     */
+    #[Route(path: '/stays/{id}/calendar.ics', name: 'stay_export', requirements: ['id' => '\d+'])]
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
+    public function exportStay(int $id, StaysIcal $staysIcal): Response
+    {
+        $calendar = $staysIcal->getStayCalendar($id);
+        if (null === $calendar) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->calendarFile($calendar, 'bewelcome-stay-' . $id . '.ics');
+    }
+
+    private function calendarFile(string $calendar, string $filename): Response
+    {
+        $response = new Response($calendar);
+        $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename
+        ));
+
+        return $response;
     }
 }

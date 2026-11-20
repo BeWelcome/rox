@@ -26,15 +26,25 @@ class UpcomingStays
     }
 
     /**
-     * Twig: upcoming_stays(limit).
+     * Twig: upcoming_stays(limit). For each stay: the first message of the request (what opens the conversation),
+     * the request, the other member, and whether the member hosts.
      *
-     * @return list<array{message: Message, request: HostingRequest, other: Member, hosting: bool}> the first message
-     *     of each request (what opens the conversation), the request, the other member, and whether the member hosts
+     * @return list<array{message: Message, request: HostingRequest, other: Member, hosting: bool}>
      */
     #[AsTwigFunction('upcoming_stays')]
     public function getUpcomingStays(int $limit = 5): array
     {
         return $this->getStays(Carbon::today(), null, $limit);
+    }
+
+    /**
+     * One accepted stay of the member, by its request (Add to calendar of a stay), or null.
+     *
+     * @return array{message: Message, request: HostingRequest, other: Member, hosting: bool}|null
+     */
+    public function getStay(int $requestId): ?array
+    {
+        return $this->getStays(null, null, 1, $requestId)[0] ?? null;
     }
 
     /**
@@ -109,11 +119,12 @@ class UpcomingStays
     }
 
     /**
-     * The member's accepted stays that aren't over before $from (and start by $to when given), soonest first.
+     * The member's accepted stays that aren't over before $from (and start by $to, or are the stay of
+     * $requestId, when given), soonest first.
      *
      * @return list<array{message: Message, request: HostingRequest, other: Member, hosting: bool}>
      */
-    private function getStays(Carbon $from, ?Carbon $to, int $limit): array
+    private function getStays(?Carbon $from, ?Carbon $to, int $limit, ?int $requestId = null): array
     {
         $member = $this->security->getUser();
         if (!$member instanceof Member) {
@@ -127,12 +138,20 @@ class UpcomingStays
             ->where('m.id IN (SELECT MIN(f.id) FROM ' . Message::class . ' f'
                 . ' WHERE f.request IS NOT NULL AND (f.sender = :member OR f.receiver = :member) GROUP BY f.request)')
             ->andWhere('r.status = :accepted')
-            ->andWhere('r.departure >= :from OR (r.departure IS NULL AND r.arrival >= :from)')
             ->setParameter('member', $member)
             ->setParameter('accepted', HostingRequest::REQUEST_ACCEPTED)
-            ->setParameter('from', $from->copy()->startOfDay())
             ->orderBy('r.arrival', 'ASC')
             ->setMaxResults($limit);
+        if (null !== $from) {
+            $queryBuilder
+                ->andWhere('r.departure >= :from OR (r.departure IS NULL AND r.arrival >= :from)')
+                ->setParameter('from', $from->copy()->startOfDay());
+        }
+        if (null !== $requestId) {
+            $queryBuilder
+                ->andWhere('r.id = :requestId')
+                ->setParameter('requestId', $requestId);
+        }
         if (null !== $to) {
             $queryBuilder
                 ->andWhere('r.arrival < :to')

@@ -43,3 +43,6 @@ stays.export.one:
 stays.export.ics:
     - 'Apple / other (.ics)'
     - 'Add to calendar menu of a stay, item that downloads the .ics file.'
+stays.nav.all:
+    - 'See all in the calendar'
+    - 'Top bar, menu of the upcoming stays, link to the stays calendar page.'

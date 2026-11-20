@@ -48,3 +48,12 @@
   #main_menu #static_menu { position: relative; }
   #main_menu .c-topbar-notices.dropdown-menu { position: absolute; top: 100%; right: 0; left: auto; width: min(22rem, calc(100vw - 1.5rem)); }
 }
+
+/* Upcoming stays (layout/_stays_nav.html.twig): the same card, with the next stays and a link to the calendar */
+#main_menu .c-topbar-stays.dropdown-menu { width: min(24rem, calc(100vw - 1.5rem)); }
+.c-topbar-stays__list { margin: 0 -0.5rem; }
+#main_menu .c-topbar-stays .c-home-stays__item { padding: 0.6rem 1.1rem; color: #0f172a; }
+#main_menu .c-topbar-stays__all { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 0.5rem 0 0; padding: 0.7rem 1rem; border-radius: 0.85rem; background: #fff4e8; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; transition: background 0.15s, color 0.15s; }
+#main_menu .c-topbar-stays__all:hover, #main_menu .c-topbar-stays__all:focus { background: #f37000; color: #fff; }
+.c-topbar-stays__chevron { font-size: 0.7rem; transition: transform 0.15s; }
+#main_menu .c-topbar-stays__all:hover .c-topbar-stays__chevron { transform: translateX(3px); }

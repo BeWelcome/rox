@@ -1,0 +1,26 @@
+{#
+  The member's upcoming stays in the top bar (main_navigation): a calendar with how many, and under it
+  the next ones and a link to the stays calendar. Only there when there are some (App\Service\UpcomingStays).
+#}
+{% set _navStays = upcoming_stays(50) %}
+{% if _navStays is not empty %}
+    <li class="nav-item dropdown topbar-notices topbar-stays">
+        <a id="stays_menu_toggle" href="#stays_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
+           data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+           aria-label="{{ 'landing.stays.title'|trans }}">
+            <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+            <span class="topbar-notices__badge">{{ _navStays|length }}</span>
+        </a>
+        <div id="stays_menu" class="dropdown-menu dropdown-menu-end c-topbar-notices c-topbar-stays">
+            <p class="c-topbar-notices__title">{{ 'landing.stays.title'|trans }}</p>
+            <div class="c-topbar-stays__list">
+                {% for stay in _navStays|slice(0, 4) %}
+                    {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+                {% endfor %}
+            </div>
+            <a class="c-topbar-stays__all" href="{{ path('stays') }}">
+                {{ 'stays.nav.all'|trans }} <i class="fas fa-arrow-right c-topbar-stays__chevron" aria-hidden="true"></i>
+            </a>
+        </div>
+    </li>
+{% endif %}

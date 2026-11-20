@@ -116,6 +116,20 @@
                     {% if message.request %}{% include 'conversations/_request_state.html.twig' with { request: message.request, unread: unread, part: 'pill' } only %}{% endif %}
                 </div>
                 <div class="c-inbox-item__bottom">
+                    {#
+                      The search, in place of the last message: the part of the message with the words, or how many
+                      messages have them when there are several
+                    #}
+                    {% set snippet = inbox_search_snippet(message) %}
+                    {% if snippet %}
+                    <span class="c-inbox-item__preview c-inbox-item__snippet">
+                        {%- if snippet.count > 1 -%}
+                            <span class="c-inbox-item__snippet-count">{{ 'conversations.search.matches'|trans({ count: snippet.count }) }}</span>
+                        {%- else -%}
+                            <span class="c-inbox-item__snippet-text">{{ snippet.text }}</span>
+                        {%- endif -%}
+                    </span>
+                    {% else %}
                     {# Who wrote the last message, at a glance: small arrow, up grey for what I sent, down orange for what I received #}
                     <span class="c-inbox-item__preview">
                         {%- if lastMessageByMember -%}
@@ -125,6 +139,7 @@
                         {%- endif -%}
                         {{ preview|truncate(140) }}
                     </span>
+                    {% endif %}
                     {% if message.request %}{% include 'conversations/_request_state.html.twig' with { request: message.request, unread: unread, part: 'status' } only %}{% endif %}
                     {%- if unread %}<span class="c-inbox-item__dot" aria-hidden="true"></span>{% endif %}
                 </div>
@@ -139,13 +154,15 @@
 #}
 {% macro list(conversations, folder, options) %}
     {% import _self as inbox %}
-    {% set options = { form: null, current: null, initiator: 2, unreadOnly: false, linkBase: null }|merge(options) %}
+    {% set options = { form: null, current: null, initiator: 2, unreadOnly: false, linkBase: null, search: '' }|merge(options) %}
     {% set form = options.form %}
     {% set member = app.user %}
     {% set initiator = options.initiator|default(2) * 1 %}
     {% set filterParams = {} %}
     {% if initiator != 2 %}{% set filterParams = filterParams|merge({ initiator: initiator }) %}{% endif %}
     {% if options.unreadOnly %}{% set filterParams = filterParams|merge({ unread_only: 1 }) %}{% endif %}
+    {% set search = options.search|default('') %}
+    {% if search != '' %}{% set filterParams = filterParams|merge({ q: search }) %}{% endif %}
 
     {% set linkBase = options.linkBase %}
     {% set segments = { conversations: 'conversations.filter.all', requests: 'requests', invitations: 'invitations' } %}
@@ -202,6 +219,31 @@
         </div>
     </div>
 
+    {#
+      Search in the messages and the members' names. On the folder pages the list sits in the selection form,
+      so the field belongs to the search form drawn before it (form attribute, see conversations.html.twig).
+    #}
+    {% set searchParams = filterParams|filter((v, k) => k != 'q') %}
+    {% set searchAction = linkBase ?: inbox.folder_url(folder) %}
+    {% if linkBase %}{% set searchParams = { folder: folder }|merge(searchParams) %}{% endif %}
+    {% set searchFormId = form ? 'c-inbox-search' : null %}
+    {% if not form %}<form class="c-inbox-search" method="get" action="{{ searchAction }}" role="search">{% else %}<div class="c-inbox-search" role="search">{% endif %}
+        {% for key, value in searchParams %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}"{% if searchFormId %} form="{{ searchFormId }}"{% endif %}>
+        {% endfor %}
+        <i class="fas fa-search c-inbox-search__icon" aria-hidden="true"></i>
+        <input class="c-inbox-search__field" type="search" name="q" value="{{ search }}" maxlength="100" autocomplete="off" enterkeyhint="search"
+               placeholder="{{ 'conversations.search.placeholder'|trans }}" aria-label="{{ 'conversations.search.placeholder'|trans }}"{% if searchFormId %} form="{{ searchFormId }}"{% endif %}>
+        {% if search != '' %}
+            <a class="c-inbox-search__clear" href="{{ inbox.filter_url(folder, searchParams|filter((v, k) => k != 'folder'), linkBase) }}" aria-label="{{ 'conversations.search.clear'|trans }}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+        <button type="submit" class="c-inbox-search__go"{% if searchFormId %} form="{{ searchFormId }}"{% endif %} aria-label="{{ 'search'|trans }}">
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </button>
+    {% if not form %}</form>{% else %}</div>{% endif %}
+
     {# All · Requests · Invitations, and Unread. Plain messages, spam and deleted are in the "⋯" menu. #}
     <div class="c-inbox-filters">
         <nav class="c-inbox-seg" aria-label="{{ 'messages'|trans }}">
@@ -231,7 +273,7 @@
     {% endif %}
 
     {% if conversations.nbResults == 0 %}
-        <p class="c-inbox-list__empty">{{ 'conversations.none'|trans }}</p>
+        <p class="c-inbox-list__empty">{{ (search != '' ? 'conversations.search.none' : 'conversations.none')|trans }}</p>
         {# Nothing to select: keep form_rest from drawing the buttons and the empty field. #}
         {% if form %}
             {% do form.messages.setRendered %}

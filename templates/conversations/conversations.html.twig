@@ -21,11 +21,14 @@
     <div class="c-inbox c-inbox--list">
 
         <section class="c-inbox__list">
+            {# The search field of the list (_inbox.macros.twig) belongs to this form: forms can't sit in one another #}
+            <form id="c-inbox-search" method="get" action="{{ inbox.folder_url(submenu.active) }}" hidden></form>
             {{ form_start(form, { attr: { class: 'c-inbox-list js-inbox-form' } }) }}
                 {{ inbox.list(conversations, submenu.active, {
                     form: form,
                     initiator: initiator,
                     unreadOnly: showUnreadOnly,
+                    search: search,
                 }) }}
                 {{ form_rest(form) }}
             {{ form_end(form) }}

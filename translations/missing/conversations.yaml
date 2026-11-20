@@ -317,3 +317,15 @@ conversations.with.count:
 flash.conversation.not.active:
     - 'You can write to other members once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member who hasn't confirmed the email address opens a message, hosting request or invitation form (shown on the other member's profile).
+conversations.search.placeholder:
+    - 'Search messages and members'
+    - 'Placeholder of the search field above the conversation list (finds words in the messages, subjects and member names).'
+conversations.search.none:
+    - 'No conversation matches your search.'
+    - 'Conversation list, when the search finds nothing.'
+conversations.search.clear:
+    - 'Clear search'
+    - 'Label of the cross that empties the search field of the conversation list.'
+conversations.search.matches:
+    - '{count, plural, one {# matched message} other {# matched messages}}'
+    - 'Conversation list searched, after the part of a message with the words, when several messages of the conversation have them.'

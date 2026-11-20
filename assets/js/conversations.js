@@ -2,10 +2,8 @@ import {hasPhotos, initBubblePhotos, initMessagePhotos, photosHtml} from './cont
 import {sendInPlace} from './conversation-send';
 import {initRequests} from './request-page';
 import {initInboxNav} from './conversations/inbox-nav';
-
-// Conversation lists: "Select" switches the list into selection mode (checkboxes and
-// the action bar), "Select all" ticks every conversation on the page.
-const form = document.querySelector('.js-inbox-form');
+import {highlightSearch} from './conversations/search-highlight';
+import {initSearch} from './conversations/search';
 
 // The folder drop-down under the list title closes when clicking elsewhere.
 document.addEventListener('click', (event) => {
@@ -16,7 +14,15 @@ document.addEventListener('click', (event) => {
     });
 });
 
-if (form) {
+// Conversation lists: "Select" switches the list into selection mode (checkboxes and
+// the action bar), "Select all" ticks every conversation on the page.
+// Runs again when the search brings a new list (conversations/search.js).
+function initList() {
+    const form = document.querySelector('.js-inbox-form');
+    if (!form || form.dataset.listReady) {
+        return;
+    }
+    form.dataset.listReady = '1';
     const selectButton = form.querySelector('.js-inbox-select');
     const checkAllButton = form.querySelector('.js-inbox-check-all');
     const checkboxes = () => form.querySelectorAll('input[type=checkbox].checkable');
@@ -164,14 +170,21 @@ function initReply() {
     });
 }
 
+initList();
 initReply();
 initMessagePhotos();
 initBubblePhotos();
+highlightSearch();
+initSearch(() => {
+    initList();
+    highlightSearch();
+});
 
 // Desktop: a conversation picked in the list loads in the pane, without reloading the page
 initInboxNav(() => {
     initReply();
     initRequests();
+    highlightSearch();
 });
 
 // Phones: the conversation stays behind a loader until the page has finished setting it up

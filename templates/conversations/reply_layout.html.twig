@@ -31,7 +31,7 @@
 
         <section class="c-inbox__list">
             <div class="c-inbox-list">
-                {{ inbox.list(conversations, folder, { current: newest, initiator: initiator, unreadOnly: unreadOnly, linkBase: app.request.pathInfo }) }}
+                {{ inbox.list(conversations, folder, { current: newest, initiator: initiator, unreadOnly: unreadOnly, search: search|default(''), linkBase: app.request.pathInfo }) }}
             </div>
         </section>
 

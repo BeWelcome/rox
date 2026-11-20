@@ -6,6 +6,7 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Pagerfanta\AbstractConversationsAdapter;
 use App\Pagerfanta\ConversationsAdapter;
 use App\Pagerfanta\ConversationsWithAdapter;
 use App\Pagerfanta\DeletedAdapter;
@@ -29,9 +30,16 @@ class InboxFolders
 
     private const array FOLDERS = ['conversations', 'messages', 'requests', 'invitations', 'spam', 'deleted'];
 
+    /** The words of the list's search, and the newest matching message of each conversation (MessageSearch::find()) */
+    private string $searchWords = '';
+
+    /** @var array<string, array{id: int, count: int}> */
+    private array $searchHits = [];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
+        private readonly MessageSearch $messageSearch,
     ) {
     }
 
@@ -46,9 +54,9 @@ class InboxFolders
     }
 
     /**
-     * The list filters (?initiator=1|3, ?unread_only=1), as on the folder pages.
+     * The list filters (?initiator=1|3, ?unread_only=1, ?q=words), as on the folder pages.
      *
-     * @return array{initiator: int, unreadOnly: bool}
+     * @return array{initiator: int, unreadOnly: bool, search: string}
      */
     public function getFilters(Request $request): array
     {
@@ -57,10 +65,48 @@ class InboxFolders
         return [
             'initiator' => \in_array($initiator, [1, 2, 3], true) ? $initiator : 2,
             'unreadOnly' => '1' === $request->query->get('unread_only', '0'),
+            'search' => mb_substr(trim((string) $request->query->get('q', '')), 0, 100),
         ];
     }
 
-    public function getConversations(Member $member, string $folder, int $initiator = 2, bool $unreadOnly = false): Pagerfanta
+    /**
+     * Keeps only the conversations of the list that match the words (see AbstractConversationsAdapter::setSearch()).
+     */
+    public function search(AbstractConversationsAdapter $adapter, Member $member, string $words): AbstractConversationsAdapter
+    {
+        if ('' === trim($words)) {
+            return $adapter;
+        }
+
+        $found = $this->messageSearch->find($member, $words);
+        $this->searchWords = $words;
+        $this->searchHits = $found['hits'];
+
+        return $adapter->setSearch($words, $found['subjectIds'], $found['messageIds']);
+    }
+
+    /**
+     * For a conversation of the searched list: the part of its newest message with the words, "…" around, and how
+     * many of its messages have them (Twig: inbox_search_snippet(message)); null when the list isn't searched or
+     * the words aren't in a message (only in the subject or the name).
+     *
+     * @return array{text: string, count: int}|null
+     */
+    #[AsTwigFunction('inbox_search_snippet')]
+    public function getSearchSnippet(Message $message): ?array
+    {
+        if ('' === $this->searchWords) {
+            return null;
+        }
+        $key = null === $message->getSubject() ? 'm' . $message->getId() : 's' . $message->getSubject()->getId();
+        $hit = $this->searchHits[$key] ?? null;
+        $found = null === $hit ? null : $this->entityManager->find(Message::class, $hit['id']);
+        $text = null === $found ? null : MessageSearch::snippet($found->getMessage(), $this->searchWords);
+
+        return null === $text ? null : ['text' => $text, 'count' => $hit['count']];
+    }
+
+    public function getConversations(Member $member, string $folder, int $initiator = 2, bool $unreadOnly = false, string $search = ''): Pagerfanta
     {
         $adapter = match ($folder) {
             'messages' => MessagesAdapter::class,
@@ -71,7 +117,7 @@ class InboxFolders
             default => ConversationsAdapter::class,
         };
 
-        $conversations = new Pagerfanta(new $adapter($this->entityManager, $member, $initiator, $unreadOnly));
+        $conversations = new Pagerfanta($this->search(new $adapter($this->entityManager, $member, $initiator, $unreadOnly), $member, $search));
         $conversations->setMaxPerPage($this->getItemsPerPage($member));
         $conversations->setCurrentPage(1);
 
@@ -171,7 +217,7 @@ class InboxFolders
     /**
      * Variables for templates that show the folder list next to a conversation.
      *
-     * @return array{folder: string, conversations: Pagerfanta, initiator: int, unreadOnly: bool}
+     * @return array{folder: string, conversations: Pagerfanta, initiator: int, unreadOnly: bool, search: string}
      */
     public function getContext(Request $request, Member $member, string $defaultFolder = 'conversations'): array
     {
@@ -180,7 +226,7 @@ class InboxFolders
 
         return [
             'folder' => $folder,
-            'conversations' => $this->getConversations($member, $folder, $filters['initiator'], $filters['unreadOnly']),
+            'conversations' => $this->getConversations($member, $folder, $filters['initiator'], $filters['unreadOnly'], $filters['search']),
         ] + $filters;
     }
 }

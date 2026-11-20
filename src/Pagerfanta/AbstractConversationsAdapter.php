@@ -8,13 +8,22 @@ use App\Doctrine\MessageResultSetMapping;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManager;
-use PDO;
 
 abstract class AbstractConversationsAdapter
 {
     protected Connection $connection;
     protected EntityManager $entityManager;
+
+    /** Words searched for (see setSearch()), null when the list isn't searched */
+    private ?string $searchWords = null;
+
+    /** @var list<int> */
+    private array $searchSubjectIds = [];
+
+    /** @var list<int> */
+    private array $searchMessageIds = [];
 
     public function __construct(
         EntityManager $entityManager,
@@ -27,17 +36,35 @@ abstract class AbstractConversationsAdapter
     }
 
     /**
+     * Keeps only the conversations with a message that contains the words (the conversations and the messages
+     * without one that MessageSearch found), or with a member whose username or visible name contains them.
+     *
+     * @param list<int> $subjectIds
+     * @param list<int> $messageIds
+     */
+    public function setSearch(string $words, array $subjectIds, array $messageIds): static
+    {
+        $words = trim($words);
+        $this->searchWords = '' === $words ? null : $words;
+        $this->searchSubjectIds = array_map('intval', $subjectIds);
+        $this->searchMessageIds = array_map('intval', $messageIds);
+
+        return $this;
+    }
+
+    /**
      * Returns the number of results.
      */
     public function getNbResults(): int
     {
         $count = 0;
         try {
-            $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m';
+            $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m'
+                . ' WHERE ' . $this->getSearchCondition();
             $result = $this->connection->executeQuery(
                 $countQuery,
-                ['memberId' => $this->member->getId()],
-                [PDO::PARAM_INT]
+                $this->getParameters(),
+                array_map(static fn ($value) => \is_int($value) ? ParameterType::INTEGER : ParameterType::STRING, $this->getParameters())
             );
             $count = $result->fetchOne();
         } catch (DBALException) {
@@ -53,15 +80,52 @@ abstract class AbstractConversationsAdapter
     public function getSlice(int $offset, int $length): iterable
     {
         $sql = 'SELECT * FROM (' . $this->getConversationsQuery() . ') m';
+        $sql .= ' WHERE ' . $this->getSearchCondition();
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
 
-        $query = $this->entityManager->createNativeQuery($sql, new MessageResultSetMapping())
-            ->setParameter(':memberId', $this->member->getId())
-        ;
+        $query = $this->entityManager->createNativeQuery($sql, new MessageResultSetMapping());
+        foreach ($this->getParameters() as $name => $value) {
+            $query->setParameter($name, $value);
+        }
 
         $conversations = $query->getResult();
 
         return $conversations;
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    private function getParameters(): array
+    {
+        $parameters = ['memberId' => $this->member->getId()];
+        if (null !== $this->searchWords) {
+            $parameters['searchWords'] = '%' . addcslashes($this->searchWords, '%_\\') . '%';
+        }
+
+        return $parameters;
+    }
+
+    private function getSearchCondition(): string
+    {
+        if (null === $this->searchWords) {
+            return '1 = 1';
+        }
+
+        $conditions = [];
+        if ([] !== $this->searchSubjectIds) {
+            $conditions[] = 'm.subject_id IN (' . implode(',', $this->searchSubjectIds) . ')';
+        }
+        if ([] !== $this->searchMessageIds) {
+            $conditions[] = 'm.id IN (' . implode(',', $this->searchMessageIds) . ')';
+        }
+        // The other member, by username, short name or name when it isn't hidden
+        $conditions[] = 'EXISTS (SELECT 1 FROM member o'
+            . ' WHERE o.id = IF(m.sender_id = :memberId, m.receiver_id, m.sender_id)'
+            . ' AND (o.Username LIKE :searchWords OR o.ShortName LIKE :searchWords'
+            . ' OR ((o.HideAttribute & ' . Member::NAME_HIDDEN . ') = 0 AND o.Name LIKE :searchWords)))';
+
+        return '(' . implode(' OR ', $conditions) . ')';
     }
 
     protected function getUnreadCondition(): string

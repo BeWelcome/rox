@@ -11774,7 +11774,6 @@ label.p-preference-card__title { margin: 0; }
    as a card on the grey, like the home page stops growing */
 @media (min-width: 1600px) {
   body.is-inbox:not(.is-embedded) { background: #f4f4f5; }
-  body.is-inbox:not(.is-embedded) main > .container-lg { width: 100%; max-width: 1480px; margin: 0 auto; padding: 0 1rem; }
   body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) { margin: 1.25rem 0; overflow: hidden; border: 1px solid #e4e4e7; border-radius: 1.1rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
 }
 @media (min-width: 1600px) and (min-height: 1250px) {
@@ -12244,7 +12243,8 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 @media (min-width: 768px) {
   /* Page: two cards on the grey, under the top bar, the cards scroll inside */
   body.is-inbox:not(.is-embedded) { background: #f0f0f0; }
-  body.is-inbox:not(.is-embedded) main > .container-lg { width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.5rem 15px; justify-content: flex-start; }
+  /* As wide as the home page: the container's own width and gutter, like the top bar */
+  body.is-inbox:not(.is-embedded) main > .container-lg { width: 100%; max-width: none; margin: 0 auto; padding: 1.5rem 0.75rem; justify-content: flex-start; }
   body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) {
     grid-template-columns: minmax(300px, 370px) minmax(0, 1fr);
     gap: 1.25rem;
@@ -12361,6 +12361,10 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .c-inbox__pane .c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__send { width: auto; height: auto; padding: 0.65rem 1.25rem; border-radius: 999px; }
   .c-inbox__pane .c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__send .js-decide-send:not([hidden]) { display: inline; }
 }
+/* The inbox as wide as the home page and the top bar (Bootstrap's .container-lg widths) */
+@media (min-width: 992px) { body.is-inbox:not(.is-embedded) main > .container-lg { max-width: 960px; } }
+@media (min-width: 1200px) { body.is-inbox:not(.is-embedded) main > .container-lg { max-width: 1140px; } }
+@media (min-width: 1400px) { body.is-inbox:not(.is-embedded) main > .container-lg { max-width: 1320px; } }
 .c-inbox-list.is-selecting .c-inbox-more__toggle { border-color: #e2e8f0; background: #fff; color: #475569; box-shadow: none; }
 
 /* The stay card folded into one line: phones only, in the inbox */
@@ -13326,6 +13330,7 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-home-dash__card--trips { order: 2; }
 .c-home-dash__card--activities { order: 3; }
 .c-home-dash__card--groups { order: 4; }
+.c-home-dash__card--stays { order: 4; }
 .c-home-dash:has(.c-home-dash__card--trips[hidden]) .c-home-dash__card--groups { order: 2; }
 .c-home-dash .c-home-dash__card--activities.is-empty { grid-column: 1 / -1; order: 5; }
 .c-home-dash:not(:has(.c-home-dash__card--trips[hidden])) .c-home-dash__card--activities.is-empty { grid-column: auto; }

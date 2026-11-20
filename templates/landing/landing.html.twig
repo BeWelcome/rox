@@ -135,6 +135,8 @@
   time, previous and next), upcoming activities and the discussions of the member's groups.
   Each card has its title, a count, its own control (radius, +) and See all always last at the top right (no footer row); the lists are loaded by landing.js.
 #}
+{% set stays = upcoming_stays(5) %}
+{% set staysInDash = stays is not empty and not visitorsCount and activityCount %}
 <div class="c-home-blocks c-home-dash">
 
     {# Messages: the unread count in orange #}
@@ -216,12 +218,16 @@
             <div id="groupsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
+
+    {% if staysInDash %}
+        {% include 'landing/_stays.html.twig' with { stays: stays, inDash: true } only %}
+    {% endif %}
 </div>
 
-{# The member's upcoming stays (none: no card), and next to them on a computer Explore by country #}
-{% set stays = upcoming_stays(5) %}
-<div class="c-home-explore-row{{ stays is empty or countries is empty ? ' is-alone' : '' }}">
-    {% if stays is not empty %}
+{# The member's upcoming stays (none: no card), and next to them on a computer Explore by country.
+   No visitors but upcoming activities: the stays go in the dashboard, next to the activities (staysInDash). #}
+<div class="c-home-explore-row{{ stays is empty or staysInDash or countries is empty ? ' is-alone' : '' }}">
+    {% if stays is not empty and not staysInDash %}
         {% include 'landing/_stays.html.twig' %}
     {% endif %}
     {% if countries is not empty %}

@@ -14704,6 +14704,11 @@ a.p-cmt__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Dashboard: grey rows while a card's list loads (landing/landing.html.twig, loading()) */
 .c-home-skeleton__row { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 0; }
+.c-home-dash .c-home-skeleton__row { gap: 0.85rem; padding: 0.7rem 1.5rem; }
+.c-home-dash .c-home-skeleton__lead { width: 2.9rem; height: 2.9rem; }
+@media (max-width: 767px) {
+  .c-home-dash .c-home-skeleton__row { padding-right: 1.1rem; padding-left: 1.1rem; }
+}
 .c-home-skeleton__lead { flex-shrink: 0; width: 3.25rem; height: 3.25rem; border-radius: 50%; }
 .c-home-skeleton__lead--tile { border-radius: 0.75rem; }
 .c-home-skeleton__lines { display: flex; flex: 1; flex-direction: column; gap: 0.5rem; }

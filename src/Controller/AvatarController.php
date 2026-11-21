@@ -7,6 +7,7 @@ use App\Entity\MemberPhoto;
 use App\Security\MemberVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -118,14 +119,15 @@ class AvatarController extends AbstractController
     {
         $imageManager = new ImageManager(new Driver());
         try {
-            $img = $imageManager->read($avatar);
+            $img = $imageManager->decode($avatar);
         } catch (Throwable) {
             return false;
         }
 
         $this->removeAvatarFiles($member);
         $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
-        $img->save($newFileName);
+        // the avatar files have no extension: keep the format of the uploaded picture
+        $img->encode()->save($newFileName);
 
         $memberPhotoRepository = $this->entityManager->getRepository(MemberPhoto::class);
         $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $member->getId()], ['created' => 'DESC']);
@@ -198,7 +200,7 @@ class AvatarController extends AbstractController
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
 
         $imageManager = new ImageManager(new Driver());
-        $img = $imageManager->read($original);
+        $img = $imageManager->decodePath($original);
 
         $height = $img->height();
         $width = $img->width();
@@ -211,7 +213,7 @@ class AvatarController extends AbstractController
 
         $img->scale(width: $sizeOfAvatar);
 
-        $img->save($filename, 100, 'jpg');
+        $img->encodeUsingFormat(Format::JPEG, quality: 100)->save($filename);
     }
 
     private function createEmptyAvatarImage(string $sizeOfAvatar): string
@@ -220,13 +222,13 @@ class AvatarController extends AbstractController
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
         $imageManager = new ImageManager(new Driver());
-        $img = $imageManager->read($original);
+        $img = $imageManager->decodePath($original);
         if ('original' === $sizeOfAvatar) {
             $filename = $original;
         } else {
             $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
             $img->scale(width: $sizeOfAvatar);
-            $img->save($filename);
+            $img->encode()->save($filename);
         }
 
         return $filename;

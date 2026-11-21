@@ -354,7 +354,7 @@ class GroupManagementController extends AbstractController
     {
         $fileName = $this->generateUniqueFileName() . '.' . $picture->guessExtension();
         $picture->move($groupDirectory, $fileName);
-        $image = new ImageManager(new Driver())->read($groupDirectory . '/' . $fileName);
+        $image = new ImageManager(new Driver())->decodePath($groupDirectory . '/' . $fileName);
         $image->scale(width: 80);
         $image->save($groupDirectory . '/thumb' . $fileName);
 

@@ -262,7 +262,7 @@ class ForumPagesController extends AbstractController
      * The moderation panel of a thread: its forms for a post (?moderate={postId}; the first post if none) and for the
      * thread, sent to forum_admin. Open when the page has ?moderate or ?section (post or topic, the part shown).
      *
-     * @param array{id: int, author: ?int}|null   $starter
+     * @param array{id: int, author: ?int}|null $starter
      * @param array<int, list<ModeratorReport>> $reports the reports about the posts of the page
      *
      * @return array<string, mixed>|null

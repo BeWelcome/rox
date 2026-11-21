@@ -210,7 +210,7 @@
           {% set offersText = member.standardOffers|map(offer => ('ProfileTypicOffer_' ~ offer)|lower|trans({}, 'messages', profile_language))|join(', ') %}
           {% if hasAddress and address.isWheelChairAccessible %}{% set offersText = offersText ~ (offersText ? ', ' : '') ~ 'wheelchair'|trans({}, 'messages', profile_language) %}{% endif %}
           {% set offersText = offersText ~ ' ' ~ (t['OfferGuests'] ?? '') %}
-          {% set rulesText = member.restrictions|map(restriction => ('restriction_' ~ restriction)|lower|trans({}, 'messages', profile_language))|join(', ') ~ ' ' ~ (t['HouseRules'] ?? '') %}
+          {% set rulesText = member.restrictions|map(restriction => ('restriction.' ~ restriction)|lower|trans({}, 'messages', profile_language))|join(', ') ~ ' ' ~ (t['HouseRules'] ?? '') %}
           {{ edit.row('profile.where.you.sleep'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.where.you.sleep'|trans, t['WhereYouSleep'] ?? '', accommodationUrl ~ 'sleep', { icon: 'bed' }) }}
           {{ edit.row('profile.offer.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.offer.guests'|trans, offersText, accommodationUrl ~ 'offers', { icon: 'gift' }) }}
           {{ edit.row('profile.house.rules'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.house.rules'|trans, rulesText, accommodationUrl ~ 'rules', { icon: 'list-ul' }) }}

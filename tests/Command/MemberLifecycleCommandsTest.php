@@ -67,6 +67,40 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         self::assertCount(0, $this->mailsTo('member-5'));
     }
 
+    /**
+     * The first reminder doesn't lead to the suspension the next night: the member gets a year to come back.
+     */
+    public function testAMemberAwayForFiveYearsIsSuspendedAYearAfterTheReminder(): void
+    {
+        $this->setMember('member-4', MemberStatusType::ACTIVE, lastActive: '-6 years', updated: '-6 years');
+
+        $this->execute('members:remind:login');
+        $this->execute('members:suspend:notification');
+
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+        self::assertSame(
+            ['email.login.reminder.subject'],
+            array_map(static fn (Email $mail): ?string => $mail->getSubject(), $this->mailsTo('member-4')),
+            'the reminder, no suspension notice',
+        );
+
+        // eleven months after the reminder: still waiting
+        $this->connection->executeStatement(
+            "UPDATE member SET updated = ? WHERE Username = 'member-4'",
+            [new DateTime('-11 months')->format('Y-m-d H:i:s')],
+        );
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+
+        // a year after the reminder
+        $this->connection->executeStatement(
+            "UPDATE member SET updated = ? WHERE Username = 'member-4'",
+            [new DateTime('-1 year -1 day')->format('Y-m-d H:i:s')],
+        );
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-4')['Status']);
+    }
+
     public function testSignupsNotFinishedWithinTwoWeeksAreRemoved(): void
     {
         $this->setMember('member-2', MemberStatusType::AWAITING_MAIL_CONFIRMATION, created: '-15 days');

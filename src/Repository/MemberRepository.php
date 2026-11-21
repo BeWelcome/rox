@@ -221,7 +221,8 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
     }
 
     /**
-     * Reminded members who haven't been active for five years despite the reminders.
+     * Reminded members who haven't been active for five years despite the reminders. The last reminder (members:
+     * remind:login sets updated) is at least a year old: a member gets a year after a reminder to come back.
      *
      * @return list<Member>
      */
@@ -232,8 +233,10 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         return $this->createQueryBuilder('m')
             ->where('m.status = :outOfRemind')
             ->andWhere('m.lastActive <= :fiveYearsAgo OR (m.lastActive IS NULL AND m.created <= :fiveYearsAgo)')
+            ->andWhere('m.updated <= :yearAgo')
             ->setParameter('outOfRemind', MemberStatusType::OUT_OF_REMIND)
             ->setParameter('fiveYearsAgo', $fiveYearsAgo)
+            ->setParameter('yearAgo', new DateTime('-1 year'))
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()

@@ -8,7 +8,7 @@ use App\Doctrine\WhoSpokeLastType;
 use App\Entity\ForumThread;
 use App\Entity\Group as GroupEntity;
 use App\Entity\Member;
-use App\Entity\ReportToModerator;
+use App\Entity\ModeratorReport;
 use App\Model\ForumModerationModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -169,6 +169,8 @@ final class ForumModerationTest extends WebTestCase
 
         $report = $this->report($post->getId(), $reporter);
         self::assertSame(ReportStatusType::OPEN, $report->getStatus());
+        // nobody answered yet: no moderator (main's table kept 0 there, which is no member)
+        self::assertNull($report->getModerator());
         self::assertStringContainsString('This is spam.', $report->getPostComment());
         self::assertStringContainsString('Really.', $report->getPostComment());
 
@@ -251,7 +253,7 @@ final class ForumModerationTest extends WebTestCase
 
     public function testTheMessagesOfOldAndNewReportsReadAsAConversation(): void
     {
-        $report = new ReportToModerator();
+        $report = new ModeratorReport();
         $report->setReporter($this->member('member-2'));
         $report->setPostComment(
             "<p><small>2026-11-01 10:15 member-3:</small><br>We looked at it.</p><hr>\n"
@@ -308,11 +310,11 @@ final class ForumModerationTest extends WebTestCase
         return (int) $group->getId();
     }
 
-    private function report(int $postId, Member $reporter): ReportToModerator
+    private function report(int $postId, Member $reporter): ModeratorReport
     {
         $this->entityManager()->clear();
-        $report = $this->entityManager()->getRepository(ReportToModerator::class)->findOneBy(['post' => $postId, 'reporter' => $reporter->getId()]);
-        self::assertInstanceOf(ReportToModerator::class, $report);
+        $report = $this->entityManager()->getRepository(ModeratorReport::class)->findOneBy(['post' => $postId, 'reporter' => $reporter->getId()]);
+        self::assertInstanceOf(ModeratorReport::class, $report);
 
         return $report;
     }

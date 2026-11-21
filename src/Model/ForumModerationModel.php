@@ -9,7 +9,7 @@ use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
-use App\Entity\ReportToModerator;
+use App\Entity\ModeratorReport;
 use App\Service\ForumSearchIndex;
 use DateTime;
 use DateTimeImmutable;
@@ -80,14 +80,13 @@ class ForumModerationModel
      * A member's report about a post, or what they add to it: each message is kept with its time and author, the
      * newest first.
      */
-    public function report(ForumPost $post, Member $reporter, string $comment): ReportToModerator
+    public function report(ForumPost $post, Member $reporter, string $comment): ModeratorReport
     {
         $report = $this->findReport($post, $reporter);
         if (null === $report) {
-            $report = new ReportToModerator();
+            $report = new ModeratorReport();
             $report->setPost($post);
             $report->setReporter($reporter);
-            $report->setModeratorComment('');
             $report->setStatus(ReportStatusType::OPEN);
             $this->entityManager->persist($report);
         }
@@ -101,7 +100,7 @@ class ForumModerationModel
     /**
      * A moderator answers a report and sets its status.
      */
-    public function answerReport(ReportToModerator $report, Member $moderator, string $comment, string $status): void
+    public function answerReport(ModeratorReport $report, Member $moderator, string $comment, string $status): void
     {
         if ('' !== trim($comment)) {
             $report->setPostComment($this->addMessage($report->getPostComment(), $moderator, $comment));
@@ -112,9 +111,9 @@ class ForumModerationModel
         $this->entityManager->flush();
     }
 
-    public function findReport(ForumPost $post, Member $reporter): ?ReportToModerator
+    public function findReport(ForumPost $post, Member $reporter): ?ModeratorReport
     {
-        return $this->entityManager->getRepository(ReportToModerator::class)->findOneBy([
+        return $this->entityManager->getRepository(ModeratorReport::class)->findOneBy([
             'post' => $post->getId(),
             'reporter' => $reporter,
         ]);
@@ -124,7 +123,7 @@ class ForumModerationModel
      * @param list<string> $statuses none for all
      * @param Group|null   $group    only the reports about posts in the group's threads
      *
-     * @return list<ReportToModerator> oldest change first
+     * @return list<ModeratorReport> oldest change first
      */
     public function findReports(array $statuses, ?Member $moderator = null, ?Group $group = null): array
     {
@@ -133,7 +132,7 @@ class ForumModerationModel
             $queryBuilder->andWhere('r.moderator = :moderator')->setParameter('moderator', $moderator);
         }
 
-        /** @var list<ReportToModerator> $reports */
+        /** @var list<ModeratorReport> $reports */
         $reports = $queryBuilder->getQuery()->getResult();
 
         return $reports;
@@ -181,7 +180,7 @@ class ForumModerationModel
      * @return list<ReportMessage>
      */
     #[AsTwigFunction('forum_report_messages')]
-    public function getMessages(ReportToModerator $report): array
+    public function getMessages(ModeratorReport $report): array
     {
         $reporter = $report->getReporter()->getUsername();
         $messages = [];
@@ -210,7 +209,7 @@ class ForumModerationModel
     /**
      * @param list<int> $postIds
      *
-     * @return array<int, list<ReportToModerator>> the reports of the posts, by post id
+     * @return array<int, list<ModeratorReport>> the reports of the posts, by post id
      */
     public function findReportsOfPosts(array $postIds): array
     {
@@ -218,7 +217,7 @@ class ForumModerationModel
         if ([] === $postIds) {
             return $reports;
         }
-        foreach ($this->entityManager->getRepository(ReportToModerator::class)->findBy(['post' => $postIds]) as $report) {
+        foreach ($this->entityManager->getRepository(ModeratorReport::class)->findBy(['post' => $postIds]) as $report) {
             $reports[$report->getPostId()][] = $report;
         }
 
@@ -230,7 +229,7 @@ class ForumModerationModel
      */
     private function createReportsQueryBuilder(array $statuses, ?Group $group): QueryBuilder
     {
-        $queryBuilder = $this->entityManager->getRepository(ReportToModerator::class)->createQueryBuilder('r');
+        $queryBuilder = $this->entityManager->getRepository(ModeratorReport::class)->createQueryBuilder('r');
         if ([] !== $statuses) {
             $queryBuilder->andWhere('r.status IN (:statuses)')->setParameter('statuses', $statuses);
         }

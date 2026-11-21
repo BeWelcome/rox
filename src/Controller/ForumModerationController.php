@@ -6,7 +6,7 @@ use App\Doctrine\ReportStatusType;
 use App\Entity\ForumPost;
 use App\Entity\Group;
 use App\Entity\Member;
-use App\Entity\ReportToModerator;
+use App\Entity\ModeratorReport;
 use App\Form\ModeratePostType;
 use App\Form\ModerateThreadType;
 use App\Logger\Logger;
@@ -171,7 +171,7 @@ class ForumModerationController extends AbstractController
 
         $others = array_values(array_filter(
             $this->moderationModel->findReportsOfPosts([(int) $post->getId()])[(int) $post->getId()] ?? [],
-            static fn (ReportToModerator $other): bool => $other->getId() !== $report->getId(),
+            static fn (ModeratorReport $other): bool => $other->getId() !== $report->getId(),
         ));
 
         return $this->render('forum/report_moderator.html.twig', [
@@ -215,7 +215,7 @@ class ForumModerationController extends AbstractController
         $counts = array_map(fn (array $criteria): int => \count($this->moderationModel->findReports($criteria[0], $criteria[1], $scope)), $lists);
         $reports = $this->moderationModel->findReports($lists[$list][0], $lists[$list][1], $scope);
 
-        $postIds = array_values(array_unique(array_map(static fn (ReportToModerator $report): int => $report->getPostId(), $reports)));
+        $postIds = array_values(array_unique(array_map(static fn (ModeratorReport $report): int => $report->getPostId(), $reports)));
         $posts = [];
         if ([] !== $postIds) {
             foreach ($this->entityManager->getRepository(ForumPost::class)->findBy(['id' => $postIds]) as $post) {

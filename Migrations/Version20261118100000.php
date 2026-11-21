@@ -24,13 +24,19 @@ final class Version20261118100000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->connection->executeStatement(<<<'SQL'
-            UPDATE member m
-            INNER JOIN memberspreferences mp ON mp.IdMember = m.id
-            INNER JOIN preferences p ON p.id = mp.IdPreference AND p.codeName = 'PreferenceLanguage'
+        // The choices first, then the members by id: in one UPDATE with member, MariaDB can't use an index for the
+        // byte comparison with language and walks every member once per language. main's values are language ids
+        // (digits), develop's short codes.
+        $choices = $this->connection->fetchAllKeyValue(<<<'SQL'
+            SELECT mp.IdMember, l.ShortCode
+            FROM preferences p
+            INNER JOIN memberspreferences mp ON mp.IdPreference = p.id
             INNER JOIN language l ON BINARY l.ShortCode = BINARY mp.Value
-            SET m.Locale = l.ShortCode
+            WHERE p.codeName = 'PreferenceLanguage' AND mp.Value NOT REGEXP '^[0-9]+$'
             SQL);
+        foreach ($choices as $memberId => $locale) {
+            $this->connection->executeStatement('UPDATE member SET Locale = ? WHERE id = ?', [$locale, $memberId]);
+        }
         $this->connection->executeStatement(<<<'SQL'
             DELETE mp FROM memberspreferences mp
             INNER JOIN preferences p ON p.id = mp.IdPreference

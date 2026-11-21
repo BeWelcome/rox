@@ -131,9 +131,6 @@
     "fakerphp/faker": {
         "version": "v1.16.0"
     },
-    "foolz/sphinxql-query-builder": {
-        "version": "1.2.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.95",
         "recipe": {
@@ -145,9 +142,6 @@
         "files": [
             ".php-cs-fixer.dist.php"
         ]
-    },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.5"
     },
     "gedmo/doctrine-extensions": {
         "version": "v3.5.0"
@@ -177,12 +171,6 @@
     "hidehalo/nanoid-php": {
         "version": "1.1.8"
     },
-    "html2text/html2text": {
-        "version": "4.3.1"
-    },
-    "incenteev/composer-parameter-handler": {
-        "version": "v2.1.4"
-    },
     "infection/abstract-testframework-adapter": {
         "version": "0.3.1"
     },
@@ -203,30 +191,6 @@
     },
     "justinrainbow/json-schema": {
         "version": "5.2.11"
-    },
-    "laminas/laminas-code": {
-        "version": "3.4.1"
-    },
-    "laminas/laminas-escaper": {
-        "version": "2.9.0"
-    },
-    "laminas/laminas-eventmanager": {
-        "version": "3.4.0"
-    },
-    "laminas/laminas-stdlib": {
-        "version": "3.6.0"
-    },
-    "laminas/laminas-uri": {
-        "version": "2.9.1"
-    },
-    "laminas/laminas-validator": {
-        "version": "2.15.0"
-    },
-    "league/html-to-markdown": {
-        "version": "4.10.0"
-    },
-    "lorenzo/pinky": {
-        "version": "1.0.5"
     },
     "masterminds/html5": {
         "version": "2.7.5"
@@ -853,13 +817,7 @@
     "twig/extra-bundle": {
         "version": "v3.3.3"
     },
-    "twig/inky-extra": {
-        "version": "v3.3.3"
-    },
     "twig/intl-extra": {
-        "version": "v3.3.3"
-    },
-    "twig/markdown-extra": {
         "version": "v3.3.3"
     },
     "twig/twig": {
@@ -873,8 +831,5 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
-    },
-    "xemlock/htmlpurifier-html5": {
-        "version": "v0.1.11"
     }
 }

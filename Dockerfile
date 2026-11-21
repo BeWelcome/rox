@@ -43,7 +43,6 @@ RUN set -eux; \
 		icu-dev \
 		libjpeg-turbo-dev \
 		libpng-dev \
-		libxslt-dev \
 		libzip-dev \
 		zlib-dev \
 	; \
@@ -55,7 +54,6 @@ RUN set -eux; \
 		gd \
 		pcntl \
 		pdo_mysql \
-		xsl \
 		zip \
         exif \
 	; \

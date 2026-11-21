@@ -80,7 +80,7 @@ class GalleryManageTest extends WebTestCase
         $this->entityManager->clear();
         self::assertNotNull($this->entityManager->find(GalleryImage::class, $other));
 
-        $this->client->jsonRequest('POST', '/gallery/manage/pictures/' . $other, ['title' => 'Mine'], ['HTTP_X_CSRF_TOKEN' => $token]);
+        $this->client->jsonRequest('POST', '/gallery/manage/pictures/' . $other, ['title' => 'Mine'], ['HTTP_X_CSRF_TOKEN' => $token, 'HTTP_SEC_FETCH_SITE' => 'same-origin']);
         $this->assertResponseStatusCodeSame(404);
 
         $this->entityManager->remove($this->entityManager->find(GalleryImage::class, $other));
@@ -113,13 +113,29 @@ class GalleryManageTest extends WebTestCase
     }
 
     /**
+     * The token isn't kept in the session (a request of the page before could write the session back without it,
+     * and the member's next call failed): the browser says where the call comes from.
+     */
+    public function testCallsFromAnotherSiteAreRefused(): void
+    {
+        $this->client->loginUser($this->member('member-3'));
+        $token = $this->client->request('GET', '/gallery/manage')->filter('.js-gm')->attr('data-token');
+
+        $this->client->jsonRequest('POST', '/gallery/manage/albums', ['title' => 'Zz test'], ['HTTP_X_CSRF_TOKEN' => $token, 'HTTP_SEC_FETCH_SITE' => 'cross-site']);
+        $this->assertResponseStatusCodeSame(403);
+
+        $this->client->jsonRequest('POST', '/gallery/manage/albums', ['title' => 'Zz test'], ['HTTP_X_CSRF_TOKEN' => $token, 'HTTP_SEC_FETCH_SITE' => 'same-origin']);
+        $this->assertResponseIsSuccessful();
+    }
+
+    /**
      * @param array<string, mixed> $body
      *
      * @return array<string, mixed>
      */
     private function call(string $url, array $body, string $token): array
     {
-        $this->client->jsonRequest('POST', $url, $body, ['HTTP_X_CSRF_TOKEN' => $token]);
+        $this->client->jsonRequest('POST', $url, $body, ['HTTP_X_CSRF_TOKEN' => $token, 'HTTP_SEC_FETCH_SITE' => 'same-origin']);
         $this->assertResponseIsSuccessful();
 
         return json_decode((string) $this->client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR);

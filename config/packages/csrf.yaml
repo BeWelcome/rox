@@ -11,3 +11,4 @@ framework:
             - logout
             - browser_push_subscription
             - preference_update
+            - gallery_manage

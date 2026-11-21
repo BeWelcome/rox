@@ -6,6 +6,7 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Repository\NewsletterStatisticsRepository;
+use App\Service\Sitemap;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\CallbackAdapter;
@@ -49,6 +50,7 @@ class MassmailModel
     public function __construct(
         private readonly Connection $connection,
         private readonly NewsletterStatisticsRepository $statistics,
+        private readonly Sitemap $sitemap,
     ) {
     }
 
@@ -185,7 +187,7 @@ class MassmailModel
 
     public function trigger(Newsletter $newsletter): int
     {
-        return $this->connection->transactional(function () use ($newsletter): int {
+        $count = $this->connection->transactional(function () use ($newsletter): int {
             $this->connection->executeStatement("UPDATE broadcast SET Status = 'Triggered' WHERE id = ?", [$newsletter->getId()]);
             $count = (int) $this->connection->executeStatement(
                 "UPDATE broadcastmessages SET Status = 'ToSend', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToApprove'",
@@ -195,6 +197,10 @@ class MassmailModel
 
             return $count;
         });
+        // a published newsletter has a page of its own, in the sitemap
+        $this->sitemap->invalidate();
+
+        return $count;
     }
 
     /**
@@ -206,7 +212,7 @@ class MassmailModel
      */
     public function untrigger(Newsletter $newsletter): int
     {
-        return $this->connection->transactional(function () use ($newsletter): int {
+        $count = $this->connection->transactional(function () use ($newsletter): int {
             $this->connection->executeStatement("UPDATE broadcast SET Status = 'Created' WHERE id = ?", [$newsletter->getId()]);
             $count = (int) $this->connection->executeStatement(
                 "UPDATE broadcastmessages SET Status = 'ToApprove', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToSend'",
@@ -216,6 +222,10 @@ class MassmailModel
 
             return $count;
         });
+        // taken back, its page leaves the sitemap
+        $this->sitemap->invalidate();
+
+        return $count;
     }
 
     /**

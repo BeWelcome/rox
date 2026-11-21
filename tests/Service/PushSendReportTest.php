@@ -3,9 +3,9 @@
 namespace App\Tests\Service;
 
 use App\Service\PushSendReport;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Minishlink\WebPush\MessageSentReport;
+use Nyholm\Psr7\Request;
+use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 class PushSendReportTest extends TestCase

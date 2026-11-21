@@ -9,11 +9,11 @@ use App\Service\BrowserPushEndpointResolverInterface;
 use App\Service\BrowserPushEndpointValidator;
 use App\Service\BrowserPushWebPushFactoryInterface;
 use App\Service\PushGateway;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Minishlink\WebPush\MessageSentReport;
 use Minishlink\WebPush\SubscriptionInterface;
 use Minishlink\WebPush\WebPush;
+use Nyholm\Psr7\Request;
+use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -84,11 +84,10 @@ class PushGatewayTest extends TestCase
             ->with(
                 $this->anything(),
                 self::callback(static function (array $clientOptions): bool {
-                    return false === ($clientOptions['allow_redirects'] ?? null)
-                        && 5 === ($clientOptions['connect_timeout'] ?? null)
-                        && 10 === ($clientOptions['timeout'] ?? null)
-                        && ['fcm.googleapis.com:443:142.250.185.10']
-                            === ($clientOptions['curl'][\CURLOPT_RESOLVE] ?? null);
+                    return 0 === ($clientOptions['max_redirects'] ?? null)
+                        && 5 === ($clientOptions['max_connect_duration'] ?? null)
+                        && 10 === ($clientOptions['max_duration'] ?? null)
+                        && ['fcm.googleapis.com' => '142.250.185.10'] === ($clientOptions['resolve'] ?? null);
                 }),
                 $this->anything()
             )

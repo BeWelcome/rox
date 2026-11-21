@@ -54,27 +54,21 @@ final readonly class PushGateway implements PushGatewayInterface
         return PushSendReport::fromMessageSentReport($report);
     }
 
+    /**
+     * The options for Symfony's HTTP client: no redirects, at most 5 seconds to connect and 10 in all, and the
+     * endpoint's host resolved to the IP the validator checked.
+     */
     private function getClientOptions(ValidatedBrowserPushEndpoint $endpoint): array
     {
         $clientOptions = [
-            'allow_redirects' => false,
-            'connect_timeout' => 5,
-            'timeout' => 10,
+            'max_redirects' => 0,
+            'max_connect_duration' => 5,
+            'max_duration' => 10,
         ];
         $pinnedIp = $endpoint->getPinnedIp();
-        if (null === $pinnedIp) {
-            return $clientOptions;
+        if (null !== $pinnedIp) {
+            $clientOptions['resolve'] = [$endpoint->getHost() => $pinnedIp];
         }
-
-        if (filter_var($pinnedIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
-            $pinnedIp = '[' . $pinnedIp . ']';
-        }
-
-        $clientOptions['curl'] = [
-            \CURLOPT_RESOLVE => [
-                \sprintf('%s:%d:%s', $endpoint->getHost(), $endpoint->getPort(), $pinnedIp),
-            ],
-        ];
 
         return $clientOptions;
     }

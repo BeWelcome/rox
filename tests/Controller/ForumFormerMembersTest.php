@@ -88,12 +88,12 @@ final class ForumFormerMembersTest extends WebTestCase
     public function testEditingAPostOfAFormerMemberNotifiesNoOne(): void
     {
         $post = $this->firstPost();
-        $queued = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM posts_notificationqueue');
+        $queued = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM forum_post_notification');
 
         static::getContainer()->get(ForumModel::class)->queueNotifications($post, ForumModel::NOTIFICATION_EDIT);
         static::getContainer()->get(EntityManagerInterface::class)->flush();
 
-        self::assertSame($queued, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM posts_notificationqueue'));
+        self::assertSame($queued, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM forum_post_notification'));
     }
 
     private function threadItem(Crawler $crawler): Crawler

@@ -9,6 +9,7 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\NotificationStatusType;
 use App\Doctrine\ThreadReplyType;
 use App\Entity\ForumPost;
+use App\Entity\ForumPostNotification;
 use App\Entity\ForumPostTranslation;
 use App\Entity\ForumThread;
 use App\Entity\ForumThreadTranslation;
@@ -17,7 +18,6 @@ use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberThreadSubscription;
-use App\Entity\PostNotification;
 use App\Service\ForumSearchIndex;
 use DateTime;
 use DateTimeImmutable;
@@ -364,9 +364,9 @@ class ForumModel
         $thread->addTranslation(new ForumThreadTranslation($locale, 'title', $title)->setTranslator($translator));
     }
 
-    private function newNotification(Member $member, ForumPost $post, string $type, string $table, int $subscription): PostNotification
+    private function newNotification(Member $member, ForumPost $post, string $type, string $table, int $subscription): ForumPostNotification
     {
-        return new PostNotification()
+        return new ForumPostNotification()
             ->setReceiver($member)
             ->setPost($post)
             ->setStatus(NotificationStatusType::SCHEDULED)
@@ -412,7 +412,7 @@ class ForumModel
     private function getQueuedReceiverIds(ForumPost $post): array
     {
         return array_map('intval', $this->entityManager->getConnection()->fetchFirstColumn(
-            'SELECT DISTINCT IdMember FROM posts_notificationqueue WHERE IdPost = ? AND Status = ?',
+            'SELECT DISTINCT receiver_id FROM forum_post_notification WHERE post_id = ? AND status = ?',
             [$post->getId(), NotificationStatusType::SCHEDULED],
         ));
     }

@@ -8,10 +8,10 @@ use App\Doctrine\NotificationStatusType;
 use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
 use App\Entity\ForumPost;
+use App\Entity\ForumPostNotification;
 use App\Entity\ForumThread;
 use App\Entity\Member;
-use App\Entity\PostNotification;
-use App\Repository\PostNotificationRepository;
+use App\Repository\ForumPostNotificationRepository;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushConfig;
 use App\Service\BrowserPushNotificationProcessor;
@@ -41,7 +41,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
 
     public function testProcessesBrowserPushQueueWhenForumQueueIsEmpty(): void
     {
-        $postNotificationRepository = $this->createMock(PostNotificationRepository::class);
+        $postNotificationRepository = $this->createMock(ForumPostNotificationRepository::class);
         $postNotificationRepository
             ->expects($this->once())
             ->method('getScheduledNotifications')
@@ -52,7 +52,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(PostNotification::class)
+            ->with(ForumPostNotification::class)
             ->willReturn($postNotificationRepository)
         ;
         $browserPushNotificationProcessor = $this->createMock(BrowserPushNotificationProcessor::class);
@@ -87,7 +87,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
     public function testQueuesForumBrowserPushNotificationWhenEmailFails(): void
     {
         $postNotification = $this->forumPostNotification();
-        $postNotificationRepository = $this->createMock(PostNotificationRepository::class);
+        $postNotificationRepository = $this->createMock(ForumPostNotificationRepository::class);
         $postNotificationRepository
             ->expects($this->once())
             ->method('getScheduledNotifications')
@@ -116,7 +116,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         $queuedNotifications = [];
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturnMap([
-            [PostNotification::class, $postNotificationRepository],
+            [ForumPostNotification::class, $postNotificationRepository],
             [BrowserPushSubscription::class, $subscriptionRepository],
         ]);
         $entityManager
@@ -179,13 +179,13 @@ class SendAndPushNotificationsCommandTest extends TestCase
     {
         $postNotification = $this->forumPostNotification();
         $postNotification->setReceiver($postNotification->getPost()->getAuthor());
-        $postNotificationRepository = $this->createStub(PostNotificationRepository::class);
+        $postNotificationRepository = $this->createStub(ForumPostNotificationRepository::class);
         $postNotificationRepository->method('getScheduledNotifications')->willReturn([$postNotification]);
         $postNotificationRepository->method('getSentMessageIds')->willReturn([]);
         $persisted = [];
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturnMap([
-            [PostNotification::class, $postNotificationRepository],
+            [ForumPostNotification::class, $postNotificationRepository],
             [BrowserPushSubscription::class, $this->createStub(EntityRepository::class)],
         ]);
         $entityManager->method('persist')->willReturnCallback(static function (object $entity) use (&$persisted): void {
@@ -222,7 +222,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
 
     public function testBrowserPushQueueFailureDoesNotFailForumNotificationCommand(): void
     {
-        $postNotificationRepository = $this->createMock(PostNotificationRepository::class);
+        $postNotificationRepository = $this->createMock(ForumPostNotificationRepository::class);
         $postNotificationRepository
             ->expects($this->once())
             ->method('getScheduledNotifications')
@@ -233,7 +233,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(PostNotification::class)
+            ->with(ForumPostNotification::class)
             ->willReturn($postNotificationRepository)
         ;
         $browserPushNotificationProcessor = $this->createMock(BrowserPushNotificationProcessor::class);
@@ -369,7 +369,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         array $sentMessageIds,
         Mailer $mailer,
     ): CommandTester {
-        $repository = $this->createMock(PostNotificationRepository::class);
+        $repository = $this->createMock(ForumPostNotificationRepository::class);
         $repository
             ->expects($this->once())
             ->method('getScheduledNotifications')
@@ -385,7 +385,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(PostNotification::class)
+            ->with(ForumPostNotification::class)
             ->willReturn($repository)
         ;
         $entityManager->expects($this->exactly(\count($notifications)))->method('persist');
@@ -420,7 +420,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
     }
 
     /**
-     * @return list<PostNotification>
+     * @return list<ForumPostNotification>
      */
     private function createThreadedNotifications(): array
     {
@@ -445,9 +445,9 @@ class SendAndPushNotificationsCommandTest extends TestCase
         ];
     }
 
-    private function createThreadedNotification(int $id, Member $receiver, ForumPost $post): PostNotification
+    private function createThreadedNotification(int $id, Member $receiver, ForumPost $post): ForumPostNotification
     {
-        $notification = new PostNotification()
+        $notification = new ForumPostNotification()
             ->setReceiver($receiver)
             ->setPost($post)
             ->setType('reply')
@@ -458,7 +458,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
         return $notification;
     }
 
-    private function forumPostNotification(): PostNotification
+    private function forumPostNotification(): ForumPostNotification
     {
         $receiver = $this->member('receiver');
         $author = $this->member('author');
@@ -472,7 +472,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
             ->setGroup(null)
         ;
         $post->setThread($thread);
-        $postNotification = new PostNotification()
+        $postNotification = new ForumPostNotification()
             ->setReceiver($receiver)
             ->setPost($post)
             ->setType('reply')

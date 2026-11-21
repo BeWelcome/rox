@@ -332,7 +332,7 @@ final class ForumWritingTest extends WebTestCase
 
     private function notifications(ForumPost $post, Member $member): int
     {
-        return $this->countRows('posts_notificationqueue', 'IdPost = ? AND IdMember = ?', [$post->getId(), $member->getId()]);
+        return $this->countRows('forum_post_notification', 'post_id = ? AND receiver_id = ?', [$post->getId(), $member->getId()]);
     }
 
     /**

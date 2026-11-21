@@ -518,7 +518,7 @@ class GroupModel
 
         $types = [ArrayParameterType::INTEGER];
         $connection->executeStatement(
-            'DELETE n FROM posts_notificationqueue n JOIN forum_post p ON p.id = n.IdPost WHERE p.threadid IN (?)',
+            'DELETE n FROM forum_post_notification n JOIN forum_post p ON p.id = n.post_id WHERE p.threadid IN (?)',
             [$threadIds],
             $types,
         );

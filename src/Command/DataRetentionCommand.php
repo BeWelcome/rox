@@ -10,6 +10,7 @@ use App\Entity\BroadcastMessage;
 use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
 use App\Entity\Donation;
+use App\Entity\ForumPostNotification;
 use App\Entity\Friend;
 use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
@@ -26,7 +27,6 @@ use App\Entity\MemberThreadSubscription;
 use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\PasswordReset;
-use App\Entity\PostNotification;
 use App\Entity\ProfileNote;
 use App\Entity\ProfileVisit;
 use App\Entity\Trip;
@@ -347,7 +347,7 @@ class DataRetentionCommand extends Command
             PasswordReset::class => 'e.member = :member',
             MemberPreference::class => 'e.member = :member',
             MemberThreadSubscription::class => 'e.subscriber = :member',
-            PostNotification::class => 'e.receiver = :member',
+            ForumPostNotification::class => 'e.receiver = :member',
             MemberLegHidden::class => 'e.member = :member',
             MemberLegNotificationSent::class => 'e.member = :member',
             MemberActivityNotificationSent::class => 'e.member = :member',

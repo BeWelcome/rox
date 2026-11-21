@@ -407,7 +407,11 @@ services:
         arguments:
             # reuse Doctrine's connection, so sessions use the same runtime credentials
             - !service { class: PDO, factory: ['@database_connection', 'getNativeConnection'] }
-            - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_NONE }
+            # One request of a session at a time (GET_LOCK on the session id, released when the session is saved):
+            # without a lock, two requests of a member that both change the session (a form's CSRF token, a notice)
+            # overwrite each other, and the form is refused or the notice lost (#596). Not LOCK_TRANSACTIONAL: it
+            # opens a transaction on this connection, which is Doctrine's.
+            - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_ADVISORY }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
 

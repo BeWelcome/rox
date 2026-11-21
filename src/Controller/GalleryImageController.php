@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Entity\GalleryImage;
 use App\Security\MemberVoter;
 use App\Service\GalleryImageFiles;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * The files of gallery pictures: the original and the smaller copies.
  */
+#[ReleasesSession]
 class GalleryImageController extends AbstractController
 {
     private const int MAX_AGE = 604800;

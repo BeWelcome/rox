@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Entity\Member;
 use App\Entity\MemberPhoto;
 use App\Security\MemberVoter;
@@ -72,6 +73,7 @@ class AvatarController extends AbstractController
         requirements: ['size' => '\d+|original'],
         defaults: ['size' => '48']
     )]
+    #[ReleasesSession]
     public function showAvatar(Request $request, Member $member, string $size): BinaryFileResponse
     {
         // a link from a mail (MailLinkSigner::mailAvatarUrl()): the receiver is a member, the mail program isn't

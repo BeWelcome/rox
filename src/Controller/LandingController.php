@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
 use App\Entity\HostingRequest;
@@ -46,6 +47,7 @@ class LandingController extends AbstractController
     }
 
     #[Route(path: '/widget/conversations', name: '/widget/conversations')]
+    #[ReleasesSession]
     public function getConversations(Request $request): Response
     {
         /** @var Member $member */
@@ -75,6 +77,7 @@ class LandingController extends AbstractController
     }
 
     #[Route(path: '/widget/visitors', name: '/widget/visitors')]
+    #[ReleasesSession]
     public function getVisitors(Request $request, TripModel $tripModel): Response
     {
         /** @var Member $member */
@@ -99,6 +102,7 @@ class LandingController extends AbstractController
      * The threads with the newest posts in the member's groups, for the groups tab on the home page.
      */
     #[Route(path: '/widget/threads', name: '/widget/threads')]
+    #[ReleasesSession]
     public function getThreads(): Response
     {
         /** @var Member $member */
@@ -118,6 +122,7 @@ class LandingController extends AbstractController
      * @return Response
      */
     #[Route(path: '/widget/activities', name: '/widget/activities')]
+    #[ReleasesSession]
     public function getActivities(Request $request)
     {
         /** @var Member $member */
@@ -133,6 +138,7 @@ class LandingController extends AbstractController
     }
 
     #[Route(path: '/widget/accommodation', name: '/widget/accommodation')]
+    #[ReleasesSession]
     public function setAccommodation(Request $request, Environment $twig): JsonResponse
     {
         /** @var Member $member */
@@ -237,6 +243,7 @@ class LandingController extends AbstractController
      * The alert under the welcome banner again, after something was answered in the side panel.
      */
     #[Route(path: '/widget/requests-alert', name: '/widget/requests-alert')]
+    #[ReleasesSession]
     public function getRequestsAlert(): Response
     {
         /** @var Member $member */

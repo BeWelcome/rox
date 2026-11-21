@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Dto\GroupSearch;
 use App\Entity\Address;
@@ -252,6 +253,7 @@ class GroupPagesController extends AbstractController
     }
 
     #[Route(path: '/group/realimg/{group_id}', name: 'group_realimg', requirements: ['group_id' => '\d+'], methods: ['GET'])]
+    #[ReleasesSession]
     public function picture(
         #[MapEntity(id: 'group_id')] Group $group,
         #[Autowire('%group_directory%')] string $groupDirectory,
@@ -260,6 +262,7 @@ class GroupPagesController extends AbstractController
     }
 
     #[Route(path: '/group/thumbimg/{group_id}', name: 'group_thumbimg', requirements: ['group_id' => '\d+'], methods: ['GET'])]
+    #[ReleasesSession]
     public function thumbnail(
         #[MapEntity(id: 'group_id')] Group $group,
         #[Autowire('%group_directory%')] string $groupDirectory,

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Service\StaysIcal;
 use App\Service\UpcomingStays;
 use Carbon\Carbon;
@@ -40,6 +41,7 @@ class StaysController extends AbstractController
      */
     #[Route(path: '/stays/nav', name: 'stays_nav')]
     #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
+    #[ReleasesSession]
     public function navigation(): Response
     {
         return $this->render('layout/_stays_nav.html.twig');

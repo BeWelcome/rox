@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Mime\Email;
 
 /**
@@ -69,6 +70,33 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
             "SELECT DATEDIFF(NOW(), LastActive) FROM member WHERE Username = 'member-5'"
         ));
         self::assertCount(0, $this->mailsTo('member-5'));
+    }
+
+    /**
+     * A run finishes its batch however long it takes; one that starts meanwhile (the cron starts one every 30
+     * minutes) ends at once and leaves the members to the run at work.
+     */
+    public function testARetentionRunLeavesTheMembersToTheRunAtWork(): void
+    {
+        $this->setMember('member-5', MemberStatusType::ASKED_TO_LEAVE, lastActive: '-2 years');
+        $memberId = (int) $this->member('member-5')['id'];
+        $runAtWork = static::getContainer()->get(LockFactory::class)->createLock('data:retention', null);
+        self::assertTrue($runAtWork->acquire());
+
+        try {
+            $display = $this->execute('data:retention');
+
+            self::assertStringContainsString('The previous run is still at work', $display);
+            self::assertSame('member-5', $this->member('member-5')['Username']);
+        } finally {
+            $runAtWork->release();
+        }
+
+        $this->execute('data:retention');
+        self::assertSame('retired_' . $memberId, $this->connection->fetchOne(
+            'SELECT Username FROM member WHERE id = ?',
+            [$memberId],
+        ));
     }
 
     /**
@@ -363,11 +391,13 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         return (int) $this->connection->lastInsertId();
     }
 
-    private function execute(string $command): void
+    private function execute(string $command): string
     {
         static::getContainer()->get(EntityManagerInterface::class)->clear();
         $tester = new CommandTester(new Application(self::$kernel)->find($command));
         self::assertSame(0, $tester->execute([]), $tester->getDisplay());
+
+        return $tester->getDisplay();
     }
 
     /**

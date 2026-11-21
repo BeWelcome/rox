@@ -49,6 +49,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Lock\LockFactory;
 
 #[AsCommand(
     name: 'data:retention',
@@ -58,9 +59,6 @@ use Symfony\Component\Finder\Finder;
 )]
 class DataRetentionCommand extends Command
 {
-    /** A run stops after this, so that it ends before the next one starts. */
-    public const int MAX_SECONDS = 110;
-
     private Member $bwAdmin;
     private MemberRepository $memberRepository;
 
@@ -72,6 +70,7 @@ class DataRetentionCommand extends Command
         private readonly string $galleryDirectory,
         #[Autowire('%member_batch_size%')]
         private readonly int $batchSize,
+        private readonly LockFactory $lockFactory,
     ) {
         parent::__construct();
     }
@@ -104,7 +103,19 @@ class DataRetentionCommand extends Command
 
         $io->title('Running Data Retention');
 
-        $retired = $this->removeMembers($io, $batchSize);
+        // One run at a time: a run finishes its batch, however long that takes (no expiry), and a run that
+        // starts meanwhile (the cron starts one every 30 minutes) leaves it to the one at work.
+        $lock = $this->lockFactory->createLock('data:retention', null);
+        if (!$lock->acquire()) {
+            $io->note('The previous run is still at work; this one ends.');
+
+            return Command::SUCCESS;
+        }
+        try {
+            $retired = $this->removeMembers($io, $batchSize);
+        } finally {
+            $lock->release();
+        }
 
         $io->success(\sprintf('Data of %d members has been deleted.', $retired));
 
@@ -114,7 +125,6 @@ class DataRetentionCommand extends Command
     private function removeMembers(SymfonyStyle $io, int $batchSize): int
     {
         $entityManager = $this->entityManager;
-        $start = microtime(true);
         $removed = 0;
 
         $members = $this->memberRepository->loadDataRetentionMembers($batchSize);
@@ -126,18 +136,6 @@ class DataRetentionCommand extends Command
 
             /** @var Member $member */
             foreach ($members as $member) {
-                if (microtime(true) - $start >= self::MAX_SECONDS) {
-                    $msg = \sprintf(
-                        'Stopped after %d seconds, %d of %d members done.',
-                        self::MAX_SECONDS,
-                        $removed,
-                        \count($members),
-                    );
-                    $io->warning($msg);
-                    $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
-                    break;
-                }
-
                 $username = $member->getUsername();
                 $this->removeBrowserPushNotificationsFromSender($username);
 

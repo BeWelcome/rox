@@ -43,7 +43,7 @@ class ManticoreIndicesMessagesCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->note('Creating manticore message real-time index.');
 
-        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        $client = $this->createClient();
         $index = $client->table(MessageSearchIndex::INDEX);
         try {
             // Rebuild from scratch: an existing index would otherwise get every message a second time
@@ -74,12 +74,41 @@ class ManticoreIndicesMessagesCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->addDocuments($index, $output);
+        // All messages go in without auto-optimize, then the disk chunks are merged once: otherwise Manticore may start
+        // merging in the middle of the insert, as it did in the places index (ManticoreIndicesGeonamesCommand), and
+        // close the connection. Auto-optimize is switched on again whatever happens.
+        $this->rawSql($client, 'SET GLOBAL auto_optimize=0');
+        try {
+            $this->addDocuments($index, $output);
+            $io->newLine();
+            $io->note('Optimizing ' . MessageSearchIndex::INDEX . ' (merging its disk chunks).');
+            $this->rawSql($client, 'OPTIMIZE TABLE ' . MessageSearchIndex::INDEX . ' OPTION cutoff=1, sync=1');
+        } finally {
+            $this->rawSql($client, 'SET GLOBAL auto_optimize=1');
+        }
 
-        $io->newLine();
         $io->success('Created ' . MessageSearchIndex::INDEX . '.');
 
         return Command::SUCCESS;
+    }
+
+    protected function createClient(): Client
+    {
+        return new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+    }
+
+    /**
+     * Raw: the /sql endpoint only takes these raw, and the client can't parse their empty answer.
+     */
+    private function rawSql(Client $client, string $statement): void
+    {
+        try {
+            $client->sql($statement, true);
+        } catch (Exception $exception) {
+            if ('' !== $exception->getMessage()) {
+                throw $exception;
+            }
+        }
     }
 
     private function addDocuments(Table $index, OutputInterface $output): void

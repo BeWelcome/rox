@@ -3,6 +3,7 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\HostingRequest;
+use App\Entity\Member;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
@@ -217,29 +218,19 @@ class InvitationMockups implements MockupProviderInterface
 
     private function getVariablesForViewGuest(array $parameters): array
     {
-        $host = $parameters['admin'];
-        $guest = $parameters['user'];
-
-        $leg = $this->invitationUtility->getLeg($host);
-        $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
-        $form = $this->formFactory->create(ReportSpamType::class);
-
-        return [
-            'leg' => $leg,
-            'host' => $host,
-            'guest' => $guest,
-            'thread' => $thread,
-            'form' => $form->createView(),
-            'is_spam' => false,
-            'show_deleted' => false,
-        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'invitations');
+        return $this->getVariablesForView($parameters, $parameters['admin'], $parameters['user']);
     }
 
     private function getVariablesForViewHost(array $parameters): array
     {
-        $host = $parameters['user'];
-        $guest = $parameters['admin'];
+        return $this->getVariablesForView($parameters, $parameters['user'], $parameters['admin']);
+    }
 
+    /**
+     * The invitation as one of its two members sees it in the inbox (the member is $parameters['user']).
+     */
+    private function getVariablesForView(array $parameters, Member $host, Member $guest): array
+    {
         $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
         $form = $this->formFactory->create(ReportSpamType::class);

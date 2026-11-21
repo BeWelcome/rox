@@ -145,11 +145,13 @@ class HostingRequest
 
     public function setStatus(int $status): self
     {
-        if (self::REQUEST_OPEN !== $status
+        if (
+            self::REQUEST_OPEN !== $status
             && self::REQUEST_CANCELLED !== $status
             && self::REQUEST_DECLINED !== $status
             && self::REQUEST_TENTATIVELY_ACCEPTED !== $status
-            && self::REQUEST_ACCEPTED !== $status) {
+            && self::REQUEST_ACCEPTED !== $status
+        ) {
             throw new InvalidArgumentException('Request status outside of valid range. Got ' . $status . 'instead of REQUEST_OPEN (0), REQUEST_CANCELLED (1), REQUEST_DECLINED (2), REQUEST_TENTATIVELY_ACCEPTED (4) or REQUEST_ACCEPTED (8) ');
         }
 

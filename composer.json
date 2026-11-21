@@ -44,7 +44,7 @@
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpdoc-parser": "^2.3",
         "ramsey/uuid-doctrine": "2.*",
-        "sebastian/diff": "^7.0",
+        "sebastian/diff": "^9",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/asset": "8.2.*",
         "symfony/cache": "8.2.*",
@@ -92,7 +92,7 @@
         "fakerphp/faker": "^v1.14",
         "friendsofphp/php-cs-fixer": "^3.0",
         "hautelook/alice-bundle": "^2.0",
-        "infection/infection": "^0.32",
+        "infection/infection": "^0.35",
         "mockery/mockery": "^1.4.0",
         "nelmio/alice": "^3.0",
         "phpstan/extension-installer": "*",
@@ -100,13 +100,13 @@
         "phpstan/phpstan-doctrine": "*",
         "phpstan/phpstan-mockery": "^2.0",
         "phpstan/phpstan-symfony": "*",
-        "phpunit/phpunit": "^12",
+        "phpunit/phpunit": "^13",
         "rector/rector": "^2.1",
-        "squizlabs/php_codesniffer": "^3.5",
+        "squizlabs/php_codesniffer": "^4",
         "symfony/browser-kit": "8.1.*",
         "symfony/css-selector": "8.1.*",
         "symfony/maker-bundle": "^1.8",
-        "systemsdk/phpcpd": "^8.2"
+        "systemsdk/phpcpd": "^9"
     },
     "autoload": {
         "psr-4": {

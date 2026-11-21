@@ -169,7 +169,7 @@ class Address
         return $this;
     }
 
-    public function IsWheelChairAccessible(): ?bool
+    public function isWheelChairAccessible(): ?bool
     {
         return $this->isWheelChairAccessible;
     }

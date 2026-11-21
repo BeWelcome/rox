@@ -37,7 +37,7 @@ class VolunteerToolReportsTest extends WebTestCase
     {
         [$spammer, $receiver] = $this->members(2);
         $this->send($spammer, $receiver, 3);
-        $this->setStatus($spammer, MemberStatusType::BANNED);
+        $this->setMemberStatus($spammer, MemberStatusType::BANNED);
 
         $this->open('/admin/tools/topspammer');
 
@@ -48,8 +48,8 @@ class VolunteerToolReportsTest extends WebTestCase
     {
         [$spammer, $receiver] = $this->members(2);
         $this->send($spammer, $receiver, 1);
-        $this->setStatus($spammer, MemberStatusType::REJECTED);
-        $this->setStatus($receiver, MemberStatusType::TAKEN_OUT);
+        $this->setMemberStatus($spammer, MemberStatusType::REJECTED);
+        $this->setMemberStatus($receiver, MemberStatusType::TAKEN_OUT);
 
         $this->open('/admin/tools/damagedone');
 
@@ -62,9 +62,9 @@ class VolunteerToolReportsTest extends WebTestCase
         [$older, $newer, $newest, $left] = $this->members(4);
         foreach ([$older, $newer, $newest] as $spammer) {
             $this->send($spammer, $left, 1);
-            $this->setStatus($spammer, MemberStatusType::BANNED);
+            $this->setMemberStatus($spammer, MemberStatusType::BANNED);
         }
-        $this->setStatus($left, MemberStatusType::ASKED_TO_LEAVE);
+        $this->setMemberStatus($left, MemberStatusType::ASKED_TO_LEAVE);
         foreach ([[$older, '+1 day'], [$newer, '+2 days'], [$newest, '+3 days']] as [$spammer, $when]) {
             $this->connection->executeStatement('UPDATE member SET updated = ? WHERE id = ?', [new DateTime($when)->format('Y-m-d H:i:s'), $spammer->getId()]);
         }
@@ -214,7 +214,7 @@ class VolunteerToolReportsTest extends WebTestCase
         $this->entityManager->flush();
     }
 
-    private function setStatus(Member $member, string $status): void
+    private function setMemberStatus(Member $member, string $status): void
     {
         $this->connection->executeStatement(
             'UPDATE member SET Status = ?, updated = NOW() WHERE id = ?',

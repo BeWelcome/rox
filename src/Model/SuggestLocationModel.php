@@ -7,6 +7,7 @@ use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 use Manticoresearch\Client;
+use Manticoresearch\Query as ManticoreQuery;
 use Manticoresearch\Query\BoolQuery;
 use Manticoresearch\Query\Equals;
 use Manticoresearch\Query\MatchPhrase;
@@ -121,6 +122,45 @@ class SuggestLocationModel
      */
     private function getPlacesExact(array $parts, int $limit, ?string $translationId = null): array
     {
+        return $this->searchPlaces($parts, $limit, new MatchPhrase($parts[0], 'name'), $translationId);
+    }
+
+    private function getPlaces(array $parts, int $limit): array
+    {
+        return $this->searchPlaces($parts, $limit, new MatchQuery($parts[0] . '*', 'name'), self::PLACE);
+    }
+
+    private function searchPlaces(array $parts, int $limit, ManticoreQuery $matchQuery, ?string $translationId): array
+    {
+        $localeQuery = new BoolQuery();
+        $localeQuery->should(new Equals('locale', '_geo'));
+        $localeQuery->should(new Equals('locale', $this->translator->getLocale()));
+
+        return $this->searchLocations(
+            $parts,
+            $limit,
+            $matchQuery,
+            $localeQuery,
+            'isPlace',
+            'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3 + ' .
+            'log10(population) + log10(member_count))\')',
+            $translationId,
+        );
+    }
+
+    /**
+     * name[[, admin unit], country]: the places or admin units (isPlace, isAdmin) whose name matches, in the admin
+     * units and the country given, ranked by $ranker.
+     */
+    private function searchLocations(
+        array $parts,
+        int $limit,
+        ManticoreQuery $matchQuery,
+        BoolQuery $localeQuery,
+        string $kind,
+        string $ranker,
+        ?string $translationId,
+    ): array {
         $countryId = '';
         $adminUnits = [];
         if (1 < \count($parts)) {
@@ -130,15 +170,6 @@ class SuggestLocationModel
             $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
         }
 
-        $query = $this->getQueryForGeonamesRt();
-        $matchQuery = new MatchPhrase($parts[0], 'name');
-
-        $locale = $this->translator->getLocale();
-
-        $localeQuery = new BoolQuery();
-        $localeQuery->should(new Equals('locale', '_geo'));
-
-        $localeQuery->should(new Equals('locale', $locale));
         $filterElements = ['country', 'admin1', 'admin2', 'admin3', 'admin4'];
         $adminUnitFilterQuery = new BoolQuery();
         foreach ($adminUnits as $adminUnit) {
@@ -157,14 +188,11 @@ class SuggestLocationModel
             $boolQuery->must($adminUnitFilterQuery);
         }
 
+        $query = $this->getQueryForGeonamesRt();
         $query
             ->search($boolQuery)
-            ->filter('isPlace', 'equals', 1)
-            ->option(
-                'ranker',
-                'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3 + ' .
-                'log10(population) + log10(member_count)) \')'
-            )
+            ->filter($kind, 'equals', 1)
+            ->option('ranker', $ranker)
         ;
         if (!empty($countryId)) {
             $query->filter('country', 'equals', $countryId);
@@ -174,104 +202,17 @@ class SuggestLocationModel
         return $this->getLocationDetails($results, $translationId);
     }
 
-    private function getPlaces(array $parts, int $limit): array
-    {
-        $countryId = '';
-        $adminUnits = [];
-        if (1 < \count($parts)) {
-            $countryOrAdminUnit = end($parts);
-            $countryId = $this->getCountryId($countryOrAdminUnit);
-
-            $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
-        }
-
-        $query = $this->getQueryForGeonamesRt();
-        $matchQuery = new MatchQuery($parts[0] . '*', 'name');
-        $localeQuery = new BoolQuery();
-        $localeQuery->should(new Equals('locale', '_geo'));
-        $localeQuery->should(new Equals('locale', $this->translator->getLocale()));
-        $filterElements = ['country', 'admin1', 'admin2', 'admin3', 'admin4'];
-        $adminUnitFilterQuery = new BoolQuery();
-        foreach ($adminUnits as $adminUnit) {
-            $adminUnitFilter = new BoolQuery();
-            foreach ($filterElements as $filterElement) {
-                if (!empty($adminUnit[$filterElement])) {
-                    $adminUnitFilter->must(new Equals($filterElement, $adminUnit[$filterElement]));
-                }
-            }
-            $adminUnitFilterQuery->should($adminUnitFilter);
-        }
-        $boolQuery = new BoolQuery();
-        $boolQuery->must($matchQuery);
-        $boolQuery->must($localeQuery);
-        if (!empty($adminUnits)) {
-            $boolQuery->must($adminUnitFilterQuery);
-        }
-
-        $query
-            ->search($boolQuery)
-            ->filter('isPlace', 'equals', 1)
-            ->option(
-                'ranker',
-                'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3 + ' .
-                        'log10(population) + log10(member_count))\')'
-            )
-        ;
-        if (!empty($countryId)) {
-            $query->filter('country', 'equals', $countryId);
-        }
-        $results = $this->getManticoreResults($query, $limit);
-
-        return $this->getLocationDetails($results, self::PLACE);
-    }
-
     private function getAdminUnits(array $parts, int $limit = 10): array
     {
-        $countryId = '';
-        $adminUnits = [];
-        if (1 < \count($parts)) {
-            $countryOrAdminUnit = end($parts);
-            $countryId = $this->getCountryId($countryOrAdminUnit);
-
-            $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
-        }
-
-        $query = $this->getQueryForGeonamesRt();
-        $matchQuery = new MatchQuery($parts[0] . '*', 'name');
-        $localeQuery = $this->getLocaleQuery();
-
-        $filterElements = ['country', 'admin1', 'admin2', 'admin3', 'admin4'];
-        $adminUnitFilterQuery = new BoolQuery();
-        foreach ($adminUnits as $adminUnit) {
-            $adminUnitFilter = new BoolQuery();
-            foreach ($filterElements as $filterElement) {
-                if (!empty($adminUnit[$filterElement])) {
-                    $adminUnitFilter->must(new Equals($filterElement, $adminUnit[$filterElement]));
-                }
-            }
-            $adminUnitFilterQuery->should($adminUnitFilter);
-        }
-        $boolQuery = new BoolQuery();
-        $boolQuery->must($matchQuery);
-        $boolQuery->must($localeQuery);
-        if (!empty($adminUnits)) {
-            $boolQuery->must($adminUnitFilterQuery);
-        }
-
-        $query
-            ->search($boolQuery)
-            ->filter('isAdmin', 'equals', 1)
-            ->option(
-                'ranker',
-                'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3)\')'
-            )
-        ;
-        if (!empty($countryId)) {
-            $query->filter('country', 'equals', $countryId);
-        }
-        $results = $this->getManticoreResults($query, $limit);
-
-        return $this->getLocationDetails($results, self::ADMIN_UNIT);
+        return $this->searchLocations(
+            $parts,
+            $limit,
+            new MatchQuery($parts[0] . '*', 'name'),
+            $this->getLocaleQuery(),
+            'isAdmin',
+            'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3)\')',
+            self::ADMIN_UNIT,
+        );
     }
 
     private function getCountries(array $parts, int $limit = 3): array

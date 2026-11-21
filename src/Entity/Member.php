@@ -1090,20 +1090,22 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function isBrowsable(): bool
     {
-        if (\in_array(
-            $this->status,
-            [
-                MemberStatusType::TAKEN_OUT,
-                MemberStatusType::SUSPENDED,
-                MemberStatusType::ASKED_TO_LEAVE,
-                MemberStatusType::BUGGY,
-                MemberStatusType::BANNED,
-                MemberStatusType::REJECTED,
-                MemberStatusType::PASSED_AWAY,
-                MemberStatusType::DUPLICATE_SIGNED,
-            ],
-            true
-        )) {
+        if (
+            \in_array(
+                $this->status,
+                [
+                    MemberStatusType::TAKEN_OUT,
+                    MemberStatusType::SUSPENDED,
+                    MemberStatusType::ASKED_TO_LEAVE,
+                    MemberStatusType::BUGGY,
+                    MemberStatusType::BANNED,
+                    MemberStatusType::REJECTED,
+                    MemberStatusType::PASSED_AWAY,
+                    MemberStatusType::DUPLICATE_SIGNED,
+                ],
+                true
+            )
+        ) {
             return false;
         }
 

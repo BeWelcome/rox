@@ -328,7 +328,7 @@ class BrowserNotificationServiceTest extends TestCase
         $repository = $this->createMock(EntityRepository::class);
         $repository->expects($this->once())->method('findBy')->willReturn($subscriptions);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')
+        $entityManager->expects($this->atLeastOnce())->method('getRepository')
             ->with(BrowserPushSubscription::class)
             ->willReturn($repository)
         ;

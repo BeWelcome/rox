@@ -620,9 +620,11 @@ class ForumPost
     public function getMessageTranslations(): array
     {
         $languages = [];
-        foreach ($this->objectManager->getRepository(Language::class)->findBy(['shortCode' => $this->getTranslations()->map(
-            static fn (ForumPostTranslation $translation) => $translation->getLocale()
-        )->toArray()]) as $language) {
+        foreach (
+            $this->objectManager->getRepository(Language::class)->findBy(['shortCode' => $this->getTranslations()->map(
+                static fn (ForumPostTranslation $translation) => $translation->getLocale()
+            )->toArray()]) as $language
+        ) {
             $languages[$language->getShortCode()] = $language;
         }
 

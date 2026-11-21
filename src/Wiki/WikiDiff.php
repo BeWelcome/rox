@@ -3,7 +3,7 @@
 namespace App\Wiki;
 
 use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use SebastianBergmann\Diff\Output\DiffOnlyOutputBuilder;
 
 /**
  * The lines one version of a page changed from the one before. Runs of more than five unchanged lines collapse to
@@ -31,7 +31,8 @@ final readonly class WikiDiff
 
     public static function between(string $old, string $new): self
     {
-        $differ = new Differ(new UnifiedDiffOutputBuilder());
+        // only diffToArray() is used: the output builder makes no difference
+        $differ = new Differ(new DiffOnlyOutputBuilder());
         $lines = $differ->diffToArray(self::lines($old), self::lines($new));
 
         $rows = [];

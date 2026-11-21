@@ -44,7 +44,7 @@ class CheckerModelTest extends TestCase
         $messageRepository = $this->createStub(EntityRepository::class);
         $messageRepository->method('findBy')->willReturn([$message]);
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->with(Message::class)->willReturn($messageRepository);
+        $entityManager->expects(self::atLeastOnce())->method('getRepository')->with(Message::class)->willReturn($messageRepository);
         $entityManager->expects(self::once())->method('persist')->with($message);
         $entityManager->expects(self::once())->method('flush');
 

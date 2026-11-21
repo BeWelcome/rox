@@ -39,6 +39,42 @@ class FeedbackTest extends WebTestCase
     }
 
     /**
+     * A visitor proves to be human with the captcha: the form shows its image, a wrong code keeps the form with an error
+     * and sends nothing, the code from the image sends the feedback.
+     */
+    public function testAVisitorSendsFeedbackWithTheCaptcha(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $category = $entityManager->getRepository(FeedbackCategory::class)->findOneBy(['visible' => 1]);
+        $fields = [
+            'IdCategory' => $category->getId(),
+            'FeedbackQuestion' => '<p>zztest visitor feedback</p>',
+            'FeedbackEmail' => 'visitor@example.com',
+        ];
+
+        $crawler = $client->request('GET', '/feedback');
+        $image = $crawler->filter('img[src^="data:image/jpeg;base64,"]');
+        self::assertCount(1, $image);
+        $data = base64_decode(substr((string) $image->attr('src'), \strlen('data:image/jpeg;base64,')), true);
+        self::assertNotFalse(@imagecreatefromstring((string) $data), 'the captcha is a readable image');
+
+        $client->submit($crawler->filter('form')->form(), ['captcha' => 'wrong'] + $fields);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('form [name="captcha"]');
+        $this->assertEmailCount(0);
+
+        $crawler = $client->request('GET', '/feedback');
+        $phrase = $client->getRequest()->getSession()->get('_captcha_captcha')['phrase'];
+        $client->submit($crawler->filter('form')->form(), ['captcha' => $phrase] + $fields);
+
+        $this->assertResponseRedirects('/feedback/received');
+        $this->assertEmailCount(1);
+        $this->assertEmailHtmlBodyContains($this->getMailerMessage(), 'zztest visitor feedback');
+    }
+
+    /**
      * A safety report shows the note under the topic instead of a dialog (it shows for that topic only, about/contact.js
      * keeps it in step with the choice); coming from a message, a dialog offers to report that message.
      */

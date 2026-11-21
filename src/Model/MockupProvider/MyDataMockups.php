@@ -7,7 +7,6 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
-use App\Entity\BroadcastMessage;
 use App\Entity\Comment;
 use App\Entity\CommunityNews;
 use App\Entity\Donation;
@@ -19,6 +18,7 @@ use App\Entity\Location;
 use App\Entity\Log;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
@@ -277,7 +277,7 @@ class MyDataMockups implements MockupProviderInterface
                 $mockEntity->setDescription('Activity description');
                 break;
             case 'broadcasts':
-                $mockEntity = new BroadcastMessage()
+                $mockEntity = new NewsletterRecipient()
                     ->setNewsletter($this->newsletter())
                     ->setUpdated(new Carbon());
                 break;

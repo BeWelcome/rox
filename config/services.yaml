@@ -185,7 +185,7 @@ services:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
         arguments:
-            $className: 'App\Entity\BroadcastMessage'
+            $className: 'App\Entity\NewsletterRecipient'
             $memberRelationName: receiver
             $alias: broadcasts
         tags: [ 'app.member_data_extractor' ]

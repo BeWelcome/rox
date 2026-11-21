@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,9 +18,9 @@ class SubscriptionModel
     public function unsubscribeNewsletter(string $username, string $unsubscribeKey): bool
     {
         $entityManager = $this->entityManager;
-        $broadcastRepository = $entityManager->getRepository(BroadcastMessage::class);
+        $broadcastRepository = $entityManager->getRepository(NewsletterRecipient::class);
         $memberRepository = $entityManager->getRepository(Member::class);
-        /** @var BroadcastMessage $broadcast */
+        /** @var NewsletterRecipient $broadcast */
         $broadcast = $broadcastRepository->findOneBy(['unsubscribeKey' => $unsubscribeKey]);
         if (null === $broadcast) {
             return false;

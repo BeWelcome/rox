@@ -2,6 +2,7 @@
 
 namespace App\Tests\Command;
 
+use App\Command\MembersSuspendCommand;
 use App\Doctrine\MemberStatusType;
 use App\Entity\ForumThread;
 use DateTime;
@@ -188,6 +189,56 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
 
         self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-4')['Status'], 'has comments');
         self::assertSame(MemberStatusType::ASKED_TO_LEAVE, $this->member('member-6')['Status'], 'no comments');
+    }
+
+    /**
+     * The reminder and the suspension share a lock: while one is at work, a run of either ends at once and changes
+     * nothing; the next run does the work.
+     */
+    public function testTheReminderAndTheSuspensionWaitForTheRunAtWork(): void
+    {
+        $this->setMember('member-4', MemberStatusType::ACTIVE, lastActive: '-2 years', updated: '-2 years');
+        $this->setMember('member-6', MemberStatusType::OUT_OF_REMIND, lastActive: '-6 years', updated: '-1 year -1 day');
+        $this->removeComments('member-6', received: true, written: true);
+        $runAtWork = static::getContainer()->get(LockFactory::class)->createLock(MembersSuspendCommand::LOCK, null);
+        self::assertTrue($runAtWork->acquire());
+
+        try {
+            self::assertStringContainsString('is at work', $this->execute('members:remind:login'));
+            self::assertStringContainsString('is at work', $this->execute('members:suspend:notification'));
+
+            self::assertSame(MemberStatusType::ACTIVE, $this->member('member-4')['Status']);
+            self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-6')['Status']);
+            self::assertCount(0, $this->mailsTo('member-4'));
+        } finally {
+            $runAtWork->release();
+        }
+
+        $this->execute('members:remind:login');
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-6')['Status']);
+    }
+
+    /**
+     * A member due for the suspension isn't reminded again (that would put the suspension off by a year); a member
+     * with comments, never suspended, gets the yearly reminder.
+     */
+    public function testAMemberDueForTheSuspensionIsntRemindedAgain(): void
+    {
+        foreach (['member-4', 'member-6'] as $username) {
+            $this->setMember($username, MemberStatusType::OUT_OF_REMIND, lastActive: '-6 years', updated: '-1 year -1 day');
+        }
+        $this->removeComments('member-6', received: true, written: true);
+
+        $this->execute('members:remind:login');
+
+        self::assertCount(1, $this->mailsTo('member-4'), 'has comments: reminded');
+        self::assertCount(0, $this->mailsTo('member-6'), 'due for the suspension: not reminded');
+
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-6')['Status']);
     }
 
     public function testSignupsNotFinishedWithinTwoWeeksAreRemoved(): void

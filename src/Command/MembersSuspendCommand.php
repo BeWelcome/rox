@@ -14,11 +14,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Lock\LockFactory;
 
 /**
  * Members who didn't come back for five years despite the reminders are suspended, a year after the last reminder at
  * the earliest, and told that their account will be deleted in two months. Two months after the suspension the data
- * retention takes them. Members who got or wrote a comment aren't suspended. Run it daily.
+ * retention takes them. Members who got or wrote a comment aren't suspended. The cron runs it several times a day
+ * (member_batch_size members a run); it shares a lock with members:remind:login, so only one of the two runs at a time.
  */
 #[AsCommand(
     name: 'members:suspend:notification',
@@ -29,12 +31,16 @@ class MembersSuspendCommand extends Command
     /** Marks the members as suspended after the reminders (instead of counting them). */
     public const int REMINDERS_SUSPENDED = 100;
 
+    /** Taken by this command and members:remind:login: one of the two runs at a time. */
+    public const string LOCK = 'members:lifecycle';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MemberRepository $memberRepository,
         private readonly Mailer $mailer,
         #[Autowire('%member_batch_size%')]
         private readonly int $batchSize,
+        private readonly LockFactory $lockFactory,
     ) {
         parent::__construct();
     }
@@ -54,6 +60,24 @@ class MembersSuspendCommand extends Command
             return Command::FAILURE;
         }
 
+        // one of the two at a time: they both change the members waiting for a reminder (OutOfRemind)
+        $lock = $this->lockFactory->createLock(self::LOCK, null);
+        if (!$lock->acquire()) {
+            $io->note('members:remind:login or members:suspend:notification is at work; this run ends.');
+
+            return Command::SUCCESS;
+        }
+        try {
+            $this->suspend($io, $batchSize);
+        } finally {
+            $lock->release();
+        }
+
+        return Command::SUCCESS;
+    }
+
+    private function suspend(SymfonyStyle $io, int $batchSize): void
+    {
         // the ones suspended in earlier runs first, so that a member suspended now gets the two months
         $scheduled = $this->memberRepository->scheduleSuspendedMembersForDeletion();
 
@@ -70,7 +94,5 @@ class MembersSuspendCommand extends Command
 
         $io->success(\sprintf('Suspended %d members.', \count($members)));
         $io->success(\sprintf('Scheduled %d members for deletion by data:retention.', $scheduled));
-
-        return Command::SUCCESS;
     }
 }

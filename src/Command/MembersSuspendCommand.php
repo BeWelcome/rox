@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 /**
  * Members who didn't come back for five years despite the reminders are suspended, a year after the last reminder at
  * the earliest, and told that their account will be deleted in two months. Two months after the suspension the data
- * retention takes them. Run it daily.
+ * retention takes them. Members who got or wrote a comment aren't suspended. Run it daily.
  */
 #[AsCommand(
     name: 'members:suspend:notification',

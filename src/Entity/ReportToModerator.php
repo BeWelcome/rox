@@ -9,6 +9,9 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * main's reports to the forum moderators (`reports_to_moderators`), kept while main uses the table. develop reads
+ * and writes App\Entity\ModeratorReport (`moderator_report`), filled from this table by Version20261121100000.
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")

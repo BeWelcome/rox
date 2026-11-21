@@ -9,7 +9,7 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
-use App\Entity\ReportToModerator;
+use App\Entity\ModeratorReport;
 use App\Model\ForumModerationModel;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -86,7 +86,7 @@ class ForumThreadRepository extends EntityRepository
     {
         return match ($filter) {
             'reported' => $queryBuilder
-                ->andWhere('t.id IN (SELECT rr.thread FROM ' . ReportToModerator::class . ' rr WHERE rr.status IN (:openReports))')
+                ->andWhere('t.id IN (SELECT rr.thread FROM ' . ModeratorReport::class . ' rr WHERE rr.status IN (:openReports))')
                 ->setParameter('openReports', ForumModerationModel::OPEN_STATUSES),
             'hidden' => $queryBuilder
                 ->andWhere('t.visibility IN (:restricted) OR t.expiryDate IS NOT NULL OR t.deleted = :deletedThread')

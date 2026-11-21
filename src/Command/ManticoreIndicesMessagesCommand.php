@@ -18,7 +18,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Builds the message search index (message_rt) from scratch. New messages are added as they are written
- * (MessageSearchIndexListener).
+ * (MessageSearchIndexListener), also while this runs: the documents are replaced, not inserted, so a message the
+ * listener indexed first doesn't stop the build with a duplicate id. The deploy builds it on the live site.
  */
 #[AsCommand(
     name: 'manticore:indices:messages',
@@ -123,7 +124,7 @@ class ManticoreIndicesMessagesCommand extends Command
 
         $afterId = 0;
         while ([] !== $documents = $repository->getSearchIndexDocuments($afterId, self::CHUNK_SIZE)) {
-            $index->addDocuments($documents);
+            $index->replaceDocuments($documents);
             $afterId = end($documents)['id'];
             $progressBar->advance(\count($documents));
 

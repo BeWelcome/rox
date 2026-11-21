@@ -14,7 +14,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * The message index gets all messages without Manticore's auto-optimize, then its disk chunks are merged once, and
- * auto-optimize is on again afterwards, also when the insert fails.
+ * auto-optimize is on again afterwards, also when the insert fails. The documents are replaced, not inserted: on the
+ * live site the listener may have indexed a message before the build gets to it.
  */
 class ManticoreIndicesMessagesCommandTest extends TestCase
 {
@@ -30,8 +31,8 @@ class ManticoreIndicesMessagesCommandTest extends TestCase
             "SHOW TABLES LIKE 'message_rt'",
             'create',
             'SET GLOBAL auto_optimize=0',
-            'add 2',
-            'add 1',
+            'replace 2',
+            'replace 1',
             'OPTIMIZE TABLE message_rt OPTION cutoff=1, sync=1',
             'SET GLOBAL auto_optimize=1',
         ], $this->calls);
@@ -60,11 +61,11 @@ class ManticoreIndicesMessagesCommandTest extends TestCase
 
             return [];
         });
-        $table->method('addDocuments')->willReturnCallback(static function (array $documents) use (&$calls, $fail) {
+        $table->method('replaceDocuments')->willReturnCallback(static function (array $documents) use (&$calls, $fail) {
             if ($fail) {
                 throw new RuntimeException('Manticore closed the connection');
             }
-            $calls[] = 'add ' . \count($documents);
+            $calls[] = 'replace ' . \count($documents);
 
             return [];
         });

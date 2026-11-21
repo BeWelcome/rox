@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Command\MembersSuspendCommand;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Comment;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
 use DateInterval;
@@ -32,6 +34,9 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public const int DIRECTION_ASCENDING = 1;
     public const int DIRECTION_DESCENDING = 2;
+
+    /** How many suspended members one UPDATE hands over to the data retention (by id: it locks only those rows). */
+    public const int SCHEDULE_CHUNK_SIZE = 1000;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -221,7 +226,9 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
     }
 
     /**
-     * Reminded members who haven't been active for five years despite the reminders.
+     * Reminded members who haven't been active for five years despite the reminders. The last reminder (members:
+     * remind:login sets updated) is at least a year old: a member gets a year after a reminder to come back.
+     * Members who wrote or got a comment are part of the community's references and aren't suspended.
      *
      * @return list<Member>
      */
@@ -232,8 +239,12 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         return $this->createQueryBuilder('m')
             ->where('m.status = :outOfRemind')
             ->andWhere('m.lastActive <= :fiveYearsAgo OR (m.lastActive IS NULL AND m.created <= :fiveYearsAgo)')
+            ->andWhere('m.updated <= :yearAgo')
+            ->andWhere('NOT EXISTS (SELECT received.id FROM ' . Comment::class . ' received WHERE received.toMember = m)')
+            ->andWhere('NOT EXISTS (SELECT written.id FROM ' . Comment::class . ' written WHERE written.fromMember = m)')
             ->setParameter('outOfRemind', MemberStatusType::OUT_OF_REMIND)
             ->setParameter('fiveYearsAgo', $fiveYearsAgo)
+            ->setParameter('yearAgo', new DateTime('-1 year'))
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -264,25 +275,52 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
     }
 
     /**
-     * Hands the members suspended more than two months ago over to the data retention: they left a year ago as
-     * far as it is concerned.
+     * Hands suspended members over to the data retention (they left a year ago as far as it is concerned): those
+     * members:suspend:notification suspended (marked in Reminders) two months after their suspension, as its notice
+     * told them; those suspended otherwise, by the volunteers, a year after it, when they didn't get in touch.
+     * Members who got or wrote a comment stay suspended: they're part of the community's references.
+     *
+     * Two steps, so that the site keeps writing members meanwhile: the members are found by a plain read (finding
+     * them reads the whole table, and an UPDATE doing that would lock every row it reads, blocking every login), then
+     * changed by id, a chunk at a time, which locks only those rows. A member unsuspended in between stays as is.
      *
      * @return int the number of members
      */
     public function scheduleSuspendedMembersForDeletion(): int
     {
-        return $this->createQueryBuilder('m')
-            ->update()
-            ->set('m.status', ':askedToLeave')
-            ->set('m.lastActive', ':yearAgo')
+        $ids = $this->createQueryBuilder('m')
+            ->select('m.id')
             ->where('m.status = :suspended')
-            ->andWhere('m.updated < :twoMonthsAgo')
-            ->setParameter('askedToLeave', MemberStatusType::ASKED_TO_LEAVE)
-            ->setParameter('yearAgo', new DateTime('-1 year -1 day'))
+            ->andWhere(
+                '(m.remindersWithOutLogin = :suspendedAfterReminders AND m.updated < :twoMonthsAgo)'
+                . ' OR (m.remindersWithOutLogin <> :suspendedAfterReminders AND m.updated < :oneYearAgo)'
+            )
+            ->andWhere('NOT EXISTS (SELECT received.id FROM ' . Comment::class . ' received WHERE received.toMember = m)')
+            ->andWhere('NOT EXISTS (SELECT written.id FROM ' . Comment::class . ' written WHERE written.fromMember = m)')
             ->setParameter('suspended', MemberStatusType::SUSPENDED)
+            ->setParameter('suspendedAfterReminders', MembersSuspendCommand::REMINDERS_SUSPENDED)
             ->setParameter('twoMonthsAgo', new DateTime('-2 months'))
+            ->setParameter('oneYearAgo', new DateTime('-1 year'))
             ->getQuery()
-            ->execute();
+            ->getSingleColumnResult();
+
+        $scheduled = 0;
+        foreach (array_chunk($ids, self::SCHEDULE_CHUNK_SIZE) as $chunk) {
+            $scheduled += $this->createQueryBuilder('m')
+                ->update()
+                ->set('m.status', ':askedToLeave')
+                ->set('m.lastActive', ':yearAgo')
+                ->where('m.id IN (:ids)')
+                ->andWhere('m.status = :suspended')
+                ->setParameter('askedToLeave', MemberStatusType::ASKED_TO_LEAVE)
+                ->setParameter('yearAgo', new DateTime('-1 year -1 day'))
+                ->setParameter('ids', $chunk)
+                ->setParameter('suspended', MemberStatusType::SUSPENDED)
+                ->getQuery()
+                ->execute();
+        }
+
+        return $scheduled;
     }
 
     public function applySearchFilters(QueryBuilder $qb, SearchFormRequest $searchRequest): void

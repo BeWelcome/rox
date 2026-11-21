@@ -184,7 +184,7 @@
           <div class="p-pro-field">
             <h3 class="p-pro-field__label">{{ 'profile.house.rules'|trans({}, 'messages', profile_language)|raw }}</h3>
             <div class="p-pro-field__text">
-              {% for restriction in restrictions %}{{ ('restriction_' ~ restriction)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
+              {% for restriction in restrictions %}{{ ('restriction.' ~ restriction)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
               {% if houseRules|length > 0 %}{{ houseRules|purify|nl2br }}{% endif %}
             </div>
           </div>

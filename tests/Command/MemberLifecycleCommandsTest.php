@@ -50,7 +50,11 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
     public function testMembersAwayForFiveYearsAreSuspendedAndLaterHandedToTheRetention(): void
     {
         $this->setMember('member-4', MemberStatusType::OUT_OF_REMIND, lastActive: '-6 years', updated: '-1 year');
+        $this->removeComments('member-4', received: true, written: true);
         $this->setMember('member-5', MemberStatusType::SUSPENDED, lastActive: '-6 years', updated: '-3 months');
+        // suspended by this command (its marker), not by the volunteers
+        $this->connection->executeStatement("UPDATE member SET Reminders = 100 WHERE Username = 'member-5'");
+        $this->removeComments('member-5', received: true, written: true);
 
         $this->execute('members:suspend:notification');
 
@@ -93,6 +97,97 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
             'SELECT Username FROM member WHERE id = ?',
             [$memberId],
         ));
+    }
+
+    /**
+     * The first reminder doesn't lead to the suspension the next night: the member gets a year to come back.
+     */
+    public function testAMemberAwayForFiveYearsIsSuspendedAYearAfterTheReminder(): void
+    {
+        $this->setMember('member-4', MemberStatusType::ACTIVE, lastActive: '-6 years', updated: '-6 years');
+        $this->removeComments('member-4', received: true, written: true);
+
+        $this->execute('members:remind:login');
+        $this->execute('members:suspend:notification');
+
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+        self::assertSame(
+            ['email.login.reminder.subject'],
+            array_map(static fn (Email $mail): ?string => $mail->getSubject(), $this->mailsTo('member-4')),
+            'the reminder, no suspension notice',
+        );
+
+        // eleven months after the reminder: still waiting
+        $this->connection->executeStatement(
+            "UPDATE member SET updated = ? WHERE Username = 'member-4'",
+            [new DateTime('-11 months')->format('Y-m-d H:i:s')],
+        );
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status']);
+
+        // a year after the reminder
+        $this->connection->executeStatement(
+            "UPDATE member SET updated = ? WHERE Username = 'member-4'",
+            [new DateTime('-1 year -1 day')->format('Y-m-d H:i:s')],
+        );
+        $this->execute('members:suspend:notification');
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-4')['Status']);
+    }
+
+    /**
+     * Members the volunteers suspended (no marker) are handed to the retention a year after the suspension, when they
+     * didn't get in touch; not two months after it, like those suspended after the reminders.
+     */
+    public function testMembersSuspendedByTheVolunteersLeaveAYearAfterTheSuspension(): void
+    {
+        $this->setMember('member-4', MemberStatusType::SUSPENDED, lastActive: '-1 month', updated: '-3 months');
+        $this->setMember('member-5', MemberStatusType::SUSPENDED, lastActive: '-2 years', updated: '-13 months');
+        $this->removeComments('member-5', received: true, written: true);
+
+        $this->execute('members:suspend:notification');
+
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-4')['Status']);
+        self::assertSame(MemberStatusType::ASKED_TO_LEAVE, $this->member('member-5')['Status']);
+        self::assertCount(0, $this->mailsTo('member-4'));
+        self::assertCount(0, $this->mailsTo('member-5'));
+    }
+
+    /**
+     * Members who got or wrote a comment are part of the references and aren't suspended, however long they're away.
+     */
+    public function testMembersWithACommentArentSuspended(): void
+    {
+        foreach (['member-4', 'member-5', 'member-6'] as $username) {
+            $this->setMember($username, MemberStatusType::OUT_OF_REMIND, lastActive: '-6 years', updated: '-1 year -1 day');
+        }
+        $this->removeComments('member-4', received: false, written: true);
+        $this->removeComments('member-5', received: true, written: false);
+        $this->removeComments('member-6', received: true, written: true);
+
+        $this->execute('members:suspend:notification');
+
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-4')['Status'], 'got a comment');
+        self::assertSame(MemberStatusType::OUT_OF_REMIND, $this->member('member-5')['Status'], 'wrote a comment');
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-6')['Status'], 'no comments');
+        self::assertCount(0, $this->mailsTo('member-4'));
+        self::assertCount(1, $this->mailsTo('member-6'));
+    }
+
+    /**
+     * Suspended members who got or wrote a comment stay suspended; the retention doesn't take them.
+     */
+    public function testSuspendedMembersWithACommentStaySuspended(): void
+    {
+        foreach (['member-4', 'member-6'] as $username) {
+            $this->setMember($username, MemberStatusType::SUSPENDED, lastActive: '-6 years', updated: '-3 months');
+            $this->connection->executeStatement('UPDATE member SET Reminders = 100 WHERE Username = ?', [$username]);
+        }
+        $this->removeComments('member-6', received: true, written: true);
+
+        $this->execute('members:suspend:notification');
+
+        self::assertSame(MemberStatusType::SUSPENDED, $this->member('member-4')['Status'], 'has comments');
+        self::assertSame(MemberStatusType::ASKED_TO_LEAVE, $this->member('member-6')['Status'], 'no comments');
     }
 
     public function testSignupsNotFinishedWithinTwoWeeksAreRemoved(): void
@@ -311,6 +406,17 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
     private function rows(string $from, array $parameters): int
     {
         return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM ' . $from, $parameters);
+    }
+
+    private function removeComments(string $username, bool $received, bool $written): void
+    {
+        $id = (int) $this->member($username)['id'];
+        if ($received) {
+            $this->connection->executeStatement('DELETE FROM comment WHERE to_member_id = ?', [$id]);
+        }
+        if ($written) {
+            $this->connection->executeStatement('DELETE FROM comment WHERE from_member_id = ?', [$id]);
+        }
     }
 
     private function setMember(

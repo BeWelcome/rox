@@ -61,6 +61,22 @@ class TripLegsTest extends WebTestCase
         self::assertSame(2, $this->visibleLegs());
     }
 
+    public function testAStopWithoutOptionAsksForOneAboveItsOptions(): void
+    {
+        $values = $this->editValues();
+        $first = array_key_first($values['trip']['legs']);
+        unset($values['trip']['legs'][$first]['options']);
+
+        $crawler = $this->client->request('POST', '/trip/' . $this->trip . '/edit', $values);
+
+        self::assertFalse($this->client->getResponse()->isRedirection(), 'a stop without an option was saved');
+        $stop = $crawler->filter('.p-trips-stop')->first();
+        // its own message (not the validator's "should not be blank"), once, right above the options
+        $errors = $stop->filter('.p-trips-stop__errors');
+        self::assertSame(1, substr_count($errors->text(), 'trip.error.no.options'));
+        self::assertCount(1, $stop->filter('.p-trips-stop__errors + .p-trips-stop__options'));
+    }
+
     public function testALegWithoutInvitationsIsDeleted(): void
     {
         $this->connection()->executeStatement('UPDATE request SET invite_for_leg = NULL WHERE invite_for_leg = ?', [$this->legs[1]]);

@@ -84,15 +84,15 @@ class GalleryImageFiles
         }
 
         try {
-            $image = new ImageManager(new Driver())->read($original)->orient();
+            $image = new ImageManager(new Driver())->decodePath($original)->orient();
             if ($square) {
                 $image->cover($bound, $bound);
             } else {
                 $image->scaleDown($bound, $bound);
             }
             $encoded = \in_array($info['mime'], ['image/jpeg', 'image/webp'], true)
-                ? $image->encodeByMediaType($info['mime'], quality: 85)
-                : $image->encodeByMediaType($info['mime']);
+                ? $image->encodeUsingMediaType($info['mime'], quality: 85)
+                : $image->encodeUsingMediaType($info['mime']);
 
             return false !== file_put_contents($copy, (string) $encoded);
         } catch (Throwable) {

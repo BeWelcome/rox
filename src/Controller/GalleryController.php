@@ -149,7 +149,7 @@ class GalleryController extends AbstractController
 
         // creates a thumbnail for the current image
         $imageManager = new ImageManager(new Driver());
-        $img = $imageManager->read($image->getRealPath())->orient();
+        $img = $imageManager->decodePath($image->getRealPath())->orient();
         if ($width > 240 || $height > 240) {
             $img->scale(width: 240);
         }
@@ -373,7 +373,7 @@ class GalleryController extends AbstractController
             // create image!
             $imageManager = new ImageManager(new Driver());
             $imageManager
-                ->create($image->getWidth(), $image->getHeight())->fill('#ccc')
+                ->createImage($image->getWidth(), $image->getHeight())->fill('#ccc')
                 ->save($filepath);
         }
 

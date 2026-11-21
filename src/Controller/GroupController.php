@@ -481,7 +481,7 @@ class GroupController extends AbstractController
                 $fileName
             );
             $imageManager = new ImageManager(new Driver());
-            $img = $imageManager->read($groupImageDir . '/' . $fileName);
+            $img = $imageManager->decodePath($groupImageDir . '/' . $fileName);
             $img->scale(width: 80);
             $img->save($groupImageDir . '/thumb' . $fileName);
 

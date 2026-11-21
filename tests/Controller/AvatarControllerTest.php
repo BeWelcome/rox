@@ -122,6 +122,32 @@ class AvatarControllerTest extends WebTestCase
         $this->assertServedFileStartsWith($client, 'empty_avatar_');
     }
 
+    public function testAnUploadedPictureIsStoredAndServedResized(): void
+    {
+        $client = static::createClient();
+        $member = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Member::class)
+            ->findOneBy(['username' => 'member-5']);
+        $this->assertInstanceOf(Member::class, $member);
+        $this->memberId = $member->getId();
+        $this->removeAvatarFiles();
+        $client->loginUser($member);
+
+        // as the browser sends it: the cropped picture of the canvas as a data URI
+        ob_start();
+        imagepng(imagecreatetruecolor(120, 80));
+        $picture = 'data:image/png;base64,' . base64_encode((string) ob_get_clean());
+        $client->request('POST', '/members/uploadavatar', ['avatar' => $picture]);
+
+        $this->assertResponseIsSuccessful();
+        self::assertSame("\x89PNG", substr((string) file_get_contents($this->avatarFile('original')), 0, 4));
+
+        $client->request('GET', '/members/avatar/member-5/48');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertServedFileStartsWith($client, $this->memberId . '_48_48');
+        self::assertSame([48, 48], \array_slice(getimagesize($this->avatarFile('48_48')) ?: [], 0, 2));
+    }
+
     private function createAnonymousClient(): KernelBrowser
     {
         $client = static::createClient();

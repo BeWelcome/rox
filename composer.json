@@ -34,7 +34,7 @@
         "intervention/image": "^4.0",
         "jfcherng/php-levenshtein-distance": "*",
         "judev/php-htmltruncator": "^1.2",
-        "longitude-one/doctrine-spatial": "^5.0",
+        "longitude-one/doctrine-spatial": "^6.0",
         "manticoresoftware/manticoresearch-php": "^4.0",
         "minishlink/web-push": "^11.0",
         "nelmio/cors-bundle": "^2.1",

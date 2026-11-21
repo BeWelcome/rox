@@ -242,7 +242,7 @@ class InvitationController extends BaseRequestAndInvitationController
         ) {
             $this->addExpiredFlash($host);
 
-            return $this->forward(MessageController::class . ':reply', ['message' => $invitation]);
+            return $this->forward(MessageController::class . '::reply', ['message' => $invitation]);
         }
 
         [$thread] = $this->conversationModel->getThreadInformationForMessage($invitation);

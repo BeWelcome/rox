@@ -47,10 +47,13 @@
 {% set sidebar = (submenu is defined) and not embedded %}
 {% if not embedded %}{% include 'menu.html.twig' %}{% endif %}
 {# inline_notices: the page shows its notice flashes itself (inline_notice_messages), the others stay toasts #}
-{% set inline_notice_messages = (inline_notices ?? false) ? app.flashes('notice') : [] %}
+{# keep_notices: the page leaves the notices for the next one. Showing them takes them: an error page, which is also
+   what a missing picture of another page answers with, would use up the notice of what the member just did #}
+{% set keep_notices = keep_notices ?? false %}
+{% set inline_notice_messages = (inline_notices ?? false) and not keep_notices ? app.flashes('notice') : [] %}
 <div id="toasts" class="bw-toasts">
   {# plausible_event flashes are analytics events (_analytics.html.twig), never a message for the member #}
-  {% for label, messages in app.flashes|filter((messages, label) => label != 'plausible_event') %}
+  {% for label, messages in (keep_notices ? {} : app.flashes)|filter((messages, label) => label != 'plausible_event') %}
     {% for message in messages %}
       {% if label == 'success' %}{% set toastClass = 'bw-toast--success' %}{% set icon = 'fa-check-circle' %}
       {% elseif label == 'danger' or label == 'error' %}{% set toastClass = 'bw-toast--error' %}{% set icon = 'fa-exclamation-circle' %}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7034c355ba151cf6dd401e1ebacbaef",
+    "content-hash": "1015dbf7c56fb6b911470192ed165203",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -2054,27 +2054,31 @@
         },
         {
             "name": "gregwar/captcha",
-            "version": "v1.3.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/Captcha.git",
-                "reference": "4edbcd09fde4353b94ce550f43460eba73baf2cc"
+                "reference": "c1e67b3d7ac4f873f785daa366051d7c73d19ca0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/4edbcd09fde4353b94ce550f43460eba73baf2cc",
-                "reference": "4edbcd09fde4353b94ce550f43460eba73baf2cc",
+                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/c1e67b3d7ac4f873f785daa366051d7c73d19ca0",
+                "reference": "c1e67b3d7ac4f873f785daa366051d7c73d19ca0",
                 "shasum": ""
             },
             "require": {
                 "ext-fileinfo": "*",
                 "ext-gd": "*",
                 "ext-mbstring": "*",
-                "php": ">=5.3.0",
+                "php": "^8.2",
                 "symfony/finder": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6.4 || ^7.0 || ^8.0 || ^9.0"
+                "friendsofphp/php-cs-fixer": "^3.49",
+                "phpstan/phpstan": "2.1.17",
+                "phpstan/phpstan-phpunit": "2.0.6",
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "4.0.4"
             },
             "type": "library",
             "autoload": {
@@ -2106,28 +2110,28 @@
             ],
             "support": {
                 "issues": "https://github.com/Gregwar/Captcha/issues",
-                "source": "https://github.com/Gregwar/Captcha/tree/v1.3.0"
+                "source": "https://github.com/Gregwar/Captcha/tree/v2.1.1"
             },
-            "time": "2025-06-23T12:25:54+00:00"
+            "time": "2026-08-27T10:37:12+00:00"
         },
         {
             "name": "gregwar/captcha-bundle",
-            "version": "v2.5.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/CaptchaBundle.git",
-                "reference": "b129efda562bf8361ca6eb77043036813f749de6"
+                "reference": "251aa803c9df56b755d342e455e1f5c572efc2f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/CaptchaBundle/zipball/b129efda562bf8361ca6eb77043036813f749de6",
-                "reference": "b129efda562bf8361ca6eb77043036813f749de6",
+                "url": "https://api.github.com/repos/Gregwar/CaptchaBundle/zipball/251aa803c9df56b755d342e455e1f5c572efc2f5",
+                "reference": "251aa803c9df56b755d342e455e1f5c572efc2f5",
                 "shasum": ""
             },
             "require": {
                 "ext-gd": "*",
-                "gregwar/captcha": "^1.2.1",
-                "php": ">=8.0.2",
+                "gregwar/captcha": "^2.1",
+                "php": ">=8.2",
                 "symfony/form": "~6.0|~7.0|~8.0",
                 "symfony/framework-bundle": "~6.0|~7.0|~8.0",
                 "symfony/translation": "~6.0|~7.0|~8.0",
@@ -2135,7 +2139,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.45",
-                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan": "^2.2.5",
                 "symplify/easy-coding-standard": "^12"
             },
             "type": "symfony-bundle",
@@ -2173,9 +2177,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Gregwar/CaptchaBundle/issues",
-                "source": "https://github.com/Gregwar/CaptchaBundle/tree/v2.5.0"
+                "source": "https://github.com/Gregwar/CaptchaBundle/tree/v3.0.0"
             },
-            "time": "2026-01-08T10:51:57+00:00"
+            "time": "2026-07-09T10:41:14+00:00"
         },
         {
             "name": "hidehalo/nanoid-php",

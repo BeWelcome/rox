@@ -1,0 +1,54 @@
+stays.today:
+    - 'Today'
+    - 'Stays calendar, button that goes back to the current month.'
+stays.month.previous:
+    - 'Previous month'
+    - 'Stays calendar, label of the arrow to the month before.'
+stays.month.next:
+    - 'Next month'
+    - 'Stays calendar, label of the arrow to the month after.'
+stays.month.list:
+    - 'Stays in {month}'
+    - 'Stays calendar, title of the list under the calendar (month name).'
+stays.month.none:
+    - 'No stays this month.'
+    - 'Stays calendar, under the calendar when no stay crosses the month.'
+stays.filter.all:
+    - 'All'
+    - 'Stays calendar, filter showing every stay of the month.'
+stays.filter.guests:
+    - 'Guests'
+    - 'Stays calendar, filter showing the stays where the member hosts.'
+stays.filter.hosts:
+    - 'Hosts'
+    - 'Stays calendar, filter showing the stays where the member is the guest.'
+stays.count:
+    - '{count, plural, one {# stay} other {# stays}}'
+    - 'Stays calendar, after the picked day in the title of the list (28 Nov · 2 stays).'
+stays.day.clear:
+    - 'Clear'
+    - 'Stays calendar, button that unpicks the day and shows the whole month again.'
+stays.day.none:
+    - 'No stays on this day.'
+    - 'Stays calendar, list of a picked day without stays.'
+stays.export.hosting:
+    - '{username} stays with you'
+    - 'Calendar file of the stays, title of a stay where the member hosts (username of the guest).'
+stays.export.guest:
+    - 'Staying with {username}'
+    - 'Calendar file of the stays, title of a stay where the member is the guest (username of the host).'
+stays.export.one:
+    - 'Add to calendar'
+    - 'A stay (stays calendar list, menu of the stay card in the conversation), title of the menu with Google, Outlook and the .ics file.'
+stays.export.ics:
+    - 'Apple / other (.ics)'
+    - 'Add to calendar menu of a stay, item that downloads the .ics file.'
+stays.nav.all:
+    - 'See all in the calendar'
+    - 'Top bar, menu of the upcoming stays, link to the stays calendar page.'
+stays.group.maybe:
+    - 'still to confirm'
+    - 'Stays calendar, list: the title over the stays answered maybe, after a Maybe label.'
+stays.filter:
+    - 'Filter'
+    - 'Stays calendar, the button that opens the filters (All, Guests, Hosts, Maybe).'

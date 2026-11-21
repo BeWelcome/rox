@@ -47,7 +47,7 @@
 
         <section class="c-inbox__list">
             <div class="c-inbox-list">
-                {{ inbox.list(conversations, folder, { initiator: initiator, unreadOnly: unreadOnly }) }}
+                {{ inbox.list(conversations, folder, { initiator: initiator, unreadOnly: unreadOnly, search: search|default('') }) }}
             </div>
         </section>
         {% endif %}

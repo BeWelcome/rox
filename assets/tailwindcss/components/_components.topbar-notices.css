@@ -48,3 +48,34 @@
   #main_menu #static_menu { position: relative; }
   #main_menu .c-topbar-notices.dropdown-menu { position: absolute; top: 100%; right: 0; left: auto; width: min(22rem, calc(100vw - 1.5rem)); }
 }
+
+/* Upcoming stays (layout/_stays_nav.html.twig): a dark card like the member menu, with the next stays
+   and a button to the calendar */
+#main_menu #stays_menu.dropdown-menu { width: min(24rem, calc(100vw - 1.5rem)); padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.08); background: #1c1e22; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); }
+#stays_menu .c-topbar-notices__title { padding: 0.2rem 0.5rem 0.45rem; color: #a1a1aa; }
+#main_menu #stays_menu .c-home-stays__item,
+#main_menu #stays_menu .c-home-stays__item:hover { gap: 0.75rem; padding: 0.55rem 0.5rem; border-radius: 0.65rem; color: #f4f4f5; }
+#main_menu #stays_menu .c-home-stays__item:hover { background: rgba(255, 255, 255, 0.07); }
+#stays_menu .c-home-stays__avatar { width: 2.6rem; height: 2.6rem; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12); }
+#stays_menu .c-home-stays__name { color: #fff; }
+#stays_menu .c-home-stays__line { color: #a1a1aa; }
+/* How soon, small and grey under the name (orange today or now) */
+#stays_menu .c-home-stays__line { font-size: 0.8125rem; }
+#stays_menu .c-home-stays__soon { color: #a1a1aa; font-weight: 500; }
+#stays_menu .c-home-stays__soon.is-now { color: #fb923c; }
+/* The menu: no "Your guest / host" (room), a stay answered maybe in an amber label */
+#stays_menu .c-home-stays__role { display: none; }
+#stays_menu .c-home-stays__maybe { display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.5rem; border-radius: 999px; background: rgba(251, 191, 36, 0.18); color: #fcd34d; font-size: 0.75rem; font-weight: 700; line-height: 1.4; vertical-align: 0.05rem; }
+#stays_menu .c-topbar-stays__group { display: flex; align-items: center; gap: 0.4rem; margin: 0.5rem 0 0.15rem; padding: 0.6rem 0 0 0.25rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: #a1a1aa; font-size: 0.8125rem; font-weight: 600; }
+#stays_menu .c-topbar-stays__group .c-home-stays__maybe { margin: 0; }
+#stays_menu .c-topbar-stays__group.is-first { margin-top: 0; padding-top: 0; border-top: 0; }
+/* Under the Maybe title, the rows don't need their own label */
+#stays_menu .c-topbar-stays__list--maybe .c-home-stays__maybe { display: none; }
+#stays_menu .c-req-pill.c-req-pill { background: rgba(255, 255, 255, 0.08); color: #e4e4e7; }
+#main_menu #stays_menu .c-topbar-stays__all,
+#main_menu #stays_menu .c-topbar-stays__all:hover,
+#main_menu #stays_menu .c-topbar-stays__all:focus { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.6rem; padding: 0.7rem 1rem; border-radius: 0.75rem; background: #ea7a2e; color: #fff; font-size: 0.875rem; font-weight: 700; text-decoration: none; transition: background 0.15s; }
+#main_menu #stays_menu .c-topbar-stays__all:hover,
+#main_menu #stays_menu .c-topbar-stays__all:focus { background: #dc6b1f; }
+.c-topbar-stays__chevron { font-size: 0.75rem; transition: transform 0.15s; }
+#stays_menu .c-topbar-stays__all:hover .c-topbar-stays__chevron { transform: translateX(3px); }

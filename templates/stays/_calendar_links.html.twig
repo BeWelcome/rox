@@ -1,0 +1,21 @@
+{#
+  Add one stay to a calendar: Google and Outlook open the event already filled in (all day, from arrival to
+  departure), Apple and the others take the .ics file (stay_export). As Bootstrap dropdown items.
+  Expects stay (App\Service\UpcomingStays: message, request, other, hosting).
+  Stays calendar list (stays/_calendar_menu.html.twig) and the "⋯" menu of the stay card (request/_card_menu.html.twig).
+#}
+{% set _request = stay.request %}
+{% set _last = _request.departure ?? _request.arrival %}
+{% set _title = (stay.hosting ? 'stays.export.hosting' : 'stays.export.guest')|trans({ username: stay.other.username }) %}
+{% set _details = url('conversation_view', { id: stay.message.id }) %}
+<a class="dropdown-item c-compose-tools__item" target="_blank" rel="noopener"
+   href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text={{ _title|url_encode }}&amp;dates={{ _request.arrival|date('Ymd') }}/{{ _last|date_modify('+1 day')|date('Ymd') }}&amp;details={{ _details|url_encode }}">
+    <i class="fab fa-google" aria-hidden="true"></i><span>Google Calendar</span>
+</a>
+<a class="dropdown-item c-compose-tools__item" target="_blank" rel="noopener"
+   href="https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&amp;rru=addevent&amp;allday=true&amp;subject={{ _title|url_encode }}&amp;startdt={{ _request.arrival|date('Y-m-d') }}&amp;enddt={{ _last|date_modify('+1 day')|date('Y-m-d') }}&amp;body={{ _details|url_encode }}">
+    <i class="fab fa-microsoft" aria-hidden="true"></i><span>Outlook</span>
+</a>
+<a class="dropdown-item c-compose-tools__item" href="{{ path('stay_export', { id: _request.id }) }}" download>
+    <i class="fab fa-apple" aria-hidden="true"></i><span>{{ 'stays.export.ics'|trans }}</span>
+</a>

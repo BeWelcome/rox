@@ -1,0 +1,19 @@
+{#
+  Upcoming stays: the accepted hosting requests and invitations of the member that aren't over, as host or as
+  guest, soonest first (App\Service\UpcomingStays). Before "Explore by country": on its left on a computer, above it on phones.
+  A stay opens its conversation in the side panel. Shown only when there are stays (landing.html.twig).
+  inDash: in the dashboard grid instead, next to Upcoming activities (no Visitors card).
+#}
+<section class="c-home-card c-home-stays{{ inDash ?? false ? ' c-home-dash__card c-home-dash__card--stays' : '' }}" aria-labelledby="home_stays_title">
+    <header class="c-home-stays__head">
+        <span class="c-home-dash__icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+        <h2 class="c-home-stays__title" id="home_stays_title">{{ 'landing.stays.title'|trans }}</h2>
+        <span class="c-home-dash__count c-home-dash__count--hot">{{ stays|length }}</span>
+        <a class="c-home-dash__seeall" href="{{ path('stays') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
+    </header>
+    <div class="c-home-stays__list">
+        {% for stay in stays %}
+            {% include 'landing/_stay_row.html.twig' with { stay: stay } only %}
+        {% endfor %}
+    </div>
+</section>

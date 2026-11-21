@@ -19,7 +19,7 @@
 {% endif %}
 {% set nights = date(request.departure|date('Y-m-d')).diff(date(request.arrival|date('Y-m-d'))).days %}
 
-{% set _menu %}{% include 'request/_card_menu.html.twig' with { stay: request, confirm: 'request.confirm.cancel', dates: side == 'guest' } %}{% endset %}
+{% set _menu %}{% include 'request/_card_menu.html.twig' with { stay: request, confirm: 'request.confirm.cancel', dates: side == 'guest', calendar: { message: original, request: request, other: original.Initiator.Username == myself.Username ? original.Receiver : original.Initiator, hosting: side == 'host' } } %}{% endset %}
 {% include 'request/_stay_card.html.twig' with {
     stay: request, status: status, nights: nights, kind: 'request', decider: side == 'host',
     other: original.Initiator.Username == myself.Username ? original.Receiver : original.Initiator,

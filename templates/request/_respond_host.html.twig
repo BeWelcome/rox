@@ -1,7 +1,7 @@
 {#
   The host's answer to a hosting request, under the messages (on the conversation page
   and on the reply page when the form comes back with an error): the message and Send.
-  Accept, Maybe and Decline are in the stay card (request/_stay_answer.html.twig): a pick
+  Accept, Maybe and Decline are right above it (request/_stay_answer.html.twig): a pick
   shows the picked answer and "Change" above the message, the dates when the guest is
   flexible (accept or maybe), and Send submits as the picked button (requests.js).
   Without a pick, Send posts a plain message.
@@ -20,19 +20,32 @@
 {% set guestName = (guest is former_member ? member_name(guest) : guest.shortNameOrUsername ?? guest.username) %}
 
 {% set awaitingAnswer = request.status == constant(S ~ 'REQUEST_OPEN') %}
+{# Still waiting (or maybe) when the arrival has passed: nobody can answer any more (as in the stay card) #}
+{% set expired = request.status in [constant(S ~ 'REQUEST_OPEN'), constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')] and request.arrival|date('Y-m-d') < 'now'|date('Y-m-d') %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? '' : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{# Accept, Maybe and Decline, at the bottom. Not answered yet: only them (c-decide--pick-first), a pick
+   opens the message under them with the answer on top, "Change" goes back to them, and "Just write a
+   message" opens it without an answer (requests.js). Once answered they are hidden: the edit button next
+   to the status in the stay card shows them again. #}
+{% if not expired %}
+    {% include 'request/_stay_answer.html.twig' with {
+        stay: request, request_form: respond, current: current, answer_label: null, compose: true,
+        collapsed: request.status in [constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED'), constant(S ~ 'REQUEST_ACCEPTED'), constant(S ~ 'REQUEST_DECLINED')]
+    } only %}
+{% endif %}
+
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? (expired ? '' : ' c-decide--pick-first') : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
 
     {% if respond.accept is defined %}{% do respond.accept.setRendered %}{% endif %}
     {% if respond.tentatively is defined %}{% do respond.tentatively.setRendered %}{% endif %}
     {% do respond.decline.setRendered %}
 
-    {# The message, with the answer picked in the stay card (request/_stay_answer.html.twig) on top #}
+    {# The message, with the answer picked above (request/_stay_answer.html.twig) on top #}
     <div class="c-decide__step c-decide__write js-decide-step" data-step="write" data-choice="reply">
         {# The picked answer, with a cross back to a plain message, and "Change dates" when the guest is
            flexible (hidden while no answer is picked: then Send posts a plain message). Another answer is
-           picked in the stay card above. #}
+           picked above. #}
         <div class="c-decide__top">
             {% set _sameMonth = request.arrival|date('Ym') == request.departure|date('Ym') %}
             {% set _dates = request.arrival|format_date(pattern='EEE d' ~ (_sameMonth ? '' : ' MMM')) ~ ' – ' ~ request.departure|format_date(pattern='EEE d MMM') %}
@@ -48,7 +61,8 @@
                             <i class="fa fa-calendar" aria-hidden="true"></i> <span class="c-decide__change-label">{{ 'request.respond.change'|trans }}</span>
                         </button>
                     {% endif %}
-                    <button type="button" class="c-decide__unpick c-decide__unpick--quiet js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    {# Picked by mistake: back to Accept, Maybe and Decline #}
+                    <button type="button" class="c-decide__repick js-decide-change"><i class="fas fa-rotate-left" aria-hidden="true"></i> <span>{{ 'request.decide.change'|trans }}</span></button>
                 </div>
             {% endfor %}
         </div>

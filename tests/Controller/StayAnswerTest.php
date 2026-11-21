@@ -14,13 +14,13 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * The host answers a hosting request from the stay card: Accept, Maybe and Decline pick the answer, the
- * message line at the bottom sends it. The guest only reads where the request stands.
+ * The host answers a hosting request under the messages: Accept, Maybe and Decline, right above the message
+ * line, pick the answer, the message line sends it. The guest only reads where the request stands.
  */
 #[Group('integration')]
 class StayAnswerTest extends WebTestCase
 {
-    public function testTheHostAcceptsFromTheStayCard(): void
+    public function testTheHostAcceptsAboveTheMessageLine(): void
     {
         $client = static::createClient();
         [$message, $guest, $host] = $this->createRequest();
@@ -31,7 +31,9 @@ class StayAnswerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         self::assertSelectorTextContains('.c-stay2__status', 'request.status.to.answer');
         self::assertSelectorTextContains('.c-stay2__question', 'request.decide.prompt');
-        $picks = $crawler->filter('.c-stay2 .js-stay-pick');
+        $picks = $crawler->filter('.c-stay2__answer--compose .js-stay-pick');
+        // Not in the stay card any more
+        self::assertCount(0, $crawler->filter('.c-stay2 .js-stay-pick'));
         self::assertSame(['accept', 'maybe', 'decline'], $picks->each(static fn ($pick) => $pick->attr('data-choice')));
         // The big decision panel under the messages is gone
         self::assertCount(0, $crawler->filter('.js-decide-step[data-step="decide"]'));

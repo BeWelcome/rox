@@ -13,6 +13,7 @@ use App\Pagerfanta\InvitationsAdapter;
 use App\Pagerfanta\MessagesAdapter;
 use App\Pagerfanta\RequestsAdapter;
 use App\Pagerfanta\SpamAdapter;
+use App\Service\InboxFolders;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -35,8 +36,11 @@ class ConversationsController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(protected ConversationsModel $conversationsModel, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        protected ConversationsModel $conversationsModel,
+        private EntityManagerInterface $entityManager,
+        private readonly InboxFolders $inboxFolders,
+    ) {
     }
 
     #[Route(path: '/conversations/spam/', name: 'conversations_spam')]
@@ -103,6 +107,7 @@ class ConversationsController extends AbstractController
         $page = $request->query->get('page', '1');
         $unreadOnly = '1' === $request->query->get('unread_only', '0');
         $initiator = $request->query->get('initiator', '2');
+        $search = $this->inboxFolders->getFilters($request)['search'];
 
         $adapter = $this->getAdapterFromConversationsType($active);
         $conversationsAdapter = new $adapter(
@@ -112,7 +117,7 @@ class ConversationsController extends AbstractController
             $unreadOnly
         );
 
-        $conversations = new Pagerfanta($conversationsAdapter);
+        $conversations = new Pagerfanta($this->inboxFolders->search($conversationsAdapter, $member, $search));
         $conversations->setMaxPerPage($this->getItemsPerPage($member));
         $conversations->setCurrentPage($page);
 
@@ -145,6 +150,7 @@ class ConversationsController extends AbstractController
             'conversations' => $conversations,
             'showUnreadOnly' => $unreadOnly,
             'initiator' => $initiator,
+            'search' => $search,
             'submenu' => [
                 'active' => $active,
                 'items' => $this->getSubMenuItems(),

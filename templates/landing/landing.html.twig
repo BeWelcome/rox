@@ -2,6 +2,7 @@
 {# the members' home keeps the footer on phones too #}
 {% set footer_on_mobile = true %}
 {% import 'macros.twig' as macros %}
+{% import _self as dash %}
 
 {% block stylesheets %}
   {{ encore_entry_link_tags('leaflet') }}
@@ -134,9 +135,8 @@
   time, previous and next), upcoming activities and the discussions of the member's groups.
   Each card has its title, a count, its own control (radius, +) and See all always last at the top right (no footer row); the lists are loaded by landing.js.
 #}
-{% set loading %}
-    <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
-{% endset %}
+{% set stays = upcoming_stays(5) %}
+{% set staysInDash = stays is not empty and not visitorsCount and activityCount %}
 <div class="c-home-blocks c-home-dash">
 
     {# Messages: the unread count in orange #}
@@ -148,7 +148,7 @@
             <a class="c-home-dash__seeall" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="conversationsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
 
@@ -189,7 +189,7 @@
             <a class="c-home-dash__seeall" href="{{ url('visitors') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="legsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
 
@@ -203,7 +203,7 @@
             <a class="c-home-dash__seeall" href="{{ path('activities') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="activitiesdisplay" class="c-home-list">{{ dash.loading('tile') }}</div>
         </div>
     </section>
 
@@ -215,14 +215,25 @@
             <a class="c-home-dash__seeall" href="{{ path('groups_mygroups') }}">{{ 'landing.see.all'|trans }} <i class="fas fa-chevron-right c-home-dash__seeall-chevron" aria-hidden="true"></i></a>
         </header>
         <div class="c-home-pane c-home-dash__body">
-            <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
+            <div id="groupsdisplay" class="c-home-list">{{ dash.loading() }}</div>
         </div>
     </section>
+
+    {% if staysInDash %}
+        {% include 'landing/_stays.html.twig' with { stays: stays, inDash: true } only %}
+    {% endif %}
 </div>
 
-{% if countries is not empty %}
-    {% include 'landing/_countries.html.twig' %}
-{% endif %}
+{# The member's upcoming stays (none: no card), and next to them on a computer Explore by country.
+   No visitors but upcoming activities: the stays go in the dashboard, next to the activities (staysInDash). #}
+<div class="c-home-explore-row{{ stays is empty or staysInDash or countries is empty ? ' is-alone' : '' }}">
+    {% if stays is not empty and not staysInDash %}
+        {% include 'landing/_stays.html.twig' %}
+    {% endif %}
+    {% if countries is not empty %}
+        {% include 'landing/_countries.html.twig' %}
+    {% endif %}
+</div>
 
 {# Be involved: donate, volunteer, and the transparency links #}
 {% set goalReached = campaign.yearDonated >= campaign.yearNeeded %}
@@ -369,3 +380,15 @@
 <div class="js-places-preview" data-from="home" hidden></div>
 {{ include('search/_preview_drawer.html.twig') }}
 {% endblock content %}
+
+{#- Grey rows while a list loads: a round photo, or the square date of an activity (shape 'tile') -#}
+{% macro loading(shape = 'round', rows = 3) %}
+    <div class="c-home-skeleton" aria-hidden="true">
+        {% for i in 1..rows %}
+            <div class="c-home-skeleton__row">
+                <span class="c-home-skeleton__lead c-home-skeleton__lead--{{ shape }}"></span>
+                <span class="c-home-skeleton__lines"><span></span><span></span></span>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

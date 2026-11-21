@@ -222,3 +222,6 @@ request.decide.send.short.maybe:
 request.decide.send.short.decline:
     - 'Decline'
     - Send button once the host picked Decline in the stay card
+request.decide.just.write:
+    - 'Or just write a message'
+    - 'Answer to a stay request, under Accept, Maybe and Decline: opens the message field without answering.'

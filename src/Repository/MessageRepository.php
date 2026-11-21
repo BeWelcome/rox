@@ -11,10 +11,12 @@ use App\Doctrine\SpamInfoType;
 use App\Dto\ReplyRate;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Service\MessageSearchIndex;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -541,6 +543,43 @@ class MessageRepository extends EntityRepository
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Documents for the message_rt search index (see MessageSearchIndex::document()), by id from $afterId on.
+     *
+     * @return list<array{id: int, subject_id: int, sender: int, receiver: int, content: string}>
+     */
+    public function getSearchIndexDocuments(int $afterId, int $limit): array
+    {
+        $rows = $this->getEntityManager()->getConnection()->fetchAllAssociative(
+            <<<'SQL'
+                SELECT m.id, m.subject_id, m.sender_id, m.receiver_id, s.subject, m.message
+                FROM message m
+                LEFT JOIN subject s ON s.id = m.subject_id
+                WHERE m.id > :afterId
+                ORDER BY m.id
+                LIMIT :limit
+                SQL,
+            ['afterId' => $afterId, 'limit' => $limit],
+            ['afterId' => ParameterType::INTEGER, 'limit' => ParameterType::INTEGER]
+        );
+
+        return array_map(
+            static fn (array $row): array => ['id' => (int) $row['id']] + MessageSearchIndex::document(
+                null === $row['subject_id'] ? null : (int) $row['subject_id'],
+                (int) $row['sender_id'],
+                (int) $row['receiver_id'],
+                $row['subject'],
+                $row['message'],
+            ),
+            $rows
+        );
+    }
+
+    public function countSearchIndexDocuments(): int
+    {
+        return (int) $this->getEntityManager()->getConnection()->fetchOne('SELECT COUNT(*) FROM message');
     }
 
     private function queryReportedMessages(): QueryBuilder

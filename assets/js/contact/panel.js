@@ -11,6 +11,8 @@
  * confirmation which way back to offer. onBack(source): called by the back arrow
  * ("arrow") and by the confirmation's back button ("done").
  */
+import { refreshStaysNav } from '../stays-nav';
+
 export function createContactPanel(panel, {from, onBack}) {
     const frame = panel.querySelector('.js-search-contact-frame');
     const title = panel.querySelector('.js-search-contact-title');
@@ -102,11 +104,17 @@ export function createContactPanel(panel, {from, onBack}) {
             return;
         }
         panel.classList.add('is-loaded');
+        // Another page in the panel, after an answer for instance (it can add or remove a stay): the top bar's stays again
+        if (panel.dataset.navigated) {
+            delete panel.dataset.navigated;
+            refreshStaysNav();
+        }
         // A link or a form inside the panel loads another page there (the member's preview,
         // back to the conversation, an answer): the spinner again until it is loaded
         frame.contentWindow.addEventListener('beforeunload', () => {
             if (isOpen()) {
                 panel.classList.remove('is-loaded');
+                panel.dataset.navigated = '1';
             }
         });
     });

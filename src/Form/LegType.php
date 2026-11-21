@@ -80,8 +80,9 @@ class LegType extends AbstractType
                 'expanded' => true,
                 'disabled' => $expired,
                 'constraints' => [
-                    new NotBlank(),
-                    new NotNull(),
+                    // said above the options: which one is up to the member, but a stop needs one
+                    new NotBlank(message: 'trip.error.no.options'),
+                    new NotNull(message: 'trip.error.no.options'),
                 ],
             ]);
 

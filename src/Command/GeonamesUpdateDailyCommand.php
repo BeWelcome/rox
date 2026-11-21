@@ -77,9 +77,24 @@ class GeonamesUpdateDailyCommand extends Command
             $io->writeln(\sprintf('Names: %d deleted', $this->deleteNames($date)));
         }
 
+        $io->writeln(\sprintf('Addresses: %d brought in line with their place', $this->syncAddresses()));
+
         $io->success('Applied the geonames changes.');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * An address keeps the country and the region of its place (Address::copyPlace()): a place that changed them,
+     * or an address moved to another place (moveReferences()), is brought in line here.
+     */
+    private function syncAddresses(): int
+    {
+        return (int) $this->connection->executeStatement(
+            'UPDATE address a JOIN location g ON g.geoname_id = a.location
+             SET a.country_code = g.country_id, a.region_code = LEFT(g.admin_1_id, 32)
+             WHERE NOT (a.country_code <=> g.country_id AND a.region_code <=> LEFT(g.admin_1_id, 32))'
+        );
     }
 
     /**

@@ -36,6 +36,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 // the volunteer tools' spammers, newest first (MessageRepository::findTopSpammers, findDamageDone)
 #[ORM\Index(name: 'idx_member_status_updated', columns: ['Status', 'updated'])]
 #[ORM\Index(name: 'idx_member_accommodation', columns: ['Accommodation'])]
+// a member by username: every profile, picture and message link (the full-text index doesn't serve an equality),
+// and no two members with the same username
+#[ORM\UniqueConstraint(name: 'uniq_member_username', columns: ['Username'])]
 #[ORM\Index(name: 'ft_member_search', columns: ['Username', 'Name', 'AboutMe', 'Hobbies', 'Books', 'Music', 'Movies', 'Occupation', 'PastTrips', 'PlannedTrips', 'PleaseBring', 'WhereYouSleep', 'OfferGuests', 'OfferHosts', 'GettingThere', 'Organizations', 'AdditionalAccommodationInfo', 'ILiveWith', 'MaxLengthOfStay', 'HouseRules'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[Gedmo\TranslationEntity(class: MemberTranslation::class)]

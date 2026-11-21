@@ -302,7 +302,9 @@ class MassmailTest extends WebTestCase
                 self::assertStringContainsString('Bonjour member-3', (string) $mail->getHtmlBody());
             }
         }
-        self::assertSame(['member-3' => 'Le sujet', 'bwadmin' => 'The subject'], $subjects);
+        // in no order: the members come as the database finds them
+        ksort($subjects);
+        self::assertSame(['bwadmin' => 'The subject', 'member-3' => 'Le sujet'], $subjects);
         self::assertSame(0, $this->recipients($id));
         self::assertSame(['enqueued' => 0, 'triggered' => 0, 'sent' => 0, 'failed' => 0], $this->statistics($id));
         self::assertCount(1, $this->client->followRedirect()->filter('.c-inline-flash'));

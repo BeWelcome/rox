@@ -4,31 +4,39 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f666c22c5129dce2c1169738c05bc9b0",
+    "content-hash": "069f4c0b47857dcdf8ddc58110af15ef",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
-            "version": "v2.1.3",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anthonymartin/GeoLocation.git",
-                "reference": "14abf5164b510997fdfea03bbd90c9e442ffe24d"
+                "reference": "8f76a2fe4e7ca262219773ee3919eead3566a7a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthonymartin/GeoLocation/zipball/14abf5164b510997fdfea03bbd90c9e442ffe24d",
-                "reference": "14abf5164b510997fdfea03bbd90c9e442ffe24d",
+                "url": "https://api.github.com/repos/anthonymartin/GeoLocation/zipball/8f76a2fe4e7ca262219773ee3919eead3566a7a3",
+                "reference": "8f76a2fe4e7ca262219773ee3919eead3566a7a3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=8.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.6 || ^12.5"
+                "deptrac/deptrac": "^4.7",
+                "nyholm/psr7": "^1.8",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^12.5",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.1"
             },
             "suggest": {
-                "ext-curl": "Required only for Google geocoding with GeoPoint::fromAddress() or GeoLocation::getGeocodeFromGoogle().",
-                "ext-json": "Required only to decode Google geocoding responses."
+                "ext-curl": "Default geocoding transport; unnecessary when injecting a PSR-18 client.",
+                "guzzlehttp/guzzle": "An optional PSR-18 client; supply its PSR-17 request factory too.",
+                "psr/http-client": "Optional PSR-18 client contract for injected HTTP transports.",
+                "psr/http-factory": "Optional PSR-17 request/response factories for injected HTTP transports.",
+                "symfony/http-client": "An optional PSR-18 client adapter; supply a PSR-17 request factory too."
             },
             "type": "library",
             "autoload": {
@@ -63,9 +71,9 @@
             ],
             "support": {
                 "issues": "https://github.com/anthonymartin/GeoLocation/issues",
-                "source": "https://github.com/anthonymartin/GeoLocation/tree/v2.1.3"
+                "source": "https://github.com/anthonymartin/GeoLocation/tree/v3.0.0"
             },
-            "time": "2026-10-24T01:43:34+00:00"
+            "time": "2026-10-24T03:41:29+00:00"
         },
         {
             "name": "babdev/pagerfanta-bundle",

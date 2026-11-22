@@ -34,6 +34,9 @@ class AvatarController extends AbstractController
     private const string AVATAR_PATH = '../data/user/avatars/';
     private const string EMPTY_AVATAR_PATH = 'images/';
     private const int ORIGINAL_QUALITY = 90;
+    // the thumbnails: WebP for the site; JPEG for the links in mails, as mail programs like Outlook show no WebP
+    private const int WEBP_QUALITY = 80;
+    private const int JPEG_QUALITY = 85;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -80,7 +83,8 @@ class AvatarController extends AbstractController
     {
         // a link from a mail (MailLinkSigner::mailAvatarUrl()): the receiver is a member, the mail program isn't
         // logged in; the picture shows as long as members may see the profile
-        if ($this->uriSigner->checkRequest($request)) {
+        $fromMail = $this->uriSigner->checkRequest($request);
+        if ($fromMail) {
             if (!$member->isVisibleToMembers()) {
                 return $this->emptyAvatar($size);
             }
@@ -88,9 +92,10 @@ class AvatarController extends AbstractController
             return $this->emptyAvatar($size);
         }
 
-        if (!$this->avatarImageExists($member, $size)) {
+        $webp = !$fromMail && $this->canWriteWebp();
+        if (!$this->avatarImageExists($member, $size, $webp)) {
             try {
-                $this->createAvatarImage($member, $size);
+                $this->createAvatarImage($member, $size, $webp);
             } catch (InvalidArgumentException) {
                 return $this->emptyAvatar($size);
             } catch (Throwable $throwable) {
@@ -105,7 +110,7 @@ class AvatarController extends AbstractController
             }
         }
 
-        $filename = $this->getAvatarImageFilename($member, $size);
+        $filename = $this->getAvatarImageFilename($member, $size, $webp);
         if (!is_file($filename) || !is_readable($filename)) {
             $this->logger->warning(\sprintf(
                 'Avatar image %s for member %d is missing or not readable, falling back to empty avatar',
@@ -180,22 +185,31 @@ class AvatarController extends AbstractController
         return $response;
     }
 
-    private function getAvatarImageFilename(Member $member, string $size): string
+    /**
+     * <id>_<size>_<size> is the JPEG (mails, and the site where PHP can't write WebP; older ones are of quality 100),
+     * <id>_<size>_<size>.webp the WebP of the site.
+     */
+    private function getAvatarImageFilename(Member $member, string $size, bool $webp): string
     {
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size;
         if ('original' !== $size) {
-            $filename .= '_' . $size;
+            $filename .= '_' . $size . ($webp ? '.webp' : '');
         }
 
         return $filename;
     }
 
-    private function avatarImageExists(Member $member, string $size): bool
+    private function avatarImageExists(Member $member, string $size, bool $webp): bool
     {
-        return file_exists($this->getAvatarImageFilename($member, $size));
+        return file_exists($this->getAvatarImageFilename($member, $size, $webp));
     }
 
-    private function createAvatarImage(Member $member, string $sizeOfAvatar): void
+    private function canWriteWebp(): bool
+    {
+        return \function_exists('gd_info') && (gd_info()['WebP Support'] ?? false);
+    }
+
+    private function createAvatarImage(Member $member, string $sizeOfAvatar, bool $webp): void
     {
         // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';
@@ -204,7 +218,7 @@ class AvatarController extends AbstractController
             throw new InvalidArgumentException($message);
         }
 
-        $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+        $filename = $this->getAvatarImageFilename($member, $sizeOfAvatar, $webp);
 
         $imageManager = new ImageManager(new Driver());
         $img = $imageManager->decodePath($original);
@@ -220,7 +234,10 @@ class AvatarController extends AbstractController
 
         $img->scale(width: $sizeOfAvatar);
 
-        $img->encodeUsingFormat(Format::JPEG, quality: 100)->save($filename);
+        $img->encodeUsingFormat(
+            $webp ? Format::WEBP : Format::JPEG,
+            quality: $webp ? self::WEBP_QUALITY : self::JPEG_QUALITY,
+        )->save($filename);
     }
 
     private function createEmptyAvatarImage(string $sizeOfAvatar): string

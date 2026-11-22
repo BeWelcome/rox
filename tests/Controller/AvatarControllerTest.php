@@ -61,7 +61,7 @@ class AvatarControllerTest extends WebTestCase
     public function testDirectoryAsThumbnailFallsBackToEmptyAvatar(): void
     {
         $client = $this->createLoggedInClient();
-        mkdir($this->avatarFile('48_48'));
+        mkdir($this->avatarFile($this->siteThumbnail(48)));
 
         $client->request('GET', '/members/avatar/member-5/48');
 
@@ -72,12 +72,12 @@ class AvatarControllerTest extends WebTestCase
     public function testExistingThumbnailIsServed(): void
     {
         $client = $this->createLoggedInClient();
-        imagepng(imagecreatetruecolor(48, 48), $this->avatarFile('48_48'));
+        imagepng(imagecreatetruecolor(48, 48), $this->avatarFile($this->siteThumbnail(48)));
 
         $client->request('GET', '/members/avatar/member-5/48');
 
         $this->assertResponseIsSuccessful();
-        $this->assertServedFileStartsWith($client, $this->memberId . '_48_48');
+        $this->assertServedFile($client, $this->siteThumbnail(48));
     }
 
     public function testWithoutLoginTheEmptyAvatarIsServed(): void
@@ -124,7 +124,7 @@ class AvatarControllerTest extends WebTestCase
 
         $client->request('GET', $url);
         $this->assertResponseIsSuccessful();
-        $this->assertServedFileStartsWith($client, $this->memberId . '_96_96');
+        $this->assertServedFile($client, '96_96');
 
         // a changed signature, or the link of another member's picture
         $client->request('GET', preg_replace('/_hash=[^&]+/', '_hash=zztest', $url));
@@ -169,8 +169,43 @@ class AvatarControllerTest extends WebTestCase
         $client->request('GET', '/members/avatar/member-5/48');
 
         $this->assertResponseIsSuccessful();
-        $this->assertServedFileStartsWith($client, $this->memberId . '_48_48');
-        self::assertSame([48, 48], \array_slice(getimagesize($this->avatarFile('48_48')) ?: [], 0, 2));
+        $this->assertServedFile($client, $this->siteThumbnail(48));
+        self::assertSame([48, 48], \array_slice(getimagesize($this->avatarFile($this->siteThumbnail(48))) ?: [], 0, 2));
+    }
+
+    /**
+     * The site gets WebP, the link in a mail JPEG: mail programs like Outlook show no WebP.
+     */
+    public function testTheSiteGetsWebpAndAMailJpeg(): void
+    {
+        if (!(gd_info()['WebP Support'] ?? false)) {
+            self::markTestSkipped('GD without WebP');
+        }
+        $client = $this->createLoggedInClient();
+        imagepng(imagecreatetruecolor(200, 200), $this->avatarFile('original'));
+
+        $client->request('GET', '/members/avatar/member-5/96');
+        $this->assertServedFile($client, '96_96.webp');
+        self::assertSame('image/webp', getimagesize($this->avatarFile('96_96.webp'))['mime'] ?? null);
+
+        $client->request('GET', $this->mailAvatarUrl('member-5'));
+        $this->assertServedFile($client, '96_96');
+        self::assertSame('image/jpeg', getimagesize($this->avatarFile('96_96'))['mime'] ?? null);
+    }
+
+    /**
+     * The thumbnail the site is served: WebP where PHP can write it.
+     */
+    private function siteThumbnail(int $size): string
+    {
+        return $size . '_' . $size . ((gd_info()['WebP Support'] ?? false) ? '.webp' : '');
+    }
+
+    private function assertServedFile(KernelBrowser $client, string $suffix): void
+    {
+        $response = $client->getResponse();
+        $this->assertInstanceOf(BinaryFileResponse::class, $response);
+        self::assertSame($this->memberId . '_' . $suffix, $response->getFile()->getFilename());
     }
 
     private function createAnonymousClient(): KernelBrowser

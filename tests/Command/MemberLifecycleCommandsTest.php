@@ -297,7 +297,7 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         $filesystem = new Filesystem();
         // the member's pictures (an old name, the original, a size of the pages), one of a member whose id starts with
         // the same digits, and one of a size nobody asks for (left to a clean-up of its own)
-        $own = [$memberId . '_30_30', $memberId . '_96', $memberId . '_original', $memberId . '_192_192'];
+        $own = [$memberId . '_30_30', $memberId . '_96', $memberId . '_original', $memberId . '_192_192', $memberId . '_48_48.webp'];
         $others = [$memberId . '9999_30_30', $memberId . '_77_77'];
         foreach ([...$own, ...$others] as $name) {
             $filesystem->dumpFile($avatars . $name, 'x');

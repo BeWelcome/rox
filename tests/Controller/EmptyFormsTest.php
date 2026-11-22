@@ -102,6 +102,8 @@ class EmptyFormsTest extends WebTestCase
             // the test database has no translations: the message is its key
             self::assertStringContainsString($message, $content);
         }
+        // a field's message stands under the field, never in its label (above the field)
+        self::assertCount(0, $this->client->getCrawler()->filter('label .form-error-message, legend .form-error-message'));
     }
 
     /**

@@ -186,3 +186,7 @@ comment.guidelines.empty:
   - 'Please confirm that you followed the comment guidelines.'
   - 'Comment form: the guidelines box is not ticked.'
   - validators
+comment.report.empty:
+  - 'Please say what is wrong with the comment.'
+  - 'Report a comment: the form was sent without a text.'
+  - validators

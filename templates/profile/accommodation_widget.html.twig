@@ -39,6 +39,7 @@
      class="{%- if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}u:block{% else %}u:hidden{% endif %} u:mt-8">
   {{ form_label(form.hosting_interest) }}
   {{ form_widget(form.hosting_interest) }}
+  {{ form_errors(form.hosting_interest) }}
   <div class="range text-center u:mt-8 u:text-12">
     <p class="rangeSlider__value-output">{{ 'hosting.interest.select'|trans }}</p>
   </div>

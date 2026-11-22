@@ -41,6 +41,7 @@
                     </div>
                     {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker form-control'}}) }}
                 </div>
+                {{ form_errors(form.request.duration) }}
             </div>
 
             {{ form_row(form.request.arrival) }}

@@ -257,13 +257,9 @@
                 {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
             {%- endif -%}
         {%- endif -%}
-        {% block form_label_errors %}{{- form_errors(form) -}}{% endblock form_label_errors %}</{{ element|default('label') }}>
-    {%- else -%}
-        {%- if errors|length > 0 -%}
-            <div id="{{ id }}_errors" class="mb-2">
-                {{- form_errors(form) -}}
-            </div>
-        {%- endif -%}
+        {# A field's errors come once, under the field (form_row below, or the page's own template): not in the
+           label, where they stood above the field. A page that wants them in the label fills this block. #}
+        {% block form_label_errors %}{% endblock form_label_errors %}</{{ element|default('label') }}>
     {%- endif -%}
 {%- endblock form_label %}
 
@@ -336,6 +332,7 @@
     <{{ element|default('div') }}{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' o-form-group')|trim})} %}{{ block('attributes') }}{% endwith %}>
     {{- form_label(form) -}}
     {{- form_widget(form, widget_attr) -}}
+    {{- form_errors(form) -}}
     {{- form_help(form) -}}
     </{{ element|default('div') }}>
 {%- endblock form_row %}
@@ -343,12 +340,11 @@
 {# Errors #}
 
 {% block form_errors -%}
+    {# the message alone: it used to come with an "Error" badge in front, which pages hid one by one #}
     {%- if errors|length > 0 -%}
-        <div class="{% if form is not rootform %}invalid-feedback u:flex u:rounded-4{% else %}alert alert-danger{% endif %}" style="background-color: rgba(255, 255, 255, 0.9);">
+        <div class="{% if form is not rootform %}invalid-feedback u:flex u:flex-col{% else %}alert alert-danger{% endif %}">
             {%- for error in errors -%}
-                <span class="u:flex u:h-20 u:place-items-center">
-                    <span class="form-error-icon badge badge-danger text-uppercase u:ml-4 u:mr-4">{{ 'Error'|trans({}, 'validators') }}</span> <span class="form-error-message">{{ error.message }}</span>
-                </span>
+                <span class="form-error-message">{{ error.message }}</span>
             {%- endfor -%}
         </div>
     {%- endif %}

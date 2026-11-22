@@ -74,7 +74,7 @@ final class Version20261118100000 extends AbstractMigration
         );
         $preferenceId = $this->connection->fetchOne("SELECT id FROM preferences WHERE codeName = 'PreferenceLanguage'");
         // main's values: the language id of each member's site language (member.Locale got them when member was
-        // filled; on a copy of production 99.9 % of the members get their old value back)
+        // filled, so nearly every member gets the old value back)
         $this->connection->executeStatement(
             <<<'SQL'
                 INSERT INTO memberspreferences (IdMember, IdPreference, Value, created)

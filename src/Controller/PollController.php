@@ -21,6 +21,7 @@ use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -168,7 +169,7 @@ class PollController extends AbstractController
             $this->pollModel->addChoice($poll, (string) $form->get('text')->getData());
             $this->addTranslatedFlash('success', 'poll.choice.added');
         } else {
-            $this->addTranslatedFlash('error', 'poll.choice.not.saved');
+            $this->addTranslatedFlash('error', ...$this->choiceNotSaved($poll, $form));
         }
 
         return $this->redirectToRoute('polls_update', ['pollId' => $poll->getId(), '_fragment' => 'choices']);
@@ -195,7 +196,7 @@ class PollController extends AbstractController
             $this->pollModel->updateChoice($choice, (string) $form->get('text')->getData());
             $this->addTranslatedFlash('success', 'poll.choice.updated');
         } else {
-            $this->addTranslatedFlash('error', 'poll.choice.not.saved');
+            $this->addTranslatedFlash('error', ...$this->choiceNotSaved($poll, $form));
         }
 
         return $this->redirectToRoute('polls_update', ['pollId' => $poll->getId(), '_fragment' => 'choices']);
@@ -286,5 +287,21 @@ class PollController extends AbstractController
         ];
 
         return ['active' => $active, 'items' => $items];
+    }
+
+    /**
+     * Why a choice wasn't saved, for its notice: what is wrong with the text (empty, too long) while the choices can
+     * change, else that they can't any more.
+     *
+     * @return array{0: string, 1?: array<string, mixed>, 2?: string} the arguments of the translation
+     */
+    private function choiceNotSaved(Poll $poll, FormInterface $form): array
+    {
+        $error = $form->isSubmitted() && $this->canChangeChoices($poll) ? $form->getErrors(true)->current() : false;
+        if ($error instanceof FormError) {
+            return [$error->getMessageTemplate(), $error->getMessageParameters(), 'validators'];
+        }
+
+        return ['poll.choice.not.saved'];
     }
 }

@@ -940,3 +940,7 @@ profile.max.guests.empty:
   - 'Please enter how many guests you can host.'
   - 'Profile editor, accommodation: the maximum number of guests is empty.'
   - validators
+error.registration.key.empty:
+  - 'Please enter the key from the mail.'
+  - 'Confirming the e-mail address: the registration key is empty.'
+  - validators

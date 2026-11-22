@@ -349,3 +349,7 @@ forum.post.text.empty:
   - 'Please write your post.'
   - 'Forum post form: the text is empty.'
   - validators
+forum.report.comment.empty:
+  - 'Please say what is wrong with the post.'
+  - 'Report a post to the moderators: the comment is empty.'
+  - validators

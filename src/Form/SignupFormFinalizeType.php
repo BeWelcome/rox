@@ -109,7 +109,8 @@ class SignupFormFinalizeType extends AbstractType
                     'class' => 'js-location-picker',
                 ],
                 'label' => 'profile.set.location',
-                'error_bubbling' => true,
+                // the place's errors stay with it (under the field), not in the box on top of the form as well
+                'error_bubbling' => false,
                 'help' => 'help.location',
             ])
             ->add('accommodation', ChoiceType::class, [

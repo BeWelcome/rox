@@ -123,7 +123,7 @@ class EditTranslationFormType extends AbstractType
                     'required' => false,
                     'help' => $translatedTextHelp,
                     'constraints' => [
-                        new NotBlank(),
+                        new NotBlank(message: 'translation.text.empty'),
                     ],
                 ])
             ;

@@ -32,7 +32,8 @@ class JoinGroupType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'placeholder' => false,
-                'error_bubbling' => true,
+                // under the two buttons (it bubbled up to the box on top of the form)
+                'error_bubbling' => false,
                 'constraints' => [
                     new NotBlank(message: 'error.select.notification'),
                 ],

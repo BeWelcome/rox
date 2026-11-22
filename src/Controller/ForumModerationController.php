@@ -260,7 +260,7 @@ class ForumModerationController extends AbstractController
             ->add('comment', TextareaType::class, [
                 'label' => 'forum.report.comment',
                 'required' => !$withStatus,
-                'constraints' => $withStatus ? [new Length(max: 5000)] : [new NotBlank(), new Length(max: 5000)],
+                'constraints' => $withStatus ? [new Length(max: 5000)] : [new NotBlank(message: 'forum.report.comment.empty'), new Length(max: 5000)],
             ]);
         if ($withStatus) {
             $builder->add('status', ChoiceType::class, [

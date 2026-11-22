@@ -379,3 +379,7 @@ translation.englishtext.empty:
   - 'Please enter the English text.'
   - 'Translation tool, new text: the English text is empty.'
   - validators
+translation.text.empty:
+  - 'Please enter the translation.'
+  - 'Translation tool, edit a translation: the translated text is empty.'
+  - validators

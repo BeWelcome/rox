@@ -2,8 +2,11 @@
 
 namespace App\Tests\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\FaqCategory;
+use App\Entity\ForumPost;
+use App\Entity\Group as GroupEntity;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
@@ -57,6 +60,9 @@ class EmptyFormsTest extends WebTestCase
         yield 'a language for the profile' => ['member-2', '/members/member-2/add/language', 'add_language_form', ['error.language']];
         yield 'a comment edited' => ['{writer}', '{comment}', 'comment', ['comment.text.empty']];
         yield 'a new password from the mail' => ['', '{reset}', 'reset_password_form', ['css:#reset_password_form_password_first ~ .c-login-form__error, .c-login-form__field .c-login-form__error']];
+        yield 'joining a group' => ['member-2', '/group/{group}/join', '', ['css:.p-forum-seg ~ .p-group-form__error']];
+        yield 'confirming the e-mail address' => ['', '{confirm}', 'confirm_email_address_form', ['error.registration.key.empty']];
+        yield 'reporting a post' => ['member-2', '/forums/reporttomod/{post}', '', ['forum.report.comment.empty']];
         yield 'a new text to translate' => ['bwadmin', '/admin/translations/create', 'translation_form', ['translation.wordcode.empty', 'translation.description.empty', 'translation.englishtext.empty']];
     }
 
@@ -76,6 +82,27 @@ class EmptyFormsTest extends WebTestCase
         if ('{reset}' === $page) {  // the link of the mail that resets a password
             $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
             $page = '/resetpassword/member-2/' . static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($member);
+        }
+        if (str_contains($page, '{group}')) {  // a group the member isn't in yet
+            $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
+            $group = current(array_filter(
+                $entityManager->getRepository(GroupEntity::class)->findAll(),
+                static fn (GroupEntity $group): bool => !$group->isMember($member) && GroupEntity::BEWELCOME !== $group->getId(),
+            ));
+            self::assertInstanceOf(GroupEntity::class, $group);
+            $page = str_replace('{group}', (string) $group->getId(), $page);
+        }
+        if (str_contains($page, '{post}')) {
+            $post = $entityManager->getRepository(ForumPost::class)->findOneBy([]);
+            self::assertInstanceOf(ForumPost::class, $post);
+            $page = str_replace('{post}', (string) $post->getId(), $page);
+        }
+        if ('{confirm}' === $page) {  // the link of the mail of a member whose address waits for confirmation
+            $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-6']);
+            $member->setStatus(MemberStatusType::AWAITING_MAIL_CONFIRMATION)->setRegistrationKey('zztest-key');
+            $entityManager->flush();
+            $username = 'member-6';
+            $page = '/members/member-6/confirm/zztest-key';
         }
         if ('' !== $username) {  // a visitor's form otherwise
             $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);

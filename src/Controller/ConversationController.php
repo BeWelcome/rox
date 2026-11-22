@@ -38,7 +38,7 @@ class ConversationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    /** The CSRF token id of the actions on a conversation (delete, recover, purge, decline, not spam). */
+    /** The CSRF token id of the actions on a conversation (delete, recover, decline, not spam). */
     public const string TOKEN = 'conversation';
 
     public function __construct(
@@ -119,27 +119,6 @@ class ConversationController extends AbstractController
         $this->conversationModel->markConversationDeleted($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.deleted');
-
-        return $this->redirectToRoute('conversations_deleted');
-    }
-
-    #[Route(
-        path: '/conversation/{id}/purge',
-        name: 'conversation_purge',
-        requirements: ['id' => '\d+'],
-        methods: ['POST'],
-    )]
-    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
-    #[IsCsrfTokenValid(self::TOKEN)]
-    public function purgeConversation(Message $message): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationPurged($member, $conversation);
-
-        $this->addTranslatedFlash('notice', 'flash.marked.purged');
 
         return $this->redirectToRoute('conversations_deleted');
     }

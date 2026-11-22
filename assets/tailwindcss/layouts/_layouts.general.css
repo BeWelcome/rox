@@ -9082,6 +9082,8 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips-stop { padding: 1rem; border: 1px solid #eef0f3; border-radius: 0.9rem; background: #fcfcfd; }
 .p-trips-stop__fields { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 0.6rem; align-items: center; }
 .p-trips-stop__fields .p-trips-field { margin: 0; }
+/* The place with its error under it, one cell of the row */
+.p-trips-stop__place { min-width: 0; }
 /* The dates of a stop: the calendar of the stay requests under the place (trips.js) */
 .p-trips-stop.has-calendar .p-trips-stop__fields { grid-template-columns: minmax(0, 1fr) auto; }
 .p-trips-stop__dates { max-width: 26rem; margin-top: 0.75rem; }

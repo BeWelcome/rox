@@ -88,7 +88,7 @@ class MassmailController extends AbstractController
                 $this->entityManager->persist($this->word('broadcast_title_' . $name, (string) $form->get('subject')->getData(), $description));
                 $this->entityManager->persist($this->word('broadcast_body_' . $name, (string) $form->get('body')->getData(), $description));
                 $this->entityManager->flush();
-                $this->translationModel->refreshTranslationsCache();
+                $this->updateCachedTexts($name);
                 $this->addFlash('notice', $this->translator->trans('admin.massmail.created.flash'));
 
                 return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
@@ -136,7 +136,7 @@ class MassmailController extends AbstractController
                     ->setAuthor($this->volunteer());
             }
             $this->entityManager->flush();
-            $this->translationModel->refreshTranslationsCache();
+            $this->updateCachedTexts($name);
             $this->addFlash('notice', $this->translator->trans('admin.massmail.updated'));
 
             return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
@@ -363,6 +363,16 @@ class MassmailController extends AbstractController
     public function oldPage(int $id, string $target = 'admin_massmail_details'): RedirectResponse
     {
         return $this->redirectToRoute($target, ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    /**
+     * The subject and the text of a saved mass mail, in the cached catalogues: only these two texts change there.
+     * Building the catalogues of every language again took up to 1 GB, and more when two volunteers saved at once.
+     */
+    private function updateCachedTexts(string $name): void
+    {
+        $this->translationModel->updateCachedText('broadcast_title_' . $name, 'en');
+        $this->translationModel->updateCachedText('broadcast_body_' . $name, 'en');
     }
 
     /**

@@ -209,9 +209,12 @@ class TripModelNotificationTest extends TestCase
         $this->assertSame([], $finds);
     }
 
-    public function testSendScheduledTripNotificationsUsesFrequencyAndCreatedWindow(): void
+    public function testSendScheduledTripNotificationsSendsOneDigestPerHost(): void
     {
         [$trip, $leg] = $this->createTripWithLeg();
+        $second = new Leg();
+        $this->setEntityId($second, 78);
+        $trip->addLeg($second);
         $host = new Member();
         $this->setEntityId($host, 12);
         $since = new DateTimeImmutable('2026-06-27 00:00:00');
@@ -235,15 +238,17 @@ class TripModelNotificationTest extends TestCase
                 [MemberLegNotificationSent::class, $this->createSentRepository()],
             ])
         ;
-        $entityManager->expects($this->once())->method('persist');
+        // both legs are marked as sent to the host, in one go
+        $entityManager->expects($this->exactly(2))->method('persist');
         $entityManager->expects($this->once())->method('flush');
         $this->allowTripNotificationLocks($entityManager);
 
         $mailer = $this->createMock(Mailer::class);
+        $mailer->expects($this->never())->method('sendTripNotificationEmail');
         $mailer
             ->expects($this->once())
-            ->method('sendTripNotificationEmail')
-            ->with($host, $leg)
+            ->method('sendTripDigestEmail')
+            ->with($host, [$leg, $second], Preference::TRIP_NOTIFICATIONS_DAILY)
             ->willReturn(true)
         ;
 
@@ -257,7 +262,41 @@ class TripModelNotificationTest extends TestCase
         $this->assertSame(1, $sent);
         $this->assertSame([
             [$leg, [Preference::TRIP_NOTIFICATIONS_DAILY], 3],
+            [$second, [Preference::TRIP_NOTIFICATIONS_DAILY], 3],
         ], $legCalls);
+    }
+
+    public function testSendScheduledTripNotificationsLeavesOutWhatWasSentAlready(): void
+    {
+        [$trip, $leg] = $this->createTripWithLeg();
+        $host = new Member();
+        $this->setEntityId($host, 12);
+
+        $tripRepository = $this->createStub(TripRepository::class);
+        $tripRepository->method('findTripsCreatedBetween')->willReturn([$trip]);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->method('getRepository')
+            ->willReturnMap([
+                [Trip::class, $tripRepository],
+                [Leg::class, $this->createLegRepository([$host])],
+                [MemberLegNotificationSent::class, $this->createSentRepository(new MemberLegNotificationSent($host, $leg))],
+            ])
+        ;
+        $entityManager->expects($this->never())->method('persist');
+        $this->allowTripNotificationLocks($entityManager);
+
+        $mailer = $this->createMock(Mailer::class);
+        $mailer->expects($this->never())->method('sendTripDigestEmail');
+
+        $tripModel = new TripModel($entityManager, $mailer);
+
+        $this->assertSame(0, $tripModel->sendScheduledTripNotifications(
+            Preference::TRIP_NOTIFICATIONS_DAILY,
+            new DateTimeImmutable('2026-06-27 00:00:00'),
+            new DateTimeImmutable('2026-06-28 00:00:00')
+        ));
     }
 
     public function testSendScheduledTripNotificationsDoesNotStoreFailedSend(): void
@@ -285,8 +324,8 @@ class TripModelNotificationTest extends TestCase
         $mailer = $this->createMock(Mailer::class);
         $mailer
             ->expects($this->once())
-            ->method('sendTripNotificationEmail')
-            ->with($host, $leg)
+            ->method('sendTripDigestEmail')
+            ->with($host, [$leg], Preference::TRIP_NOTIFICATIONS_WEEKLY)
             ->willReturn(false)
         ;
 

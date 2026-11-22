@@ -1,0 +1,28 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  The new trips near the receiver of a day, a week or a month in one mail (members who want them right away get
+  emails/trip.notification.new.html.twig per leg): per leg who travels, the leg as a stay card and the link to the
+  trip. Below how to change these mails.
+  legs (each of a trip, with its creator), receiver; frequency: daily, weekly or monthly (it is part of the subject and title).
+#}
+{% block preheader %}{{ ('trip.notification.digest.subject.' ~ frequency)|trans({ count: legs|length }) }}{% endblock %}
+
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'mydata.trips.headline'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: ('trip.notification.digest.subject.' ~ frequency)|trans({ count: legs|length })|trim('.', 'right') } %}
+    {% for leg in legs %}
+        {% set _traveller = leg.trip.creator %}
+        {% include 'emails/_partials/sender.html.twig' with { member: _traveller, references: true } %}
+        {% include 'emails/_partials/stay.html.twig' with { leg: leg } %}
+        <div style="margin:-8px 0 28px;">
+        {% include 'emails/_partials/small_links.html.twig' with { links: [
+            { label: 'contact.trip.see'|trans, url: url('trip_show', { id: leg.trip.id }) },
+            { label: 'message.profile'|trans({ username: _traveller.username }), url: url('members_profile', { username: _traveller.username }) },
+        ] } %}
+        </div>
+    {% endfor %}
+{% endblock content %}
+
+{% block footer_extra %}
+<p style="margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;"><a href="{{ url('preferences', { username: receiver.username }) }}" style="color:#64748b;text-decoration:underline;">{{ 'trip.notification.preference.link'|trans }}</a></p>
+{% endblock %}

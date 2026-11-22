@@ -1,0 +1,34 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  The new activities near the receiver of a day, a week or a month in one mail (members who want them right away
+  get emails/activity.notification.new.html.twig per activity): per activity its box (title, when, where, who
+  organises it) and the link to it. Below how to change these mails.
+  activities, receiver; frequency: daily, weekly or monthly (it is part of the subject and title).
+#}
+{% block preheader %}{{ ('activity.notification.digest.subject.' ~ frequency)|trans({ count: activities|length }) }}{% endblock %}
+
+{% block content %}
+    {% set _locale = receiverLocale ?? 'en' %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'activities'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: ('activity.notification.digest.subject.' ~ frequency)|trans({ count: activities|length })|trim('.', 'right') } %}
+    {% for activity in activities %}
+        {% set _where = activity.location.name ~ (activity.address ? ', ' ~ activity.address : '') %}
+        {% set _box %}
+            <div style="font-size:18px;line-height:26px;font-weight:bold;color:#0f172a;">{{ activity.title }}</div>
+            <div style="margin-top:6px;font-size:14px;line-height:20px;color:#334155;">&#128197; {{ activity.starts|format_datetime('medium', 'short', locale=_locale) }} &ndash; {{ activity.ends|format_datetime(activity.ends|date('Y-m-d') == activity.starts|date('Y-m-d') ? 'none' : 'medium', 'short', locale=_locale) }}</div>
+            <div style="margin-top:2px;font-size:14px;line-height:20px;color:#334155;">&#128205; {{ _where }}</div>
+            <div style="margin-top:2px;font-size:14px;line-height:20px;color:#334155;">&#128100; {{ activity.createdBy.username }}</div>
+        {% endset %}
+        {% include 'emails/_partials/box.html.twig' with { html: _box } %}
+        <div style="margin:-12px 0 28px;">
+        {% include 'emails/_partials/small_links.html.twig' with { links: [
+            { label: 'activity.notification.see'|trans, url: url('activities_show', { id: activity.id }) },
+            { label: 'message.profile'|trans({ username: activity.createdBy.username }), url: url('members_profile', { username: activity.createdBy.username }) },
+        ] } %}
+        </div>
+    {% endfor %}
+{% endblock content %}
+
+{% block footer_extra %}
+<p style="margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;"><a href="{{ url('preferences', { username: receiver.username }) }}" style="color:#64748b;text-decoration:underline;">{{ 'activity.notification.preference.link'|trans }}</a></p>
+{% endblock %}

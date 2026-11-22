@@ -220,12 +220,45 @@ class TripModel
 
         /** @var TripRepository $tripRepository */
         $tripRepository = $this->entityManager->getRepository(Trip::class);
-        $trips = $tripRepository->findTripsCreatedBetween($createdSince, $createdUntil);
+        /** @var LegRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Leg::class);
+        $sentRepository = $this->entityManager->getRepository(MemberLegNotificationSent::class);
 
-        $sent = 0;
-        foreach ($trips as $trip) {
+        // the legs of the period per host who wasn't told about them yet
+        $hosts = [];
+        $legs = [];
+        foreach ($tripRepository->findTripsCreatedBetween($createdSince, $createdUntil) as $trip) {
             foreach ($trip->getLegs() as $leg) {
-                $sent += $this->sendLegNotifications($leg, [$frequency]);
+                foreach ($legRepository->getMembersToNotifyAboutLeg($leg, [$frequency]) as $host) {
+                    if (null !== $sentRepository->findOneBy(['member' => $host, 'leg' => $leg])) {
+                        continue;
+                    }
+                    $hosts[$host->getId()] = $host;
+                    $legs[$host->getId()][] = $leg;
+                }
+            }
+        }
+
+        // one mail a host: the digest of the period
+        $sent = 0;
+        foreach ($hosts as $hostId => $host) {
+            $lockName = $this->acquireDigestLock($host);
+            if (null === $lockName) {
+                continue;
+            }
+
+            try {
+                if (true !== $this->mailer?->sendTripDigestEmail($host, $legs[$hostId], $frequency)) {
+                    continue;
+                }
+
+                foreach ($legs[$hostId] as $leg) {
+                    $this->entityManager->persist(new MemberLegNotificationSent($host, $leg));
+                }
+                $this->entityManager->flush();
+                ++$sent;
+            } finally {
+                $this->releaseTripNotificationLock($lockName);
             }
         }
 
@@ -314,6 +347,14 @@ class TripModel
     private function acquireLegNotificationLock(Member $member, Leg $leg): ?string
     {
         $lockName = \sprintf('member-leg-notification-sent:%d:%d', $member->getId(), $leg->getId());
+        $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
+
+        return 1 === (int) $locked ? $lockName : null;
+    }
+
+    private function acquireDigestLock(Member $member): ?string
+    {
+        $lockName = \sprintf('member-trip-digest:%d', $member->getId());
         $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
 
         return 1 === (int) $locked ? $lockName : null;

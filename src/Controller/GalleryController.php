@@ -21,6 +21,7 @@ use Hidehalo\Nanoid\Client;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -361,7 +362,7 @@ class GalleryController extends AbstractController
     }
 
     #[Route(path: '/gallery/show/uploaded/{id}/{fileInfo}', name: 'gallery_uploaded_ckeditor', requirements: ['id' => '\d+'])]
-    public function showUploadedImage(UploadedImage $image, string $fileInfo): BinaryFileResponse
+    public function showUploadedImage(UploadedImage $image, string $fileInfo, Filesystem $filesystem): BinaryFileResponse
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
@@ -370,7 +371,9 @@ class GalleryController extends AbstractController
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
         }
         if (!file_exists($filepath)) {
-            // create image!
+            // create image! The directory first, where nothing was uploaded yet (a new installation): without it
+            // the placeholder could not be written and the picture answered with a server error
+            $filesystem->mkdir($uploadDirectory);
             $imageManager = new ImageManager(new Driver());
             $imageManager
                 ->createImage($image->getWidth(), $image->getHeight())->fill('#ccc')

@@ -69,6 +69,12 @@ class MockupPreviewsTest extends WebTestCase
         yield ['newsletters', 'newsletters', 'Type: terms'];
         yield ['home_and_login', 'login', 'Error: none'];
         yield ['home_and_login', 'login', 'Error: too many attempts'];
+        yield ['trips', 'trip near you (mail)', null];
+        yield ['trips', 'trips near you, digest (mail)', 'Frequency: weekly'];
+        yield ['activities', 'activity near you (mail)', null];
+        yield ['activities', 'activities near you, digest (mail)', 'Frequency: monthly'];
+        yield ['trips', 'trips near you, digest (mail)', 'Count: one'];
+        yield ['activities', 'activities near you, digest (mail)', 'Count: some'];
     }
 
     #[DataProvider('previews')]

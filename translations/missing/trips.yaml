@@ -134,6 +134,15 @@ trip.notification.new.subject:
 trip.notification.new.email:
     - '{username} added a trip in your area.'
     - Email body for trip notifications.
+trip.notification.digest.subject.daily:
+    - '{count, plural, one {Daily summary: a new trip in your area} other {Daily summary: # new trips in your area}}'
+    - Email subject and title of the daily mail with the new trips near the member (count is the number of stops in it).
+trip.notification.digest.subject.weekly:
+    - '{count, plural, one {Weekly summary: a new trip in your area} other {Weekly summary: # new trips in your area}}'
+    - Email subject and title of the weekly mail with the new trips near the member (count is the number of stops in it).
+trip.notification.digest.subject.monthly:
+    - '{count, plural, one {Monthly summary: a new trip in your area} other {Monthly summary: # new trips in your area}}'
+    - Email subject and title of the monthly mail with the new trips near the member (count is the number of stops in it).
 trip.notification.preference.link:
     - Change your trip notification preference
     - Link text in trip notification emails pointing to the preferences page.

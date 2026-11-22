@@ -40,7 +40,6 @@ final class PageActionsTest extends WebTestCase
     {
         return [
             'delete a conversation' => ['member-2', '/conversation/1/delete'],
-            'purge a conversation' => ['member-2', '/conversation/1/purge'],
             'recover a conversation' => ['member-2', '/conversation/1/recover'],
             'decline a request' => ['member-2', '/conversation/1/decline'],
             'not spam' => ['member-2', '/conversation/1/nospam'],

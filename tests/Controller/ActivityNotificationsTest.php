@@ -101,19 +101,40 @@ class ActivityNotificationsTest extends WebTestCase
             ->setStarts(new DateTime('-3 days 18:00'))->setEnds(new DateTime('-3 days 21:00')))));
     }
 
-    public function testTheDailyRunMailsTheActivitiesOfTheDay(): void
+    public function testTheDailyRunMailsTheActivitiesOfTheDayInOneMail(): void
     {
-        $activity = $this->activity('member-4');
+        $first = $this->activity('member-4');
+        $second = $this->activity('member-5', static fn (Activity $activity) => $activity->setTitle('Zz notification walk'));
         $command = new Application(static::$kernel)->find('activities:notifications:send');
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['frequency' => 'daily']));
 
+        // one mail to who wants them daily (member-3), with both; nothing for who wants them right away
         self::assertStringContainsString('Sent 1 activity notification emails.', $tester->getDisplay());
-        self::assertSame([$this->member('member-3')->getEmail()], array_keys($this->mailsAbout($activity)));
-        // the next run doesn't mail it again
+        $daily = $this->member('member-3')->getEmail();
+        self::assertSame([$daily], array_keys($this->mailsAbout($first)));
+        self::assertSame($this->mailsAbout($first)[$daily], $this->mailsAbout($second)[$daily]);
+        $mail = $this->mailsAbout($first)[$daily];
+        self::assertStringContainsString('Zz notification meeting', (string) $mail->getHtmlBody());
+        self::assertStringContainsString('Zz notification walk', (string) $mail->getHtmlBody());
+        self::assertSame('activity.notification.digest.subject.daily', $mail->getSubject());
+        self::assertCount(1, self::getMailerMessages());
+        // the next run doesn't mail them again
         $tester->execute(['frequency' => 'daily']);
         self::assertStringContainsString('Sent 0 activity notification emails.', $tester->getDisplay());
+        self::assertCount(1, self::getMailerMessages());
+    }
+
+    public function testTheWeeklyRunLeavesTheDailyMembersAlone(): void
+    {
+        $this->activity('member-4');
+        $tester = new CommandTester(new Application(static::$kernel)->find('activities:notifications:send'));
+
+        self::assertSame(Command::SUCCESS, $tester->execute(['frequency' => 'weekly']));
+
+        self::assertStringContainsString('Sent 0 activity notification emails.', $tester->getDisplay());
+        self::assertCount(0, self::getMailerMessages());
     }
 
     public function testTheCommandRefusesOtherFrequencies(): void

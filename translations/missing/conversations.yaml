@@ -28,9 +28,6 @@ lives.and.speaks:
 flash.marked.deleted:
     - 'The conversations have been marked as deleted.'
     - Flash message shown when the user marks one or more conversation as deleted.
-flash.marked.purged:
-    - 'The conversations have been marked as purged (irrevocably deleted).'
-    - Flash message shown when the user marks one or more conversation as purged.
 flash.recovered:
     - 'The conversations have been recovered and moved back in the regular folders.'
     - Flash message shown when the user decided to move deleted conversations back.

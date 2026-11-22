@@ -43,6 +43,8 @@
             </button>
         </div>
         <div class="p-trips-stop__fields">
+            {# the place and its error in one cell: the dates (and the calendar the script adds) come after both #}
+            <div class="p-trips-stop__place">
             <div class="p-trips-field p-trips-field--icon{{ location_errors is not empty ? ' has-error' }}">
                 <i class="fas fa-location-dot" aria-hidden="true"></i>
                 <div class="auto-search-wrapper max-height">
@@ -55,6 +57,13 @@
                     >
                 </div>
             </div>
+            {% if location_errors is not empty %}
+                <p class="p-trips-stop__error js-location-error">
+                    <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                    {{ form.location.fullname.vars.value ? 'trip.leg.location.pick'|trans : location_errors|first }}
+                </p>
+            {% endif %}
+            </div>
             <div class="p-trips-field p-trips-field--icon p-trips-field--dates">
                 <i class="far fa-calendar-alt" aria-hidden="true"></i>
                 {{ form_widget(form.duration, { attr: {
@@ -64,12 +73,6 @@
                 } }) }}
             </div>
         </div>
-        {% if location_errors is not empty %}
-            <p class="p-trips-stop__error js-location-error">
-                <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
-                {{ form.location.fullname.vars.value ? 'trip.leg.location.pick'|trans : location_errors|first }}
-            </p>
-        {% endif %}
         <div class="p-trips-stop__errors">
             {{ form_errors(form.duration) }}
             {{ form_errors(form.options) }}

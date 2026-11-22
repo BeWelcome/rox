@@ -77,6 +77,23 @@ class TripLegsTest extends WebTestCase
         self::assertCount(1, $stop->filter('.p-trips-stop__errors + .p-trips-stop__options'));
     }
 
+    public function testAStopWithoutAPlaceSaysSoRightUnderThePlace(): void
+    {
+        $values = $this->editValues();
+        $first = array_key_first($values['trip']['legs']);
+        $values['trip']['legs'][$first]['location']['fullname'] = '';
+        $values['trip']['legs'][$first]['location']['geoname_id'] = '';
+
+        $crawler = $this->client->request('POST', '/trip/' . $this->trip . '/edit', $values);
+
+        self::assertFalse($this->client->getResponse()->isRedirection(), 'a stop without a place was saved');
+        $stop = $crawler->filter('.p-trips-stop')->first();
+        // once, under the place: before the dates, and before the calendar the script adds after the row of fields
+        self::assertCount(1, $stop->filter('.js-location-error'));
+        self::assertCount(1, $stop->filter('.p-trips-stop__fields > .p-trips-stop__place > .p-trips-field.has-error + .js-location-error'));
+        self::assertCount(1, $stop->filter('.p-trips-stop__place + .p-trips-field--dates'));
+    }
+
     public function testALegWithoutInvitationsIsDeleted(): void
     {
         $this->connection()->executeStatement('UPDATE request SET invite_for_leg = NULL WHERE invite_for_leg = ?', [$this->legs[1]]);

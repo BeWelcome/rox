@@ -4,7 +4,6 @@ namespace App\Model\MockupProvider;
 
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\Activity;
 use App\Entity\Leg;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -25,16 +24,6 @@ class LandingMockups implements MockupProviderInterface
             'type' => 'template',
             'template' => 'landing/widget/triplegs.html.twig',
         ],
-        'trip near you (mail)' => [
-            'type' => 'email',
-            'template' => 'emails/trip.notification.new.html.twig',
-            'description' => 'Mail to members near a leg of a new trip.',
-        ],
-        'activity near you (mail)' => [
-            'type' => 'email',
-            'template' => 'emails/activity.notification.new.html.twig',
-            'description' => 'Mail to members near a new activity.',
-        ],
     ];
 
     public function getFeature(): string
@@ -52,8 +41,6 @@ class LandingMockups implements MockupProviderInterface
         return match ($parameters['name']) {
             'be visited|none' => $this->getTripsWidgetEmpty(),
             'be visited|two legs' => $this->getTripsWidgetTwoLegs($parameters['user']),
-            'trip near you (mail)' => $this->getTripMail($parameters['admin'], $parameters['user']),
-            'activity near you (mail)' => $this->getActivityMail($parameters['admin'], $parameters['user']),
             default => [],
         };
     }
@@ -68,47 +55,6 @@ class LandingMockups implements MockupProviderInterface
         return [
             'legs' => null,
             'radius' => 10,
-        ];
-    }
-
-    /**
-     * The traveller (bwadmin) passes near the receiver (the translator).
-     */
-    private function getTripMail(Member $traveller, Member $receiver): array
-    {
-        $legs = $this->getTripsWidgetTwoLegs($traveller)['legs'];
-
-        return [
-            'sender' => $traveller,
-            'receiver' => $receiver,
-            'trip' => $legs[0]->getTrip(),
-            'leg' => $legs[0],
-            'subject' => 'Subject',
-        ];
-    }
-
-    /**
-     * The creator (bwadmin) organizes an activity near the receiver (the translator).
-     */
-    private function getActivityMail(Member $creator, Member $receiver): array
-    {
-        $location = new Location();
-        $location->setName('Mock');
-        $activity = self::withId(new Activity(), 1)
-            ->setCreatedBy($creator)
-            ->setTitle('Picnic in the park')
-            ->setDescription('Bring something to share.')
-            ->setLocation($location)
-            ->setAddress('Main entrance')
-            ->setStarts(new Carbon('next saturday 14:00'))
-            ->setEnds(new Carbon('next saturday 18:00'))
-            ->setStatus(Activity::STATUS_ACTIVE);
-
-        return [
-            'sender' => $creator,
-            'receiver' => $receiver,
-            'activity' => $activity,
-            'subject' => 'Subject',
         ];
     }
 

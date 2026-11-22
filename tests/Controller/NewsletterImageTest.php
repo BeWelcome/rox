@@ -32,9 +32,8 @@ final class NewsletterImageTest extends WebTestCase
         $this->directory = static::getContainer()->getParameter('newsletter_image_directory');
         new Filesystem()->mkdir($this->directory);
         // a 1x1 transparent PNG
-        file_put_contents($this->directory . '/' . self::NAME, base64_decode(
-            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', true
-        ));
+        $png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+        file_put_contents($this->directory . '/' . self::NAME, base64_decode($png, true));
 
         $client->request('GET', '/images/newsletter/' . self::NAME);
 

@@ -5,3 +5,7 @@ feedback.missing.info:
     - 'Please add a reason why you report this profile.'
     - Error message shown when no additional info is provided why the profile is reported.
     - validators
+feedback.message.empty:
+  - 'Please write your message.'
+  - 'Contact form: the message is empty.'
+  - validators

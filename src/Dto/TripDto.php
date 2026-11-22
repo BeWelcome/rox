@@ -14,10 +14,10 @@ class TripDto
 {
     public ?int $id = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'trip.summary.empty')]
     public ?string $summary = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'trip.description.empty')]
     public ?string $description = null;
 
     public int $countOfTravellers = 1;

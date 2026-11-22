@@ -24,13 +24,13 @@ class ForumPostType extends AbstractType
         if ($options['with_title']) {
             $builder->add('title', TextType::class, [
                 'label' => 'forum_label_topictitle',
-                'constraints' => [new NotBlank(), new Length(max: 200)],
+                'constraints' => [new NotBlank(message: 'forum.post.title.empty'), new Length(max: 200)],
             ]);
         }
 
         $builder->add('text', CkEditorType::class, [
             'label' => 'forum_label_text',
-            'constraints' => [new NotBlank()],
+            'constraints' => [new NotBlank(message: 'forum.post.text.empty')],
         ]);
 
         if (null !== $options['locales']) {

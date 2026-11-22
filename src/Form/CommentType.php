@@ -37,7 +37,7 @@ class CommentType extends AbstractType
                 'required' => false,
                 'choices' => $commentChoices,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.quality.empty'),
                 ],
             ])
             ->add('relations', ChoiceType::class, [
@@ -52,7 +52,7 @@ class CommentType extends AbstractType
                     return ['username' => $toMember->getUsername()];
                 },
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.relations.empty'),
                 ],
             ])
             ->add('comment', TextareaType::class, [
@@ -61,7 +61,7 @@ class CommentType extends AbstractType
                     'rows' => 6,
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.text.empty'),
                 ],
             ])
         ;
@@ -74,7 +74,7 @@ class CommentType extends AbstractType
                     'label_html' => true,
                     'mapped' => false,
                     'constraints' => [
-                        new NotBlank(),
+                        new NotBlank(message: 'comment.guidelines.empty'),
                     ],
                 ])
             ;

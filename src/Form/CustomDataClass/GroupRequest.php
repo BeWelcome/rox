@@ -9,13 +9,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupRequest
 {
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'group.name.empty')]
     public string $name;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'group.description.empty')]
     public string $description;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'group.type.empty')]
     public string $type = 'Public';
 
     /** The group's forum posts are visible to all members ('Yes') or to the group's members only ('No'). */

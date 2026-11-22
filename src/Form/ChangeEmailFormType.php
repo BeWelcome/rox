@@ -30,7 +30,7 @@ class ChangeEmailFormType extends AbstractType
             $builder->add('password', PasswordType::class, [
                 'label' => 'password',
                 'help' => 'account.email.password.help',
-                'constraints' => [new NotBlank()],
+                'constraints' => [new NotBlank(message: 'account.email.password.empty')],
             ]);
         }
     }

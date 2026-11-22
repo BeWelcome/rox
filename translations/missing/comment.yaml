@@ -170,3 +170,19 @@ comment.relation.shown.hosted_me:
 flash.comment.not.active:
     - 'You can write comments once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member whose account isn't active yet opens the comment form (shown on the other member's profile).
+comment.quality.empty:
+  - 'Please choose how your experience was.'
+  - 'Comment form: none of positive, neutral, negative is chosen.'
+  - validators
+comment.relations.empty:
+  - 'Please choose how you know each other.'
+  - 'Comment form: no relation (was my guest, hosted me, ...) is chosen.'
+  - validators
+comment.text.empty:
+  - 'Please write your comment.'
+  - 'Comment form: the comment is empty.'
+  - validators
+comment.guidelines.empty:
+  - 'Please confirm that you followed the comment guidelines.'
+  - 'Comment form: the guidelines box is not ticked.'
+  - validators

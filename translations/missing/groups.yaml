@@ -470,3 +470,15 @@ flash.group.not.confirmed:
 flash.group.join.not.active:
     - 'You can ask to join this group once your account is active: please fill in all required details and confirm your email address.'
     - Notice when a member whose account isn't active yet asks to join a group that needs approval (shown on the group page).
+group.name.empty:
+  - 'Please give the group a name.'
+  - 'Group form: the name is empty.'
+  - validators
+group.description.empty:
+  - 'Please describe the group.'
+  - 'Group form and group settings: the description is empty.'
+  - validators
+group.type.empty:
+  - 'Please choose who can join the group.'
+  - 'Group form: no type (public, approval, invitation) is chosen.'
+  - validators

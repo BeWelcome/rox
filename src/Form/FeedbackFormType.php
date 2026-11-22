@@ -44,7 +44,7 @@ class FeedbackFormType extends AbstractType
                 'label' => 'feedbackenteryourquestion',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'feedback.message.empty'),
                 ],
             ])
         ;

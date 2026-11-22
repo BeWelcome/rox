@@ -23,7 +23,7 @@ class GroupCategoryNameType extends AbstractType
         if ($options['new']) {
             $builder->add('name', TextType::class, [
                 'label' => 'name',
-                'constraints' => [new NotBlank(), new Length(max: 100)],
+                'constraints' => [new NotBlank(message: 'admin.group.category.name.empty'), new Length(max: 100)],
             ]);
         } else {
             $displayLocale = $options['display_locale'];
@@ -38,7 +38,7 @@ class GroupCategoryNameType extends AbstractType
                     'label' => 'language',
                     'choices' => $choices,
                     'attr' => ['class' => 'js-tom-select'],
-                    'constraints' => [new NotBlank()],
+                    'constraints' => [new NotBlank(message: 'admin.group.category.locale.empty')],
                 ])
                 ->add('name', TextType::class, [
                     'label' => 'name',

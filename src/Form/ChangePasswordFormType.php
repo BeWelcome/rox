@@ -19,7 +19,7 @@ class ChangePasswordFormType extends AbstractType
             ->add('current', PasswordType::class, [
                 'label' => 'profile.current.password',
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'account.password.current.empty'),
                 ],
             ])
             ->add('password', PasswordType::class, [

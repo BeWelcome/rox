@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupSettingsRequest
 {
     /** The description in the admin's language. */
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'group.description.empty')]
     public string $description = '';
 
     #[Assert\Choice(choices: [GroupType::PUBLIC, GroupType::NEED_ACCEPTANCE, GroupType::INVITE_ONLY])]

@@ -158,9 +158,11 @@ class AvatarController extends AbstractController
 
     private function emptyAvatar($size): BinaryFileResponse
     {
-        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size . '.png';
+        // the name createEmptyAvatarImage() writes: looked up with ".png" it was never found, so the placeholder was
+        // made again for every request, and a request could read it half written
+        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
 
-        if (!file_exists($filename)) {
+        if ('original' === $size || !file_exists($filename)) {
             $filename = $this->createEmptyAvatarImage($size);
         }
 

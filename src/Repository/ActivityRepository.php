@@ -143,6 +143,7 @@ class ActivityRepository extends EntityRepository
             ->setParameter('now', new DateTime())
             ->setParameter('active', Activity::STATUS_ACTIVE)
             ->orderBy('a.starts', 'ASC')
+            ->addOrderBy('a.id', 'ASC')
         ;
         if ($onlineOnly) {
             $qb->andWhere('a.online = 1');
@@ -160,6 +161,7 @@ class ActivityRepository extends EntityRepository
             ->where('a.ends < :now AND a.starts < :now')
             ->setParameter('now', new DateTime())
             ->orderBy('a.ends', 'DESC')
+            ->addOrderBy('a.id', 'DESC')
         ;
 
         return $this->paginate($qb, $page, $items);
@@ -174,6 +176,7 @@ class ActivityRepository extends EntityRepository
             ->join('a.attendees', 'aa', Join::WITH, 'aa.attendee = :member')
             ->setParameter('member', $member)
             ->orderBy('a.starts', 'DESC')
+            ->addOrderBy('a.id', 'DESC')
         ;
 
         return $this->paginate($qb, $page, $items);
@@ -192,6 +195,7 @@ class ActivityRepository extends EntityRepository
             ->setParameter('now', new DateTime())
             ->setParameter('active', Activity::STATUS_ACTIVE)
             ->orderBy('a.starts', 'ASC')
+            ->addOrderBy('a.id', 'ASC')
         ;
 
         $address = $member->getActiveAddress();
@@ -222,6 +226,7 @@ class ActivityRepository extends EntityRepository
                 . ' OR l.name LIKE :keyword OR c.name LIKE :keyword')
             ->setParameter('keyword', '%' . addcslashes($keyword, '%_\\') . '%')
             ->orderBy('a.ends', 'DESC')
+            ->addOrderBy('a.id', 'DESC')
         ;
 
         return $this->paginate($qb, $page, $items);
@@ -364,7 +369,8 @@ class ActivityRepository extends EntityRepository
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', new DateTime()->modify('+3 months'))
             ->andWhere($qb->expr()->neq('a.status', 1)) // Do not show activities that were cancelled
-            ->orderBy('a.starts', 'asc');
+            ->orderBy('a.starts', 'asc')
+            ->addOrderBy('a.id', 'asc');
 
         if ($online) {
             $qb->andWhere($qb->expr()->orX(

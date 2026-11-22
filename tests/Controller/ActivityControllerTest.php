@@ -97,6 +97,39 @@ class ActivityControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(404);
     }
 
+    /**
+     * Activities that start at the same time are each on one page of a list: the lists have a second order (the
+     * id). With the start alone the database was free to hand any of them out for a page, and with many at the
+     * same time some were on two pages and others on none.
+     */
+    public function testActivitiesAtTheSameTimeAreEachOnOnePageOfTheLists(): void
+    {
+        $ids = [$this->activityId];
+        for ($i = 0; $i < 5; ++$i) {
+            $ids[] = $this->createdIds[] = $this->createActivity('member-1')->getId();
+        }
+        sort($ids);
+        $repository = $this->getEntityManager()->getRepository(Activity::class);
+        $member = $this->member('member-2');
+
+        $lists = [
+            'upcoming' => static fn (int $page) => $repository->findUpcoming(false, $page, 2),
+            'near the member' => static fn (int $page) => $repository->findNearMember($member, 0, $page, 2),
+        ];
+        foreach ($lists as $name => $list) {
+            $listed = [];
+            $pages = $list(1)->getNbPages();
+            for ($page = 1; $page <= $pages; ++$page) {
+                foreach ($list($page)->getCurrentPageResults() as $activity) {
+                    $listed[] = $activity->getId();
+                }
+            }
+
+            // each one once, and those of the same time in the order of their ids
+            self::assertSame($ids, array_values(array_intersect($listed, $ids)), $name);
+        }
+    }
+
     public function testListsUseTheMembersItemsPerPage(): void
     {
         $entityManager = $this->getEntityManager();

@@ -57,6 +57,9 @@ return new PhpCsFixer\Config()
 //      \todo enable again after determining why that assert fails.
         'phpdoc_add_missing_param_annotation' => true,
         'phpdoc_order' => true,
+        // @Symfony wants the first paragraph of a docblock to end in a full stop, question or exclamation mark, and
+        // has no option for it: after a sentence in brackets it asks for ".)."
+        'phpdoc_summary' => false,
         'semicolon_after_instruction' => true,
         'strict_comparison' => true,
         'strict_param' => true,

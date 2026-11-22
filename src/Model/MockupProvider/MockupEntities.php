@@ -28,4 +28,18 @@ trait MockupEntities
 
         return $entity;
     }
+
+    /**
+     * How many of something a mockup should show so that a language's plural forms all get an example (never none):
+     * one and some for the languages with two forms, one, two and five for the others.
+     *
+     * @return array<string, int> a label for the variant => the count
+     */
+    private static function pluralCounts(?string $locale): array
+    {
+        return match ($locale) {
+            'en', 'de', 'fr', 'es', 'pt', 'pt-br', 'gl' => ['one' => 1, 'some' => 3],
+            default => ['one' => 1, 'few' => 2, 'other' => 5],
+        };
+    }
 }

@@ -51,7 +51,7 @@ class ActivityModel
 
     /**
      * Mails the members who want to hear daily, weekly or monthly ($frequency) about the activities created in the
-     * period.
+     * period: one mail a member with all of them (only "immediately" sends a mail per activity).
      *
      * @return int the mails sent
      */
@@ -63,9 +63,42 @@ class ActivityModel
 
         /** @var ActivityRepository $repository */
         $repository = $this->entityManager->getRepository(Activity::class);
-        $sent = 0;
+        $sentRepository = $this->entityManager->getRepository(MemberActivityNotificationSent::class);
+
+        // the activities of the period per member who wasn't told about them yet
+        $members = [];
+        $activities = [];
         foreach ($repository->findActivitiesCreatedBetween($createdSince, $createdUntil) as $activity) {
-            $sent += $this->sendActivityNotifications($activity, [$frequency]);
+            foreach ($repository->getMembersToNotifyAboutActivity($activity, [$frequency]) as $member) {
+                if (null !== $sentRepository->findOneBy(['member' => $member, 'activity' => $activity])) {
+                    continue;
+                }
+                $members[$member->getId()] = $member;
+                $activities[$member->getId()][] = $activity;
+            }
+        }
+
+        // one mail a member: the digest of the period
+        $sent = 0;
+        foreach ($members as $memberId => $member) {
+            $lock = $this->lockFactory->createLock(\sprintf('member-activity-digest:%d', $memberId));
+            if (!$lock->acquire()) {
+                continue;
+            }
+
+            try {
+                if (!$this->mailer->sendActivityDigestEmail($member, $activities[$memberId], $frequency)) {
+                    continue;
+                }
+
+                foreach ($activities[$memberId] as $activity) {
+                    $this->entityManager->persist(new MemberActivityNotificationSent($member, $activity));
+                }
+                $this->entityManager->flush();
+                ++$sent;
+            } finally {
+                $lock->release();
+            }
         }
 
         return $sent;

@@ -270,6 +270,54 @@ class Mailer
         );
     }
 
+    /**
+     * The activities created near the receiver in a day, week or month, in one mail (members who chose "immediately"
+     * get a mail per activity: sendActivityNotificationEmail()).
+     *
+     * @param list<Activity> $activities
+     * @param string         $frequency  the member's preference: Daily, Weekly or Monthly
+     */
+    public function sendActivityDigestEmail(Member $receiver, array $activities, string $frequency): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address($this->noReplyEmailAddress, 'BeWelcome'),
+            $receiver,
+            'activity.notification.digest',
+            [
+                'subject' => [
+                    'translationId' => 'activity.notification.digest.subject.' . strtolower($frequency),
+                    'parameters' => ['count' => \count($activities)],
+                ],
+                'activities' => $activities,
+                'frequency' => strtolower($frequency),
+            ]
+        );
+    }
+
+    /**
+     * The legs of new trips near the receiver of a day, week or month, in one mail (members who chose "immediately"
+     * get a mail per leg: sendTripNotificationEmail()).
+     *
+     * @param list<Leg> $legs
+     * @param string    $frequency the member's preference: Daily, Weekly or Monthly
+     */
+    public function sendTripDigestEmail(Member $receiver, array $legs, string $frequency): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address($this->noReplyEmailAddress, 'BeWelcome'),
+            $receiver,
+            'trip.notification.digest',
+            [
+                'subject' => [
+                    'translationId' => 'trip.notification.digest.subject.' . strtolower($frequency),
+                    'parameters' => ['count' => \count($legs)],
+                ],
+                'legs' => $legs,
+                'frequency' => strtolower($frequency),
+            ]
+        );
+    }
+
     public function sendTripNotificationEmail(Member $receiver, Leg $leg): bool
     {
         $trip = $leg->getTrip();

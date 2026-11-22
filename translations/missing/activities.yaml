@@ -259,6 +259,15 @@ activity.notification.new.subject:
 activity.notification.new.email:
     - 'There''s an activity in your area.'
     - Email title and preheader for activity notifications (the creator is shown below it).
+activity.notification.digest.subject.daily:
+    - '{count, plural, one {Daily summary: a new activity in your area} other {Daily summary: # new activities in your area}}'
+    - Email subject and title of the daily mail with the new activities near the member (count is the number of activities in it).
+activity.notification.digest.subject.weekly:
+    - '{count, plural, one {Weekly summary: a new activity in your area} other {Weekly summary: # new activities in your area}}'
+    - Email subject and title of the weekly mail with the new activities near the member (count is the number of activities in it).
+activity.notification.digest.subject.monthly:
+    - '{count, plural, one {Monthly summary: a new activity in your area} other {Monthly summary: # new activities in your area}}'
+    - Email subject and title of the monthly mail with the new activities near the member (count is the number of activities in it).
 activity.notification.see:
     - 'See the activity'
     - Button in the activity notification email; opens the activity.

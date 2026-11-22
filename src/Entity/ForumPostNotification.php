@@ -11,8 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  * A notification about a forum post that waits for the send:notifications cron, or was sent: one per receiver and
  * post (App\Model\ForumModel queues them, App\Command\SendAndPushNotificationsCommand sends them).
  *
- * In a table of its own, `forum_post_notification`, which got the notifications that weren't sent yet from main's
- * `posts_notificationqueue` (App\Entity\PostNotification). main's table stays as main uses it: its Status knows
+ * In a table of its own, `forum_post_notification`, which got the notifications that weren't sent yet, and the sent
+ * ones with a Message-ID (what the later mails of a thread refer to), from main's `posts_notificationqueue`
+ * (App\Entity\PostNotification). main's table stays as main uses it: its Status knows
  * ToSend, Sent and Failed only, so the 'Freeze' of a notification that isn't sent (the receiver isn't active, the
  * mail failed) was stored as an empty status there.
  */

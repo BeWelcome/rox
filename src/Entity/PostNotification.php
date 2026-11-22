@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * main's queue of the forum's notification mails (`posts_notificationqueue`), kept while main uses the table.
  * develop reads and writes App\Entity\ForumPostNotification (`forum_post_notification`), which got the
- * notifications that weren't sent yet from this table (Version20261121110000).
+ * notifications that weren't sent yet, and the sent ones with a Message-ID, from this table (Version20261121110000).
  *
  * Do not check entities with PHPMD.
  *

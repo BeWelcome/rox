@@ -14,10 +14,11 @@ use Override;
  * isn't active, the mail failed) with 'Freeze', which the enum doesn't know: it was stored as an empty status.
  * In the new table the status is a string.
  *
- * Only the notifications that still wait to be sent come along (Status ToSend), the ids kept: the sent ones are
- * history. With them goes what the mails of a thread refer to (the Message-IDs of the mails sent before): the
- * first mail to a member about a thread after this migration starts a new conversation in their mail program.
- * main's table has no foreign keys, so a notification whose receiver or post is gone stays behind.
+ * Two kinds of notifications come along, the ids kept: those that still wait to be sent (Status ToSend), and the
+ * sent ones that have a Message-ID. The mails of a thread refer to the Message-IDs of the mails sent before, so a
+ * member's mail program keeps them in one conversation; without them the next mail about a thread would start a
+ * new one. The other sent notifications (main's, and develop's from before it kept the Message-ID) are history and
+ * stay. main's table has no foreign keys, so a notification whose receiver or post is gone stays behind.
  *
  * Each step checks first: the test database's schema comes from the entities, so there the new table is there
  * already (and empty).
@@ -27,7 +28,7 @@ final class Version20261121110000 extends AbstractMigration
     #[Override]
     public function getDescription(): string
     {
-        return 'Create forum_post_notification with the notifications of posts_notificationqueue that still wait to be sent.';
+        return 'Create forum_post_notification with the notifications of posts_notificationqueue that wait to be sent or have a Message-ID.';
     }
 
     public function up(Schema $schema): void
@@ -40,12 +41,12 @@ final class Version20261121110000 extends AbstractMigration
             $this->connection->executeStatement(<<<'SQL'
                 INSERT IGNORE INTO forum_post_notification (id, created, updated, status, type, subscription_id,
                     subscription_table, message_id, receiver_id, post_id)
-                SELECT q.id, q.created, q.updated, 'ToSend', q.Type, q.IdSubscription, q.TableSubscription, NULL,
+                SELECT q.id, q.created, q.updated, q.Status, q.Type, q.IdSubscription, q.TableSubscription, q.MessageId,
                     q.IdMember, q.IdPost
                 FROM posts_notificationqueue q
                 INNER JOIN member m ON m.id = q.IdMember
                 INNER JOIN forum_post p ON p.id = q.IdPost
-                WHERE q.Status = 'ToSend'
+                WHERE q.Status = 'ToSend' OR (q.Status = 'Sent' AND q.MessageId IS NOT NULL)
                 SQL);
         }
     }

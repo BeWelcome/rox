@@ -18,7 +18,7 @@
 {% endif %}
 {% set _safety = [
     { href: url('safety'), label: 'menu.safety.information'|trans },
-    { href: url('safety_contact_no_modal'), label: 'menu.safety.report'|trans },
+    { href: url('feedback', { IdCategory: 2, no: 1 }), label: 'menu.safety.report'|trans },
 ] %}
 {% if app.user %}
     {% set _safety = _safety|merge([

@@ -58,7 +58,8 @@ use Symfony\Component\Lock\LockFactory;
 class DataRetentionCommand extends Command
 {
     /**
-     * The sizes of the profile pictures, as files <id>_<size>_<size> (and <id>_<size> of the old site): those the
+     * The sizes of the profile pictures, as files <id>_<size>_<size> and <id>_<size>_<size>.webp (and <id>_<size> of
+     * the old site): those the
      * pages, the mails and the scripts ask for, those of the old site, and the original.
      */
     private const array AVATAR_SIZES = [
@@ -313,6 +314,7 @@ class DataRetentionCommand extends Command
             $files[] = $memberPath . $size;
             if ('original' !== $size) {
                 $files[] = $memberPath . $size . '_' . $size;
+                $files[] = $memberPath . $size . '_' . $size . '.webp';
             }
         }
 

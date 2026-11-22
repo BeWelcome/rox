@@ -57,6 +57,8 @@ class CommentType extends AbstractType
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'label.comment.text',
+                // an emptied comment is '' for the entity (which takes no null): the check below says it is missing
+                'empty_data' => '',
                 'attr' => [
                     'rows' => 6,
                 ],

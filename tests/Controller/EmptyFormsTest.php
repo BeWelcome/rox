@@ -2,10 +2,12 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Comment;
 use App\Entity\FaqCategory;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
+use App\Model\PasswordModel;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -53,6 +55,8 @@ class EmptyFormsTest extends WebTestCase
         yield 'forum notifications of a member' => ['bwadmin', '/admin/subscriptions', 'forum_notifications', ['admin.username.empty']];
         yield 'a right for a member' => ['bwadmin', '/admin/rights', 'right_assignment', ['admin.rights.error.right', 'admin.rights.error.level', 'admin.rights.error.comment']];
         yield 'a language for the profile' => ['member-2', '/members/member-2/add/language', 'add_language_form', ['error.language']];
+        yield 'a comment edited' => ['{writer}', '{comment}', 'comment', ['comment.text.empty']];
+        yield 'a new password from the mail' => ['', '{reset}', 'reset_password_form', ['css:#reset_password_form_password_first ~ .c-login-form__error, .c-login-form__field .c-login-form__error']];
         yield 'a new text to translate' => ['bwadmin', '/admin/translations/create', 'translation_form', ['translation.wordcode.empty', 'translation.description.empty', 'translation.englishtext.empty']];
     }
 
@@ -63,6 +67,16 @@ class EmptyFormsTest extends WebTestCase
     public function testAnEmptyFormSaysWhatIsMissing(string $username, string $page, string $formName, array $messages): void
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        if ('{comment}' === $page) {  // the writer of a stored comment edits it
+            $comment = $entityManager->getRepository(Comment::class)->findOneBy([]);
+            self::assertInstanceOf(Comment::class, $comment);
+            $username = (string) $comment->getFromMember()->getUsername();
+            $page = '/members/' . $comment->getToMember()->getUsername() . '/comment/edit';
+        }
+        if ('{reset}' === $page) {  // the link of the mail that resets a password
+            $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-2']);
+            $page = '/resetpassword/member-2/' . static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($member);
+        }
         if ('' !== $username) {  // a visitor's form otherwise
             $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
             self::assertInstanceOf(Member::class, $member);
@@ -99,6 +113,10 @@ class EmptyFormsTest extends WebTestCase
         self::assertContains($status, [200, 422], 'the empty form answered ' . $status);
         $content = (string) $this->client->getResponse()->getContent();
         foreach ($messages as $message) {
+            if (str_starts_with($message, 'css:')) {  // a message the test translations know: found by its place
+                self::assertGreaterThan(0, $this->client->getCrawler()->filter(substr($message, 4))->count(), $message);
+                continue;
+            }
             // the test database has no translations: the message is its key
             self::assertStringContainsString($message, $content);
         }

@@ -56,4 +56,27 @@ final class SafetyPagesTest extends WebTestCase
         // the reactive work was shown twice before
         self::assertCount(1, $crawler->filter('#reactive .p-safety__text'));
     }
+
+    /**
+     * The footer's "report a problem with a member" leads to the contact form with the safety topic chosen (it was
+     * a route with the query in its path, whose address no route matched: a 404).
+     */
+    public function testTheFootersReportLinkOpensTheContactFormForTheSafetyTeam(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/safety');
+        $this->assertResponseIsSuccessful();
+
+        $link = $crawler->filter('#footer_safety a')->reduce(
+            static fn ($a) => str_contains((string) $a->attr('href'), 'feedback'),
+        );
+        self::assertCount(1, $link);
+        $href = (string) $link->attr('href');
+        self::assertSame('/feedback?IdCategory=2&no=1', parse_url($href, \PHP_URL_PATH) . '?' . parse_url($href, \PHP_URL_QUERY));
+
+        // the contact form, with its topic field (the safety topic is 2 on the live site, as the safety pages link it)
+        $crawler = $client->request('GET', $href);
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('select[name=IdCategory]'));
+    }
 }

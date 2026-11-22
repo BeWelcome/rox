@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Model\SafetyModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -51,17 +50,5 @@ class SafetyController extends AbstractController
         return $this->render('safety/safetyteam.html.twig', [
             'team_members' => $safetyModel->getSafetyTeamMembers(),
         ]);
-    }
-
-    #[Route(path: '/feedback?IdCategory=2', name: 'safety_contact')]
-    public function showSafetyContact(): RedirectResponse
-    {
-        return $this->redirectToRoute('feedback', ['IdCategory' => 2]);
-    }
-
-    #[Route(path: '/feedback?IdCategory=2&no', name: 'safety_contact_no_modal')]
-    public function showSafetyContactNoModal(): RedirectResponse
-    {
-        return $this->redirectToRoute('feedback', ['IdCategory' => 2, 'no' => 1]);
     }
 }

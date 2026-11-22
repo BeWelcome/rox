@@ -280,7 +280,7 @@ class ActivityController extends AbstractController
                 return $this->redirectToRoute('activities_show', ['id' => $activity->getId(), 'embed' => 1, 'answered' => 1]);
             }
         } else {
-            $this->addTranslatedFlash('error', 'activity.answer.empty');
+            $this->addTranslatedFlash('error', 'activity.answer.empty', [], 'validators');
         }
 
         return $this->redirectToRoute('activities_show', ['id' => $activity->getId()]);

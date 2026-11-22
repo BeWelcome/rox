@@ -37,6 +37,7 @@
                     {% do item.setRendered %}
                 {% endfor %}
             </div>
+            {% for _error in form.notifications.vars.errors %}<p class="p-group-form__error">{{ _error.message }}</p>{% endfor %}
         </div>
 
         <div class="p-group-form__foot">

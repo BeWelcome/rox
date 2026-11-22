@@ -307,3 +307,23 @@ admin.tools.team_coordinators.none:
 admin.tools.team_coordinators.page:
   - 'Show the page'
   - 'Volunteer tools, team coordinators: button that opens the Get active page.'
+admin.tools.find_member.error.empty:
+  - 'Please enter what to search for.'
+  - 'Volunteer tools, find a member: the search was sent empty.'
+  - validators
+admin.tools.find_member.error.short:
+  - 'Please enter at least {{ limit }} characters.'
+  - 'Volunteer tools, find a member: the search term is too short ({{ limit }} is the minimum).'
+  - validators
+admin.login_message.message.empty:
+  - 'Please write the announcement.'
+  - 'Site announcements: the message is empty.'
+  - validators
+admin.login_message.expires.empty:
+  - 'Please choose the day the announcement ends.'
+  - 'Site announcements: the end date is empty.'
+  - validators
+admin.username.empty:
+  - 'Please enter a username.'
+  - 'Volunteer tools: a form that asks for a member''s username was sent without one.'
+  - validators

@@ -173,13 +173,13 @@ class GroupController extends AbstractController
                 'placeholder' => 'admin.groups.rename.pick',
                 'label' => 'admin.group.old.name',
                 'required' => true,
-                'constraints' => [new NotBlank()],
+                'constraints' => [new NotBlank(message: 'admin.group.rename.group.empty')],
             ])
             ->add('new_name', TextType::class, [
                 'label' => 'admin.group.new.name',
                 'required' => true,
                 'attr' => ['maxlength' => self::NAME_LENGTH],
-                'constraints' => [new NotBlank(), new Length(max: self::NAME_LENGTH)],
+                'constraints' => [new NotBlank(message: 'admin.group.rename.name.empty'), new Length(max: self::NAME_LENGTH)],
             ])
             ->add('submit', SubmitType::class, ['label' => 'admin.groups.rename.submit'])
             ->getForm();

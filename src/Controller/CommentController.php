@@ -89,7 +89,8 @@ class CommentController extends AbstractController
                 )
             );
             if (empty($feedback)) {
-                $form->addError(new FormError('Feedback can not be empty.'));
+                // on the field, in the member's language (it was English, on top of the form)
+                $form->get('feedback')->addError(new FormError($this->translator->trans('comment.report.empty', [], 'validators')));
             } else {
                 $success = $mailer->sendCommentReportedFeedbackEmail(
                     $member,

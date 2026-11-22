@@ -32,12 +32,12 @@ class LegType extends AbstractType
         $builder
             ->add('arrival', HiddenType::class, [
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'trip.leg.dates.empty'),
                 ],
             ])
             ->add('departure', HiddenType::class, [
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'trip.leg.dates.empty'),
                 ],
             ])
         ;

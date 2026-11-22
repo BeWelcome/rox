@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * A vote: one choice (blank votes are allowed, as on the legacy pages) or several, and a comment if the
@@ -30,6 +31,8 @@ class PollVoteType extends AbstractType
             'multiple' => $poll->isMultipleChoice(),
             'expanded' => true,
             'required' => false,
+            // a vote without a choice was stored as a vote
+            'constraints' => [new NotBlank(message: 'poll.vote.empty')],
         ]);
 
         if ($poll->allowsComments()) {

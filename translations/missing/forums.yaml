@@ -341,3 +341,15 @@ forum.report.moderators.can:
 forum.report.read.rules:
     - 'Read the rules'
     - Link in the box next to the report form, to the group's rules
+forum.post.title.empty:
+  - 'Please give the topic a title.'
+  - 'Forum post form: the title of a new topic is empty.'
+  - validators
+forum.post.text.empty:
+  - 'Please write your post.'
+  - 'Forum post form: the text is empty.'
+  - validators
+forum.report.comment.empty:
+  - 'Please say what is wrong with the post.'
+  - 'Report a post to the moderators: the comment is empty.'
+  - validators

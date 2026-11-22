@@ -367,3 +367,19 @@ translation.tool.mockups.broken.action:
 admin.translation.no.right.locale:
     text: 'You can''t translate into {language}: your translator right is for {languages}. Ask in the BeWelcome Translators group to translate more languages.'
     description: 'Notice on the translator''s profile when they opened a language their translator right (Words) doesn''t cover. Keep {language} and {languages} (a list of language names).'
+translation.wordcode.empty:
+  - 'Please enter a code for the text.'
+  - 'Translation tool, new text: the code is empty.'
+  - validators
+translation.description.empty:
+  - 'Please describe where the text is used.'
+  - 'Translation tool, new text: the description is empty.'
+  - validators
+translation.englishtext.empty:
+  - 'Please enter the English text.'
+  - 'Translation tool, new text: the English text is empty.'
+  - validators
+translation.text.empty:
+  - 'Please enter the translation.'
+  - 'Translation tool, edit a translation: the translated text is empty.'
+  - validators

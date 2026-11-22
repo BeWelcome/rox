@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TranslationFormType extends AbstractType
 {
@@ -22,9 +23,11 @@ class TranslationFormType extends AbstractType
         $builder
             ->add('description', TextareaType::class, [
                 'label' => 'translation.description',
+                'constraints' => [new NotBlank(message: 'translation.description.empty')],
             ])
             ->add('englishText', TextareaType::class, [
                 'label' => 'label.admin.translation.englishtext',
+                'constraints' => [new NotBlank(message: 'translation.englishtext.empty')],
             ])
             // empty: detected from the English text when it is saved
             ->add('format', TranslationFormatChoiceType::class, [
@@ -49,6 +52,7 @@ class TranslationFormType extends AbstractType
             if (null === $translationRequest->wordCode) {
                 $form->add('wordCode', TextType::class, [
                     'label' => 'translation.wordcode',
+                    'constraints' => [new NotBlank(message: 'translation.wordcode.empty')],
                 ])
                 ;
             } else {

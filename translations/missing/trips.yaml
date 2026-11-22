@@ -320,3 +320,15 @@ trip.panel.profile:
 trip.panel.meet.locals.note:
     - '{name} would like to meet locals.'
     - 'Trip in the side panel, the orange note on a stop where the traveller ticked Meet locals. {name} is the traveller.'
+trip.leg.dates.empty:
+  - 'Please choose the dates of this stop.'
+  - 'Trip form: a stop has no arrival or departure.'
+  - validators
+trip.summary.empty:
+  - 'Please give your trip a title.'
+  - 'Trip form: the title is empty.'
+  - validators
+trip.description.empty:
+  - 'Please describe your trip.'
+  - 'Trip form: the description is empty.'
+  - validators

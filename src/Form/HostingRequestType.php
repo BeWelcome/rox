@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
+use Closure;
+use DateTime;
 use DateTimeInterface;
 use Override;
 use Symfony\Component\Form\AbstractType;
@@ -34,8 +36,21 @@ class HostingRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('arrival', HiddenType::class)
-            ->add('departure', HiddenType::class)
+            // an empty date stays off the request (the entity takes no null): the duration's check says it is missing
+            ->add('arrival', HiddenType::class, [
+                'setter' => static function (HostingRequest $request, ?DateTime $arrival): void {
+                    if (null !== $arrival) {
+                        $request->setArrival($arrival);
+                    }
+                },
+            ])
+            ->add('departure', HiddenType::class, [
+                'setter' => static function (HostingRequest $request, ?DateTime $departure): void {
+                    if (null !== $departure) {
+                        $request->setDeparture($departure);
+                    }
+                },
+            ])
             ->add('inviteForLeg', HiddenType::class)
             ->add('flexible', CheckboxType::class, [
                 'label' => 'label.flexible',
@@ -120,6 +135,18 @@ class HostingRequestType extends AbstractType
         return 'request';
     }
 
+    /**
+     * An empty number of travellers stays off the request (the entity takes no null): the field's check says so.
+     */
+    private static function travellersSetter(): Closure
+    {
+        return static function (HostingRequest $request, mixed $travellers): void {
+            if (null !== $travellers && '' !== $travellers) {
+                $request->setNumberOfTravellers((int) $travellers);
+            }
+        };
+    }
+
     private function addFieldsForInvitation(FormInterface $form, array $options): void
     {
         if ($options['new']) {
@@ -135,7 +162,7 @@ class HostingRequestType extends AbstractType
         }
         $form->remove('flexible');
 
-        $form->add('numberOfTravellers', HiddenType::class);
+        $form->add('numberOfTravellers', HiddenType::class, ['setter' => self::travellersSetter()]);
     }
 
     private function addFieldsForRequest(FormInterface $form, array $options, $data): void
@@ -149,6 +176,7 @@ class HostingRequestType extends AbstractType
             ],
             'invalid_message' => 'request.error.number_of_travellers',
             'required' => false,
+            'setter' => self::travellersSetter(),
             'constraints' => [
                 new NotBlank(message: 'request.error.numberoftravellers.empty'),
                 new LessThanOrEqual(20),

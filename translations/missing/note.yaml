@@ -107,3 +107,7 @@ profile.notes.none.found:
 profile.notes.empty.hint:
     - "Add one from a member's profile, with the note button. Only you will see it."
     - My notes page, under "There are no notes about other members, yet."; says where notes are written
+note.text.empty:
+  - 'Please write the note.'
+  - 'Profile note form: the note is empty.'
+  - validators

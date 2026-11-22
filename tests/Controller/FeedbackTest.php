@@ -120,6 +120,8 @@ class FeedbackTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         self::assertCount(1, $crawler->filter('.form-error-message'));
-        self::assertCount(1, $crawler->filter('label[for="FeedbackQuestion"] .form-error-message'));
+        // under the field, not in its label (where it stood above the field)
+        self::assertCount(0, $crawler->filter('label[for="FeedbackQuestion"] .form-error-message'));
+        self::assertCount(1, $crawler->filter('label[for="FeedbackQuestion"] ~ .invalid-feedback .form-error-message'));
     }
 }

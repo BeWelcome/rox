@@ -25,3 +25,6 @@ label.language:
     - 'Language'
 label.language.level:
     - 'Level'
+error.language:
+  - 'Please choose a language.'
+  - 'Shown when a form that asks for a language (adding a profile language, a spoken language) is sent without one.'

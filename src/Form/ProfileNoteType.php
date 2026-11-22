@@ -31,7 +31,7 @@ class ProfileNoteType extends AbstractType
             ->add('comment', CkEditorType::class, [
                 'label' => 'profile.note.comment',
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'note.text.empty'),
                 ],
             ])
         ;

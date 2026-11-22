@@ -160,6 +160,8 @@
                  value="{{ location.fullname.vars.value }}">
         </div>
         {{ form_errors(location.fullname) }}
+        {# a name typed but no place picked: the place's own error (from its hidden id), when the name has none #}
+        {% if location.fullname.vars.errors is empty %}{{ form_errors(location) }}{% endif %}
         {{ sf.help(location) }}
       </div>
       {% do location.fullname.setRendered %}

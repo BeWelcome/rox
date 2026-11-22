@@ -9,19 +9,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqCategoryRequest
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Length(min="10", max="100")
-     */
-    public $wordCode;
+    // null while the form is empty: the checks below say what is missing
+    #[Assert\NotBlank(message: 'admin.faq.category.code.empty')]
+    #[Assert\Length(max: 100)]
+    public ?string $wordCode = null;
 
-    /**
-     * #[NotBlank()].
-     */
-    public string $description;
+    #[Assert\NotBlank(message: 'admin.faq.category.description.empty')]
+    public ?string $description = null;
 
     public static function fromFaqCategory(EntityManagerInterface $entityManager, FaqCategory $faqCategory): self
     {

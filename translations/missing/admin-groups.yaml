@@ -97,3 +97,19 @@ admin.groups.archived:
 admin.groups.unarchived:
   - 'Unarchived the group "{name}".'
   - 'Groups admin, unarchival: confirmation after unarchiving a group.'
+admin.group.category.name.empty:
+  - 'Please enter the name of the category.'
+  - 'Group categories admin: the name is empty.'
+  - validators
+admin.group.category.locale.empty:
+  - 'Please choose the language of the name.'
+  - 'Group categories admin: no language is chosen for a category''s name.'
+  - validators
+admin.group.rename.group.empty:
+  - 'Please choose the group to rename.'
+  - 'Rename a group: no group is chosen.'
+  - validators
+admin.group.rename.name.empty:
+  - 'Please enter the new name.'
+  - 'Rename a group: the new name is empty.'
+  - validators

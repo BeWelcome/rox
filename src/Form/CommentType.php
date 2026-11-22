@@ -37,7 +37,7 @@ class CommentType extends AbstractType
                 'required' => false,
                 'choices' => $commentChoices,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.quality.empty'),
                 ],
             ])
             ->add('relations', ChoiceType::class, [
@@ -52,16 +52,18 @@ class CommentType extends AbstractType
                     return ['username' => $toMember->getUsername()];
                 },
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.relations.empty'),
                 ],
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'label.comment.text',
+                // an emptied comment is '' for the entity (which takes no null): the check below says it is missing
+                'empty_data' => '',
                 'attr' => [
                     'rows' => 6,
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'comment.text.empty'),
                 ],
             ])
         ;
@@ -74,7 +76,7 @@ class CommentType extends AbstractType
                     'label_html' => true,
                     'mapped' => false,
                     'constraints' => [
-                        new NotBlank(),
+                        new NotBlank(message: 'comment.guidelines.empty'),
                     ],
                 ])
             ;

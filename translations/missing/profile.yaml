@@ -936,3 +936,11 @@ profile.comment.add.button:
 profile.comments.see.others:
     - '{count, plural, one {See the other comment} other {See the # other comments}}'
     - Link under the latest comments of a profile, to the comments tab; count is the number of comments not shown
+profile.max.guests.empty:
+  - 'Please enter how many guests you can host.'
+  - 'Profile editor, accommodation: the maximum number of guests is empty.'
+  - validators
+error.registration.key.empty:
+  - 'Please enter the key from the mail.'
+  - 'Confirming the e-mail address: the registration key is empty.'
+  - validators

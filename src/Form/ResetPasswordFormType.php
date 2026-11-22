@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ResetPasswordFormType extends AbstractType
 {
@@ -22,6 +24,11 @@ class ResetPasswordFormType extends AbstractType
                 'required' => true,
                 'first_options' => ['label' => 'password'],
                 'second_options' => ['label' => 'password.repeat'],
+                // the same as a new password on the account page
+                'constraints' => [
+                    new NotBlank(message: 'signup.error.password.blank'),
+                    new Length(min: 8),
+                ],
             ])
         ;
     }

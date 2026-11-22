@@ -19,7 +19,7 @@ class ResetPasswordRequestFormType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'username',
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'resetpassword.username.empty'),
                 ],
             ])
             ->add('reset_password', SubmitType::class, [

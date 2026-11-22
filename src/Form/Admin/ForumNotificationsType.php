@@ -16,7 +16,7 @@ class ForumNotificationsType extends AbstractType
             // a search with suggestions in the template (member/suggest)
             ->add('username', TextType::class, [
                 'label' => 'label.username',
-                'constraints' => [new NotBlank()],
+                'constraints' => [new NotBlank(message: 'admin.username.empty')],
             ])
             ->add('enable', SubmitType::class, [
                 'label' => 'admin.subscriptions.enable',

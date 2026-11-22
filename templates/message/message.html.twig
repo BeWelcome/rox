@@ -73,12 +73,13 @@
                     </div>
                     {% endif %}
 
-                    {# Field errors are shown inside each label by rox_form_theme (form_label_errors). #}
+                    {# The form's own errors here, each field's under the field #}
                     {{ form_errors(form) }}
 
                     <div class="p-message-form__field">
                         {{ form_label(form.subject.subject, null, { label_attr: { class: 'o-label' } }) }}
                         {{ form_widget(form.subject.subject, { attr: { class: 'o-input' } }) }}
+                        {{ form_errors(form.subject.subject) }}
                     </div>
 
                     {# A plain text box: the text is sent as paragraphs (contact/plain_text.js) #}
@@ -90,6 +91,7 @@
                             {% include 'conversations/_photo_attach.html.twig' with { part: 'box', name: receiver.shortNameOrUsername } only %}
                         </div>
                         {% do form.message.setRendered %}
+                        {{ form_errors(form.message) }}
                     </div>
 
                     {{ form_rest(form) }}

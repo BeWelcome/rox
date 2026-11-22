@@ -43,6 +43,10 @@ class FaqCategoryFormType extends AbstractType
                     return strtolower(str_ireplace('faq_cat_', '', $wordCode));
                 },
                 static function ($strippedWordCode) {
+                    // nothing entered stays nothing: the form says the code is missing
+                    if (null === $strippedWordCode || '' === trim((string) $strippedWordCode)) {
+                        return null;
+                    }
                     if (true === stripos($strippedWordCode, 'faq_cat_')) {
                         throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }

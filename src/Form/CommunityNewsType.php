@@ -23,7 +23,7 @@ class CommunityNewsType extends AbstractType
                     'maxlength' => 255,
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'communitynews.title.empty'),
                 ],
             ])
             ->add('text', CkEditorType::class, [
@@ -35,7 +35,7 @@ class CommunityNewsType extends AbstractType
                     'data-editor-toolbar' => 'news',
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'communitynews.text.empty'),
                 ],
             ])
             ->add('public', CheckboxType::class, [

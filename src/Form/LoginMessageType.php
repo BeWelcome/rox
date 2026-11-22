@@ -26,7 +26,7 @@ class LoginMessageType extends AbstractType
                 'label' => 'admin.tools.login_message.message',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'admin.login_message.message.empty'),
                 ],
             ])
             ->add('expires', TextType::class, [
@@ -35,7 +35,7 @@ class LoginMessageType extends AbstractType
                     'class' => 'flatpickr',
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(message: 'admin.login_message.expires.empty'),
                 ],
             ])
         ;

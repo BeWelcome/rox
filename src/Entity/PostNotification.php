@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\PostNotificationRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * main's queue of the forum's notification mails (`posts_notificationqueue`), kept while main uses the table.
+ * develop reads and writes App\Entity\ForumPostNotification (`forum_post_notification`), which got the
+ * notifications that weren't sent yet, and the sent ones with a Message-ID, from this table (Version20261121110000).
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
@@ -14,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'posts_notificationqueue')]
 #[ORM\Index(name: 'posts_notificationqueue_status', columns: ['Status'])]
 #[ORM\UniqueConstraint(name: 'posts_notificationqueue_message_id_unique', columns: ['MessageId'])]
-#[ORM\Entity(repositoryClass: PostNotificationRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class PostNotification
 {

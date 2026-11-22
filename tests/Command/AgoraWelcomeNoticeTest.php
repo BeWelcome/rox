@@ -35,14 +35,14 @@ final class AgoraWelcomeNoticeTest extends KernelTestCase
              VALUES (?, ?, 'In', 0, 1, 0, NOW(), NOW()) ON DUPLICATE KEY UPDATE notifications_enabled = 1, welcome_notice_sent = 0",
             [$member->getId(), GroupEntity::BEWELCOME],
         );
-        $connection->executeStatement("UPDATE posts_notificationqueue SET Status = 'Sent'");
+        $connection->executeStatement("UPDATE forum_post_notification SET status = 'Sent'");
         $forumModel = static::getContainer()->get(ForumModel::class);
 
         $forumModel->queueNotifications($thread->getFirstPost(), ForumModel::NOTIFICATION_REPLY);
         $m = $entityManager->getRepository(\App\Entity\GroupMembership::class)->findOneBy(['group' => GroupEntity::BEWELCOME, 'member' => $member->getId()]);
         $first = $this->sendAndGetMail($member);
 
-        $connection->executeStatement('DELETE FROM posts_notificationqueue WHERE IdMember = ?', [$member->getId()]);
+        $connection->executeStatement('DELETE FROM forum_post_notification WHERE receiver_id = ?', [$member->getId()]);
         $forumModel->queueNotifications($thread->getLastPost(), ForumModel::NOTIFICATION_REPLY);
         $second = $this->sendAndGetMail($member);
 
@@ -58,7 +58,7 @@ final class AgoraWelcomeNoticeTest extends KernelTestCase
     {
         // notifications go out five minutes after the post at the earliest
         static::getContainer()->get(EntityManagerInterface::class)->getConnection()->executeStatement(
-            "UPDATE posts_notificationqueue SET created = NOW() - INTERVAL 10 MINUTE WHERE Status = 'ToSend'"
+            "UPDATE forum_post_notification SET created = NOW() - INTERVAL 10 MINUTE WHERE status = 'ToSend'"
         );
         $tester = new CommandTester(new Application(self::$kernel)->find('send:notifications'));
         self::assertSame(0, $tester->execute([]), $tester->getDisplay());

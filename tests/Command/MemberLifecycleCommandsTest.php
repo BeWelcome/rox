@@ -340,7 +340,7 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         $connection->executeStatement("INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) SELECT ?, id, 'zztest', NOW(), NOW() FROM preferences ORDER BY id LIMIT 1", [$memberId]);
         $connection->executeStatement("INSERT INTO passwordreset (member_id, token, generated) VALUES (?, 'zztest-token', NOW())", [$memberId]);
         $connection->executeStatement("INSERT INTO members_threads_subscribed (IdSubscriber, IdThread, ActionToWatch, UnSubscribeKey, notificationsEnabled, created) SELECT ?, id, 'replies', 'zztestkey', 1, NOW() FROM forum_thread ORDER BY id LIMIT 1", [$memberId]);
-        $connection->executeStatement("INSERT INTO posts_notificationqueue (IdMember, IdPost, IdSubscription, TableSubscription, Status, Type, created) SELECT ?, id, 0, 'NotSet', 'ToSend', 'reply', NOW() FROM forum_post ORDER BY id LIMIT 1", [$memberId]);
+        $connection->executeStatement("INSERT INTO forum_post_notification (receiver_id, post_id, subscription_id, subscription_table, status, type, created) SELECT ?, id, 0, 'NotSet', 'ToSend', 'reply', NOW() FROM forum_post ORDER BY id LIMIT 1", [$memberId]);
         $connection->executeStatement('INSERT INTO member_activity_notification_sent (member_id, activity_id, created) SELECT ?, id, NOW() FROM activity ORDER BY id LIMIT 1', [$memberId]);
         $memberships = $this->rows('group_membership WHERE member_id = ?', [$memberId]);
         self::assertGreaterThan(0, $memberships, 'the fixtures give member-2 group memberships');
@@ -386,7 +386,7 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
             'memberspreferences WHERE IdMember = :id',
             'passwordreset WHERE member_id = :id',
             'members_threads_subscribed WHERE IdSubscriber = :id',
-            'posts_notificationqueue WHERE IdMember = :id',
+            'forum_post_notification WHERE receiver_id = :id',
             'member_activity_notification_sent WHERE member_id = :id',
         ];
         foreach ($removed as $from) {

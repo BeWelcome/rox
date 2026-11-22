@@ -85,7 +85,7 @@ final class GroupControllerTest extends WebTestCase
             [$owner->getId(), $threadId],
         );
         $connection->executeStatement(
-            'INSERT INTO posts_notificationqueue (IdMember, IdPost, created, Type, TableSubscription, IdSubscription, Status)'
+            'INSERT INTO forum_post_notification (receiver_id, post_id, created, type, subscription_table, subscription_id, status)'
             . " VALUES (?, ?, NOW(), 'reply', 'members_threads_subscribed', 0, 'ToSend')",
             [$owner->getId(), $postIds[0]],
         );
@@ -101,7 +101,7 @@ final class GroupControllerTest extends WebTestCase
         foreach ($postIds as $postId) {
             self::assertSame(0, $this->countRows($connection, 'forum_post', 'id', (int) $postId));
             self::assertSame(0, $this->countRows($connection, 'forum_post_translation', 'object_id', (int) $postId));
-            self::assertSame(0, $this->countRows($connection, 'posts_notificationqueue', 'IdPost', (int) $postId));
+            self::assertSame(0, $this->countRows($connection, 'forum_post_notification', 'post_id', (int) $postId));
         }
     }
 

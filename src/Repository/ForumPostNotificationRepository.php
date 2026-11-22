@@ -9,9 +9,9 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Class PostNotificationRepository.
+ * The queue of the forum's notification mails (App\Entity\ForumPostNotification).
  */
-class PostNotificationRepository extends EntityRepository
+class ForumPostNotificationRepository extends EntityRepository
 {
     /**
      * @return int|mixed|string

@@ -3,9 +3,9 @@
 namespace App\Tests\Service;
 
 use App\Entity\ForumPost;
+use App\Entity\ForumPostNotification;
 use App\Entity\ForumThread;
 use App\Entity\Member;
-use App\Entity\PostNotification;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -140,7 +140,7 @@ class MailerTest extends TestCase
         );
     }
 
-    private function createNotification(string $type, int $id = 501): PostNotification
+    private function createNotification(string $type, int $id = 501): ForumPostNotification
     {
         $receiver = new Member()
             ->setId(7)
@@ -151,7 +151,7 @@ class MailerTest extends TestCase
         $thread = new ForumThread()->setId(42);
         $post = new ForumPost()->setId(101)->setThread($thread);
 
-        $notification = new PostNotification()
+        $notification = new ForumPostNotification()
             ->setReceiver($receiver)
             ->setPost($post)
             ->setType($type)

@@ -5,11 +5,11 @@ namespace App\Command;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\NotificationStatusType;
 use App\Entity\ForumPost;
+use App\Entity\ForumPostNotification;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
-use App\Entity\PostNotification;
 use App\Model\ForumModel;
-use App\Repository\PostNotificationRepository;
+use App\Repository\ForumPostNotificationRepository;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushNotificationProcessor;
@@ -75,14 +75,14 @@ class SendAndPushNotificationsCommand extends Command
             $batchSize = $this->batchSize;
         }
 
-        /** @var PostNotificationRepository $notificationQueue */
-        $notificationQueue = $this->entityManager->getRepository(PostNotification::class);
+        /** @var ForumPostNotificationRepository $notificationQueue */
+        $notificationQueue = $this->entityManager->getRepository(ForumPostNotification::class);
         $scheduledNotifications = $notificationQueue->getScheduledNotifications($batchSize);
 
         $sent = 0;
         if (!empty($scheduledNotifications)) {
             $notificationReferences = [];
-            /** @var PostNotification $scheduled */
+            /** @var ForumPostNotification $scheduled */
             foreach ($scheduledNotifications as $scheduled) {
                 $receiver = $scheduled->getReceiver();
                 $status = $receiver->getStatus();
@@ -165,7 +165,7 @@ class SendAndPushNotificationsCommand extends Command
      * The membership in the BeWelcome group a notification comes from, if the member hasn't been told yet that
      * new members get the agora's posts and how to stop them (the first agora mail tells them).
      */
-    private function getWelcomeMembership(PostNotification $notification): ?GroupMembership
+    private function getWelcomeMembership(ForumPostNotification $notification): ?GroupMembership
     {
         if (
             ForumModel::SUBSCRIPTION_GROUP !== $notification->getTableSubscription()
@@ -182,7 +182,7 @@ class SendAndPushNotificationsCommand extends Command
         return null === $membership || $membership->isWelcomeNoticeSent() ? null : $membership;
     }
 
-    private function sendBrowserNotification(PostNotification $notification): void
+    private function sendBrowserNotification(ForumPostNotification $notification): void
     {
         $post = $notification->getPost();
         // the author gets the mail of their own post (the whole thread in their mail program), but no push about it
@@ -231,7 +231,7 @@ class SendAndPushNotificationsCommand extends Command
         ]);
     }
 
-    private function getSubject(PostNotification $notification): string
+    private function getSubject(ForumPostNotification $notification): string
     {
         $prefix = '';
         switch ($notification->getType()) {

@@ -48,6 +48,7 @@ final class ProfilePicture
             'image/jpeg' => '.jpg',
             'image/gif' => '.gif',
             'image/bmp' => '.bmp',
+            'image/webp' => '.webp',
             default => '',
         };
     }

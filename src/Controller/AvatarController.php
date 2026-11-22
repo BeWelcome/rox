@@ -8,6 +8,7 @@ use App\Entity\MemberPhoto;
 use App\Security\MemberVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\AutoEncoder;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
@@ -32,6 +33,7 @@ class AvatarController extends AbstractController
     private const EXPIRY = 60 * 60 * 24; // One day
     private const string AVATAR_PATH = '../data/user/avatars/';
     private const string EMPTY_AVATAR_PATH = 'images/';
+    private const int ORIGINAL_QUALITY = 90;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -128,8 +130,9 @@ class AvatarController extends AbstractController
 
         $this->removeAvatarFiles($member);
         $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
-        // the avatar files have no extension: keep the format of the uploaded picture
-        $img->encode()->save($newFileName);
+        // the avatar files have no extension: keep the format of the uploaded picture (the cropper sends WebP at
+        // quality 90, PNG from a browser that can't write WebP); written again at that quality, not the default 75
+        $img->encode(new AutoEncoder(quality: self::ORIGINAL_QUALITY))->save($newFileName);
 
         $memberPhotoRepository = $this->entityManager->getRepository(MemberPhoto::class);
         $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $member->getId()], ['created' => 'DESC']);

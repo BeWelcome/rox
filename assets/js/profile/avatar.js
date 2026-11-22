@@ -106,10 +106,10 @@ save.addEventListener('click', () => {
         type: 'rawcanvas',
         circle: false,
         size: { width: 500, height: 500 },
-        format: 'png',
     }).then((canvas) => {
         const formData = new FormData();
-        formData.append('avatar', canvas.toDataURL());
+        // WebP is far smaller than the PNG this sent before; a browser that can't write WebP sends PNG instead
+        formData.append('avatar', canvas.toDataURL('image/webp', 0.9));
 
         return fetch('/members/uploadavatar', {
             method: 'POST',

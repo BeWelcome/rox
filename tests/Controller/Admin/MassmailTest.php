@@ -92,6 +92,36 @@ class MassmailTest extends WebTestCase
         self::assertSame('For the test', $this->word('broadcast_body_' . self::NAME)['Description']);
     }
 
+    /**
+     * Saving changes the two texts in the catalogues that are cached; it doesn't build the catalogues of every
+     * language again (which needed up to 1 GB with the texts of the live site).
+     */
+    public function testASavedMassMailChangesOnlyItsTextsInTheCachedCatalogues(): void
+    {
+        $translator = static::getContainer()->get('translator');
+        $translator->getCatalogue('en');
+        $translator->getCatalogue('de');
+        // a language nobody used yet has no cached catalogue
+        $directory = static::getContainer()->getParameter('kernel.cache_dir') . '/translations';
+        foreach (glob($directory . '/catalogue.eo.*') ?: [] as $file) {
+            unlink($file);
+        }
+
+        $id = $this->create();
+        $this->client->request('GET', '/admin/massmail/' . $id . '/edit');
+        $this->client->submitForm('massmail[submit]', ['massmail[subject]' => 'New subject']);
+        $this->assertResponseRedirects('/admin/massmail/' . $id . '/details');
+
+        self::assertSame([], glob($directory . '/catalogue.eo.*') ?: [], 'the catalogue of an unused language was built');
+        // the next request reads the cached catalogues: English is every language's fallback
+        self::ensureKernelShutdown();
+        $translator = static::createClient()->getContainer()->get('translator');
+        foreach (['en', 'de'] as $locale) {
+            self::assertSame('New subject', $translator->trans('broadcast_title_' . self::NAME, [], 'messages', $locale));
+            self::assertSame('<p>The body</p>', $translator->trans('broadcast_body_' . self::NAME, [], 'messages', $locale));
+        }
+    }
+
     public function testMembersAreEnqueuedByUsername(): void
     {
         $id = $this->create();

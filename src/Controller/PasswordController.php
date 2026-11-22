@@ -127,7 +127,7 @@ class PasswordController extends AbstractController
 
         $diffInDays = $passwordReset->getGenerated()->diffInDays();
         if ($diffInDays > 2) {
-            $this->addFlash('error', 'flash.reset.password.invalid');
+            $this->addTranslatedFlash('error', 'flash.reset.password.invalid');
 
             return $this->redirectToRoute('member_request_reset_password');
         }

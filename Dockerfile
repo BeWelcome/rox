@@ -30,6 +30,7 @@ RUN apk add --no-cache \
 		freetype \
 		libjpeg-turbo \
 		libpng \
+		libwebp \
 		fcgi \
 		file \
 		gettext \
@@ -43,12 +44,13 @@ RUN set -eux; \
 		icu-dev \
 		libjpeg-turbo-dev \
 		libpng-dev \
+		libwebp-dev \
 		libzip-dev \
 		zlib-dev \
 	; \
 	\
 	docker-php-ext-configure zip; \
-	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
+	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --with-webp --enable-gd; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \

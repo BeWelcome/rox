@@ -57,12 +57,17 @@ class NewsletterController extends AbstractController
     }
 
     /**
-     * This is used to define the route but never reached as the .htaccess loads files it finds directly.
+     * An image uploaded for a newsletter (Admin\NewsletterController). An image that isn't there (any more) is a 404,
+     * not an error.
      */
     #[Route(path: '/images/newsletter/{id}', name: 'newsletter_uploaded_image')]
     public function serveImage(string $id): BinaryFileResponse
     {
         $filepath = $this->getParameter('newsletter_image_directory') . '/' . $id;
+        // {id} has no slash; a name starting with a dot (".", "..", hidden files) is no uploaded image
+        if (str_starts_with($id, '.') || !is_file($filepath) || !is_readable($filepath)) {
+            throw $this->createNotFoundException();
+        }
         $mimeType = mime_content_type($filepath);
 
         // Uploaded images aren't updated; set expiry to 1 year

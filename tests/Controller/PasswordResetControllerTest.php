@@ -69,6 +69,8 @@ class PasswordResetControllerTest extends WebTestCase
             'UPDATE passwordreset SET `generated` = ? WHERE token = ?',
             [new DateTime('-3 days')->format('Y-m-d H:i:s'), $token],
         );
+        // the request reads the reset again: not the one still held with the date it was made
+        $this->entityManager()->clear();
 
         $client->request('GET', '/resetpassword/bwadmin/' . $token);
 

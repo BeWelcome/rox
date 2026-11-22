@@ -237,36 +237,4 @@ class SearchController extends AbstractController
             'pictures' => $galleryImageRepository->getImagesForMember($member),
         ]);
     }
-
-    /**
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
-    public function searchGetPageResultsAjax(
-        Request $request,
-        TranslatorInterface $translator,
-        MemberRepository $memberRepository,
-    ): Response {
-        if ('POST' !== $request->getMethod()) {
-            // JavaScript doesn't work on client
-            // redirect to search members
-            return $this->redirectToRoute('search_locations', $request->query->all());
-        }
-
-        $searchFormRequest = new SearchFormRequest();
-
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $member);
-        $pager = new Pagerfanta($searchAdapter);
-        $pager->setMaxPerPage($searchFormRequest->items > 0 ? $searchFormRequest->items : 20);
-        $pager->setCurrentPage($request->query->getInt('page', 1));
-
-        return $this->render('member/results.html.twig', [
-            'pager' => $pager,
-            'routeName' => 'search_members_ajax',
-            'routeParams' => $request->query->all(),
-        ]);
-    }
 }

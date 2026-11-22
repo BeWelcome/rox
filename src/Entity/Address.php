@@ -20,6 +20,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'address')]
+// the members of a country or of one of its regions (PlacesModel), without going through location; with active and
+// the member, so the index answers alone (without active the database preferred reading all addresses)
+#[ORM\Index(name: 'address_country_region_idx', columns: ['country_code', 'region_code', 'active', 'member_id'])]
+#[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: AddressTranslation::class)]
 #[ORM\Entity]
 class Address
@@ -42,6 +46,17 @@ class Address
     #[ORM\ManyToOne(targetEntity: Location::class)]
     #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geoname_id', nullable: true)]
     private Location $location;
+
+    /**
+     * The country of the location (location.country_id, FR) and its region (location.admin_1_id), kept here too:
+     * "the members of a country" then needs no walk through location, which is what made the places pages slow.
+     * Follows the location (setLocation(), copyPlace()); the daily geonames update brings changed places in line.
+     */
+    #[ORM\Column(name: 'country_code', type: Types::STRING, length: 2, nullable: true)]
+    private ?string $countryCode = null;
+
+    #[ORM\Column(name: 'region_code', type: Types::STRING, length: 32, nullable: true)]
+    private ?string $regionCode = null;
 
     #[ORM\Column(name: 'latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $latitude;
@@ -117,8 +132,32 @@ class Address
     public function setLocation(Location $location): self
     {
         $this->location = $location;
+        $this->copyPlace();
 
         return $this;
+    }
+
+    /**
+     * The country and the region of the location, as the address keeps them.
+     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function copyPlace(): void
+    {
+        if (isset($this->location)) {
+            $this->countryCode = $this->location->getCountryId();
+            $this->regionCode = $this->location->getAdmin1Id();
+        }
+    }
+
+    public function getCountryCode(): ?string
+    {
+        return $this->countryCode;
+    }
+
+    public function getRegionCode(): ?string
+    {
+        return $this->regionCode;
     }
 
     public function getLocation(): Location

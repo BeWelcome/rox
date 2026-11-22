@@ -39,12 +39,11 @@ class PlacesModel
 
             $connection = $this->connection();
             $counts = $connection->executeQuery('
-                SELECT g.country_id AS code, COUNT(DISTINCT m.id) AS cnt
+                SELECT a.country_code AS code, COUNT(DISTINCT m.id) AS cnt
                 FROM member m
                 JOIN address a ON a.member_id = m.id AND a.active = 1
-                JOIN location g ON g.geoname_id = a.location
-                WHERE m.Status IN (:statuses)
-                GROUP BY g.country_id
+                WHERE m.Status IN (:statuses) AND a.country_code IS NOT NULL
+                GROUP BY a.country_code
             ', ['statuses' => MemberStatusType::ACTIVE_SEARCH_ARRAY], ['statuses' => ArrayParameterType::STRING])
                 ->fetchAllKeyValue();
 
@@ -128,12 +127,11 @@ class PlacesModel
     {
         $connection = $this->connection();
         $counts = $connection->executeQuery('
-            SELECT g.admin_1_id AS code, COUNT(DISTINCT m.id) AS cnt
+            SELECT a.region_code AS code, COUNT(DISTINCT m.id) AS cnt
             FROM member m
             JOIN address a ON a.member_id = m.id AND a.active = 1
-            JOIN location g ON g.geoname_id = a.location
-            WHERE m.Status IN (:statuses) AND g.country_id = :country AND g.admin_1_id IS NOT NULL
-            GROUP BY g.admin_1_id
+            WHERE m.Status IN (:statuses) AND a.country_code = :country AND a.region_code IS NOT NULL
+            GROUP BY a.region_code
         ', [
             'statuses' => MemberStatusType::ACTIVE_SEARCH_ARRAY,
             'country' => $countryCode,
@@ -331,14 +329,15 @@ class PlacesModel
      */
     private function membersQuery(string $countryCode, ?string $regionCode, ?int $cityId = null): array
     {
-        $where = 'm.Status IN (:statuses) AND g.country_id = :country';
+        // the country and the region are on the address (Address::copyPlace()): no walk through location
+        $where = 'm.Status IN (:statuses) AND a.country_code = :country';
         $parameters = ['statuses' => MemberStatusType::ACTIVE_SEARCH_ARRAY, 'country' => $countryCode];
         if (null !== $regionCode) {
-            $where .= ' AND g.admin_1_id = :region';
+            $where .= ' AND a.region_code = :region';
             $parameters['region'] = $regionCode;
         }
         if (null !== $cityId) {
-            $where .= ' AND g.geoname_id = :city';
+            $where .= ' AND a.location = :city';
             $parameters['city'] = $cityId;
         }
 
@@ -346,7 +345,6 @@ class PlacesModel
             '
             FROM member m
             JOIN address a ON a.member_id = m.id AND a.active = 1
-            JOIN location g ON g.geoname_id = a.location
             WHERE ' . $where,
             $parameters,
             ['statuses' => ArrayParameterType::STRING],

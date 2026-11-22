@@ -201,7 +201,8 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     /**
      * Members who haven't been active for a year and weren't reminded in the last year (updated is set when one
-     * is reminded).
+     * is reminded). Not those due for the suspension (members:suspend:notification): another reminder would put it
+     * off by a year, and the two commands would take turns depending on which got to a member first.
      *
      * @return list<Member>
      */
@@ -213,11 +214,14 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->where('m.status IN (:statuses)')
             ->andWhere('m.lastActive < :yearAgo OR (m.lastActive IS NULL AND m.created < :yearAgo)')
             ->andWhere('m.updated IS NULL OR m.updated <= :yearAgo')
+            ->andWhere('NOT (' . $this->dueForSuspension() . ')')
             ->setParameter('statuses', [
                 MemberStatusType::ACTIVE,
                 MemberStatusType::CHOICE_INACTIVE,
                 MemberStatusType::OUT_OF_REMIND,
             ])
+            ->setParameter('outOfRemind', MemberStatusType::OUT_OF_REMIND)
+            ->setParameter('fiveYearsAgo', new DateTime('-5 years'))
             ->setParameter('yearAgo', $yearAgo)
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($limit)
@@ -234,16 +238,11 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
      */
     public function findMembersToSuspend(int $limit): array
     {
-        $fiveYearsAgo = new DateTime('-5 years');
-
         return $this->createQueryBuilder('m')
-            ->where('m.status = :outOfRemind')
-            ->andWhere('m.lastActive <= :fiveYearsAgo OR (m.lastActive IS NULL AND m.created <= :fiveYearsAgo)')
+            ->where($this->dueForSuspension())
             ->andWhere('m.updated <= :yearAgo')
-            ->andWhere('NOT EXISTS (SELECT received.id FROM ' . Comment::class . ' received WHERE received.toMember = m)')
-            ->andWhere('NOT EXISTS (SELECT written.id FROM ' . Comment::class . ' written WHERE written.fromMember = m)')
             ->setParameter('outOfRemind', MemberStatusType::OUT_OF_REMIND)
-            ->setParameter('fiveYearsAgo', $fiveYearsAgo)
+            ->setParameter('fiveYearsAgo', new DateTime('-5 years'))
             ->setParameter('yearAgo', new DateTime('-1 year'))
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($limit)
@@ -498,5 +497,17 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             $qb->andWhere('m.standardOffers LIKE :offers_tour')
                ->setParameter('offers_tour', '%' . \App\Doctrine\StandardOffersType::GUIDED_TOUR . '%');
         }
+    }
+
+    /**
+     * DQL on m: reminded (OutOfRemind), away for five years, and neither got nor wrote a comment. Parameters
+     * :outOfRemind and :fiveYearsAgo.
+     */
+    private function dueForSuspension(): string
+    {
+        return 'm.status = :outOfRemind'
+            . ' AND (m.lastActive <= :fiveYearsAgo OR (m.lastActive IS NULL AND m.created <= :fiveYearsAgo))'
+            . ' AND NOT EXISTS (SELECT received.id FROM ' . Comment::class . ' received WHERE received.toMember = m)'
+            . ' AND NOT EXISTS (SELECT written.id FROM ' . Comment::class . ' written WHERE written.fromMember = m)';
     }
 }

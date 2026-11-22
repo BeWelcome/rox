@@ -14,10 +14,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Lock\LockFactory;
 
 /**
  * Members who haven't logged in for a year get a reminder, at most one a year, and leave the search results until
- * they log in again (OutOfRemind). Run it daily.
+ * they log in again (OutOfRemind). The cron runs it several times a day (member_batch_size members a run); it shares a
+ * lock with members:suspend:notification, so only one of the two runs at a time.
  */
 #[AsCommand(
     name: 'members:remind:login',
@@ -31,6 +33,7 @@ class MembersRemindLoginCommand extends Command
         private readonly Mailer $mailer,
         #[Autowire('%member_batch_size%')]
         private readonly int $batchSize,
+        private readonly LockFactory $lockFactory,
     ) {
         parent::__construct();
     }
@@ -50,6 +53,24 @@ class MembersRemindLoginCommand extends Command
             return Command::FAILURE;
         }
 
+        // one of the two at a time: they both change the members waiting for a reminder (OutOfRemind)
+        $lock = $this->lockFactory->createLock(MembersSuspendCommand::LOCK, null);
+        if (!$lock->acquire()) {
+            $io->note('members:remind:login or members:suspend:notification is at work; this run ends.');
+
+            return Command::SUCCESS;
+        }
+        try {
+            $this->remind($io, $batchSize);
+        } finally {
+            $lock->release();
+        }
+
+        return Command::SUCCESS;
+    }
+
+    private function remind(SymfonyStyle $io, int $batchSize): void
+    {
         $members = $this->memberRepository->findMembersToRemind($batchSize);
         foreach ($members as $member) {
             $member
@@ -61,7 +82,5 @@ class MembersRemindLoginCommand extends Command
         $this->entityManager->flush();
 
         $io->success(\sprintf('Reminded %d members.', \count($members)));
-
-        return Command::SUCCESS;
     }
 }

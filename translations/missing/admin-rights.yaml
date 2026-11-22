@@ -118,6 +118,12 @@ admin.rights.error.member:
 admin.rights.error.right:
   - 'Choose a right.'
   - 'Error of the assign form: no right chosen.'
+admin.rights.error.level:
+  - 'Enter a level from 1 to 10.'
+  - 'Error of the assign form: the level is empty.'
+admin.rights.error.comment:
+  - 'Enter a comment that says why the member gets the right.'
+  - 'Error of the assign form: the comment is empty.'
 admin.rights.error.assigned:
   - 'This member already has this right.'
   - 'Error of the assign form: the member has the right already.'

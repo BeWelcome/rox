@@ -51,6 +51,8 @@ class EmptyFormsTest extends WebTestCase
         yield 'renaming a group' => ['bwadmin', '/admin/groups/rename', 'form', ['admin.group.rename.group.empty', 'admin.group.rename.name.empty']];
         yield 'a site announcement' => ['bwadmin', '/admin/tools/login_message/add', 'login_message', ['admin.login_message.message.empty', 'admin.login_message.expires.empty']];
         yield 'forum notifications of a member' => ['bwadmin', '/admin/subscriptions', 'forum_notifications', ['admin.username.empty']];
+        yield 'a right for a member' => ['bwadmin', '/admin/rights', 'right_assignment', ['admin.rights.error.right', 'admin.rights.error.level', 'admin.rights.error.comment']];
+        yield 'a language for the profile' => ['member-2', '/members/member-2/add/language', 'add_language_form', ['error.language']];
         yield 'a new text to translate' => ['bwadmin', '/admin/translations/create', 'translation_form', ['translation.wordcode.empty', 'translation.description.empty', 'translation.englishtext.empty']];
     }
 

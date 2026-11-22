@@ -42,7 +42,7 @@ class RightAssignmentType extends AbstractType
                 'label' => 'admin.rights.level',
                 'attr' => ['min' => 1, 'max' => 10],
                 'constraints' => [
-                    new NotBlank(message: 'AdminRightsNoLevelSelected'),
+                    new NotBlank(message: 'admin.rights.error.level'),
                     new Range(min: 1, max: 10),
                 ],
             ])
@@ -56,7 +56,7 @@ class RightAssignmentType extends AbstractType
             ->add('comment', TextareaType::class, [
                 'label' => 'admin.rights.comment',
                 'attr' => ['rows' => 3],
-                'constraints' => [new NotBlank(message: 'AdminRightsCommentEmpty')],
+                'constraints' => [new NotBlank(message: 'admin.rights.error.comment')],
             ])
         ;
     }

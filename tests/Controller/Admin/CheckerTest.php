@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller\Admin;
 
+use App\Controller\Admin\CheckerController;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Member;
@@ -87,6 +88,38 @@ final class CheckerTest extends WebTestCase
         self::assertSame(['@', 'support'], $row->filter('.c-checker__words mark')->each(static fn (Crawler $mark): string => $mark->text()));
     }
 
+    public function testTheProcessedBlockWordMessagesAreTheOnesWithABlockWord(): void
+    {
+        // decided by a checker, either way; and waiting, but of a sender who was banned meanwhile
+        $keptAsOk = $this->messageOf('member-3', 'Checked', 'SpamBlkWord');
+        $keptAsSpam = $this->messageOf('member-5', 'Checked', 'SpamBlkWord,SpamSayChecker');
+        $ofBannedSender = $this->messageOf('member-7', 'ToCheck', 'SpamBlkWord,SpamSayMember');
+        // not these: no block word (though checked, or of a banned sender), and a block word still to check
+        $checkedWithoutBlockWord = $this->messageOf('member-3', 'Checked', 'NotSpam');
+        $bannedWithoutBlockWord = $this->messageOf('member-7', 'Sent', 'NotSpam');
+        $toCheck = $this->messageOf('member-5', 'ToCheck', 'SpamBlkWord');
+        $this->connection()->executeStatement("UPDATE member SET Status = 'Banned' WHERE Username = 'member-7'");
+        // the newest first
+        $this->connection()->executeStatement('UPDATE message SET created = NOW() - INTERVAL 3 DAY WHERE id = ?', [$keptAsOk]);
+        $this->connection()->executeStatement('UPDATE message SET created = NOW() - INTERVAL 1 DAY WHERE id = ?', [$keptAsSpam]);
+        $this->connection()->executeStatement('UPDATE message SET created = NOW() - INTERVAL 2 DAY WHERE id = ?', [$ofBannedSender]);
+        $this->client->loginUser($this->member('bwadmin'));
+
+        $crawler = $this->client->request('GET', '/admin/spam/messages/blocked/processed');
+
+        $this->assertResponseIsSuccessful();
+        $listed = $crawler->filter('.js-checker-row input[value="' . CheckerController::SPAM . '"]')->each(
+            static fn (Crawler $input): int => (int) preg_replace('/\\D/', '', (string) $input->attr('name')),
+        );
+        self::assertSame([$keptAsSpam, $ofBannedSender, $keptAsOk], $listed);
+        self::assertNotContains($checkedWithoutBlockWord, $listed);
+        self::assertNotContains($bannedWithoutBlockWord, $listed);
+        self::assertNotContains($toCheck, $listed);
+        // the stored decision is preselected
+        self::assertCount(1, $this->row($crawler, $keptAsSpam)->filter('input[value="' . CheckerController::SPAM . '"][checked]'));
+        self::assertCount(1, $this->row($crawler, $keptAsOk)->filter('input[value="' . CheckerController::NOT_SPAM . '"][checked]'));
+    }
+
     public function testTheDecisionsNeedTheTokenAndTheRight(): void
     {
         $message = $this->message('ToCheck', 'SpamSayMember', 'zztest reported');
@@ -148,6 +181,25 @@ final class CheckerTest extends WebTestCase
         );
         // a sender who isn't banned (the block word section shows active senders only)
         $this->connection()->executeStatement("UPDATE member SET Status = 'Active' WHERE id = (SELECT sender_id FROM message WHERE id = ?)", [$id]);
+
+        return $id;
+    }
+
+    /**
+     * A message sent by the member, in this state. Returns its id.
+     */
+    private function messageOf(string $sender, string $status, string $spamInfo): int
+    {
+        $id = (int) $this->connection()->fetchOne(
+            "SELECT MIN(m.id) FROM message m JOIN member mb ON mb.id = m.sender_id
+             WHERE mb.Username = ? AND m.subject_id IS NOT NULL AND m.status = 'Sent' AND m.spam_info = 'NotSpam' AND m.checker_comment IS NULL",
+            [$sender],
+        );
+        self::assertGreaterThan(0, $id, 'no message of ' . $sender . ' left for the test');
+        $this->connection()->executeStatement(
+            "UPDATE message SET status = ?, spam_info = ?, checker_comment = 'zztest' WHERE id = ?",
+            [$status, $spamInfo, $id],
+        );
 
         return $id;
     }

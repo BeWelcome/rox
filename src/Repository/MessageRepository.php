@@ -20,6 +20,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Pagerfanta\Adapter\CallbackAdapter;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -358,12 +359,20 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
+     * The block word messages the checkers are done with, the newest first: decided (checked), or of a sender who
+     * was banned meanwhile.
+     *
+     * Their ids are read in one go and the page is cut from them. With a LIMIT the database walks the messages from
+     * the newest backwards until it has a page full, and these are few and mostly old: 26 seconds with 2.6 million
+     * messages, against half a second for all the ids.
      */
     public function findProcessedBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
-        $queryBuilder = $this->queryProcessedBlockWordsMessages();
-        $adapter = new QueryAdapter($queryBuilder);
+        $ids = $this->findProcessedBlockWordsMessageIds();
+        $adapter = new CallbackAdapter(
+            static fn (): int => \count($ids),
+            fn (int $offset, int $length): array => $this->findInOrder(\array_slice($ids, $offset, $length)),
+        );
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
@@ -582,6 +591,47 @@ class MessageRepository extends EntityRepository
         return (int) $this->getEntityManager()->getConnection()->fetchOne('SELECT COUNT(*) FROM message');
     }
 
+    /**
+     * @return list<int> newest first
+     */
+    private function findProcessedBlockWordsMessageIds(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        // spam_info is a list (SpamBlkWord,SpamSayChecker), so "has a block word" is a LIKE '%...%', which no index
+        // serves. It has a handful of distinct values, which the index gives at once: the ones with the marker, then
+        // the messages with exactly these.
+        $spamInfos = $connection->fetchFirstColumn(
+            'SELECT DISTINCT spam_info FROM message WHERE spam_info LIKE ?',
+            ['%' . SpamInfoType::SPAM_BLOCKED_WORD . '%'],
+        );
+        if ([] === $spamInfos) {
+            return [];
+        }
+
+        return array_map('intval', $connection->fetchFirstColumn(
+            'SELECT m.id FROM message m JOIN member mb ON mb.id = m.sender_id
+             WHERE m.spam_info IN (:spamInfos) AND (m.status = :checked OR mb.Status = :banned)
+             ORDER BY m.created DESC, m.id DESC',
+            ['spamInfos' => $spamInfos, 'checked' => MessageStatusType::CHECKED, 'banned' => MemberStatusType::BANNED],
+            ['spamInfos' => ArrayParameterType::STRING],
+        ));
+    }
+
+    /**
+     * @param list<int> $ids
+     *
+     * @return list<Message> in the order of the ids
+     */
+    private function findInOrder(array $ids): array
+    {
+        $messages = [];
+        foreach ($this->findBy(['id' => $ids]) as $message) {
+            $messages[$message->getId()] = $message;
+        }
+
+        return array_values(array_filter(array_map(static fn (int $id): ?Message => $messages[$id] ?? null, $ids)));
+    }
+
     private function queryReportedMessages(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('m');
@@ -621,29 +671,6 @@ class MessageRepository extends EntityRepository
             ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
             ->andWhere($qb->expr()->eq('mb.status', ':active'))
             ->setParameter('active', MemberStatusType::ACTIVE)
-            ->orderBy('m.created', 'DESC')
-        ;
-
-        return $qb;
-    }
-
-    private function queryProcessedBlockWordsMessages(): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('m');
-        $qb
-            ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
-            ->where($qb->expr()->notLike('m.spamInfo', ':blockedWord'))
-            ->andWhere($qb->expr()->notLike('m.spamInfo', ':checkerSaysSpam'))
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->eq('m.status', ':status'),
-                    $qb->expr()->eq('mb.status', ':banned'),
-                )
-            )
-            ->setParameter('blockedWord', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
-            ->setParameter('checkerSaysSpam', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
-            ->setParameter('status', MessageStatusType::CHECKED)
-            ->setParameter('banned', MemberStatusType::BANNED)
             ->orderBy('m.created', 'DESC')
         ;
 

@@ -12,7 +12,7 @@ use Pagerfanta\Adapter\CallbackAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
- * Mass mails (table broadcast) and their recipients (broadcastmessages) for the volunteers who send them.
+ * Mass mails (table broadcast) and their recipients (newsletter_recipient) for the volunteers who send them.
  *
  * A recipient is enqueued (ToApprove), triggered (ToSend), then sent or failed by send:massmail. Subject and text
  * are the words broadcast_title_<name> and broadcast_body_<name>, translated like any other word. The counts per
@@ -174,7 +174,7 @@ class MassmailModel
     {
         return $this->connection->transactional(function () use ($newsletter): int {
             $count = (int) $this->connection->executeStatement(
-                "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToApprove'",
+                "DELETE FROM newsletter_recipient WHERE newsletter_id = ? AND status = 'ToApprove'",
                 [$newsletter->getId()],
             );
             $this->statistics->add($newsletter, enqueued: -$count);
@@ -188,7 +188,7 @@ class MassmailModel
         return $this->connection->transactional(function () use ($newsletter): int {
             $this->connection->executeStatement("UPDATE broadcast SET Status = 'Triggered' WHERE id = ?", [$newsletter->getId()]);
             $count = (int) $this->connection->executeStatement(
-                "UPDATE broadcastmessages SET Status = 'ToSend', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToApprove'",
+                "UPDATE newsletter_recipient SET status = 'ToSend', updated = NOW() WHERE newsletter_id = ? AND status = 'ToApprove'",
                 [$newsletter->getId()],
             );
             $this->statistics->add($newsletter, enqueued: -$count, triggered: $count);
@@ -209,7 +209,7 @@ class MassmailModel
         return $this->connection->transactional(function () use ($newsletter): int {
             $this->connection->executeStatement("UPDATE broadcast SET Status = 'Created' WHERE id = ?", [$newsletter->getId()]);
             $count = (int) $this->connection->executeStatement(
-                "UPDATE broadcastmessages SET Status = 'ToApprove', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToSend'",
+                "UPDATE newsletter_recipient SET status = 'ToApprove', updated = NOW() WHERE newsletter_id = ? AND status = 'ToSend'",
                 [$newsletter->getId()],
             );
             $this->statistics->add($newsletter, enqueued: $count, triggered: -$count);
@@ -390,7 +390,7 @@ class MassmailModel
     {
         return $this->connection->transactional(function () use ($newsletter, $enqueuer, $from, $parameters, $types): int {
             $count = (int) $this->connection->executeStatement(
-                "INSERT IGNORE INTO broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+                "INSERT IGNORE INTO newsletter_recipient (newsletter_id, receiver_id, enqueued_by_id, status, updated)
                 SELECT :newsletter, m.id, :enqueuer, 'ToApprove', NOW() " . $from,
                 $parameters + ['newsletter' => $newsletter->getId(), 'enqueuer' => $enqueuer->getId()],
                 $types,

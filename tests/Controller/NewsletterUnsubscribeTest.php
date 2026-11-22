@@ -2,9 +2,9 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\Preference;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +35,7 @@ class NewsletterUnsubscribeTest extends WebTestCase
         $newsletter->setCreatedBy($members->findOneBy(['username' => 'bwadmin']));
         $newsletter->setCreated(new DateTime());
         $entityManager->persist($newsletter);
-        $message = new BroadcastMessage();
+        $message = new NewsletterRecipient();
         $message->setNewsletter($newsletter)
             ->setEnqueuedBy($members->findOneBy(['username' => 'bwadmin']))
             ->setStatus('Sent')

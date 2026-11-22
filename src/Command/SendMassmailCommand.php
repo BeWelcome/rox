@@ -3,9 +3,9 @@
 namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\NewsletterStatistics;
 use App\Repository\NewsletterRepository;
 use App\Repository\NewsletterStatisticsRepository;
@@ -51,9 +51,9 @@ class SendMassmailCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $batchSize = (int) $input->getArgument('batchSize') ?: $this->batchSize;
 
-        $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
+        $massmailRepository = $this->entityManager->getRepository(NewsletterRecipient::class);
 
-        /** @var BroadcastMessage[] $scheduledBroadcastMessages */
+        /** @var NewsletterRecipient[] $scheduledBroadcastMessages */
         $scheduledBroadcastMessages = $massmailRepository->findBy(
             ['status' => 'ToSend'],
             ['updated' => 'ASC'],
@@ -76,7 +76,7 @@ class SendMassmailCommand extends Command
      * stops the sending moves the waiting messages back to the queue meanwhile (MassmailModel::untrigger), and two
      * runs at the same time don't send a message twice. The counts change with the message.
      *
-     * @param BroadcastMessage[] $scheduledBroadcastMessages
+     * @param NewsletterRecipient[] $scheduledBroadcastMessages
      */
     private function sendMassmail(array $scheduledBroadcastMessages, SymfonyStyle $io): int
     {
@@ -95,7 +95,7 @@ class SendMassmailCommand extends Command
             $connection->beginTransaction();
             try {
                 $waiting = $connection->fetchOne(
-                    "SELECT 1 FROM broadcastmessages WHERE IdBroadcast = :newsletter AND IdReceiver = :receiver AND Status = 'ToSend' FOR UPDATE",
+                    "SELECT 1 FROM newsletter_recipient WHERE newsletter_id = :newsletter AND receiver_id = :receiver AND status = 'ToSend' FOR UPDATE",
                     $key,
                 );
                 if (false === $waiting) {
@@ -127,8 +127,8 @@ class SendMassmailCommand extends Command
                     $statistics->add($newsletter, triggered: -1, sent: 1);
                     ++$sent;
                 } catch (Exception $e) {
-                    $io->error('Message Frozen: ' . $e->getMessage());
-                    $this->setStatus($key, 'Freeze');
+                    $io->error('Message failed: ' . $e->getMessage());
+                    $this->setStatus($key, NewsletterRecipient::STATUS_FAILED);
                     $statistics->add($newsletter, triggered: -1, failed: 1);
                 }
                 $connection->commit();
@@ -148,8 +148,8 @@ class SendMassmailCommand extends Command
     private function setStatus(array $key, string $status, ?string $unsubscribeKey = null): void
     {
         $this->entityManager->getConnection()->executeStatement(
-            'UPDATE broadcastmessages SET Status = :status, unsubscribe_key = COALESCE(:unsubscribeKey, unsubscribe_key), updated = NOW()
-            WHERE IdBroadcast = :newsletter AND IdReceiver = :receiver',
+            'UPDATE newsletter_recipient SET status = :status, unsubscribe_key = COALESCE(:unsubscribeKey, unsubscribe_key), updated = NOW()
+            WHERE newsletter_id = :newsletter AND receiver_id = :receiver',
             $key + ['status' => $status, 'unsubscribeKey' => $unsubscribeKey],
         );
     }

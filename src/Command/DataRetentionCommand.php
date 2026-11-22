@@ -6,7 +6,6 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\DeleteRequestType;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
-use App\Entity\BroadcastMessage;
 use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
 use App\Entity\Donation;
@@ -26,6 +25,7 @@ use App\Entity\MemberPreference;
 use App\Entity\MemberThreadSubscription;
 use App\Entity\MemberTranslation;
 use App\Entity\Message;
+use App\Entity\NewsletterRecipient;
 use App\Entity\PasswordReset;
 use App\Entity\ProfileNote;
 use App\Entity\ProfileVisit;
@@ -352,7 +352,7 @@ class DataRetentionCommand extends Command
             MemberLegNotificationSent::class => 'e.member = :member',
             MemberActivityNotificationSent::class => 'e.member = :member',
             LoginMessageAcknowledged::class => 'e.member = :member',
-            BroadcastMessage::class => 'e.receiver = :member',
+            NewsletterRecipient::class => 'e.receiver = :member',
         ];
         foreach ($deletes as $entity => $where) {
             $this->entityManager->createQuery('DELETE ' . $entity . ' e WHERE ' . $where)

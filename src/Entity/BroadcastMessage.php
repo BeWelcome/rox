@@ -7,6 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * main's recipients of a mass mail (`broadcastmessages`), kept while main uses the table. develop reads and writes
+ * App\Entity\NewsletterRecipient (`newsletter_recipient`), filled from this table by Version20261121120000.
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")

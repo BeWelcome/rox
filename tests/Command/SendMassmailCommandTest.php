@@ -4,9 +4,9 @@ namespace App\Tests\Command;
 
 use App\Command\SendMassmailCommand;
 use App\Doctrine\MemberStatusType;
-use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\NewsletterStatistics;
 use App\Repository\NewsletterRepository;
 use App\Repository\NewsletterStatisticsRepository;
@@ -58,7 +58,7 @@ class SendMassmailCommandTest extends TestCase
         $receiver = $this->createStub(Member::class);
         $receiver->method('getId')->willReturn(42);
         $receiver->method('getStatus')->willReturn(MemberStatusType::ACTIVE);
-        $scheduled = $this->createStub(BroadcastMessage::class);
+        $scheduled = $this->createStub(NewsletterRecipient::class);
         $scheduled->method('getNewsletter')->willReturn($newsletter);
         $scheduled->method('getReceiver')->willReturn($receiver);
 
@@ -83,7 +83,7 @@ class SendMassmailCommandTest extends TestCase
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $entityManager->method('getConnection')->willReturn($connection);
         $entityManager->method('getRepository')->willReturnMap([
-            [BroadcastMessage::class, $messages],
+            [NewsletterRecipient::class, $messages],
             [NewsletterStatistics::class, $statistics],
             [Newsletter::class, $newsletters],
         ]);
@@ -94,7 +94,7 @@ class SendMassmailCommandTest extends TestCase
         $tester = new CommandTester(new SendMassmailCommand($entityManager, $mailer, 25));
 
         self::assertSame(Command::SUCCESS, $tester->execute([]));
-        self::assertSame(['Freeze'], $statuses);
+        self::assertSame(['Failed'], $statuses);
         self::assertStringContainsString('Sent 0 messages', $tester->getDisplay());
     }
 }

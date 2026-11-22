@@ -494,8 +494,8 @@ class MassmailTest extends WebTestCase
     private function enqueued(int $id): array
     {
         return $this->connection()->fetchFirstColumn(
-            "SELECT m.Username FROM broadcastmessages bm JOIN member m ON m.id = bm.IdReceiver
-            WHERE bm.IdBroadcast = ? AND bm.Status = 'ToApprove' ORDER BY m.Username",
+            "SELECT m.Username FROM newsletter_recipient nr JOIN member m ON m.id = nr.receiver_id
+            WHERE nr.newsletter_id = ? AND nr.status = 'ToApprove' ORDER BY m.Username",
             [$id],
         );
     }
@@ -516,7 +516,7 @@ class MassmailTest extends WebTestCase
     private function recipients(int $id, ?string $status = null): int
     {
         return (int) $this->connection()->fetchOne(
-            'SELECT COUNT(*) FROM broadcastmessages WHERE IdBroadcast = ?' . (null !== $status ? ' AND Status = ?' : ''),
+            'SELECT COUNT(*) FROM newsletter_recipient WHERE newsletter_id = ?' . (null !== $status ? ' AND status = ?' : ''),
             null !== $status ? [$id, $status] : [$id],
         );
     }

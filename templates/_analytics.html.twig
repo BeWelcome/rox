@@ -16,7 +16,8 @@
       window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
       plausible.init()
     </script>
-    {% if app.request and app.request.hasPreviousSession %}
+    {# not on a page that leaves the notices for the next one (keep_notices, base.html.twig): the events wait too #}
+    {% if app.request and app.request.hasPreviousSession and not (keep_notices ?? false) %}
         {% for event in app.flashes('plausible_event') %}
             {% if event is iterable %}
     <script>plausible({{ event.name|json_encode|raw }}, {{ event|filter((value, key) => key != 'name')|json_encode|raw }})</script>

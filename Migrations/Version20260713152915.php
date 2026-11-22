@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
@@ -31,6 +29,8 @@ final class Version20260713152915 extends AbstractMigration
     #[Override]
     public function down(Schema $schema): void
     {
-        $this->throwIrreversibleMigrationException('Deleted orphaned group memberships cannot be restored.');
+        // The deleted memberships pointed at no group: main can't use them either, so there is nothing to bring back,
+        // and the migrations can be rolled back past this one when stage switches back to main.
+        $this->write('The memberships of groups that no longer exist stay deleted.');
     }
 }

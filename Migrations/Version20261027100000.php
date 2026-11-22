@@ -34,6 +34,8 @@ final class Version20261027100000 extends AbstractMigration
     #[Override]
     public function down(Schema $schema): void
     {
-        $this->throwIrreversibleMigrationException('geo__countries was filled by geonames:update --countries, which is gone.');
+        // Nothing to bring back for main: it doesn't read geo__countries (and the command that filled it is gone). So
+        // the migrations can be rolled back past this one when stage switches back to main.
+        $this->write('geo__countries stays dropped: nothing reads it.');
     }
 }

@@ -37,7 +37,6 @@ use DateTime;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -48,7 +47,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Lock\LockFactory;
 
 #[AsCommand(
@@ -59,6 +57,15 @@ use Symfony\Component\Lock\LockFactory;
 )]
 class DataRetentionCommand extends Command
 {
+    /**
+     * The sizes of the profile pictures, as files <id>_<size>_<size> (and <id>_<size> of the old site): those the
+     * pages, the mails and the scripts ask for, those of the old site, and the original.
+     */
+    private const array AVATAR_SIZES = [
+        'xs', '24', '30', '32', '36', '44', '48', '50', '64', '72', '96', '100', '120', '128', '150', '160', '192', '200',
+        '320', '480', '500', '800', 'original',
+    ];
+
     private Member $bwAdmin;
     private MemberRepository $memberRepository;
 
@@ -297,18 +304,21 @@ class DataRetentionCommand extends Command
 
     private function removeProfilePictures(Member $member): void
     {
-        $memberPath = $this->dataDirectory . '/user/avatars/';
+        $memberPath = $this->dataDirectory . '/user/avatars/' . $member->getId() . '_';
 
-        $filesystem = new Filesystem();
-        $finder = new Finder();
-        try {
-            // {id}_{size}: '{id}*' would match the avatars of members whose id starts with this one
-            $files = $finder->files()->name($member->getId() . '_*')->in($memberPath);
-
-            foreach ($files as $file) {
-                $filesystem->remove($file);
+        // the known names only: no scan of the folder (over a million files on the live site, once per member). Files
+        // of other sizes (any size can be asked for) are left to a clean-up of their own.
+        $files = [];
+        foreach (self::AVATAR_SIZES as $size) {
+            $files[] = $memberPath . $size;
+            if ('original' !== $size) {
+                $files[] = $memberPath . $size . '_' . $size;
             }
-        } catch (Exception $e) {
+        }
+
+        try {
+            new Filesystem()->remove(array_filter($files, 'file_exists'));
+        } catch (IOException $e) {
             $this->logger->write(
                 'Problem during retention run: ' . $e->getMessage(),
                 'Data Retention',

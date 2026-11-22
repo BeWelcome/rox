@@ -295,9 +295,13 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
         );
         $avatars = static::getContainer()->getParameter('data_directory') . '/user/avatars/';
         $filesystem = new Filesystem();
-        // the member's avatar, and one of a member whose id starts with the same digits
-        $filesystem->dumpFile($avatars . $memberId . '_30_30', 'x');
-        $filesystem->dumpFile($avatars . $memberId . '9999_30_30', 'x');
+        // the member's pictures (an old name, the original, a size of the pages), one of a member whose id starts with
+        // the same digits, and one of a size nobody asks for (left to a clean-up of its own)
+        $own = [$memberId . '_30_30', $memberId . '_96', $memberId . '_original', $memberId . '_192_192'];
+        $others = [$memberId . '9999_30_30', $memberId . '_77_77'];
+        foreach ([...$own, ...$others] as $name) {
+            $filesystem->dumpFile($avatars . $name, 'x');
+        }
 
         try {
             $this->execute('data:retention');
@@ -317,10 +321,14 @@ final class MemberLifecycleCommandsTest extends KernelTestCase
                  OR (receiver_id = :id AND FIND_IN_SET('receiverpurged', IFNULL(delete_request, '')) = 0)",
                 ['id' => $memberId],
             ));
-            self::assertFileDoesNotExist($avatars . $memberId . '_30_30');
-            self::assertFileExists($avatars . $memberId . '9999_30_30');
+            foreach ($own as $name) {
+                self::assertFileDoesNotExist($avatars . $name);
+            }
+            foreach ($others as $name) {
+                self::assertFileExists($avatars . $name);
+            }
         } finally {
-            $filesystem->remove([$avatars . $memberId . '_30_30', $avatars . $memberId . '9999_30_30']);
+            $filesystem->remove(array_map(static fn (string $name): string => $avatars . $name, [...$own, ...$others]));
         }
     }
 

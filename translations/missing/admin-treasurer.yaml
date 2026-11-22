@@ -151,3 +151,11 @@ admin.treasurer.comment:
 admin.treasurer.comment.help:
   - 'Shown in the public list of donations.'
   - 'Treasurer tool, donation form: help under the comment.'
+admin.treasurer.amount.empty:
+  - 'Please enter the amount.'
+  - 'Treasurer tool, donation form: the amount is empty.'
+  - validators
+admin.treasurer.date.empty:
+  - 'Please enter the day of the donation.'
+  - 'Treasurer tool, donation form: the date is empty.'
+  - validators

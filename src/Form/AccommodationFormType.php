@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 class AccommodationFormType extends AbstractType
@@ -23,6 +24,7 @@ class AccommodationFormType extends AbstractType
             ->add('max_guests', IntegerType::class, [
                 'label' => 'profile.max.guests',
                 'help' => 'help.profile.max_guests',
+                'constraints' => [new NotBlank(message: 'profile.max.guests.empty')],
                 'attr' => [
                     'class' => 'o-input',
                     'min' => 1,

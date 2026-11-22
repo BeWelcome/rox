@@ -264,3 +264,7 @@ mydata.groups.goto:
 mydata.polls.no.title:
     - 'Poll without a title'
     - 'Data export, polls: a poll that has no title.'
+mydata.password.empty:
+  - 'Please enter your password.'
+  - 'Personal data: the form that asks for the password before the download was sent without one.'
+  - validators

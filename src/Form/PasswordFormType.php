@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PasswordFormType extends AbstractType
 {
@@ -17,6 +18,7 @@ class PasswordFormType extends AbstractType
         $builder
             ->add('password', PasswordType::class, [
                 'label' => 'password',
+                'constraints' => [new NotBlank(message: 'mydata.password.empty')],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'submit',

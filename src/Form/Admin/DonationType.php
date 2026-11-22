@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DonationType extends AbstractType
 {
@@ -66,10 +67,12 @@ class DonationType extends AbstractType
                 'currency' => false,
                 'html5' => true,
                 'label' => 'admin.treasurer.amount',
+                'constraints' => [new NotBlank(message: 'admin.treasurer.amount.empty')],
             ])
             ->add('created', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'admin.treasurer.donated.on',
+                'constraints' => [new NotBlank(message: 'admin.treasurer.date.empty')],
             ])
             ->add('country', ChoiceType::class, [
                 'required' => false,

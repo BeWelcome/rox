@@ -37,3 +37,23 @@ admin.faqs.help.english:
 admin.faqs.help.active:
   - 'Members only see active FAQs.'
   - 'FAQ admin, FAQ form: the help of the active checkbox.'
+admin.faq.category.code.empty:
+  - 'Please enter a code for the category.'
+  - 'FAQ admin, category form: the code is empty.'
+  - validators
+admin.faq.category.description.empty:
+  - 'Please enter the name of the category.'
+  - 'FAQ admin, category form: the description (the name members see) is empty.'
+  - validators
+admin.faq.code.empty:
+  - 'Please enter a code for the question.'
+  - 'FAQ admin, FAQ form: the code is empty.'
+  - validators
+admin.faq.question.empty:
+  - 'Please write the question.'
+  - 'FAQ admin, FAQ form: the question is empty.'
+  - validators
+admin.faq.answer.empty:
+  - 'Please write the answer.'
+  - 'FAQ admin, FAQ form: the answer is empty.'
+  - validators

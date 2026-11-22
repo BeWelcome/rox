@@ -307,3 +307,11 @@ admin.tools.team_coordinators.none:
 admin.tools.team_coordinators.page:
   - 'Show the page'
   - 'Volunteer tools, team coordinators: button that opens the Get active page.'
+admin.tools.find_member.error.empty:
+  - 'Please enter what to search for.'
+  - 'Volunteer tools, find a member: the search was sent empty.'
+  - validators
+admin.tools.find_member.error.short:
+  - 'Please enter at least {{ limit }} characters.'
+  - 'Volunteer tools, find a member: the search term is too short ({{ limit }} is the minimum).'
+  - validators

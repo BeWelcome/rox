@@ -10,20 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqRequest
 {
-    /**
-     * @Assert\NotBlank()
-     */
-    public string $wordCode;
+    // null while the form is empty: the checks below say what is missing
+    #[Assert\NotBlank(message: 'admin.faq.code.empty')]
+    public ?string $wordCode = null;
 
-    /**
-     * @Assert\NotBlank()
-     */
-    public string $question;
+    #[Assert\NotBlank(message: 'admin.faq.question.empty')]
+    public ?string $question = null;
 
-    /**
-     * @Assert\NotBlank()
-     */
-    public string $answer;
+    #[Assert\NotBlank(message: 'admin.faq.answer.empty')]
+    public ?string $answer = null;
 
     public bool $active = true;
 

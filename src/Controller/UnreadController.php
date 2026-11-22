@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\ReleasesSession;
 use App\Entity\BrowserPushNotification;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -19,6 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UnreadController extends AbstractController
 {
     #[Route(path: '/count/conversations/unread', name: 'count_conversations_unread')]
+    #[ReleasesSession]
     public function getUnreadConversationsCount(
         Request $request,
         EntityManagerInterface $entityManager,

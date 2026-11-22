@@ -91,6 +91,31 @@ class AvatarControllerTest extends WebTestCase
         $this->assertServedFileStartsWith($client, 'empty_avatar_');
     }
 
+    /**
+     * The placeholder of a size is made once and served from then on. It was looked up under another name than it
+     * is written under, so every request made it again, and one could read it while another wrote it.
+     */
+    public function testTheEmptyAvatarOfASizeIsMadeOnce(): void
+    {
+        // without a login every avatar is the placeholder
+        $client = $this->createAnonymousClient();
+        $placeholder = self::AVATAR_DIRECTORY . 'empty_avatar_48_48';
+        $client->request('GET', '/members/avatar/member-2/48');
+        $this->assertResponseIsSuccessful();
+        self::assertFileExists($placeholder);
+        $made = strtotime('-1 day');
+        touch($placeholder, $made);
+        clearstatcache();
+
+        $client->request('GET', '/members/avatar/member-2/48');
+
+        $this->assertResponseIsSuccessful();
+        self::assertInstanceOf(BinaryFileResponse::class, $client->getResponse());
+        self::assertSame('empty_avatar_48_48', $client->getResponse()->getFile()->getFilename());
+        clearstatcache();
+        self::assertSame($made, filemtime($placeholder), 'the placeholder was written again');
+    }
+
     public function testASignedLinkFromAMailServesThePictureWithoutLogin(): void
     {
         $client = $this->createAnonymousClient();

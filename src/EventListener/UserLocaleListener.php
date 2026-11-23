@@ -6,6 +6,7 @@ use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
@@ -35,10 +36,24 @@ class UserLocaleListener implements EventSubscriberInterface
         $session->set('lang', $locale);
     }
 
+    /**
+     * The member's language is remembered beyond the session too: the page after logout is in it (rox #206).
+     */
+    public function onLoginSuccess(LoginSuccessEvent $event): void
+    {
+        $user = $event->getUser();
+        $response = $event->getResponse();
+        if (!$user instanceof Member || null === $response || !$user->getLocale()) {
+            return;
+        }
+        $response->headers->setCookie(LocaleListener::cookie($user->getLocale(), $event->getRequest()->isSecure()));
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
             SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
+            LoginSuccessEvent::class => 'onLoginSuccess',
         ];
     }
 }

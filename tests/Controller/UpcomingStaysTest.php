@@ -110,6 +110,71 @@ class UpcomingStaysTest extends WebTestCase
         self::assertCount(1, $crawler->filter('#stays_menu a[href="/conversation/' . $accepted->getId() . '"]'));
     }
 
+    /**
+     * A change of the dates after the host accepted is a new request, open again: the stay leaves the lists until the
+     * host accepts the new dates, and then it is there once, on the new dates (rox #380).
+     */
+    public function testAStayChangedAfterItWasAcceptedIsOnTheNewDatesOnly(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $members = $entityManager->getRepository(Member::class);
+        $guest = $members->findOneBy(['username' => 'member-2']);
+        $host = $members->findOneBy(['username' => 'member-5']);
+        $arrival = Carbon::today()->addMonths(2)->startOfMonth()->addDays(3);
+        $accepted = $this->request($guest, $host, HostingRequest::REQUEST_ACCEPTED, $arrival);
+        $changed = $this->reply($accepted, $guest, $host, HostingRequest::REQUEST_OPEN, $arrival->copy()->addDays(10));
+
+        $client->loginUser($host);
+        $crawler = $client->request('GET', '/stays', ['month' => $arrival->format('Y-m')]);
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->filter('.p-stays__list a[href="/conversation/' . $accepted->getId() . '"]'));
+        self::assertCount(0, $crawler->filter('.p-stays__list a[href="/conversation/' . $changed->getId() . '"]'));
+
+        // the host accepts the new dates
+        $entityManager->clear();
+        $entityManager->find(HostingRequest::class, $changed->getRequest()->getId())->setStatus(HostingRequest::REQUEST_ACCEPTED);
+        $entityManager->flush();
+
+        $crawler = $client->request('GET', '/stays', ['month' => $arrival->format('Y-m')]);
+
+        self::assertCount(0, $crawler->filter('.p-stays__list a[href="/conversation/' . $accepted->getId() . '"]'));
+        $row = $crawler->filter('.p-stays__list .js-stays-item')->reduce(
+            static fn ($item): bool => $item->filter('a[href="/conversation/' . $changed->getId() . '"]')->count() > 0,
+        );
+        self::assertCount(1, $row);
+    }
+
+    /**
+     * A reply in the conversation of $message that changes the request: a new request with $status from $arrival.
+     */
+    private function reply(Message $message, Member $sender, Member $receiver, int $status, Carbon $arrival): Message
+    {
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $request = new HostingRequest()
+            ->setArrival($arrival)
+            ->setDeparture($arrival->copy()->addDays(2))
+            ->setFlexible(false)
+            ->setNumberOfTravellers(2)
+            ->setStatus($status);
+        $reply = new Message()
+            ->setSubject($message->getSubject())
+            ->setParent($message)
+            ->setRequest($request)
+            ->setSender($sender)
+            ->setReceiver($receiver)
+            ->setInitiator($message->getInitiator())
+            ->setMessage('zztest other dates')
+            ->setStatus(MessageStatusType::SENT)
+            ->setFolder(InFolderType::REQUESTS);
+        $entityManager->persist($request);
+        $entityManager->persist($reply);
+        $entityManager->flush();
+
+        return $reply;
+    }
+
     private function request(Member $guest, Member $host, int $status, Carbon $arrival): Message
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);

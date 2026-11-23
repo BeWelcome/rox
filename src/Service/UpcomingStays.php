@@ -140,6 +140,10 @@ class UpcomingStays
             ->where('m.id IN (SELECT MIN(f.id) FROM ' . Message::class . ' f'
                 . ' WHERE f.request IS NOT NULL AND (f.sender = :member OR f.receiver = :member) GROUP BY f.request)')
             ->andWhere('r.status IN (:statuses)')
+            // the conversation's current request: a change of the dates (or travellers) is a new request, and the
+            // one accepted before keeps its status (rox #380: the stay stayed on the old dates)
+            ->andWhere('m.subject IS NULL OR r.id = (SELECT MAX(IDENTITY(l.request)) FROM ' . Message::class . ' l'
+                . ' WHERE l.subject = m.subject)')
             ->setParameter('member', $member)
             ->setParameter('statuses', $withMaybe
                 ? [HostingRequest::REQUEST_ACCEPTED, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED]

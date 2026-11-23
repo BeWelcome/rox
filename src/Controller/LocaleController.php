@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Language;
 use App\Entity\Member;
+use App\EventListener\LocaleListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +41,11 @@ class LocaleController extends AbstractController
         $session->set('locale', $locale);
         $session->set('_locale', $locale);
 
-        return new RedirectResponse($redirect);
+        // kept beyond the session: the next visit and the page after logout are in this language (rox #206)
+        $response = new RedirectResponse($redirect);
+        $response->headers->setCookie(LocaleListener::cookie($locale, $request->isSecure()));
+
+        return $response;
     }
 
     /**

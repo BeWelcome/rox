@@ -4,6 +4,10 @@ label.decline.no.message:
 request.error.arrival.past:
     - 'The arrival can''t be in the past.'
     - Error message shown when a request (or an invitation) is sent or changed with an arrival before today
+request.error.numberoftravellers.range:
+    - 'Please enter a whole number from 1 to 20.'
+    - Error message shown when the number of travellers of a request is not a whole number from 1 to 20
+    - validators
 request.error.duration:
     - 'Please set a duration'
     - Error message shown when no duration was selected in a request

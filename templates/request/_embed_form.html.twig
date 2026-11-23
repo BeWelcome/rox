@@ -54,7 +54,7 @@
                         <button type="button" class="c-contact-stay__step js-request-step" data-step="-1" aria-label="-1">
                             <i class="fas fa-minus" aria-hidden="true"></i>
                         </button>
-                        {{ form_widget(_travellers, { type: 'number', value: _travellers.vars.value ?: 1, attr: { class: 'c-contact-stay__count', min: 1, max: 20, inputmode: 'numeric' } }) }}
+                        {{ form_widget(_travellers, { type: 'number', attr: { class: 'c-contact-stay__count', min: 1, max: 20, inputmode: 'numeric' } }) }}
                         <button type="button" class="c-contact-stay__step js-request-step" data-step="1" aria-label="+1">
                             <i class="fas fa-plus" aria-hidden="true"></i>
                         </button>

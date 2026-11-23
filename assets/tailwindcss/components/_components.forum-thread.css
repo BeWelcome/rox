@@ -67,7 +67,8 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-thread-post__main { flex: 1; min-width: 0; padding: 1.1rem 1.25rem 1.2rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.04); }
 .p-thread-post.is-mine .p-thread-post__main { background: #fdf6ee; }
 .p-thread-post.is-mine .p-thread-post__photo img { box-shadow: 0 0 0 2px #f4f5f7, 0 0 0 4px #f5b97f; }
-.p-thread-post:target .p-thread-post__main { box-shadow: 0 0 0 2px #fdba74; }
+/* the post the address points to; the first post is framed as a whole (below) */
+.p-thread-post:not(.p-thread-post--starter):target .p-thread-post__main { box-shadow: 0 0 0 2px #fdba74; }
 /* The first post: one big card, its photo inside with a ring */
 .p-thread-post--starter { z-index: 1; gap: 1rem; padding: 1.5rem 1.6rem 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.05); }
 .p-thread-post--starter .p-thread-post__photo { align-self: flex-start; }

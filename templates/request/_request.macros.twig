@@ -43,7 +43,7 @@
             </button>
             <span class="c-request-stepper__value">
                 <i class="fa fa-users" aria-hidden="true"></i>
-                {{ form_widget(field, { type: 'number', value: field.vars.value ?: 1, attr: { class: 'c-request-stepper__input', min: 1, max: 20, inputmode: 'numeric' } }) }}
+                {{ form_widget(field, { type: 'number', attr: { class: 'c-request-stepper__input', min: 1, max: 20, inputmode: 'numeric' } }) }}
             </span>
             <button type="button" class="c-request-stepper__btn js-request-step" data-step="1" aria-label="+1">
                 <i class="fas fa-plus" aria-hidden="true"></i>

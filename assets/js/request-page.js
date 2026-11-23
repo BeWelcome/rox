@@ -72,18 +72,21 @@ export function initRequests() {
         const max = parseInt(input.max, 10) || 20;
         const buttons = stepper.querySelectorAll('.js-request-step');
 
+        // the field starts empty: the member says how many travel; + then starts at the minimum
         const refresh = () => {
-            const value = parseInt(input.value, 10) || min;
+            const value = parseInt(input.value, 10);
+            const empty = Number.isNaN(value);
             buttons.forEach((button) => {
                 const step = parseInt(button.dataset.step, 10);
-                button.disabled = (step < 0 && value <= min) || (step > 0 && value >= max);
+                button.disabled = (step < 0 && (empty || value <= min)) || (step > 0 && !empty && value >= max);
             });
         };
 
         buttons.forEach((button) => {
             button.addEventListener('click', () => {
-                const value = (parseInt(input.value, 10) || min) + parseInt(button.dataset.step, 10);
-                input.value = Math.min(max, Math.max(min, value));
+                const value = parseInt(input.value, 10);
+                const next = Number.isNaN(value) ? min : value + parseInt(button.dataset.step, 10);
+                input.value = Math.min(max, Math.max(min, next));
                 refresh();
             });
         });

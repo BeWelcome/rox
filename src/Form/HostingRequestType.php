@@ -12,6 +12,7 @@ use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -174,13 +175,14 @@ class HostingRequestType extends AbstractType
                 'min' => 1,
                 'max' => 20,
             ],
-            'invalid_message' => 'request.error.number_of_travellers',
+            // not a whole number ("abc", "2 people", "1.5"), or out of the range
+            'invalid_message' => 'request.error.numberoftravellers.range',
             'required' => false,
             'setter' => self::travellersSetter(),
             'constraints' => [
                 new NotBlank(message: 'request.error.numberoftravellers.empty'),
-                new LessThanOrEqual(20),
-                new GreaterThanOrEqual(1),
+                new LessThanOrEqual(20, message: 'request.error.numberoftravellers.range'),
+                new GreaterThanOrEqual(1, message: 'request.error.numberoftravellers.range'),
             ],
         ];
 
@@ -190,7 +192,8 @@ class HostingRequestType extends AbstractType
             'mapped' => false,
         ];
 
-        $numberOfTravellersType = TextType::class;
+        // a whole number the member enters: the field starts empty, there is no default
+        $numberOfTravellersType = IntegerType::class;
         if (null !== $data) {
             if ($options['reply_host']) {
                 $numberOfTravellersType = HiddenType::class;

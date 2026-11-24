@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Newsletter;
+use App\Entity\NewsletterRecipient;
 use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 
@@ -20,6 +21,39 @@ class NewsletterRepository extends EntityRepository
         $query = $qb->getQuery();
 
         return $query->getResult();
+    }
+
+    /**
+     * The drafts, newest first: the mass mails of any kind that nobody got yet. One stopped while it was sent is no
+     * draft, as the mails that left link to it.
+     *
+     * @return list<Newsletter>
+     */
+    public function findDrafts(): array
+    {
+        return $this->createQueryBuilder('n')
+            ->where("n.status <> 'Triggered'")
+            ->andWhere(
+                'NOT EXISTS (SELECT IDENTITY(r.receiver) FROM ' . NewsletterRecipient::class . ' r'
+                . ' WHERE r.newsletter = n AND r.status = :sent)',
+            )
+            ->setParameter('sent', NewsletterRecipient::STATUS_SENT)
+            ->orderBy('n.created', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function isDraft(Newsletter $newsletter): bool
+    {
+        if ('Triggered' === $newsletter->getStatus()) {
+            return false;
+        }
+
+        return false === $this->getEntityManager()->getConnection()->fetchOne(
+            'SELECT 1 FROM newsletter_recipient WHERE newsletter_id = ? AND status = ? LIMIT 1',
+            [$newsletter->getId(), NewsletterRecipient::STATUS_SENT],
+        );
     }
 
     /**

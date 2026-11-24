@@ -21,6 +21,11 @@
 .c-newsletter-card__title a:hover { color: #0f172a; text-decoration: none; transition: color 0.15s ease; }
 .c-newsletter-card__title a:hover { color: #c2410c; }
 .c-newsletter-card__meta { margin: 0 0 0.75rem; color: #64748b; font-size: 0.875rem; }
+/* drafts: for the volunteers only, above the archive */
+.c-newsletters__drafts { margin-bottom: 2rem; }
+.c-newsletters__drafts-hint { margin: -0.25rem 0 0.75rem; color: #64748b; font-size: 0.875rem; }
+.c-newsletter-card--draft { border: 1px dashed #cbd5e1; box-shadow: none; }
+.c-newsletter-card--draft .c-newsletter-card__date { background: #f1f5f9; color: #475569; }
 .c-newsletters__pager { display: flex; justify-content: center; margin-top: 2rem; }
 
 /* Language pills */

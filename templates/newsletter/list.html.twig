@@ -2,7 +2,8 @@
 {#
   The newsletter archive (NewsletterController::showNewslettersOverview): the published newsletters, newest first,
   grouped by year within the page, each with its languages. The title opens the member's locale, or the first
-  language the newsletter has.
+  language the newsletter has. Above them, on the first page, the volunteers who translate or write mass mails get
+  the drafts (NewsletterArchiveModel::getDrafts), each opening in their language.
 #}
 {% import 'newsletter/_macros.html.twig' as nl %}
 
@@ -21,6 +22,18 @@
           <p class="c-newsletters__count">{{ 'newsletters.count'|trans({count: summary.total, year: summary.since}) }}</p>
         {% endif %}
       </header>
+
+      {% if drafts is not empty %}
+        <section class="c-newsletters__year c-newsletters__drafts" aria-labelledby="c-newsletters-drafts">
+          <h2 class="c-newsletters__year-title" id="c-newsletters-drafts">{{ 'newsletters.drafts'|trans }}</h2>
+          <p class="c-newsletters__drafts-hint">{{ 'newsletters.drafts.hint'|trans }}</p>
+          <ul class="c-newsletters__list">
+            {% for draft in drafts %}
+              {{ nl.card(draft, draft.link, true) }}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
 
       {% if newsletters.nbResults == 0 %}
         <div class="c-cnews-card c-cnews-empty">
@@ -41,24 +54,7 @@
             <h2 class="c-newsletters__year-title" id="c-newsletters-{{ year }}">{{ year }}</h2>
             <ul class="c-newsletters__list">
               {% for newsletter in newsletters.currentPageResults|filter(n => n.created|date('Y') == year) %}
-                {% set count = newsletter.languages|length %}
-                <li class="c-cnews-card c-newsletter-card">
-                  <div class="c-newsletter-card__date" aria-hidden="true">
-                    <span class="c-newsletter-card__day">{{ newsletter.created|format_date(pattern='d') }}</span>
-                    <span class="c-newsletter-card__month">{{ newsletter.created|format_date(pattern='MMM') }}</span>
-                  </div>
-                  <div class="c-newsletter-card__main">
-                    <h3 class="c-newsletter-card__title">
-                      <a href="{{ path('newsletter_single', {id: newsletter.id, language: newsletter.link}) }}">{{ ('broadcast_title_' ~ newsletter.name)|lower|trans }}</a>
-                    </h3>
-                    <p class="c-newsletter-card__meta">
-                      {{ newsletter.created|format_date(pattern='d MMMM y') }} · {{ newsletter.created.diffForHumans }} · {{ 'newsletters.languages'|trans({count: count}) }}
-                    </p>
-                    {% if count > 0 %}
-                      {{ nl.languages(newsletter.id, newsletter.languages, locale) }}
-                    {% endif %}
-                  </div>
-                </li>
+                {{ nl.card(newsletter, locale) }}
               {% endfor %}
             </ul>
           </section>

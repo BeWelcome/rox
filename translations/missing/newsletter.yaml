@@ -19,6 +19,18 @@ newsletters.count:
 newsletters.languages:
     - '{count, plural, =0 {no translations} one {1 language} other {# languages}}'
     - 'Newsletter archive: in how many languages a newsletter can be read.'
+newsletters.drafts:
+    - 'Drafts'
+    - 'Newsletter archive: the heading above the newsletters that are not sent yet. Only the translators and the volunteers who write the newsletters see it.'
+newsletters.drafts.hint:
+    - 'Not sent yet. Only translators and the volunteers who write the newsletters see these.'
+    - 'Newsletter archive: the line under the heading "Drafts".'
+newsletter.draft:
+    - 'Draft: not sent yet.'
+    - 'Newsletter: shown above the text of a newsletter that is not sent yet. Only the translators and the volunteers who write the newsletters see it.'
+newsletter.draft.untranslated:
+    - 'There is no text in {language} yet.'
+    - 'Newsletter: shown to a translator who opens a draft in a language it is not translated into yet. Keep {language}.'
 newsletter.back:
     - 'All newsletters'
     - 'Newsletter: the link back to the archive.'

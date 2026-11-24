@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Model\ActivityModel;
 use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
@@ -165,14 +167,13 @@ class CheckerController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $this->checkToken($request, self::TOKEN);
-            $onPage = array_map(
-                static fn ($message): int => $message->getId(),
-                iterator_to_array($this->messages($section, $page, $limit)->getCurrentPageResults(), false),
-            );
+            $stored = $this->storedDecisions($this->messages($section, $page, $limit));
             $spam = [];
             $notSpam = [];
             foreach ($request->request->all('decisions') as $id => $decision) {
-                if (!\in_array((int) $id, $onPage, true)) {
+                // The browser sends every row's decision, the stored ones too: only a changed one is saved. Saving
+                // "ok" anew would mail a released message again, and release one waiting for its banned sender.
+                if (!isset($stored[(int) $id]) || $stored[(int) $id] === $decision) {
                     continue;
                 }
                 if (self::SPAM === $decision) {
@@ -201,9 +202,29 @@ class CheckerController extends AbstractController
             'counts' => $this->counts(),
             'active' => $section,
             'block_words' => \in_array($section, ['blocked_words', 'processed_blocked_words'], true),
-            'processed' => \in_array($section, ['processed_messages', 'processed_blocked_words'], true),
-            'spam_flag' => SpamInfoType::CHECKER_SAYS_SPAM,
+            'stored' => $this->storedDecisions($messages),
         ]);
+    }
+
+    /**
+     * What the checkers decided about the messages of a page, by message id: spam, ok, or '' while nobody decided
+     * (in the open sections, and in the processed block words for a message that waits, its sender banned).
+     *
+     * @return array<int, string>
+     */
+    private function storedDecisions(Pagerfanta $messages): array
+    {
+        $stored = [];
+        /** @var Message $message */
+        foreach ($messages->getCurrentPageResults() as $message) {
+            $stored[$message->getId()] = match (true) {
+                str_contains((string) $message->getSpamInfo(), SpamInfoType::CHECKER_SAYS_SPAM) => self::SPAM,
+                MessageStatusType::CHECKED === $message->getStatus() => self::NOT_SPAM,
+                default => '',
+            };
+        }
+
+        return $stored;
     }
 
     private function messages(string $section, int $page, int $limit): Pagerfanta

@@ -118,6 +118,35 @@ final class CheckerTest extends WebTestCase
         // the stored decision is preselected
         self::assertCount(1, $this->row($crawler, $keptAsSpam)->filter('input[value="' . CheckerController::SPAM . '"][checked]'));
         self::assertCount(1, $this->row($crawler, $keptAsOk)->filter('input[value="' . CheckerController::NOT_SPAM . '"][checked]'));
+        // nobody decided about the message that waits
+        self::assertCount(0, $this->row($crawler, $ofBannedSender)->filter('input[checked]'));
+    }
+
+    /**
+     * The browser sends the preselected decision of every row with the one that was changed.
+     */
+    public function testSavingACorrectionLeavesTheOtherMessagesOfThePageAlone(): void
+    {
+        $released = $this->messageOf('member-3', 'Checked', 'SpamBlkWord');
+        $corrected = $this->messageOf('member-5', 'Checked', 'SpamBlkWord,SpamSayChecker');
+        $waiting = $this->messageOf('member-7', 'ToCheck', 'SpamBlkWord,SpamSayMember');
+        $this->connection()->executeStatement("UPDATE member SET Status = 'Banned' WHERE Username = 'member-7'");
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->client->request('GET', '/admin/spam/messages/blocked/processed');
+
+        $form = $crawler->filter('form.js-checker-decisions')->form();
+        $form->setValues(['decisions[' . $corrected . ']' => CheckerController::NOT_SPAM]);
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects('/admin/spam/messages/blocked/processed');
+        // the corrected message is delivered with its mail; the released one is not mailed again, the waiting one waits
+        self::assertEmailCount(1);
+        self::assertSame(['Checked', 'SpamBlkWord'], $this->state($corrected));
+        self::assertSame(['Checked', 'SpamBlkWord'], $this->state($released));
+        self::assertSame(['ToCheck', 'SpamBlkWord,SpamSayMember'], $this->state($waiting));
+        $crawler = $this->client->followRedirect();
+        $saved = static::getContainer()->get(TranslatorInterface::class)->trans('admin.checker.messages.saved', ['count' => 1, 'spam' => 0, 'ok' => 1]);
+        self::assertSame($saved, $crawler->filter('.c-inline-flash__text')->text());
     }
 
     public function testTheDecisionsNeedTheTokenAndTheRight(): void

@@ -3,7 +3,8 @@
   The checkers' messages (Admin\CheckerController::handleMessages), the same page for the four sections: one decision
   per message, Not spam or Spam (decisions[id]), Mark all as presets every row, Save sends the decisions of the page.
   The block word sections mark the words in the message and list them. The processed sections preselect the stored
-  decision. Expects messages (pager), counts, active, block_words, processed and spam_flag.
+  decision; only a changed one is saved. Expects messages (pager), counts, active, block_words and stored (the
+  decision stored for each message id, '' for none).
 #}
 {% set inline_notices = true %}
 {% set _titles = {messages: 'reported.messages', processed_messages: 'reported.messages.processed', blocked_words: 'block.words.messages', processed_blocked_words: 'block.words.processed'} %}
@@ -49,7 +50,7 @@
               </div>
               <ul class="c-checker__rows">
                 {% for message in messages.currentPageResults %}
-                  {% set _stored = processed ? (spam_flag in message.spamInfo ? 'spam' : 'ok') : '' %}
+                  {% set _stored = stored[message.id] ?? '' %}
                   {% set _words = block_words ? message.message|block_words : [] %}
                   <li class="c-checker__row js-checker-row" data-stored="{{ _stored }}">
                     <div class="c-checker__main">

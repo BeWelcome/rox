@@ -1,0 +1,135 @@
+admin.shadow.flagged:
+  - 'Flagged accounts'
+  - 'Checker menu and page title: the accounts a sign-up pattern flagged and shadow banned.'
+admin.shadow.patterns:
+  - 'Sign-up patterns'
+  - 'Checker menu and page title: the texts the safety team watches for in new usernames and e-mail addresses.'
+admin.shadow.flagged.intro:
+  - 'These accounts signed up with a username or e-mail address that matches a sign-up pattern, or a volunteer flagged them in the new members tool. They are shadow banned: what they send looks sent to them, but reaches nobody until you release it. Release single messages, or release the member when the account is fine. To ban an account, open its profile.'
+  - 'Flagged accounts: the text above the list.'
+admin.shadow.flagged.open:
+  - 'Shadow banned'
+  - 'Flagged accounts: the tab with the accounts not released yet.'
+admin.shadow.flagged.released:
+  - 'Released'
+  - 'Flagged accounts: the tab with the released accounts.'
+admin.shadow.flagged.none:
+  - 'No account is shadow banned.'
+  - 'Flagged accounts: the empty list.'
+admin.shadow.flagged.none.released:
+  - 'No flagged account was released yet.'
+  - 'Flagged accounts: the empty list of released accounts.'
+admin.shadow.signed.up:
+  - 'signed up {date}'
+  - 'Flagged accounts: when the account signed up. Keep {date} as it is.'
+admin.shadow.matched:
+  - 'Matched {matched} (pattern {pattern})'
+  - 'Flagged accounts: what matched and the pattern. Keep {matched} and {pattern} as they are.'
+admin.shadow.released.by:
+  - 'Released {date} by {username}'
+  - 'Flagged accounts: when and by whom an account was released. Keep {date} and {username} as they are.'
+admin.shadow.held:
+  - '{count, plural, =0 {Nothing sent yet} one {One message held back} other {# messages held back}}'
+  - 'Flagged accounts: the heading of what the account sent and was held back.'
+admin.shadow.to:
+  - 'To {username}'
+  - 'Flagged accounts: the receiver of a held message. Keep {username} as it is.'
+admin.shadow.message.release.button:
+  - 'Release'
+  - 'Flagged accounts: button that delivers one held message.'
+admin.shadow.message.spam.button:
+  - 'Spam'
+  - 'Flagged accounts: button that keeps one held message back as spam.'
+admin.shadow.message.release:
+  - 'The message was delivered.'
+  - 'Notice after releasing one held message.'
+admin.shadow.message.spam:
+  - 'The message stays held back as spam.'
+  - 'Notice after marking one held message as spam.'
+admin.shadow.profile:
+  - 'Profile'
+  - 'Flagged accounts: button that opens the profile (where an account is banned).'
+admin.shadow.release:
+  - 'Release member'
+  - 'Flagged accounts: button that lifts the shadow ban and delivers the held messages.'
+admin.shadow.release.confirm:
+  - '{count, plural, =0 {Release {username}? What they send from now on goes through.} one {Release {username}? The held message is delivered, and what they send from now on goes through.} other {Release {username}? The # held messages are delivered, and what they send from now on goes through.}}'
+  - 'Flagged accounts: the question before releasing a member. Keep {username} as it is.'
+admin.shadow.released:
+  - '{count, plural, =0 {{username} was released.} one {{username} was released, one message delivered.} other {{username} was released, # messages delivered.}}'
+  - 'Notice after releasing a member. Keep {username} as it is.'
+admin.shadow.patterns.intro:
+  - 'A new account whose username or e-mail address contains one of these texts is flagged and shadow banned at once. Spammers often come back with the same name and a number added.'
+  - 'Sign-up patterns: the text above the form.'
+admin.shadow.pattern:
+  - 'Text'
+  - 'Sign-up patterns: the label of the text field.'
+admin.shadow.pattern.field:
+  - 'Look in'
+  - 'Sign-up patterns: the label of the choice where to look for the text.'
+admin.shadow.pattern.field.both:
+  - 'Username and e-mail'
+  - 'Sign-up patterns: look in the username and the e-mail address.'
+admin.shadow.pattern.field.username:
+  - 'Username'
+  - 'Sign-up patterns: look in the username only.'
+admin.shadow.pattern.field.email:
+  - 'E-mail address'
+  - 'Sign-up patterns: look in the e-mail address only.'
+admin.shadow.pattern.note:
+  - 'Note for the team (optional)'
+  - 'Sign-up patterns: the label of the note field.'
+admin.shadow.pattern.hint:
+  - 'The text matches anywhere, upper or lower case. * stands for any characters: jane*v matches janev12, jane.v and jane_doe_v.'
+  - 'Sign-up patterns: how a text matches.'
+admin.shadow.pattern.add:
+  - 'Add pattern'
+  - 'Sign-up patterns: the button of the form.'
+admin.shadow.pattern.too.short:
+  - 'Please enter at least three characters besides *.'
+  - 'Sign-up patterns: error when the text is too short.'
+admin.shadow.pattern.added:
+  - 'The pattern {pattern} was added.'
+  - 'Notice after adding a pattern. Keep {pattern} as it is.'
+admin.shadow.patterns.none:
+  - 'No sign-up pattern yet.'
+  - 'Sign-up patterns: the empty list.'
+admin.shadow.pattern.off:
+  - 'Switched off'
+  - 'Sign-up patterns: tag of a pattern that flags no new accounts.'
+admin.shadow.pattern.by:
+  - 'Added by {username} on {date}'
+  - 'Sign-up patterns: who added a pattern and when. Keep {username} and {date} as they are.'
+admin.shadow.pattern.flagged:
+  - '{count, plural, =0 {flagged nobody yet} one {flagged one account} other {flagged # accounts}}'
+  - 'Sign-up patterns: how many accounts a pattern flagged.'
+admin.shadow.pattern.recent:
+  - 'Recent sign-ups'
+  - 'Sign-up patterns: button that lists the recent accounts the pattern matches.'
+admin.shadow.pattern.on:
+  - 'Switch on'
+  - 'Sign-up patterns: button that switches a pattern on again.'
+admin.shadow.pattern.remove:
+  - 'Remove'
+  - 'Sign-up patterns: button that removes a pattern.'
+admin.shadow.pattern.remove.confirm:
+  - 'Remove this pattern? The accounts it flagged stay flagged.'
+  - 'Sign-up patterns: the question before removing a pattern.'
+admin.shadow.matches.title:
+  - 'Recent sign-ups matching {pattern}'
+  - 'Page title: the recent accounts a pattern matches. Keep {pattern} as it is.'
+admin.shadow.matches.intro:
+  - 'These accounts signed up in the last {days} days and match the pattern. The ticked ones are flagged and shadow banned.'
+  - 'Recent sign-ups: the text above the list. Keep {days} as it is.'
+admin.shadow.matches.none:
+  - 'No account of the last {days} days matches, apart from those flagged already.'
+  - 'Recent sign-ups: the empty list. Keep {days} as it is.'
+admin.shadow.matches.skip:
+  - 'Flag none'
+  - 'Recent sign-ups: button back to the patterns without flagging.'
+admin.shadow.matches.flag:
+  - 'Flag the ticked accounts'
+  - 'Recent sign-ups: the button that flags the ticked accounts.'
+admin.shadow.flagged.count:
+  - '{count, plural, =0 {No account was flagged.} one {One account was flagged.} other {# accounts were flagged.}}'
+  - 'Notice after flagging recent sign-ups.'

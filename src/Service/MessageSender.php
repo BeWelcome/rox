@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Model\ConversationModel;
+use App\Model\ShadowBanModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -22,6 +22,7 @@ class MessageSender
         private readonly Mailer $mailer,
         private readonly BrowserNotificationService $browserNotificationService,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ShadowBanModel $shadowBanModel,
     ) {
     }
 
@@ -50,10 +51,14 @@ class MessageSender
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
+        if (null === $parent) {
+            // a shadow banned sender: kept back, the sender sees it as sent (ShadowBanModel)
+            $message = $this->shadowBanModel->holdIfShadowBanned($message, $sender);
+        }
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (!$message->isHeldBack()) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

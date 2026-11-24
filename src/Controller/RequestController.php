@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
-use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -180,6 +179,7 @@ class RequestController extends BaseRequestAndInvitationController
             // Write request to database after doing some checks
             $hostingRequest = $this->getMessageFromData($requestForm->getData(), $guest, $host);
             $hostingRequest = $this->conversationModel->formatConversation($hostingRequest);
+            $hostingRequest = $this->shadowBanModel->holdIfShadowBanned($hostingRequest, $guest);
 
             $this->entityManager->persist($hostingRequest);
             $this->entityManager->flush();
@@ -396,7 +396,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (!str_contains($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (!$request->isHeldBack()) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }

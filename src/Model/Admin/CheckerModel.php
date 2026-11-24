@@ -61,7 +61,7 @@ class CheckerModel
                 $message->setStatus(MessageStatusType::SEND);
             } else {
                 $message->setStatus(MessageStatusType::CHECKED);
-                if (str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+                if ($message->isHeldBack()) {
                     $message->setFolder(InFolderType::NORMAL);
                     $this->sendNotification($message);
                 }

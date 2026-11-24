@@ -173,6 +173,20 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
+                                {% if all and member.username != app.user.username %}
+                                    {# the safety team and the checkers: shadow ban, released or banned with the flagged accounts #}
+                                    {% set _shadow = shadow[member.id] ?? null %}
+                                    {% if _shadow is same as(true) %}
+                                        <a class="c-tag c-tag--orange c-newmembers__shadowed" href="{{ path('admin_spam_flagged') }}#flag-{{ member.id }}"><i class="fas fa-user-secret" aria-hidden="true"></i>{{ 'admin.newmembers.shadow.banned'|trans }}</a>
+                                    {% elseif _shadow is null %}
+                                        <form method="post" action="{{ path('newmembers_shadow', {username: member.username}) }}" onsubmit="return confirm({{ 'admin.newmembers.shadow.confirm'|trans({username: member.username})|json_encode }})">
+                                            <input type="hidden" name="_token" value="{{ token }}">
+                                            <input type="hidden" name="page" value="{{ page }}">
+                                            <input type="hidden" name="profile" value="{{ profile }}">
+                                            <button type="submit" class="c-newmembers__greet c-newmembers__shadow"><i class="fas fa-user-secret" aria-hidden="true"></i>{{ 'admin.newmembers.shadow'|trans }}</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
                                 {% if can_change_status %}
                                     <label class="c-newmembers__label-small" for="c-newmembers-status-{{ loop.index }}">{{ 'memberstatus'|trans }}</label>
                                     <form class="c-newmembers__status js-newmembers-status" method="post" action="{{ path('newmembers_status', {username: member.username}) }}">

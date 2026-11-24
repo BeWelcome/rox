@@ -178,3 +178,15 @@ admin.newmembers.empty.none.title:
 admin.newmembers.empty.none.text:
   - 'New members show up here as soon as they sign up.'
   - 'New members: the list is empty without countries chosen.'
+admin.newmembers.shadow:
+  - 'Shadow ban'
+  - 'New members tool (safety team and checkers): button that shadow bans the member: what they send is held back without them noticing.'
+admin.newmembers.shadow.confirm:
+  - 'Shadow ban {username}? What they send is held back without them noticing, and they are listed with the flagged accounts.'
+  - 'New members tool: the question before shadow banning. Keep {username}.'
+admin.newmembers.shadow.done:
+  - '{username} is shadow banned and listed with the flagged accounts.'
+  - 'New members tool: notice after shadow banning a member. Keep {username}.'
+admin.newmembers.shadow.banned:
+  - 'Shadow banned'
+  - 'New members tool: tag of a member who is shadow banned (links to the flagged accounts).'

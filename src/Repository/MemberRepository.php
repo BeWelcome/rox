@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Command\MembersSuspendCommand;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Address;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
@@ -496,6 +497,14 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         if ($searchRequest->offers_tour) {
             $qb->andWhere('m.standardOffers LIKE :offers_tour')
                ->setParameter('offers_tour', '%' . \App\Doctrine\StandardOffersType::GUIDED_TOUR . '%');
+        }
+        // the place the member lives at now is marked as accessible by wheelchair (the accommodation page)
+        if ($searchRequest->accessible) {
+            $qb->andWhere(
+                'EXISTS (SELECT accessibleAddress.id FROM ' . Address::class . ' accessibleAddress'
+                . ' WHERE accessibleAddress.member = m AND accessibleAddress.active = true'
+                . ' AND accessibleAddress.isWheelChairAccessible = true)',
+            );
         }
     }
 

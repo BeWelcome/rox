@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Repository\NewsletterRepository;
 use DateTimeInterface;
@@ -23,8 +24,12 @@ class NewsletterArchiveModel
     private ?array $entries = null;
     private ?string $entriesLocale = null;
 
+    /**
+     * @param list<string> $locales the languages of the site
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly array $locales,
     ) {
     }
 
@@ -61,6 +66,60 @@ class NewsletterArchiveModel
     {
         return $this->repository()->findLanguagesByName([$newsletter->getName()])[strtolower($newsletter->getName())]
             ?? [];
+    }
+
+    /**
+     * A draft: a mass mail nobody got yet (NewsletterRepository::findDrafts). It is no public page.
+     */
+    public function isDraft(Newsletter $newsletter): bool
+    {
+        return $this->repository()->isDraft($newsletter);
+    }
+
+    /**
+     * Who reads a draft in a language: the mass mail volunteers in any, as they wrote it (the link of a test mail
+     * leads to it), a translator in the languages they translate. Nobody else.
+     */
+    public function readsDraftIn(string $language, ?Member $translator, bool $massMail): bool
+    {
+        return $massMail || (null !== $translator && $translator->hasRightsForLocale($language));
+    }
+
+    /**
+     * The drafts for the volunteer, newest first, for the archive's first page. Each has the languages the volunteer
+     * reads it in and links to the volunteer's own language; a translator who doesn't translate that one gets the
+     * first language they do: of the draft's, else of the site's.
+     *
+     * @return list<Entry>
+     */
+    public function getDrafts(string $locale, ?Member $translator, bool $massMail): array
+    {
+        if (null === $translator && !$massMail) {
+            return [];
+        }
+
+        $repository = $this->repository();
+        $drafts = $repository->findDrafts();
+        $languages = $repository->findLanguagesByName(array_map(static fn (Newsletter $n) => $n->getName(), $drafts));
+        $reads = fn (string $language): bool => $this->readsDraftIn($language, $translator, $massMail);
+
+        $entries = [];
+        foreach ($drafts as $draft) {
+            $codes = array_values(array_filter($languages[strtolower($draft->getName())] ?? [], $reads));
+            $link = array_find([$locale, ...$codes, ...$this->locales], $reads);
+            if (null === $link) {
+                continue;
+            }
+            $entries[] = [
+                'id' => $draft->getId(),
+                'name' => $draft->getName(),
+                'created' => $draft->getCreated(),
+                'languages' => $codes,
+                'link' => $link,
+            ];
+        }
+
+        return $entries;
     }
 
     /**

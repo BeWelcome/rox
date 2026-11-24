@@ -18,10 +18,19 @@
         <article class="c-cnews-article c-newsletter__article" lang="{{ language }}">
           <p class="c-page-head__eyebrow c-newsletter__eyebrow">{{ 'newsletter'|trans }} · {{ newsletter.created|format_date(pattern='d MMMM y') }}</p>
           <h1 class="c-cnews-article__title">{{ title }}</h1>
-          <p class="c-newsletter__reading">
-            <i class="fas fa-globe" aria-hidden="true"></i>
-            {{ 'newsletter.reading'|trans({language: ('lang_' ~ language)|lower|trans, others: max(languages|length - 1, 0)}) }}
-          </p>
+          {% if draft %}
+            {# a volunteer reading what is not sent yet; a translator may get it before it has a text in the language #}
+            <p class="c-newsletter__reading c-newsletter__reading--draft">
+              <i class="fas fa-pen" aria-hidden="true"></i>
+              {{ 'newsletter.draft'|trans }}
+              {% if language not in languages %}{{ 'newsletter.draft.untranslated'|trans({language: ('lang_' ~ language)|lower|trans}) }}{% endif %}
+            </p>
+          {% else %}
+            <p class="c-newsletter__reading">
+              <i class="fas fa-globe" aria-hidden="true"></i>
+              {{ 'newsletter.reading'|trans({language: ('lang_' ~ language)|lower|trans, others: max(languages|length - 1, 0)}) }}
+            </p>
+          {% endif %}
           <div class="c-cnews-article__body">
             {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': username}, null, language)|prepare_newsletter(true) }}
           </div>

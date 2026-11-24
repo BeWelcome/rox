@@ -8,3 +8,28 @@
     {% endfor %}
   </ul>
 {% endmacro %}
+
+{#
+  A newsletter of the archive list: its date, its title opening `newsletter.link`, and its languages with `active`
+  marked. A draft (drafts are listed for the volunteers only) is dated by when it was written.
+#}
+{% macro card(newsletter, active, draft = false) %}
+  {% set count = newsletter.languages|length %}
+  <li class="c-cnews-card c-newsletter-card{{ draft ? ' c-newsletter-card--draft' }}">
+    <div class="c-newsletter-card__date" aria-hidden="true">
+      <span class="c-newsletter-card__day">{{ newsletter.created|format_date(pattern='d') }}</span>
+      <span class="c-newsletter-card__month">{{ newsletter.created|format_date(pattern='MMM') }}</span>
+    </div>
+    <div class="c-newsletter-card__main">
+      <h3 class="c-newsletter-card__title">
+        <a href="{{ path('newsletter_single', {id: newsletter.id, language: newsletter.link}) }}">{{ ('broadcast_title_' ~ newsletter.name)|lower|trans }}</a>
+      </h3>
+      <p class="c-newsletter-card__meta">
+        {{ newsletter.created|format_date(pattern='d MMMM y') }} · {{ newsletter.created.diffForHumans }} · {{ 'newsletters.languages'|trans({count: count}) }}
+      </p>
+      {% if count > 0 %}
+        {{ _self.languages(newsletter.id, newsletter.languages, active) }}
+      {% endif %}
+    </div>
+  </li>
+{% endmacro %}

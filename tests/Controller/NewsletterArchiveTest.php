@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Model\NewsletterArchiveModel;
 use App\Repository\NewsletterRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -114,18 +115,142 @@ final class NewsletterArchiveTest extends WebTestCase
         );
     }
 
+    public function testADraftIsNoPublicPage(): void
+    {
+        $draft = $this->newsletter('zztest_draft', '2100-01-01', ['en', 'de'], 'Created');
+
+        $this->client->request('GET', '/newsletters/' . $draft->getId() . '/en');
+        self::assertResponseStatusCodeSame(404);
+
+        $this->client->loginUser($this->member('member-2'));
+        $this->client->request('GET', '/newsletters/' . $draft->getId() . '/en');
+        self::assertResponseStatusCodeSame(404);
+        $crawler = $this->client->request('GET', '/newsletters/1');
+        self::assertCount(0, $crawler->filter('a[href^="/newsletters/' . $draft->getId() . '/"]'));
+        self::assertCount(0, $crawler->filter('.c-newsletters__drafts'));
+    }
+
+    public function testTheArchiveListsTheDraftsForATranslatorInTheirLanguage(): void
+    {
+        $translated = $this->newsletter('zztest_draft_a', '2100-02-01', ['en', 'de', 'fr'], 'Created');
+        $untranslated = $this->newsletter('zztest_draft_b', '2100-01-01', ['en'], 'Created');
+        $sent = $this->newsletter('zztest_sent', '2100-03-01', ['en', 'de']);
+        $this->grant('member-3', 'Words', '"de";"it";');
+        $this->client->loginUser($this->member('member-3'));
+
+        // the site in German, a language the member translates: the drafts open in it, with or without a text
+        $drafts = $this->client->request('GET', '/newsletters/1', server: ['HTTP_ACCEPT_LANGUAGE' => 'de'])
+            ->filter('.c-newsletters__drafts');
+        $titles = $drafts->filter('.c-newsletter-card__title a')->each(static fn ($a) => (string) $a->attr('href'));
+        $newer = array_search('/newsletters/' . $translated->getId() . '/de', $titles, true);
+        $older = array_search('/newsletters/' . $untranslated->getId() . '/de', $titles, true);
+        self::assertIsInt($newer, 'the draft with a German text opens in German');
+        self::assertIsInt($older, 'the draft without a German text opens in German too');
+        self::assertLessThan($older, $newer, 'the newest draft comes first');
+        self::assertCount(0, $drafts->filter('a[href^="/newsletters/' . $sent->getId() . '/"]'));
+        // only the languages they read it in are offered
+        self::assertSame(
+            ['/newsletters/' . $translated->getId() . '/de'],
+            $drafts->filter('.c-newsletter-lang[href^="/newsletters/' . $translated->getId() . '/"]')
+                ->each(static fn ($a) => $a->attr('href')),
+        );
+
+        // the site in a language they don't translate: the first language they do, of the draft's, else of the site's
+        $this->client->getCookieJar()->clear();
+        $this->client->loginUser($this->member('member-3'));
+        $titles = $this->client->request('GET', '/newsletters/1', server: ['HTTP_ACCEPT_LANGUAGE' => 'fr'])
+            ->filter('.c-newsletters__drafts .c-newsletter-card__title a')
+            ->each(static fn ($a) => (string) $a->attr('href'));
+        self::assertContains('/newsletters/' . $translated->getId() . '/de', $titles);
+        self::assertCount(1, preg_grep('~^/newsletters/' . $untranslated->getId() . '/(de|it)$~', $titles) ?: []);
+
+        // the drafts are on the first page only
+        for ($day = 1; $day <= NewsletterArchiveModel::PER_PAGE; ++$day) {
+            $this->newsletter('zztest_sent_' . $day, \sprintf('2100-04-%02d', $day), ['en']);
+        }
+        $crawler = $this->client->request('GET', '/newsletters/2');
+        self::assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->filter('.c-newsletters__drafts'));
+    }
+
+    public function testTheArchiveListsTheDraftsForTheMassMailVolunteers(): void
+    {
+        $draft = $this->newsletter('zztest_draft', '2100-01-01', ['en', 'de'], 'Created');
+        $this->grant('member-3', 'MassMail', '"All";');
+        $this->client->loginUser($this->member('member-3'));
+
+        $drafts = $this->client->request('GET', '/newsletters/1')->filter('.c-newsletters__drafts');
+
+        self::assertCount(1, $drafts->filter('.c-newsletter-card__title a[href^="/newsletters/' . $draft->getId() . '/"]'));
+        self::assertCount(2, $drafts->filter('.c-newsletter-lang[href^="/newsletters/' . $draft->getId() . '/"]'));
+    }
+
+    public function testATranslatorReadsADraftInTheLanguagesTheyTranslate(): void
+    {
+        $draft = $this->newsletter('zztest_draft', '2100-01-01', ['en', 'de', 'fr'], 'Created');
+        $this->grant('member-3', 'Words', '"de";"it";');
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->client->request('GET', '/newsletters/' . $draft->getId() . '/de');
+        self::assertResponseIsSuccessful();
+        self::assertSame(
+            ['/newsletters/' . $draft->getId() . '/de'],
+            $crawler->filter('.c-newsletter-lang')->each(static fn ($a) => $a->attr('href')),
+        );
+
+        self::assertCount(1, $crawler->filter('.c-newsletter__reading--draft'));
+
+        // a language of theirs the draft has no text in yet: the page, no way round to another language
+        $this->client->request('GET', '/newsletters/' . $draft->getId() . '/it');
+        self::assertResponseIsSuccessful();
+
+        foreach (['en', 'fr'] as $language) {
+            $this->client->request('GET', '/newsletters/' . $draft->getId() . '/' . $language);
+            self::assertResponseStatusCodeSame(404, 'a language the member does not translate: ' . $language);
+        }
+    }
+
+    public function testTheMassMailVolunteersReadADraftInEveryLanguage(): void
+    {
+        $draft = $this->newsletter('zztest_draft', '2100-01-01', ['en', 'de'], 'Created');
+        $this->grant('member-3', 'MassMail', '"All";');
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->client->request('GET', '/newsletters/' . $draft->getId() . '/de');
+        self::assertResponseIsSuccessful();
+        self::assertCount(2, $crawler->filter('.c-newsletter-lang'));
+
+        $this->client->request('GET', '/newsletters/' . $draft->getId() . '/fr');
+        self::assertResponseRedirects('/newsletters/' . $draft->getId() . '/en');
+    }
+
+    public function testAMassMailStoppedWhileItWasSentStaysOpen(): void
+    {
+        $stopped = $this->newsletter('zztest_stopped', '2100-01-01', ['en'], 'Created');
+        $this->entityManager()->getConnection()->executeStatement(
+            "INSERT INTO newsletter_recipient (newsletter_id, receiver_id, status, updated)
+             SELECT ?, id, 'Sent', NOW() FROM member WHERE Username = 'member-2'",
+            [$stopped->getId()],
+        );
+
+        // the mail that left links to the page
+        $crawler = $this->client->request('GET', '/newsletters/' . $stopped->getId() . '/en');
+        self::assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->filter('.c-newsletter__reading--draft'));
+    }
+
     /**
-     * A sent regular newsletter with a text in each of the languages, in that order.
+     * A regular newsletter with a text in each of the languages, in that order: sent, unless the status says not.
      *
      * @param list<string> $languages
      */
-    private function newsletter(string $name, string $created, array $languages): Newsletter
+    private function newsletter(string $name, string $created, array $languages, string $status = 'Triggered'): Newsletter
     {
         $entityManager = $this->entityManager();
         $newsletter = new Newsletter();
         $newsletter->setName($name);
         $newsletter->setType(Newsletter::REGULAR_NEWSLETTER);
-        $newsletter->setStatus('Triggered');
+        $newsletter->setStatus($status);
         $newsletter->setCreatedBy($entityManager->getRepository(Member::class)->findOneBy(['username' => 'bwadmin']));
         $newsletter->setCreated(new DateTime($created));
         $entityManager->persist($newsletter);
@@ -139,6 +264,26 @@ final class NewsletterArchiveTest extends WebTestCase
         }
 
         return $newsletter;
+    }
+
+    /**
+     * The member, read anew: with the rights given since.
+     */
+    private function member(string $username): Member
+    {
+        $this->entityManager()->clear();
+
+        return $this->entityManager()->getRepository(Member::class)->findOneBy(['username' => $username]);
+    }
+
+    private function grant(string $username, string $right, string $scope): void
+    {
+        $this->entityManager()->getConnection()->executeStatement(
+            "INSERT INTO rightsvolunteers (Level, Scope, Comment, updated, created, IdMember, IdRight)
+             SELECT 10, ?, 'zztest', NOW(), NOW(), m.id, r.id FROM member m INNER JOIN rights r ON r.Name = ?
+             WHERE m.Username = ?",
+            [$scope, $right, $username],
+        );
     }
 
     private function entityManager(): EntityManagerInterface

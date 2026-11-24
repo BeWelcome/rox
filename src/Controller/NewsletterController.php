@@ -24,12 +24,15 @@ class NewsletterController extends AbstractController
         return $this->render('newsletter/list.html.twig', [
             'newsletters' => $archive->getPage($page, $locale),
             'summary' => $archive->getSummary($locale),
+            // what is not sent yet, for the volunteers who translate or write it
+            'drafts' => 1 === $page ? $archive->getDrafts($locale, $this->translator(), $this->writesMassMails()) : [],
         ]);
     }
 
     /**
      * A newsletter in one language, with its other languages and the older and newer ones. A language it has no text
-     * in leads to English or its first language.
+     * in leads to English or its first language. A draft (NewsletterArchiveModel::isDraft) is a 404 for everybody but
+     * the mass mail volunteers and the translators of the language.
      */
     #[Route(path: '/newsletters/{id}/{language}', name: 'newsletter_single')]
     public function showSingleNewsletter(
@@ -38,19 +41,37 @@ class NewsletterController extends AbstractController
         string $language,
         NewsletterArchiveModel $archive,
     ): Response {
+        /** @var Member|null $member */
+        $member = $this->getUser();
         $languages = $archive->getLanguages($newsletter);
-        $redirect = $archive->getRedirectLanguage($languages, $language);
+
+        // A draft is no public page: see NewsletterArchiveModel::readsDraftIn. A translator gets it in a language
+        // they translate with or without a text in it yet, and only their languages to go to.
+        $translated = false;
+        $draft = $archive->isDraft($newsletter);
+        if ($draft) {
+            $translator = $this->translator();
+            $massMail = $this->writesMassMails();
+            if (!$archive->readsDraftIn($language, $translator, $massMail)) {
+                throw $this->createNotFoundException();
+            }
+            if (!$massMail) {
+                $reads = static fn (string $code): bool => $archive->readsDraftIn($code, $translator, false);
+                $languages = array_values(array_filter($languages, $reads));
+                $translated = true;
+            }
+        }
+
+        $redirect = $translated ? null : $archive->getRedirectLanguage($languages, $language);
         if (null !== $redirect) {
             return $this->redirectToRoute('newsletter_single', ['id' => $newsletter->getId(), 'language' => $redirect]);
         }
-
-        /** @var Member|null $member */
-        $member = $this->getUser();
 
         return $this->render('newsletter/show.html.twig', [
             'newsletter' => $newsletter,
             'language' => $language,
             'languages' => $languages,
+            'draft' => $draft,
             'username' => null === $member ? 'anonymous' : $member->getUsername(),
             'neighbours' => $archive->getNeighbours($newsletter, $language, $request->getLocale()),
         ]);
@@ -76,5 +97,20 @@ class NewsletterController extends AbstractController
         $response->setSharedMaxAge(31536000);
 
         return $response;
+    }
+
+    /**
+     * The member, if they translate the site (the Words right).
+     */
+    private function translator(): ?Member
+    {
+        $member = $this->getUser();
+
+        return $member instanceof Member && $this->isGranted(Member::ROLE_ADMIN_WORDS) ? $member : null;
+    }
+
+    private function writesMassMails(): bool
+    {
+        return $this->isGranted(Member::ROLE_ADMIN_MASSMAIL);
     }
 }

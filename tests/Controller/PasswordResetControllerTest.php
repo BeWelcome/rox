@@ -39,6 +39,44 @@ class PasswordResetControllerTest extends WebTestCase
         );
     }
 
+    public function testAnUnknownUsernameGetsTheFormBackWithItsMessage(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/resetpassword');
+        $form = $crawler->filter('#reset-password-form')->form([
+            'reset_password_request_form[username]' => 'zztest-nobody-by-this-name',
+        ]);
+
+        $crawler = $client->submit($form);
+
+        self::assertContains($client->getResponse()->getStatusCode(), [200, 422]);
+        self::assertCount(1, $crawler->filter('#reset-password-form'));
+        self::assertSame(
+            [static::getContainer()->get(TranslatorInterface::class)->trans('reset.password.error')],
+            $crawler->filter('.p-login__error-title')->each(static fn ($message) => $message->text()),
+        );
+        self::assertEmailCount(0);
+    }
+
+    public function testASecondRequestSoonAfterSendsNoSecondLink(): void
+    {
+        $client = static::createClient();
+        static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($this->member('bwadmin'));
+        $crawler = $client->request('GET', '/resetpassword');
+        $form = $crawler->filter('#reset-password-form')->form([
+            'reset_password_request_form[username]' => 'bwadmin',
+        ]);
+
+        $crawler = $client->submit($form);
+
+        self::assertContains($client->getResponse()->getStatusCode(), [200, 422]);
+        self::assertSame(
+            [static::getContainer()->get(TranslatorInterface::class)->trans('reset.password.too.fast')],
+            $crawler->filter('.p-login__error-title')->each(static fn ($message) => $message->text()),
+        );
+        self::assertEmailCount(0);
+    }
+
     public function testTheLinkSetsANewPassword(): void
     {
         $client = static::createClient();

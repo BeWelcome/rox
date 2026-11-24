@@ -20,8 +20,9 @@ readonly class DonateModel
         if ($campaignValue) {
             $requiredPerMonth = floor($campaignValue['neededperyear'] / 12);
             $connection = $this->entityManager->getConnection();
+            // from the campaign's first day on: the treasurer's donations are dated with their day, at midnight
             $yearDonation = $connection->fetchOne(
-                'SELECT COALESCE(SUM(amount), 0) FROM donation WHERE created > ?',
+                'SELECT COALESCE(SUM(amount), 0) FROM donation WHERE created >= ?',
                 [$campaignValue['campaignstartdate']->format('Y-m-d H:i:s')],
             );
 

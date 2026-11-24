@@ -87,6 +87,24 @@ final class DonationsTest extends WebTestCase
         );
     }
 
+    /**
+     * The treasurer records a donation with its day (midnight); the campaign starts on a day too.
+     */
+    public function testADonationOfTheCampaignsFirstDayCounts(): void
+    {
+        $params = $this->entityManager->getRepository(Params::class)->findOneBy([]);
+        $params->setToggledonatebar(1);
+        $params->setNeededperyear(1200);
+        $params->setCampaignstartdate(new DateTime('today'));
+        $this->entityManager->flush();
+        $this->donation('300.00', 'today', 'zztest first day');
+        $this->donation('500.00', 'yesterday', 'zztest the day before');
+
+        $crawler = $this->client->request('GET', '/donations');
+
+        self::assertSame('€300', $crawler->filter('.c-donate-status__value')->text());
+    }
+
     public function testTheListShowsNoDonorsToOthers(): void
     {
         $this->donation('25.00', '2026-11-10', 'zztest via PayPal', $this->country(), $this->member('member-3'), 'zztest-7XK21983LM');

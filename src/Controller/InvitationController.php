@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\LegOptionsType;
 use App\Entity\HostingRequest;
 use App\Entity\Leg;
 use App\Entity\Member;
@@ -71,8 +72,13 @@ class InvitationController extends BaseRequestAndInvitationController
         Leg $leg,
         AllowContactCheck $allowContactCheck,
     ): Response {
-        // a leg taken off its trip takes no more invitations
-        if ($leg->isRemoved()) {
+        // a leg taken off its trip takes no more invitations; a private stop and a removed trip are the traveller's
+        // alone: nobody is invited to them, and the form would show their place and dates
+        if (
+            $leg->isRemoved()
+            || \in_array(LegOptionsType::PRIVATE, $leg->getOptions(), true)
+            || null !== $leg->getTrip()->getDeleted()
+        ) {
             throw $this->createNotFoundException();
         }
         /** @var Member $host */

@@ -34,10 +34,11 @@ class LogController extends AbstractController
         $limit = $request->query->get('limit', 20);
         // the filter form (name log) sends log[types][] and log[username]
         $filter = $request->query->all('log');
-        $types = $filter['types'] ?? [];
         $username = $filter['username'] ?? null;
 
+        // the types the volunteer's right covers: only those are shown, whatever the address asks for
         $logTypes = $logModel->getLogTypes($logViewer);
+        $types = array_values(array_intersect((array) ($filter['types'] ?? []), $logTypes));
         if (1 === \count($logTypes)) {
             $request->query->set('types', $logTypes);
             $types = $logTypes;

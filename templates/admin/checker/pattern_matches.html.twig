@@ -1,0 +1,38 @@
+{% extends 'admin/checker/_shadow_layout.html.twig' %}
+{#
+  The accounts of the last days a pattern matches and that aren't flagged yet (Admin\ShadowBanController::matches):
+  the ticked ones are flagged and shadow banned. Expects pattern, matches (member, matched), days, counts, active.
+#}
+{% block shadow_title %}{{ 'admin.shadow.matches.title'|trans({pattern: pattern.pattern}) }}{% endblock %}
+
+{% block shadow_content %}
+  <p class="c-cnews-checker__intro">{{ 'admin.shadow.matches.intro'|trans({days: days}) }}</p>
+  {% if matches is empty %}
+    <div class="c-cnews-card c-cnews-empty">
+      <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-user-check"></i></span>
+      <p class="c-cnews-empty__title">{{ 'admin.shadow.matches.none'|trans({days: days}) }}</p>
+      <p><a href="{{ path('admin_spam_patterns') }}">{{ 'admin.shadow.patterns'|trans }}</a></p>
+    </div>
+  {% else %}
+    <form method="post" class="c-cnews-card c-shadow__matches">
+      <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\ShadowBanController::TOKEN')) }}">
+      <ul class="c-shadow__match-list">
+        {% for match in matches %}
+          {% set member = match.member %}
+          <li>
+            <label class="c-shadow__match">
+              <input type="checkbox" name="members[]" value="{{ member.id }}" checked>
+              <img src="{{ path('avatar', {username: member.username, size: 48}) }}" alt="" width="32" height="32" loading="lazy">
+              <span><strong>{{ member.username }}</strong> <small>{{ member.email }} · {{ ('memberstatus' ~ member.status)|lower|trans }} · {{ member.created|format_date('medium') }}</small></span>
+              <span class="c-tag">{{ match.matched }}</span>
+            </label>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="c-shadow__actions">
+        <a class="c-cadmin-btn c-cnews-btn-small" href="{{ path('admin_spam_patterns') }}">{{ 'admin.shadow.matches.skip'|trans }}</a>
+        <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small"><i class="fas fa-user-secret" aria-hidden="true"></i>{{ 'admin.shadow.matches.flag'|trans }}</button>
+      </div>
+    </form>
+  {% endif %}
+{% endblock shadow_content %}

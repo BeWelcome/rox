@@ -199,6 +199,24 @@ class Message
         return $this->spamInfo;
     }
 
+    /**
+     * Kept back for the checkers, not delivered (no notification) until they release it: a block word in it, or its
+     * sender is shadow banned.
+     */
+    public function isHeldBack(): bool
+    {
+        return str_contains($this->spamInfo, SpamInfoType::SPAM_BLOCKED_WORD)
+            || str_contains($this->spamInfo, SpamInfoType::SHADOW_BAN);
+    }
+
+    /**
+     * Sent by a shadow banned member and not released (held, or found to be spam).
+     */
+    public function isShadowHeld(): bool
+    {
+        return InFolderType::SPAM === $this->folder && str_contains($this->spamInfo, SpamInfoType::SHADOW_BAN);
+    }
+
     public function setSpamInfo(string $spamInfo): self
     {
         $this->spamInfo = $spamInfo;

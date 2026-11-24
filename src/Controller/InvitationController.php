@@ -153,20 +153,24 @@ class InvitationController extends BaseRequestAndInvitationController
             $invitation = $this->getMessageFromData($invitationForm->getData(), $host, $guest);
             $invitation->getRequest()->setInviteForLeg($leg);
             $leg->addInvitation($invitation->getRequest());
+            $invitation = $this->shadowBanModel->holdIfShadowBanned($invitation, $host);
 
             $this->entityManager->persist($invitation);
             $this->entityManager->flush();
 
-            $this->sendInvitationNotification(
-                $host,
-                $guest,
-                $host,
-                $invitation,
-                $invitation->getSubject()->getSubject(),
-                'invitation',
-                false,
-                null
-            );
+            // held back from a shadow banned host: nobody hears of it until a volunteer releases it
+            if (!$invitation->isHeldBack()) {
+                $this->sendInvitationNotification(
+                    $host,
+                    $guest,
+                    $host,
+                    $invitation,
+                    $invitation->getSubject()->getSubject(),
+                    'invitation',
+                    false,
+                    null
+                );
+            }
 
             // Sent from the side panel (in a frame): a short "sent" page instead of the profile.
             if ($request->query->getBoolean('embed')) {

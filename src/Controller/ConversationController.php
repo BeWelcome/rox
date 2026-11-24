@@ -144,7 +144,8 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam')]
+    #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function reportAsSpam(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, false, true);

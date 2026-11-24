@@ -1,0 +1,87 @@
+{% extends 'admin/checker/_shadow_layout.html.twig' %}
+{#
+  The accounts a sign-up pattern flagged (Admin\ShadowBanController::flagged), shadow banned until released: who they
+  are, what matched, and what they sent, held back (Release delivers a message, Spam keeps it back). Release member
+  delivers all and lets what they send go through; a ban is given on the profile. released: the released ones.
+  Expects flags (pager), held (messages by flag id), released, counts, active.
+#}
+{% set _token = csrf_token(constant('App\\Controller\\Admin\\ShadowBanController::TOKEN')) %}
+
+{% block shadow_title %}{{ 'admin.shadow.flagged'|trans }}{% endblock %}
+
+{% block shadow_content %}
+  <p class="c-cnews-checker__intro">{{ 'admin.shadow.flagged.intro'|trans }}</p>
+  <nav class="c-shadow__tabs">
+    <a class="c-shadow__tab{{ released ? '' : ' is-active' }}" href="{{ path('admin_spam_flagged') }}">{{ 'admin.shadow.flagged.open'|trans }}</a>
+    <a class="c-shadow__tab{{ released ? ' is-active' : '' }}" href="{{ path('admin_spam_flagged', {released: 1}) }}">{{ 'admin.shadow.flagged.released'|trans }}</a>
+  </nav>
+
+  {% if flags.nbResults == 0 %}
+    <div class="c-cnews-card c-cnews-empty">
+      <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-user-secret"></i></span>
+      <p class="c-cnews-empty__title">{{ (released ? 'admin.shadow.flagged.none.released' : 'admin.shadow.flagged.none')|trans }}</p>
+    </div>
+  {% else %}
+    <ul class="c-shadow__flags">
+      {% for flag in flags.currentPageResults %}
+        {% set member = flag.member %}
+        <li class="c-cnews-card c-shadow__flag" id="flag-{{ member.id }}">
+          <div class="c-shadow__who">
+            <a class="c-checker__person" href="{{ path('members_profile', {username: member.username}) }}">
+              <img src="{{ path('avatar', {username: member.username, size: 48}) }}" alt="" width="40" height="40" loading="lazy">
+              <span>
+                <small>{{ ('memberstatus' ~ member.status)|lower|trans }} · {{ 'admin.shadow.signed.up'|trans({date: member.created|format_date('medium')}) }}</small>
+                <strong>{{ member.username }}</strong>
+              </span>
+            </a>
+            <span class="c-shadow__email">{{ member.email }}</span>
+          </div>
+          <p class="c-shadow__matched">
+            <i class="fas fa-fingerprint" aria-hidden="true"></i>
+            {# a pattern matched, or a volunteer flagged the member (the text says who) #}
+            {{ flag.pattern ? 'admin.shadow.matched'|trans({matched: flag.matched, pattern: flag.pattern.pattern}) : flag.matched|capitalize }}
+            · {{ flag.created|format_datetime('medium', 'short') }}
+          </p>
+          {% if released %}
+            <p class="c-shadow__matched"><i class="fas fa-user-check" aria-hidden="true"></i>{{ 'admin.shadow.released.by'|trans({date: flag.released|format_datetime('medium', 'short'), username: flag.releasedBy ? flag.releasedBy.username : '–'}) }}</p>
+          {% else %}
+            {% set _held = held[flag.id] ?? [] %}
+            <h3 class="c-shadow__held-title">{{ 'admin.shadow.held'|trans({count: _held|length}) }}</h3>
+            {% if _held is not empty %}
+              <ul class="c-shadow__held">
+                {% for message in _held %}
+                  <li class="c-shadow__message">
+                    <p class="c-checker__subject">
+                      <i class="fas {{ message.request is null ? 'fa-envelope' : 'fa-bed' }}" aria-hidden="true"></i>
+                      {{ 'admin.shadow.to'|trans({username: message.receiver.username}) }} · {{ message.subject ? message.subject.subject }}
+                      <time class="c-checker__time" datetime="{{ message.created|date('c') }}">{{ message.created.diffForHumans }}</time>
+                    </p>
+                    <div class="c-checker__text">{{ message.message|purify }}</div>
+                    <div class="c-shadow__message-actions">
+                      {% for decision, icon in {release: 'fa-paper-plane', spam: 'fa-ban'} %}
+                        <form method="post" action="{{ path('admin_spam_flagged_message', {id: message.id, decision: decision}) }}">
+                          <input type="hidden" name="_token" value="{{ _token }}">
+                          <button type="submit" class="c-checker__chip"><i class="fas {{ icon }}" aria-hidden="true"></i>{{ ('admin.shadow.message.' ~ decision ~ '.button')|trans }}</button>
+                        </form>
+                      {% endfor %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            <div class="c-shadow__actions">
+              <a class="c-cadmin-btn c-cnews-btn-small" href="{{ path('members_profile', {username: member.username}) }}"><i class="fas fa-user" aria-hidden="true"></i>{{ 'admin.shadow.profile'|trans }}</a>
+              <form method="post" action="{{ path('admin_spam_flagged_release', {id: flag.id}) }}">
+                <input type="hidden" name="_token" value="{{ _token }}">
+                <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" onclick="return confirm({{ 'admin.shadow.release.confirm'|trans({username: member.username, count: _held|length})|json_encode }})"><i class="fas fa-user-check" aria-hidden="true"></i>{{ 'admin.shadow.release'|trans }}</button>
+              </form>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    {% if flags.haveToPaginate %}
+      <div class="c-cadmin__pager">{{ pagerfanta(flags, 'rox_default') }}</div>
+    {% endif %}
+  {% endif %}
+{% endblock shadow_content %}

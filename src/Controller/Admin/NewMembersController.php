@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use App\Logger\Logger;
 use App\Model\Admin\NewMembersModel;
+use App\Model\ShadowBanModel;
 use App\Service\MessageSender;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
@@ -61,6 +62,7 @@ class NewMembersController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly MessageSender $messageSender,
         private readonly Logger $logger,
+        private readonly ShadowBanModel $shadowBanModel,
     ) {
     }
 
@@ -85,9 +87,16 @@ class NewMembersController extends AbstractController
         // the languages' counts are those in the chosen countries: the two filters go together
         $languageCounts = $this->model->getLanguages($all, $countries, $profile);
 
+        $members = $this->model->getPager($all, $locale, $page, $this->getItemsPerPage($volunteer), $countries, $profile, $languages);
+
         return $this->render('admin/newmembers/list.html.twig', [
-            'members' => $this->model->getPager($all, $locale, $page, $this->getItemsPerPage($volunteer), $countries, $profile, $languages),
+            'members' => $members,
             'all' => $all,
+            // the safety team and the checkers can shadow ban a new member (ShadowBanModel): who is flagged already
+            'shadow' => $all ? $this->shadowBanModel->getFlagStates(array_map(
+                static fn (array $member): int => (int) $member['id'],
+                iterator_to_array($members->getCurrentPageResults(), false),
+            )) : [],
             'can_change_status' => $this->canChangeStatus(),
             'statuses' => self::STATUSES,
             'chosen' => $chosen,
@@ -222,6 +231,26 @@ class NewMembersController extends AbstractController
         $this->model->markGreetingSent($member, self::GREETINGS[$greeting]);
 
         return $this->redirectToRoute('message_new', ['username' => $member->getUsername()]);
+    }
+
+    /**
+     * The safety team or a checker shadow bans the member: what they send is held back without them noticing, and
+     * they are listed with the flagged accounts (ShadowBanModel), to be released or banned there.
+     */
+    #[Route(path: '/admin/newmembers/{username:member}/shadow', name: 'newmembers_shadow', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function shadowBan(Request $request, Member $member): RedirectResponse
+    {
+        $this->denyUnlessAnyGranted([Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER]);
+        /** @var Member $volunteer */
+        $volunteer = $this->getUser();
+        // not oneself
+        if ($member !== $volunteer && $this->shadowBanModel->flagByVolunteer($member, $volunteer, 'the new members tool')) {
+            $this->logger->write('Member #' . $member->getId() . ' shadow banned in the new members tool', 'Safety');
+            $this->addTranslatedFlash('notice', 'admin.newmembers.shadow.done', ['username' => $member->getUsername()]);
+        }
+
+        return $this->redirectToRoute('newmembers', $this->listParameters($request, $request->request->getInt('page', 1)));
     }
 
     #[Route(path: '/admin/newmembers/{username:member}/status', name: 'newmembers_status', methods: ['POST'])]

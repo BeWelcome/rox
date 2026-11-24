@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{#
+  The pages of the safety team's sign-up patterns and flagged accounts (Admin\ShadowBanController), in the checkers'
+  layout with their menu. Expects counts, active; the page fills shadow_title and shadow_content.
+#}
+{% set inline_notices = true %}
+
+{% block title %}{% block shadow_title %}{% endblock %}{% endblock %}
+
+{% block main %}
+  <main role="main" class="c-cnews c-checker c-shadow">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ block('shadow_title') }}</h1>
+      </header>
+      <div class="c-cnews-checker">
+        {% include 'admin/checker/_menu.html.twig' %}
+        <section class="c-cnews-checker__main">
+          {% include 'admin/massmail/_flash.html.twig' %}
+          {% block shadow_content %}{% endblock %}
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock main %}

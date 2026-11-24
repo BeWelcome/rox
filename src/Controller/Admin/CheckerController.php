@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Model\ActivityModel;
+use App\Model\Admin\CheckerMenu;
 use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
 use App\Utilities\ItemsPerPageTraits;
@@ -50,6 +51,7 @@ class CheckerController extends AbstractController
         private readonly CommunityNewsModel $communityNewsModel,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly CheckerMenu $checkerMenu,
     ) {
     }
 
@@ -237,12 +239,7 @@ class CheckerController extends AbstractController
      */
     private function counts(): array
     {
-        return [
-            'messages' => $this->checkerModel->getReportedMessages(1, 1)->getNbResults(),
-            'blocked_words' => $this->checkerModel->getBlockWordsMessages(1, 1)->getNbResults(),
-            'activities' => $this->activityModel->getProblematicActivities(1, 1)->getNbResults(),
-            'community_news' => $this->communityNewsModel->countReportedComments(),
-        ];
+        return $this->checkerMenu->counts();
     }
 
     private function checkToken(Request $request, string $id): void

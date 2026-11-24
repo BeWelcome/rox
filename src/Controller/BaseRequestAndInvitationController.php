@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
+use App\Model\ShadowBanModel;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -15,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -26,10 +28,18 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     protected ConversationModel $conversationModel;
 
+    protected ShadowBanModel $shadowBanModel;
+
     public function __construct(
         protected readonly BaseRequestModel $model,
         protected readonly EntityManagerInterface $entityManager,
     ) {
+    }
+
+    #[Required]
+    public function setShadowBanModel(ShadowBanModel $shadowBanModel): void
+    {
+        $this->shadowBanModel = $shadowBanModel;
     }
 
     abstract protected function addExpiredFlash(Member $receiver);

@@ -1,0 +1,66 @@
+{% extends 'admin/checker/_shadow_layout.html.twig' %}
+{#
+  The safety team's sign-up patterns (Admin\ShadowBanController::patterns): a form to add one, and the list with how
+  many accounts each flagged, to switch off or remove. Expects patterns, flagged (counts by pattern id), error, fields,
+  counts, active.
+#}
+{% set _token = csrf_token(constant('App\\Controller\\Admin\\ShadowBanController::TOKEN')) %}
+
+{% block shadow_title %}{{ 'admin.shadow.patterns'|trans }}{% endblock %}
+
+{% block shadow_content %}
+  <p class="c-cnews-checker__intro">{{ 'admin.shadow.patterns.intro'|trans }}</p>
+
+  <form method="post" class="c-cnews-card c-shadow__add" novalidate>
+    <input type="hidden" name="_token" value="{{ _token }}">
+    <div class="c-shadow__add-row">
+      <label class="c-shadow__field">
+        <span>{{ 'admin.shadow.pattern'|trans }}</span>
+        <input class="o-input" type="text" name="pattern" maxlength="100" required placeholder="jane*v" value="{{ app.request.request.get('pattern') }}">
+      </label>
+      <label class="c-shadow__field c-shadow__field--narrow">
+        <span>{{ 'admin.shadow.pattern.field'|trans }}</span>
+        <select class="o-input" name="field">
+          {% for field in fields %}<option value="{{ field }}"{{ app.request.request.get('field') == field ? ' selected' }}>{{ ('admin.shadow.pattern.field.' ~ field)|trans }}</option>{% endfor %}
+        </select>
+      </label>
+    </div>
+    <label class="c-shadow__field">
+      <span>{{ 'admin.shadow.pattern.note'|trans }}</span>
+      <input class="o-input" type="text" name="note" maxlength="255" value="{{ app.request.request.get('note') }}">
+    </label>
+    {% if error %}<p class="c-shadow__error">{{ error|trans }}</p>{% endif %}
+    <p class="c-shadow__hint">{{ 'admin.shadow.pattern.hint'|trans }}</p>
+    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'admin.shadow.pattern.add'|trans }}</button>
+  </form>
+
+  {% if patterns is empty %}
+    <div class="c-cnews-card c-cnews-empty">
+      <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-fingerprint"></i></span>
+      <p class="c-cnews-empty__title">{{ 'admin.shadow.patterns.none'|trans }}</p>
+    </div>
+  {% else %}
+    <ul class="c-cnews-card c-shadow__patterns">
+      {% for pattern in patterns %}
+        <li class="c-shadow__pattern{{ pattern.active ? '' : ' is-off' }}">
+          <div class="c-shadow__pattern-main">
+            <code>{{ pattern.pattern }}</code>
+            <span class="c-tag">{{ ('admin.shadow.pattern.field.' ~ pattern.field)|trans }}</span>
+            {% if not pattern.active %}<span class="c-tag">{{ 'admin.shadow.pattern.off'|trans }}</span>{% endif %}
+            <small>{{ 'admin.shadow.pattern.by'|trans({username: pattern.createdBy ? pattern.createdBy.username : '–', date: pattern.created|format_date('medium')}) }} · {{ 'admin.shadow.pattern.flagged'|trans({count: flagged[pattern.id] ?? 0}) }}</small>
+            {% if pattern.note %}<p class="c-shadow__note">{{ pattern.note }}</p>{% endif %}
+          </div>
+          <div class="c-shadow__pattern-actions">
+            <a class="c-checker__chip" href="{{ path('admin_spam_pattern_matches', {id: pattern.id}) }}"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.shadow.pattern.recent'|trans }}</a>
+            {% for action in [pattern.active ? 'off' : 'on', 'remove'] %}
+              <form method="post" action="{{ path('admin_spam_pattern_action', {id: pattern.id, action: action}) }}">
+                <input type="hidden" name="_token" value="{{ _token }}">
+                <button type="submit" class="c-checker__chip"{% if action == 'remove' %} onclick="return confirm({{ 'admin.shadow.pattern.remove.confirm'|trans|json_encode }})"{% endif %}>{{ ('admin.shadow.pattern.' ~ action)|trans }}</button>
+              </form>
+            {% endfor %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock shadow_content %}

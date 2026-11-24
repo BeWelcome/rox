@@ -30,6 +30,7 @@ class SignupModel
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly TranslatorInterface $translator,
         private readonly Mailer $mailer,
+        private readonly ShadowBanModel $shadowBanModel,
     ) {
     }
 
@@ -68,6 +69,8 @@ class SignupModel
         }
 
         $this->entityManager->persist($member);
+        // a username or address the safety team watches for: flagged and shadow banned from the start
+        $this->shadowBanModel->checkNewMember($member);
         $this->joinBeWelcomeGroup($member);
 
         $memberRepository = $this->entityManager->getRepository(Member::class);

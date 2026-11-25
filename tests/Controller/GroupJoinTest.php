@@ -4,7 +4,9 @@ namespace App\Tests\Controller;
 
 use App\Entity\Group;
 use App\Entity\Member;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group as TestGroup;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -40,6 +42,43 @@ class GroupJoinTest extends WebTestCase
 
         $this->assertResponseRedirects();
         self::assertTrue($this->group('Hiking Enthusiasts')->isMember($this->member('member-7')));
+    }
+
+    /**
+     * @return iterable<string, array{int}>
+     */
+    public static function notApproved(): iterable
+    {
+        yield 'waiting for approval' => [Group::NOT_APPROVED];
+        yield 'under discussion' => [Group::IN_DISCUSSION];
+        yield 'dismissed' => [Group::DISMISSED];
+    }
+
+    /**
+     * A group other members can't see (GroupVoter::GROUP_VIEW) takes no new members: its join page showed the
+     * form and let them in.
+     */
+    #[DataProvider('notApproved')]
+    public function testAGroupThatIsNotApprovedIsNotJoined(int $approved): void
+    {
+        $group = $this->group('Hiking Enthusiasts');
+        $connection = static::getContainer()->get(Connection::class);
+        // the form, from the join page while the group is open
+        $this->client->loginUser($this->member('member-7'));
+        $form = $this->client->request('GET', '/group/' . $group->getId() . '/join')->filter('button[name=join]')->form();
+        $connection->executeStatement('UPDATE `group` SET approved = ? WHERE id = ?', [$approved, $group->getId()]);
+
+        $this->client->request('GET', '/group/' . $group->getId() . '/join');
+        $this->assertResponseRedirects('/groups/search');
+        // the form sent all the same
+        $this->client->submit($form, ['reason' => 'I like walking', 'notifications' => 'no']);
+        $this->assertResponseRedirects('/groups/search');
+
+        self::assertFalse($this->group('Hiking Enthusiasts')->isMember($this->member('member-7')));
+        self::assertSame(0, (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM group_membership WHERE group_id = ? AND member_id = ?',
+            [$group->getId(), $this->member('member-7')->getId()],
+        ));
     }
 
     public function testTheJoinRequestRoutesFindTheirGroupAndMember(): void

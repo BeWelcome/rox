@@ -9,6 +9,7 @@ use App\Entity\Member;
 use App\Model\GroupModel;
 use App\Service\MailLinkSigner;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -50,6 +51,31 @@ final class MailLinksTest extends WebTestCase
         self::assertSame(GroupMembershipStatusType::INVITED_INTO_GROUP, $this->membershipStatus($group, $member));
 
         $this->client->request('GET', $this->signed('accept_invite_to_group', $parameters));
+        self::assertResponseRedirects('/group/' . $group->getId());
+        self::assertSame(GroupMembershipStatusType::CURRENT_MEMBER, $this->membershipStatus($group, $member));
+    }
+
+    /**
+     * An invitation into a group that isn't approved (yet) waits: the invited member can't see the group, and
+     * doesn't join it.
+     */
+    public function testAnInvitationIntoAGroupThatIsNotApprovedWaits(): void
+    {
+        $group = $this->group('Hiking Enthusiasts');
+        $member = $this->member('member-7');
+        $this->setMembership($group, $member, GroupMembershipStatusType::INVITED_INTO_GROUP);
+        $connection = static::getContainer()->get(Connection::class);
+        $connection->executeStatement('UPDATE `group` SET approved = ? WHERE id = ?', [GroupEntity::NOT_APPROVED, $group->getId()]);
+        $this->client->loginUser($member);
+        $link = $this->signed('accept_invite_to_group', ['groupId' => $group->getId(), 'memberId' => $member->getId()]);
+
+        $this->client->request('GET', $link);
+        self::assertResponseRedirects('/groups/search');
+        self::assertSame(GroupMembershipStatusType::INVITED_INTO_GROUP, $this->membershipStatus($group, $member));
+
+        // approved: the same link lets the member in
+        $connection->executeStatement('UPDATE `group` SET approved = ? WHERE id = ?', [GroupEntity::APPROVED, $group->getId()]);
+        $this->client->request('GET', $link);
         self::assertResponseRedirects('/group/' . $group->getId());
         self::assertSame(GroupMembershipStatusType::CURRENT_MEMBER, $this->membershipStatus($group, $member));
     }

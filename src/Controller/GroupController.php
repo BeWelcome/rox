@@ -114,6 +114,11 @@ class GroupController extends AbstractController
             ]);
         }
 
+        // a group the member can't see (waiting for its approval, dismissed) takes no new members: as its page does
+        if (!$this->isGranted(GroupVoter::GROUP_VIEW, $group)) {
+            return $this->redirectToRoute('groups_search');
+        }
+
         if (DoctrineGroupType::INVITE_ONLY === $group->getType()) {
             $this->addTranslatedFlash('notice', 'flash.group.need.invite');
 
@@ -264,6 +269,11 @@ class GroupController extends AbstractController
         // only the invited member answers the invitation
         if ($this->getUser() !== $member) {
             throw $this->createAccessDeniedException();
+        }
+
+        // the invitation waits while the group isn't approved: the member can't see it yet, and doesn't join it
+        if (!$this->isGranted(GroupVoter::GROUP_VIEW, $group)) {
+            return $this->redirectToRoute('groups_search');
         }
 
         $success = $this->groupModel->acceptInviteToGroup($group, $member);

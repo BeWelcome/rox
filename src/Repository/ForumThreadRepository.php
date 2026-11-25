@@ -79,6 +79,24 @@ class ForumThreadRepository extends EntityRepository
     }
 
     /**
+     * The group's threads with the newest posts, of those the member may read (as on its forum page), deleted ones
+     * left out for the moderators too: the latest topics of the group's page, the Agora's card of the groups list.
+     *
+     * @return list<ForumThread>
+     */
+    public function findLatest(Member $member, bool $moderator, Group $group, int $limit): array
+    {
+        return $this->createLatestQueryBuilder($member, $moderator, $group)
+            ->andWhere('t.deleted = :shown')
+            ->setParameter('shown', ForumDeleteStatusType::NOT_DELETED)
+            // the newest first: the forum page puts the pinned ones on top
+            ->orderBy('p.created', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * The forum moderators' filters of a group's discussions: the threads with open reports (reported), or the ones
      * not every member sees (hidden: only for the group or the moderators, hidden after a day, or deleted).
      */

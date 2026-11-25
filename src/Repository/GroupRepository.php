@@ -176,26 +176,6 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * The group's threads with the newest posts, deleted ones left out.
-     *
-     * @return list<ForumThread>
-     */
-    public function findLatestThreads(Group $group, int $limit): array
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('t', 'p')
-            ->from(ForumThread::class, 't')
-            ->join('t.lastPost', 'p')
-            ->where('t.group = :group')
-            ->andWhere("t.deleted = 'NotDeleted'")
-            ->setParameter('group', $group)
-            ->orderBy('p.created', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * Gets all groups which name uses any of the provided name parts.
      *
      * @return array

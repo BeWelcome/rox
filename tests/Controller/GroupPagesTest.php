@@ -221,6 +221,55 @@ final class GroupPagesTest extends WebTestCase
         self::assertStringNotContainsString('Weekend hiking meetup - who is in?', $crawler->text());
     }
 
+    /**
+     * The group's page lists its latest topics by the rule its forum page has: a topic for the group only is for its
+     * members, one for the moderators for them.
+     */
+    public function testTheGroupPageLeavesOutTheTopicsTheReaderMayNotRead(): void
+    {
+        $title = 'Weekend hiking meetup - who is in?';
+        $group = $this->getGroup('Hiking Enthusiasts');
+        $connection = $this->entityManager->getConnection();
+        $latestTopics = function (string $username) use ($group): string {
+            $this->client->loginUser($this->getMember($username));
+
+            return $this->client->request('GET', '/group/' . $group->getId())->filter('main')->text();
+        };
+        $connection->executeStatement(
+            'DELETE FROM group_membership WHERE group_id = ? AND member_id = ?',
+            [$group->getId(), $this->getMember('member-2')->getId()],
+        );
+        self::assertStringContainsString($title, $latestTopics('member-2'), 'a topic for all members');
+
+        $connection->executeStatement("UPDATE forum_thread SET ThreadVisibility = 'GroupOnly' WHERE title = ?", [$title]);
+        self::assertStringNotContainsString($title, $latestTopics('member-2'), 'for the group only, a member outside');
+        $this->join($this->getMember('member-2'), $group->getId());
+        self::assertStringContainsString($title, $latestTopics('member-2'), 'for the group only, a member of the group');
+
+        $connection->executeStatement("UPDATE forum_thread SET ThreadVisibility = 'ModeratorOnly' WHERE title = ?", [$title]);
+        self::assertStringNotContainsString($title, $latestTopics('member-2'), 'for the moderators, a member of the group');
+        // bwadmin is a forum moderator in the fixtures
+        self::assertStringContainsString($title, $latestTopics('bwadmin'), 'for the moderators, a moderator');
+    }
+
+    public function testTheAgoraCardNamesNoTopicTheReaderMayNotRead(): void
+    {
+        $connection = $this->entityManager->getConnection();
+        $latest = $connection->fetchAssociative(
+            "SELECT t.id, t.title FROM forum_thread t JOIN forum_post p ON p.id = t.last_postid
+             WHERE t.IdGroup = 0 AND t.ThreadDeleted = 'NotDeleted' ORDER BY p.create_time DESC LIMIT 1",
+        );
+        self::assertNotFalse($latest, 'the fixtures have a topic in the Agora');
+
+        $card = $this->client->request('GET', '/groups/search')->filter('.p-group-card--pinned');
+        self::assertStringContainsString($latest['title'], $card->text());
+
+        $connection->executeStatement("UPDATE forum_thread SET ThreadVisibility = 'ModeratorOnly' WHERE id = ?", [$latest['id']]);
+        $card = $this->client->request('GET', '/groups/search')->filter('.p-group-card--pinned');
+        self::assertCount(1, $card);
+        self::assertStringNotContainsString($latest['title'], $card->text());
+    }
+
     public function testAGroupWaitingForApprovalSendsOtherMembersBackToTheSearch(): void
     {
         $group = $this->getGroup('Vegan Travelers');

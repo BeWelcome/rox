@@ -2,16 +2,17 @@
     "name": "BeWelcome Rox (Docker Master)",
     "dockerComposeFile": [
         "../docker-compose.yml",
-        "../docker-compose.override.yml.dist"
+        "../docker-compose.override.yml.dist",
+        "../container-compose.yml"
     ],
     "service": "php",
     "workspaceFolder": "/srv/bewelcome",
     "overrideCommand": false,
     "postCreateCommand": "git config --global --add safe.directory /srv/bewelcome && make hooks",
     "postAttachCommand": "sh docker/php/setup-progress.sh",
-    "forwardPorts": [80, 1080, 9306, 9308],
+    "forwardPorts": [8080, 1080, 9306, 9308],
     "portsAttributes": {
-        "80": {
+        "8080": {
             "label": "BeWelcome App (Nginx)",
             "onAutoForward": "openBrowser"
         },

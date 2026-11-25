@@ -12,7 +12,8 @@ services:
 
   web:
     ports:
-      - "80:80"
+      # 8080 and not 80: rootless Docker and Podman cannot use ports below 1024
+      - "8080:80"
     volumes:
       - ./public:/srv/bewelcome/public:ro
 

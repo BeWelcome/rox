@@ -74,6 +74,7 @@ security:
         - { path: ^/unsubscribe, roles: PUBLIC_ACCESS }
         - { path: ^/forums/agora/notifications/off/, roles: PUBLIC_ACCESS }
         - { path: ^/faq, roles: PUBLIC_ACCESS }
+        - { path: ^/sitemap\.xml$, roles: PUBLIC_ACCESS }
         - { path: ^/bod, roles: PUBLIC_ACCESS }
         - { path: ^/bv, roles: PUBLIC_ACCESS }
         - { path: ^/resetpassword, roles: PUBLIC_ACCESS }

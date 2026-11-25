@@ -88,6 +88,9 @@ export function initRequests() {
                 const next = Number.isNaN(value) ? min : value + parseInt(button.dataset.step, 10);
                 input.value = Math.min(max, Math.max(min, next));
                 refresh();
+                // a value set by script tells nobody: the form's Send waits for the number (contact/send_state.js)
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
             });
         });
         input.addEventListener('input', refresh);

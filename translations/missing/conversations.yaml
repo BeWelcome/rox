@@ -121,7 +121,10 @@ contact.send.hint.message:
     - Shown under the greyed Send button of the message side panel until the subject and the message are filled
 contact.send.hint.request:
     - 'Add your dates, a subject and a message to send'
-    - Shown under the greyed Send button of the stay request side panel until the dates, the subject and the message are filled
+    - Shown under the greyed Send button of the invitation side panel until the dates, the subject and the message are filled
+contact.send.hint.request.travellers:
+    - 'Add your dates, the number of travellers, a subject and a message to send'
+    - Shown under the greyed Send button of the stay request side panel until the dates, the number of travellers, the subject and the message are filled
 contact.dates:
     - 'Dates'
     - Label of the arrival and departure dates in the stay request side panel

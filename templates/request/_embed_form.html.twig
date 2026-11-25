@@ -1,7 +1,8 @@
 {#
   New stay request in the "contact a member" side panel (?embed=1, search preview and
   profile). The dates, nights and travellers work with assets/js/requests.js; Send stays
-  greyed until the dates, the subject and the message are filled (contact/send_state.js).
+  greyed until the dates, the number of travellers, the subject and the message are filled
+  (contact/send_state.js).
 #}
 {% import 'request/_request.macros.twig' as stay %}
 {% set fields = form.request %}
@@ -54,7 +55,7 @@
                         <button type="button" class="c-contact-stay__step js-request-step" data-step="-1" aria-label="-1">
                             <i class="fas fa-minus" aria-hidden="true"></i>
                         </button>
-                        {{ form_widget(_travellers, { type: 'number', attr: { class: 'c-contact-stay__count', min: 1, max: 20, inputmode: 'numeric' } }) }}
+                        {{ form_widget(_travellers, { type: 'number', attr: { class: 'c-contact-stay__count js-contact-required', min: 1, max: 20, inputmode: 'numeric' } }) }}
                         <button type="button" class="c-contact-stay__step js-request-step" data-step="1" aria-label="+1">
                             <i class="fas fa-plus" aria-hidden="true"></i>
                         </button>
@@ -109,7 +110,7 @@
                     <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'contact.send.request'|trans }}
                 </button>
             </div>
-            <p class="c-contact__hint js-contact-hint">{{ 'contact.send.hint.request'|trans }}</p>
+            <p class="c-contact__hint js-contact-hint">{{ 'contact.send.hint.request.travellers'|trans }}</p>
         </div>
     {{ form_end(form) }}
 </div>

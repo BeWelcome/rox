@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use ZxcvbnPhp\Zxcvbn;
 
@@ -42,8 +43,11 @@ class PasswordController extends AbstractController
      * \todo try to reduce complexity (low prio as it is just meeting the threshold)
      */
     #[Route(path: '/resetpassword', name: 'member_request_reset_password')]
-    public function requestResetPassword(Request $request, Mailer $mailer): Response
-    {
+    public function requestResetPassword(
+        Request $request,
+        Mailer $mailer,
+        RateLimiterFactoryInterface $passwordResetMailLimiter,
+    ): Response {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
             $this->addTranslatedFlash('notice', 'flash.reset.password.not_logged_in');
@@ -66,11 +70,13 @@ class PasswordController extends AbstractController
             }
             if (null === $member) {
                 $form->addError(new FormError($this->getTranslator()->trans('reset.password.error')));
-            } elseif (!$this->passwordModel->checkTimeElapsedOnPasswordReset($member)) {
-                $form->addError(new FormError($this->getTranslator()->trans('reset.password.too.fast')));
+            } elseif (!$passwordResetMailLimiter->create('member-' . $member->getId())->consume()->isAccepted()) {
+                // one mail an hour for a member; the link of the mail sent before stays good
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.too.many')));
             }
 
             if (0 === $form->getErrors()->count()) {
+                // asking again, an hour later or more: the new link takes the place of the one sent before
                 $token = $this->passwordModel->generatePasswordResetToken($member);
 
                 if (null === $token) {

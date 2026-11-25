@@ -22,6 +22,11 @@ rate_limiter:
             policy: sliding_window
             limit: 3
             interval: '1 hour'
+        # Password reset mails for one member: anyone who knows a username can ask for one.
+        password_reset_mail:
+            policy: sliding_window
+            limit: 1
+            interval: '1 hour'
 
 when@prod:
     framework:

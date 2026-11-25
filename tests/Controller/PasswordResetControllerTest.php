@@ -58,23 +58,66 @@ class PasswordResetControllerTest extends WebTestCase
         self::assertEmailCount(0);
     }
 
-    public function testASecondRequestSoonAfterSendsNoSecondLink(): void
+    public function testAskingAgainSendsANewLinkAndEndsTheOneBefore(): void
     {
         $client = static::createClient();
-        static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($this->member('bwadmin'));
+        $first = static::getContainer()->get(PasswordModel::class)->generatePasswordResetToken($this->member('bwadmin'));
         $crawler = $client->request('GET', '/resetpassword');
         $form = $crawler->filter('#reset-password-form')->form([
             'reset_password_request_form[username]' => 'bwadmin',
         ]);
 
-        $crawler = $client->submit($form);
+        $client->submit($form);
 
+        $this->assertResponseRedirects('/login');
+        self::assertEmailCount(1);
+        $resets = $this->entityManager()->getRepository(PasswordReset::class)->findBy(['member' => $this->member('bwadmin')]);
+        self::assertCount(1, $resets);
+        $second = $resets[0]->getToken();
+        self::assertNotSame($first, $second);
+
+        // the link of the first mail no longer opens the form, the new one does
+        $client->request('GET', '/resetpassword/bwadmin/' . $first);
+        $this->assertResponseRedirects('/resetpassword');
+        $client->request('GET', '/resetpassword/bwadmin/' . $second);
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testASecondMailWithinTheHourIsNotSent(): void
+    {
+        $client = static::createClient();
+        // the limit counts as long as the kernel lives, and so do the mails sent
+        $client->disableReboot();
+        $ask = static function () use ($client) {
+            $crawler = $client->request('GET', '/resetpassword');
+
+            return $client->submit($crawler->filter('#reset-password-form')->form([
+                'reset_password_request_form[username]' => 'bwadmin',
+            ]));
+        };
+
+        $ask();
+        $this->assertResponseRedirects('/login');
+        self::assertCount(1, self::getMailerMessages());
+        $token = $this->entityManager()->getRepository(PasswordReset::class)->findOneBy(['member' => $this->member('bwadmin')])->getToken();
+
+        $crawler = $ask();
         self::assertContains($client->getResponse()->getStatusCode(), [200, 422]);
         self::assertSame(
-            [static::getContainer()->get(TranslatorInterface::class)->trans('reset.password.too.fast')],
+            [static::getContainer()->get(TranslatorInterface::class)->trans('reset.password.too.many')],
             $crawler->filter('.p-login__error-title')->each(static fn ($message) => $message->text()),
         );
-        self::assertEmailCount(0);
+        self::assertCount(1, self::getMailerMessages(), 'no second mail');
+        // the link of the first mail is still the member's
+        $resets = $this->entityManager()->getRepository(PasswordReset::class)->findBy(['member' => $this->member('bwadmin')]);
+        self::assertCount(1, $resets);
+        self::assertSame($token, $resets[0]->getToken());
+
+        // another member's mail is not held back by it
+        $crawler = $client->request('GET', '/resetpassword');
+        $client->submit($crawler->filter('#reset-password-form')->form(['reset_password_request_form[username]' => 'member-2']));
+        $this->assertResponseRedirects('/login');
+        self::assertCount(2, self::getMailerMessages());
     }
 
     public function testTheLinkSetsANewPassword(): void

@@ -222,7 +222,9 @@ class LegRepository extends EntityRepository
             ->setParameter('longitude', $longitude)
             ->setParameter('now', $now)
             ->setParameter('durationMonthsAhead', $durationMonthsAhead)
+            // by arrival, then as planned: without the second, the pages of a list overlap for stops of one day
             ->orderBy('s.arrival', 'ASC')
+            ->addOrderBy('s.id', 'ASC')
             ->addSelect('t')
         ;
 

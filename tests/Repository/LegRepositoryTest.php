@@ -67,6 +67,48 @@ class LegRepositoryTest extends KernelTestCase
         self::assertSame($before + 4, $repository->getVisitorsCount($host, 20));
     }
 
+    /**
+     * The visitors list is paged: with many stops arriving the same day, each is on one page, not on two or none.
+     */
+    public function testLegsArrivingTheSameDayAreOnOnePageEach(): void
+    {
+        [$hostId, $travellerId] = $this->connection->fetchFirstColumn(<<<'SQL'
+                SELECT m.id FROM member m JOIN address a ON a.member_id = m.id AND a.active = 1
+                WHERE m.Status = 'Active' AND a.latitude IS NOT NULL AND a.longitude IS NOT NULL
+                ORDER BY m.id LIMIT 2
+            SQL);
+        /** @var LegRepository $repository */
+        $repository = $this->entityManager->getRepository(Leg::class);
+        $host = $this->entityManager->find(Member::class, $hostId);
+        $address = $host->getActiveAddress();
+        $trip = $this->createTrip(
+            $this->entityManager->find(Member::class, $travellerId),
+            array_fill(0, 23, [(float) $address->getLatitude(), (float) $address->getLongitude()]),
+        );
+        $created = array_map(static fn (Leg $leg): int => $leg->getId(), $trip->getLegs()->toArray());
+        // the same arrival for all of them, to the second
+        $this->connection->executeStatement(
+            'UPDATE leg SET arrival = ? WHERE trip_id = ?',
+            [new DateTime('+1 week')->format('Y-m-d 00:00:00'), $trip->getId()],
+        );
+        $this->entityManager->clear();
+        $host = $this->entityManager->find(Member::class, $hostId);
+
+        $listed = [];
+        $total = $repository->getVisitorsCount($host, 20);
+        for ($offset = 0; $offset < $total; $offset += 5) {
+            $page = $repository->getLegsInAreaQuery($host, 20)->setFirstResult($offset)->setMaxResults(5)->getResult();
+            foreach ($page as $leg) {
+                if (\in_array($leg->getId(), $created, true)) {
+                    $listed[] = $leg->getId();
+                }
+            }
+        }
+
+        sort($created);
+        self::assertSame($created, $listed, 'each stop once, in the order they were planned');
+    }
+
     public function testHostsToNotifyLiveWithinTheInvitationRadiusOnly(): void
     {
         [$hostId, $travellerId] = $this->connection->fetchFirstColumn(<<<'SQL'

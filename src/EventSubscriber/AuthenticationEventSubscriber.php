@@ -33,7 +33,8 @@ readonly class AuthenticationEventSubscriber implements EventSubscriberInterface
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        // a stateless route knows no member: reading who is logged in would open the session it is to leave alone
+        if (!$event->isMainRequest() || $event->getRequest()->attributes->getBoolean('_stateless')) {
             return;
         }
 
@@ -70,7 +71,8 @@ readonly class AuthenticationEventSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        // a stateless route knows no member: reading who is logged in would open the session it is to leave alone
+        if (!$event->isMainRequest() || $event->getRequest()->attributes->getBoolean('_stateless')) {
             return;
         }
 

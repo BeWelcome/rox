@@ -62,6 +62,33 @@ final class LogsTest extends WebTestCase
         }
     }
 
+    public function testAVolunteerSeesOnlyTheTypesTheirRightCovers(): void
+    {
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $entityManager->getConnection()->executeStatement(
+            "INSERT INTO rightsvolunteers (Level, Scope, Comment, updated, created, IdMember, IdRight)
+             SELECT 10, '\"Group\";\"NewMembers\";', 'zztest', NOW(), NOW(), m.id, r.id FROM member m INNER JOIN rights r ON r.Name = 'Logs'
+             WHERE m.Username = 'member-6'",
+        );
+        // read anew: with the right
+        $entityManager->clear();
+        $this->client->loginUser($this->member('member-6'));
+
+        $crawler = $this->client->request('GET', '/admin/logs');
+        self::assertResponseIsSuccessful();
+        self::assertSame(['Group', 'NewMembers'], $crawler->filter('.c-logs__chip input[name="log[types][]"]')->each(static fn (Crawler $box) => $box->attr('value')));
+        self::assertContains('zztest joined a group', $this->messages($crawler));
+        self::assertNotContains('zztest logged in', $this->messages($crawler));
+
+        // a type the right doesn't cover, asked for by the address: alone, and next to one it covers
+        foreach ([['Login'], ['Login', 'Group']] as $types) {
+            $crawler = $this->client->request('GET', '/admin/logs?' . http_build_query(['log' => ['types' => $types]]));
+            self::assertResponseIsSuccessful();
+            self::assertNotContains('zztest logged in', $this->messages($crawler));
+            self::assertNotContains('Login', $crawler->filter('.c-logs__row .c-tag')->each(static fn (Crawler $tag) => $tag->text()));
+        }
+    }
+
     public function testNothingFoundSaysSo(): void
     {
         $crawler = $this->client->request('GET', '/admin/logs?' . http_build_query(['log' => ['types' => ['Login'], 'username' => 'member-6']]));

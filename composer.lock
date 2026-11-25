@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8bfb51f15ffa564fa7c26bd8331198c",
+    "content-hash": "d80f3fded938e056fc45e0247cd5ac2e",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -10934,16 +10934,16 @@
         },
         {
             "name": "symfony/ux-translator",
-            "version": "3.x-dev",
+            "version": "v3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-translator.git",
-                "reference": "dbffb91d89c0445d1071e4bbf18d1ff8a6f6b5e6"
+                "reference": "79478570a246ff0079b81a5478d67ab940fc3a03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-translator/zipball/dbffb91d89c0445d1071e4bbf18d1ff8a6f6b5e6",
-                "reference": "dbffb91d89c0445d1071e4bbf18d1ff8a6f6b5e6",
+                "url": "https://api.github.com/repos/symfony/ux-translator/zipball/79478570a246ff0079b81a5478d67ab940fc3a03",
+                "reference": "79478570a246ff0079b81a5478d67ab940fc3a03",
                 "shasum": ""
             },
             "require": {
@@ -10960,7 +10960,6 @@
                 "symfony/var-dumper": "^7.4|^8.0",
                 "symfony/yaml": "^7.4|^8.0"
             },
-            "default-branch": true,
             "type": "symfony-bundle",
             "extra": {
                 "thanks": {
@@ -10993,7 +10992,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-translator/tree/3.x"
+                "source": "https://github.com/symfony/ux-translator/tree/v3.8.0"
             },
             "funding": [
                 {
@@ -11013,7 +11012,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-14T23:35:38+00:00"
+            "time": "2026-11-22T06:49:09+00:00",
+            "published-time": "2026-11-22T06:51:55+00:00"
         },
         {
             "name": "symfony/validator",
@@ -17521,9 +17521,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "symfony/ux-translator": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

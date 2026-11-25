@@ -6,6 +6,7 @@ use App\Attribute\ReleasesSession;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Dto\GroupSearch;
 use App\Entity\Address;
+use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
@@ -14,6 +15,7 @@ use App\Entity\Member;
 use App\Entity\MemberThreadSubscription;
 use App\Entity\RelatedGroup;
 use App\Model\ForumModel;
+use App\Repository\ForumThreadRepository;
 use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
@@ -187,7 +189,7 @@ class GroupPagesController extends AbstractController
             'description' => $group->getDescription($request->getLocale()),
             'membershipStatus' => $repository->findMembershipStatus($group, $member),
             'canViewForum' => $canViewForum,
-            'threads' => $canViewForum ? $repository->findLatestThreads($group, self::LATEST_THREADS) : [],
+            'threads' => $canViewForum ? $this->latestThreads($member, $group, self::LATEST_THREADS) : [],
             'memberCount' => $repository->countMembers($group),
             'latestMembers' => $repository->createMembersQueryBuilder($group)
                 ->setMaxResults(self::SIDEBAR_MEMBERS)->getQuery()->getResult(),
@@ -328,7 +330,7 @@ class GroupPagesController extends AbstractController
             'allCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
             'archivedCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch(archived: true)), 1, 1)->getNbResults(),
             'agora' => $agora,
-            'agoraThread' => null === $agora ? null : ($repository->findLatestThreads($agora, 1)[0] ?? null),
+            'agoraThread' => null === $agora || !$member instanceof Member ? null : ($this->latestThreads($member, $agora, 1)[0] ?? null),
             'near' => $member instanceof Member ? $this->findGroupsNear($member) : null,
             'newSubscriptions' => $member instanceof Member ? \count(array_filter(
                 $this->entityManager->getRepository(MemberThreadSubscription::class)->findBy(['subscriber' => $member]),
@@ -405,6 +407,21 @@ class GroupPagesController extends AbstractController
         $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
 
         return $pager;
+    }
+
+    /**
+     * The group's topics with the newest posts that the member may read: by the rule of its forum page, so a topic
+     * for the group or the moderators only isn't named to anybody else.
+     *
+     * @return list<ForumThread>
+     */
+    private function latestThreads(Member $member, Group $group, int $limit): array
+    {
+        /** @var ForumThreadRepository $threads */
+        $threads = $this->entityManager->getRepository(ForumThread::class);
+        $moderator = $this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN);
+
+        return $threads->findLatest($member, $moderator, $group, $limit);
     }
 
     private function getGroupRepository(): GroupRepository

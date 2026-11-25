@@ -17,10 +17,18 @@ function resetBackgroundColor() {
     }
 }
 
+// The check that waits for its answer, if any: a new one, or sending the form, ends it.
+let pending = null;
+
 async function getPasswordScore() {
     // Collect form data (username, email address and password)
     // Send to server to calculate score
     // Change colors
+    if (pending) {
+        pending.abort();
+    }
+    const check = new AbortController();
+    pending = check;
     const formData = new FormData();
     formData.append('username', username ? username.value : '');
     formData.append('email', email ? email.value : '');
@@ -32,11 +40,19 @@ async function getPasswordScore() {
             method: "POST",
             // Set the FormData instance as the request body
             body: formData,
+            signal: check.signal,
         });
         const json = await response.json();
         score = json.score;
     } catch (e) {
+        if (check.signal.aborted) {
+            // overtaken by a newer check, or the form was sent: nothing to show
+            return;
+        }
         console.error(e);
+    }
+    if (pending === check) {
+        pending = null;
     }
 
     let backgroundColor;
@@ -72,5 +88,17 @@ if (passwordField && passwordStrength) {
 
     if (passwordField.value != '') {
         getPasswordScore();
+    }
+
+    // Sending the form ends a check that still waits and the one about to start: the page is leaving, and an
+    // answer that comes after the form's would only get in its way.
+    const form = passwordField.closest('form');
+    if (form) {
+        form.addEventListener('submit', () => {
+            clearTimeout(timeout);
+            if (pending) {
+                pending.abort();
+            }
+        });
     }
 }

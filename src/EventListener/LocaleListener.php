@@ -48,8 +48,9 @@ readonly class LocaleListener implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        // a request without a session doesn't start one here
-        $session = $request->hasPreviousSession() ? $request->getSession() : null;
+        // a request without a session doesn't start one here, and a stateless route leaves the session alone
+        $stateless = $request->attributes->getBoolean('_stateless');
+        $session = $request->hasPreviousSession() && !$stateless ? $request->getSession() : null;
 
         // try to see if the locale has been set as a _locale routing parameter
         $locale = $request->attributes->get('_locale');

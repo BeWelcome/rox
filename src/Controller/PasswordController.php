@@ -199,7 +199,12 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: 'password/check/', name: 'check_password', methods: ['POST'])]
+    /**
+     * How strong a password is, for the meter under a password field. Stateless: the sign-up form may still wait for
+     * this answer when it is sent, and an answer that touched the session would replace the cookie of the member the
+     * sign-up just logged in (the session the request came with is gone by then, PHP starts a new one).
+     */
+    #[Route(path: 'password/check/', name: 'check_password', methods: ['POST'], stateless: true)]
     public function checkPassword(Request $request): JsonResponse
     {
         $username = $request->request->getString('username');

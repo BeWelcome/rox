@@ -59,6 +59,31 @@ final class CheckerTest extends WebTestCase
         $this->client->request('POST', '/admin/spam/messages/processed', ['_token' => $this->token($crawler), 'decisions' => [$message => 'ok']]);
         $this->assertResponseRedirects('/admin/spam/messages/processed');
         self::assertSame(['Checked', 'SpamSayMember'], $this->state($message));
+
+        // decided "ok", it stays on the list of the decided ones: that decision can be changed too
+        $crawler = $this->client->followRedirect();
+        self::assertSame('ok', $this->row($crawler, $message)->filter('input[type="radio"]:checked')->attr('value'));
+        $this->client->request('POST', '/admin/spam/messages/processed', ['_token' => $this->token($crawler), 'decisions' => [$message => 'spam']]);
+        self::assertSame(['Checked', 'SpamSayChecker,SpamSayMember'], $this->state($message));
+    }
+
+    /**
+     * A reported message a checker calls "ok" in the open list is among the decided ones afterwards; a message
+     * nobody reported and no checker called spam is not.
+     */
+    public function testAReportedMessageDecidedOkIsAmongTheDecidedOnes(): void
+    {
+        $reported = $this->messageOf('member-3', 'ToCheck', 'SpamSayMember');
+        $blockWordOk = $this->messageOf('member-5', 'Checked', 'SpamBlkWord');
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->client->request('GET', '/admin/spam/messages');
+
+        $this->client->request('POST', '/admin/spam/messages', ['_token' => $this->token($crawler), 'decisions' => [$reported => 'ok']]);
+
+        self::assertSame(['Checked', 'SpamSayMember'], $this->state($reported));
+        $crawler = $this->client->request('GET', '/admin/spam/messages/processed');
+        self::assertSame('ok', $this->row($crawler, $reported)->filter('input[type="radio"]:checked')->attr('value'));
+        self::assertCount(0, $crawler->filter('input[name="decisions[' . $blockWordOk . ']"]'));
     }
 
     public function testOnlyTheMessagesOfThePageAreDecided(): void

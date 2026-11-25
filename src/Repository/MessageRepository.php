@@ -646,14 +646,19 @@ class MessageRepository extends EntityRepository
         return $qb;
     }
 
+    /**
+     * The messages a checker decided: the ones a member reported, whether the checker called them spam or not (a
+     * wrong "ok" left the list and could not be found again), and the ones a checker called spam.
+     */
     private function queryProcessedReportedMessages(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('m');
         $qb
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECKED)
-            ->andWhere('m.spamInfo LIKE :spamInfo')
-            ->setParameter('spamInfo', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
+            ->andWhere('m.spamInfo LIKE :reported OR m.spamInfo LIKE :spam')
+            ->setParameter('reported', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
+            ->setParameter('spam', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
             ->orderBy('m.created', 'DESC')
         ;
 

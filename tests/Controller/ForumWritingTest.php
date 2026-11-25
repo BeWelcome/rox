@@ -411,8 +411,8 @@ final class ForumWritingTest extends WebTestCase
     private function joinGroup(Member $member, int $groupId): void
     {
         $this->connection->executeStatement(
-            "INSERT INTO group_membership (member_id, group_id, status, accept_mass_mail, notifications_enabled, created, updated)
-             VALUES (?, ?, 'In', 0, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = 'In', notifications_enabled = 1",
+            "INSERT INTO group_membership (member_id, group_id, status, notifications_enabled, created, updated)
+             VALUES (?, ?, 'In', 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = 'In', notifications_enabled = 1",
             [$member->getId(), $groupId],
         );
     }

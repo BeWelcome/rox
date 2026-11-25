@@ -224,7 +224,6 @@ class GroupModel
         $groupMembership = new GroupMembership();
         $groupMembership
             ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
-            ->setAcceptMassMail(true)
             ->setComment('Group creator')
             ->setGroup($group)
             ->setMember($member);
@@ -465,12 +464,10 @@ class GroupModel
     public function updateMembershipSettings(
         GroupMembership $membership,
         ?string $comment,
-        bool $acceptMassMail,
         bool $notificationsEnabled,
     ): void {
         $membership
             ->setComment('' === trim((string) $comment) ? null : $comment)
-            ->setAcceptMassMail($acceptMassMail)
             ->setNotificationsEnabled($notificationsEnabled);
         $this->entityManager->flush();
     }

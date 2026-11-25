@@ -320,7 +320,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
     public function testTheForumNotificationsAreSwitchedOffAndOnAgain(): void
     {
         $member = $this->member('member-2');
-        $this->connection()->executeStatement('UPDATE group_membership SET accept_mass_mail = 1, notifications_enabled = 1 WHERE member_id = ?', [$member->getId()]);
+        $this->connection()->executeStatement('UPDATE group_membership SET notifications_enabled = 1 WHERE member_id = ?', [$member->getId()]);
         $this->client->loginUser($this->member('member-3'));
 
         $this->client->request('GET', '/admin/subscriptions');
@@ -336,6 +336,29 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $this->client->request('GET', '/admin/subscriptions');
         $this->client->submitForm('forum_notifications[enable]', ['forum_notifications[username]' => 'member-2']);
         self::assertGreaterThan(0, $this->notifications($member->getId()));
+    }
+
+    /**
+     * A member who joins a group with e-mail updates gets the group's forum mails (notifications_enabled); the tool
+     * switched only the memberships of the old "accept mass mail" setting, so it left those mails on.
+     */
+    public function testTheToolSwitchesTheGroupAMemberJoinedWithEmailUpdates(): void
+    {
+        $member = $this->member('member-7');
+        $groupId = (int) $this->connection()->fetchOne("SELECT id FROM `group` WHERE name = 'Hiking Enthusiasts'");
+        $this->client->loginUser($member);
+        $crawler = $this->client->request('GET', '/group/' . $groupId . '/join');
+        $this->client->submit($crawler->filter('button[name=join]')->form(['reason' => '', 'notifications' => 'yes']));
+        self::assertSame(1, $this->groupNotifications($member->getId(), $groupId), 'joining with e-mail updates turned them on');
+
+        $this->client->loginUser($this->member('member-3'));
+        $this->client->request('GET', '/admin/subscriptions');
+        $this->client->submitForm('forum_notifications[disable]', ['forum_notifications[username]' => 'member-7']);
+        self::assertSame(0, $this->groupNotifications($member->getId(), $groupId));
+
+        $this->client->request('GET', '/admin/subscriptions');
+        $this->client->submitForm('forum_notifications[enable]', ['forum_notifications[username]' => 'member-7']);
+        self::assertSame(1, $this->groupNotifications($member->getId(), $groupId));
     }
 
     public function testAnUnknownMemberIsShown(): void
@@ -457,6 +480,14 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
     private function memberStatus(): string
     {
         return (string) $this->connection()->fetchOne('SELECT Status FROM member WHERE id = ?', [$this->newMember]);
+    }
+
+    private function groupNotifications(int $memberId, int $groupId): int
+    {
+        return (int) $this->connection()->fetchOne(
+            'SELECT notifications_enabled FROM group_membership WHERE member_id = ? AND group_id = ?',
+            [$memberId, $groupId],
+        );
     }
 
     private function notifications(int $memberId): int

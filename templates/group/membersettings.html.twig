@@ -22,7 +22,7 @@
             </div>
 
             <div class="p-group-switches">
-                {% for _field, _icon in {acceptMassMail: 'fa-envelope', notificationsEnabled: 'fa-bell', shownOnProfile: 'fa-user'} %}
+                {% for _field, _icon in {notificationsEnabled: 'fa-bell', shownOnProfile: 'fa-user'} %}
                     {% set _check = form[_field] %}
                     <label class="p-group-switch" for="{{ _check.vars.id }}">
                         <i class="fas {{ _icon }}" aria-hidden="true"></i>

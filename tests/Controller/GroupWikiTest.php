@@ -129,8 +129,8 @@ final class GroupWikiTest extends WebTestCase
     private function join(Member $member, Group $group): void
     {
         static::getContainer()->get(EntityManagerInterface::class)->getConnection()->executeStatement(
-            'INSERT IGNORE INTO group_membership (member_id, group_id, status, accept_mass_mail, notifications_enabled, created, updated)'
-            . " VALUES (?, ?, 'In', 0, 1, NOW(), NOW())",
+            'INSERT IGNORE INTO group_membership (member_id, group_id, status, notifications_enabled, created, updated)'
+            . " VALUES (?, ?, 'In', 1, NOW(), NOW())",
             [$member->getId(), $group->getId()],
         );
     }

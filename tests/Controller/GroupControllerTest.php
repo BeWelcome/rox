@@ -167,9 +167,9 @@ final class GroupControllerTest extends WebTestCase
             $connection->executeStatement(
                 <<<'SQL'
                     INSERT INTO group_membership
-                        (updated, created, status, accept_mass_mail, notifications_enabled, member_id, group_id)
+                        (updated, created, status, notifications_enabled, member_id, group_id)
                     VALUES
-                        (NOW(), NOW(), ?, 0, 1, ?, ?)
+                        (NOW(), NOW(), ?, 1, ?, ?)
                     SQL,
                 [$status, $memberId, $groupId],
             );

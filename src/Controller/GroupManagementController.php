@@ -66,7 +66,6 @@ class GroupManagementController extends AbstractController
 
         $form = $this->createForm(GroupMembershipSettingsType::class, [
             'comment' => $membership->getComment(),
-            'acceptMassMail' => $membership->isAcceptMassMail(),
             'notificationsEnabled' => $membership->isNotificationsEnabled(),
             'shownOnProfile' => $membership->isShownOnProfile(),
         ]);
@@ -76,7 +75,6 @@ class GroupManagementController extends AbstractController
             $this->groupModel->updateMembershipSettings(
                 $membership,
                 $data['comment'],
-                (bool) $data['acceptMassMail'],
                 (bool) $data['notificationsEnabled'],
             );
             $membership->setShownOnProfile((bool) $data['shownOnProfile']);

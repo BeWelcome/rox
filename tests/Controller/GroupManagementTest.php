@@ -444,8 +444,8 @@ final class GroupManagementTest extends WebTestCase
     private function join(Member $member, GroupEntity $group, string $status = GroupMembershipStatusType::CURRENT_MEMBER): void
     {
         $this->entityManager->getConnection()->executeStatement(
-            'INSERT INTO group_membership (member_id, group_id, status, accept_mass_mail, notifications_enabled, created, updated)'
-            . ' VALUES (?, ?, ?, 0, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = VALUES(status)',
+            'INSERT INTO group_membership (member_id, group_id, status, notifications_enabled, created, updated)'
+            . ' VALUES (?, ?, ?, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = VALUES(status)',
             [$member->getId(), $group->getId(), $status],
         );
     }

@@ -23,10 +23,6 @@ class GroupMembershipSettingsType extends AbstractType
                 'required' => false,
                 'constraints' => [new Length(max: 2000)],
             ])
-            ->add('acceptMassMail', CheckboxType::class, [
-                'label' => 'groupsmemberacceptmail',
-                'required' => false,
-            ])
             ->add('notificationsEnabled', CheckboxType::class, [
                 'label' => 'group.membership.notifications',
                 'required' => false,

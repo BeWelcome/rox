@@ -41,9 +41,10 @@ class WikiController extends AbstractController
     #[Route(path: '/wiki', name: 'wiki_front_page')]
     public function showWikiFrontPage(): Response
     {
-        $view = $this->wikiReadView(WikiScope::main(WikiPageName::FRONT_PAGE, $this->canEditWiki()), 0, $this->wikiModel);
+        $scope = WikiScope::main(WikiPageName::FRONT_PAGE, $this->canEditWiki());
+        $view = $this->wikiReadView($scope, 0, $this->wikiModel);
         if (null === $view) {
-            return $this->redirectToRoute('wiki_page_create', ['pageTitle' => WikiPageName::FRONT_PAGE]);
+            return $this->missingPage($scope);
         }
 
         return $this->render('wiki/page.html.twig', $this->withFrontPageBoxes($view));
@@ -124,7 +125,7 @@ class WikiController extends AbstractController
         $view = $this->wikiReadView($scope, $version, $this->wikiModel);
         if (null === $view) {
             if (0 === $version) {
-                return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageName]);
+                return $this->missingPage($scope);
             }
             throw $this->createNotFoundException();
         }
@@ -206,6 +207,19 @@ class WikiController extends AbstractController
     /**
      * Only active members edit the wiki (Member::isActiveMember()).
      */
+    /**
+     * A page that isn't there: who may write the wiki is led to creating it. Anybody else (a member whose account
+     * isn't active yet) gets "not found": the create page would send them back here, round and round.
+     */
+    private function missingPage(WikiScope $scope): Response
+    {
+        if (!$scope->canEdit) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $scope->pageName]);
+    }
+
     private function canEditWiki(): bool
     {
         $member = $this->getUser();

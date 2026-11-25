@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Member;
 use App\Model\WikiModel;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -102,6 +103,29 @@ final class WikiPagesTest extends WebTestCase
         self::assertSame(1, $this->wikiModel()->getPage('Zztest_New')->getVersion());
         $this->client->request('GET', '/wiki/Zztest_New/create');
         self::assertResponseRedirects('/wiki/Zztest_New/edit');
+    }
+
+    /**
+     * A member whose account isn't active yet reads the wiki and doesn't write it. A page that doesn't exist led
+     * them to its create page, which led them back: the browser gave up on the redirects.
+     */
+    public function testAMissingPageIsNotFoundForAMemberWhoMayNotWrite(): void
+    {
+        static::getContainer()->get(Connection::class)
+            ->executeStatement("UPDATE member SET Status = 'Activated' WHERE Username = 'member-6'");
+        $this->client->loginUser($this->member('member-6'));
+
+        $this->client->request('GET', '/wiki/Zztest_Missing');
+        self::assertResponseStatusCodeSame(404);
+
+        // the create page still leads to the page, which says it isn't there
+        $this->client->request('GET', '/wiki/Zztest_Missing/create');
+        self::assertResponseRedirects('/wiki/Zztest_Missing');
+
+        // a page that exists is read as before
+        $this->wikiModel()->createWikiPage('Zztest_There', 'Some text.', 'member-2');
+        $this->client->request('GET', '/wiki/Zztest_There');
+        self::assertResponseIsSuccessful();
     }
 
     public function testThePageOfAVisualEditorAndOfMarkupOnly(): void

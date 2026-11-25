@@ -78,7 +78,8 @@ class ForumsController extends AbstractController
         /** @var ForumPostRepository $postsRepository */
         $postsRepository = $this->entityManager->getRepository(ForumPost::class);
 
-        $itemsPerPage = $this->getItemsPerPage($member);
+        // the page is as long as the reader wants their pages, not the member whose posts they are
+        $itemsPerPage = $this->getItemsPerPage($loggedInMember);
         // what the logged in member may read in the forum; forum moderators and admins see all
         $moderator = $this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN);
         $posts = $postsRepository->getForumPostsByMember($member, $loggedInMember, $moderator, $search, $page, $itemsPerPage);

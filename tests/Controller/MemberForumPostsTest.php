@@ -118,6 +118,38 @@ class MemberForumPostsTest extends WebTestCase
         self::assertCount(1, $this->client->getCrawler()->filter('#post3.is-deleted s'));
     }
 
+    public function testThePageIsAsLongAsTheReaderWantsTheirPages(): void
+    {
+        $connection = static::getContainer()->get(Connection::class);
+        // seven more posts of member-1, copies of one
+        $post = $this->posts($this->member('member-1'))[0];
+        $columns = implode(', ', array_map(
+            static fn (string $column): string => '`' . $column . '`',
+            $connection->fetchFirstColumn(
+                "SELECT COLUMN_NAME FROM information_schema.COLUMNS
+                 WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'forum_post' AND COLUMN_NAME <> 'id'",
+            ),
+        ));
+        for ($copy = 0; $copy < 7; ++$copy) {
+            $connection->executeStatement(
+                \sprintf('INSERT INTO forum_post (%1$s) SELECT %1$s FROM forum_post WHERE id = ?', $columns),
+                [$post->getId()],
+            );
+        }
+        $this->itemsPerPage('member-1', '5');
+        $this->itemsPerPage('bwadmin', '10');
+
+        // bwadmin reads pages of ten, whatever the member whose posts they are reads
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->client->request('GET', '/members/member-1/posts');
+        $this->assertResponseIsSuccessful();
+        self::assertCount(10, $crawler->filter('.p-member-post'));
+
+        $this->client->loginUser($this->member('member-1'));
+        $crawler = $this->client->request('GET', '/members/member-1/posts');
+        self::assertCount(5, $crawler->filter('.p-member-post'));
+    }
+
     /**
      * @return list<int> the ids of the posts on member-1's posts page as the viewer sees it, sorted: the page lists
      *                   them newest first, and the fixtures give the posts random dates
@@ -160,6 +192,19 @@ class MemberForumPostsTest extends WebTestCase
             'INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, ?, NOW(), NOW())',
             [$member->getId(), $preferenceId, $value]
         );
+    }
+
+    private function itemsPerPage(string $username, string $value): void
+    {
+        $connection = static::getContainer()->get(Connection::class);
+        $memberId = $this->member($username)->getId();
+        $preferenceId = $connection->fetchOne('SELECT id FROM preferences WHERE codeName = ?', [Preference::ITEMS_PER_PAGE]);
+        $connection->executeStatement('DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?', [$memberId, $preferenceId]);
+        $connection->executeStatement(
+            'INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, ?, NOW(), NOW())',
+            [$memberId, $preferenceId, $value]
+        );
+        $this->entityManager->clear();
     }
 
     private function setPost(int $id, string $column, string $value): void

@@ -60,6 +60,7 @@
 .p-polls-panel { margin-bottom: 1rem; padding: 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
 .p-polls .p-polls-panel__title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0 0 1rem; color: #0f172a; font-size: 1.125rem; font-weight: 700; }
 .p-polls .p-polls-muted { margin: 0 0 0.75rem; color: #64748b; font-size: 0.875rem; }
+.p-polls .p-poll-vote__named { margin: 0; }
 .p-polls .p-polls-done { margin: 0 0 0.75rem; color: #15803d; font-weight: 600; }
 
 .p-poll-hero__text { margin: 1rem 0 0; color: #334155; line-height: 1.6; overflow-wrap: anywhere; }

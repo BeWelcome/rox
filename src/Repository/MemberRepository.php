@@ -355,17 +355,20 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
         // Age
         if ($searchRequest->min_age || $searchRequest->max_age) {
-            $now = new DateTimeImmutable();
+            $today = new DateTimeImmutable('today');
 
+            // at least 36: born 36 years ago today, or before
             if ($searchRequest->min_age) {
-                $maxBirthDate = $now->sub(new DateInterval("P{$searchRequest->min_age}Y"));
+                $maxBirthDate = $today->sub(new DateInterval("P{$searchRequest->min_age}Y"));
                 $qb->andWhere('m.birthdate <= :maxBirthDate')
                     ->setParameter('maxBirthDate', $maxBirthDate);
             }
 
+            // at most 36: not 37 yet, so born after the day 37 years ago (36 years ago left out who was 36 already)
             if ($searchRequest->max_age) {
-                $minBirthDate = $now->sub(new DateInterval("P{$searchRequest->max_age}Y"));
-                $qb->andWhere('m.birthdate >= :minBirthDate')
+                $years = (int) $searchRequest->max_age + 1;
+                $minBirthDate = $today->sub(new DateInterval("P{$years}Y"));
+                $qb->andWhere('m.birthdate > :minBirthDate')
                     ->setParameter('minBirthDate', $minBirthDate);
             }
 

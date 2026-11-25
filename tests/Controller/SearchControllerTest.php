@@ -3,6 +3,8 @@
 namespace App\Tests\Controller;
 
 use App\Repository\MemberRepository;
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -120,6 +122,66 @@ class SearchControllerTest extends WebTestCase
         self::assertGreaterThan(0, $listed(false, false), 'without the option the member is found');
         self::assertSame(0, $listed(false, true), 'a home that is not accessible is left out');
         self::assertGreaterThan(0, $listed(true, true), 'an accessible home is found');
+    }
+
+    /**
+     * @return iterable<string, array{string, string, string, bool}> minimum age, maximum age, the member's day of
+     *                                                               birth (from today), found or not
+     */
+    public static function ages(): iterable
+    {
+        yield 'at most 36: 36 today' => ['', '36', '-36 years', true];
+        yield 'at most 36: 36 since yesterday' => ['', '36', '-36 years -1 day', true];
+        yield 'at most 36: 37 tomorrow' => ['', '36', '-37 years +1 day', true];
+        yield 'at most 36: 37 today' => ['', '36', '-37 years', false];
+        yield 'at most 36: 35' => ['', '36', '-35 years -6 months', true];
+        yield 'at least 36: 36 today' => ['36', '', '-36 years', true];
+        yield 'at least 36: 36 tomorrow' => ['36', '', '-36 years +1 day', false];
+        yield 'from 36 to 36: 36 for half a year' => ['36', '36', '-36 years -6 months', true];
+    }
+
+    /**
+     * The ages of the search are the ages members have: "at most 36" includes everybody who is 36, until the day
+     * they turn 37 (it left out who was 36 already).
+     */
+    #[DataProvider('ages')]
+    public function testTheAgesOfTheSearchIncludeTheirOwnYear(string $minimum, string $maximum, string $born, bool $found): void
+    {
+        $client = static::createClient();
+        $connection = static::getContainer()->get('doctrine.dbal.default_connection');
+        $member = $connection->fetchAssociative(<<<'SQL'
+                SELECT m.id, m.Username AS username, l.geoname_id, l.name, ST_Y(l.coordinates) AS latitude, ST_X(l.coordinates) AS longitude
+                FROM member m
+                JOIN address a ON a.member_id = m.id AND a.active = 1
+                JOIN location l ON l.geoname_id = a.location
+                WHERE m.Status = 'Active' AND m.Username <> 'member-2'
+                ORDER BY m.id LIMIT 1
+            SQL);
+        self::assertNotFalse($member, 'the test fixtures contain an active member with an address');
+        // the member shows their age (bit 4 of HideAttribute hides it)
+        $connection->executeStatement(
+            'UPDATE member SET BirthDate = ?, HideAttribute = HideAttribute & ~4 WHERE id = ?',
+            [new DateTimeImmutable('today ' . $born)->format('Y-m-d'), $member['id']],
+        );
+        $client->loginUser(static::getContainer()->get(MemberRepository::class)->loadUserByIdentifier('member-2'));
+
+        $crawler = $client->request('GET', '/search/locations');
+        $crawler = $client->submit($crawler->filter('.p-search__bar .js-search-find')->form([
+            'search[location]' => $member['name'],
+            'search[location_fullname]' => $member['name'],
+            'search[location_name]' => $member['name'],
+            'search[location_geoname_id]' => (string) $member['geoname_id'],
+            'search[location_latitude]' => (string) $member['latitude'],
+            'search[location_longitude]' => (string) $member['longitude'],
+            'search[distance]' => '20',
+            'search[items]' => '100',
+            'search[last_active]' => '2400',
+            'search[min_age]' => $minimum,
+            'search[max_age]' => $maximum,
+        ]));
+
+        $this->assertResponseIsSuccessful();
+        self::assertSame($found, $crawler->filter('main a[href*="/members/' . $member['username'] . '"]')->count() > 0);
     }
 
     public function testTheHomePageMemberSearchOpensProfiles(): void

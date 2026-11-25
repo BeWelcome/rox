@@ -17,7 +17,7 @@ while :; do
 			start=$(head -n 1 "$status" | cut -d ' ' -f 1)
 			sed -n "$((shown + 1)),${lines}p" "$status" | while read -r time step; do
 				if [ "$step" = ready ]; then
-					echo "[$((time - start))s] Ready: http://localhost (Mailpit: http://localhost:1080)"
+					echo "[$((time - start))s] Ready: http://localhost:8080 (Mailpit: http://localhost:1080)"
 				else
 					echo "[$((time - start))s] $step"
 				fi

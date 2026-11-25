@@ -1,0 +1,12 @@
+# Podman only: podman-compose reads this file on its own, after docker-compose.yml and
+# docker-compose.override.yml. Docker Compose does not read it, and neither do stage and production.
+#
+# Podman does not guess the registry of a short image name, so the images get their full name here.
+# Keep the tags the same as in docker-compose.yml.
+services:
+  db:
+    image: docker.io/library/mariadb:12.3
+  manticore:
+    image: docker.io/manticoresearch/manticore:6.3.8
+  mailer:
+    image: docker.io/axllent/mailpit

@@ -18,6 +18,7 @@ The docker configuration is still in-progress, and is currently missing the setu
 
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
+* [Podman](https://podman.io/) with [podman-compose](https://github.com/containers/podman-compose) works too, rootless included. See "Using Podman" below.
 * If running on Windows, we recommend installing WSL in order to execute the following linux commands. Note that the files of the repository should be put into the WSL file share and not below your user directory or someplace else easily accessible by Windows.
 
 ### Initialize installation
@@ -46,6 +47,21 @@ The docker configuration is still in-progress, and is currently missing the setu
 
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at
 [http://localhost:8080](http://localhost:8080). If you see a "502 Bad Gateway" error in your browser, the app is still being built, and should serve the page without error once all processes finish.
+
+   **Using Podman**
+
+   `make install` calls `docker-compose`. With Podman, run the same steps with `podman-compose`:
+
+    ```bash
+    $ git rev-parse --short HEAD > VERSION
+    $ cp docker-compose.override.yml.dist docker-compose.override.yml
+    $ podman-compose up -d
+    ```
+
+   `podman-compose` reads `container-compose.yml` on its own. That file gives the images their full
+   name (`docker.io/...`), which Podman asks for. If you start the stack another way (for example
+   `podman compose` with Docker Compose as provider), add it yourself:
+   `-f docker-compose.yml -f docker-compose.override.yml -f container-compose.yml`.
 
 2. If you want to import geonames data, run the following (this operation takes awhile!):
 

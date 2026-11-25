@@ -173,6 +173,8 @@ CMD ["php-fpm"]
 FROM nginx:${NGINX_VERSION}-alpine AS bewelcome_nginx
 
 COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+# Sets the resolver of default.conf on engines other than Docker (Podman, Kubernetes)
+COPY docker/nginx/docker-entrypoint.d/ /docker-entrypoint.d/
 
 WORKDIR /srv/bewelcome/public
 
@@ -186,7 +188,7 @@ FROM bewelcome_php AS bewelcome_php_dev
 # build for production
 ARG NODE_ENV=production
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+COPY --from=docker.io/mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # git and openssh-client are only needed in development (docker-entrypoint writes VERSION from
 # git outside prod; .git is not in the image). Keeping them out of the runtime image also keeps

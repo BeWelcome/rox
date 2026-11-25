@@ -4,9 +4,9 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.5.12
-ARG NGINX_VERSION=1.30.4
-ARG BUN_VERSION=1.4.4
+ARG PHP_VERSION=8.5.13
+ARG NGINX_VERSION=1.30.7
+ARG BUN_VERSION=1.4.5
 
 
 # bun binary, copied into the "php" stage below

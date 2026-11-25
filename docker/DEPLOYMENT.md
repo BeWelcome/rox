@@ -26,18 +26,26 @@ On start in `prod`, the PHP entrypoint clears the cache, adds missing translatio
 and warms the cache.
 
 It doesn't run the Doctrine migrations: on production data they can take far longer
-than the container's healthcheck allows. Run them by hand after the deploy:
+than the container's healthcheck allows. The deploy runs them before it starts the new
+containers (sysadmins-infra, `deploy-bewelcome.sh`): `doctrine:migrations:migrate` in a
+one-off container of the new image, without a health check or time limit, while the old
+containers keep serving. The new php then starts on the migrated schema.
+
+Migrations must therefore keep the old code working: add and copy, don't drop or rename
+what the running release still reads.
+
+If a deploy skipped them (`RUN_MIGRATIONS=false`, the first deploy of a fresh stack) or
+they failed, run them by hand once the cause is fixed:
 
 ```bash
-docker exec bewelcome-php-1 bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-docker exec bewelcome-php-1 bin/console translations:add:missing
+php=$(docker ps -q --filter label=com.docker.compose.service=php | head -n1)
+docker exec "$php" bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+docker exec "$php" bin/console translations:add:missing
 ```
 
-The entrypoint adds the missing translations before the migrations have run. If the
-new code needs a migrated table for that, it logs a warning and the container starts
+The entrypoint adds the missing translations at start. If the new code needs a migrated
+table for that and the migrations haven't run, it logs a warning and the container starts
 anyway; the second command above adds them then.
-
-Until they have finished, pages that use a changed table can fail.
 
 ## Local development
 

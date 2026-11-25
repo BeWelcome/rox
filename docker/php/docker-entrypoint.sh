@@ -87,15 +87,15 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	# Clear the cache in prod so a stale compiled container from a previous image
 	# (var/ volume) can't crash the console commands below. Doctrine migrations are
-	# not run here: they are run by hand after the deploy (see docker/DEPLOYMENT.md).
+	# not run here: the deploy runs them before it starts this container (see docker/DEPLOYMENT.md).
 	if [ "$APP_ENV" = 'prod' ]; then
 		setup_step "Clearing the cache"
 		bin/console cache:clear
 	fi
 
 	setup_step "Importing missing translations and warming up the cache"
-	# Needs the current schema. When a deploy brings migrations, they run after the
-	# container is up, so a failure here must not stop the start (see docker/DEPLOYMENT.md).
+	# Needs the current schema. The deploy runs the migrations first; if they were skipped,
+	# a failure here must not stop the start (see docker/DEPLOYMENT.md).
 	if ! bin/console translations:add:missing; then
 		echo "WARNING: translations:add:missing failed. Run it again after the migrations." >&2
 	fi

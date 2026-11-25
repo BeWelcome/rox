@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\LegOptionsType;
+use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Leg;
 use App\Entity\Member;
@@ -159,20 +160,24 @@ class InvitationController extends BaseRequestAndInvitationController
             $invitation = $this->getMessageFromData($invitationForm->getData(), $host, $guest);
             $invitation->getRequest()->setInviteForLeg($leg);
             $leg->addInvitation($invitation->getRequest());
+            // as a message or a request with a block word, the invitation waits for the checkers (the answers don't)
+            $invitation = $this->conversationModel->formatConversation($invitation);
 
             $this->entityManager->persist($invitation);
             $this->entityManager->flush();
 
-            $this->sendInvitationNotification(
-                $host,
-                $guest,
-                $host,
-                $invitation,
-                $invitation->getSubject()->getSubject(),
-                'invitation',
-                false,
-                null
-            );
+            if (!str_contains((string) $invitation->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+                $this->sendInvitationNotification(
+                    $host,
+                    $guest,
+                    $host,
+                    $invitation,
+                    $invitation->getSubject()->getSubject(),
+                    'invitation',
+                    false,
+                    null
+                );
+            }
 
             // Sent from the side panel (in a frame): a short "sent" page instead of the profile.
             if ($request->query->getBoolean('embed')) {

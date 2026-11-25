@@ -105,7 +105,7 @@ class CheckerModel
 
     private function sendNotification(Message $message): void
     {
-        // Is this a message or a request?
+        // Is this a message, an invitation or a request?
         if (null === $message->getRequest()) {
             $this->mailer->sendMessageNotificationEmail(
                 $message->getSender(),
@@ -117,6 +117,16 @@ class CheckerModel
                     'body' => $message->getMessage(),
                 ]
             );
+        } elseif (null !== $message->getRequest()->getInviteForLeg()) {
+            // an invitation: its sender hosts
+            $this->mailer->sendMessageNotificationEmail($message->getSender(), $message->getReceiver(), 'invitation', [
+                'host' => $message->getSender(),
+                'subject' => $message->getSubject()->getSubject(),
+                'message' => $message,
+                'request' => $message->getRequest(),
+                'changed' => false,
+                'leg' => null,
+            ]);
         } else {
             $this->mailer->sendMessageNotificationEmail($message->getSender(), $message->getReceiver(), 'request', [
                 'host' => $message->getReceiver(),

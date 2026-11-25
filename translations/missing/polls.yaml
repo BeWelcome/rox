@@ -22,6 +22,9 @@ polls.ended.on:
 polls.cannot.vote:
   - 'You can''t vote in this poll.'
   - 'Poll page: an open poll the member can''t vote in (for example limited to other groups)'
+polls.comment.named:
+  - 'Your vote is anonymous, but a comment is shown with your name next to the results.'
+  - 'Poll page: note under the comment field of an anonymous poll'
 polls.results.multiple:
   - 'Voters could pick several choices, so the shares add up to more than 100 %.'
   - 'Poll results: note for polls with several choices'

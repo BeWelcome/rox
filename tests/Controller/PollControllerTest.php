@@ -215,6 +215,37 @@ class PollControllerTest extends WebTestCase
         self::assertNotNull($beach);
     }
 
+    /**
+     * The results list a comment with the name of its writer, whatever the poll: an anonymous poll says so where
+     * the comment is written.
+     */
+    public function testAnAnonymousPollSaysThatACommentIsShownWithTheName(): void
+    {
+        $anonymous = $this->createPoll('member-1', Poll::STATUS_OPEN, ['Park', 'Cafe'], ['anonymous' => true, 'comment' => true]);
+        $named = $this->createPoll('member-1', Poll::STATUS_OPEN, ['Park', 'Cafe'], ['anonymous' => false, 'comment' => true]);
+        $withoutComments = $this->createPoll('member-1', Poll::STATUS_OPEN, ['Park', 'Cafe'], ['anonymous' => true, 'comment' => false]);
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->client->request('GET', '/polls/contribute/' . $anonymous->getId());
+        $hint = $crawler->filter('form.p-poll-vote .p-poll-vote__named');
+        self::assertCount(1, $hint);
+        self::assertSame($hint->attr('id'), $crawler->filter('[name="poll_vote[comment]"]')->attr('aria-describedby'));
+
+        foreach ([$named, $withoutComments] as $poll) {
+            $crawler = $this->client->request('GET', '/polls/contribute/' . $poll->getId());
+            self::assertCount(1, $crawler->filter('form.p-poll-vote'));
+            self::assertCount(0, $crawler->filter('.p-poll-vote__named'));
+        }
+
+        // what the note is about: the comment of an anonymous vote is listed with its writer
+        $crawler = $this->client->request('GET', '/polls/contribute/' . $anonymous->getId());
+        $form = $crawler->filter('form.p-poll-vote')->form(['poll_vote[choices]' => (string) $anonymous->getChoices()[0]->getId()]);
+        $form['poll_vote[comment]'] = 'zztest a comment';
+        $this->client->submit($form);
+        $crawler = $this->client->request('GET', '/polls/results/' . $anonymous->getId());
+        self::assertCount(1, $crawler->filter('.p-poll-comments__item strong'));
+    }
+
     public function testTakeBackVote(): void
     {
         $poll = $this->createPoll('member-1', Poll::STATUS_OPEN, ['Park', 'Cafe'], ['anonymous' => false, 'changeVote' => true]);

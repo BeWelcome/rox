@@ -54,7 +54,12 @@
         {% if voteForm.comment is defined %}
           <div class="p-polls-field">
             {{ form_label(voteForm.comment, null, { label_attr: { class: 'p-polls-label' } }) }}
-            {{ form_widget(voteForm.comment, { attr: { class: 'p-polls-input p-polls-input--box', rows: 3 } }) }}
+            {# the results list a comment with its writer's name, in an anonymous poll too: said where it is written #}
+            {% set _named = poll.anonymous ? 'p-poll-vote-comment-named' : null %}
+            {{ form_widget(voteForm.comment, { attr: { class: 'p-polls-input p-polls-input--box', rows: 3 }|merge(_named ? { 'aria-describedby': _named } : {}) }) }}
+            {% if _named %}
+              <p class="p-polls-muted p-poll-vote__named" id="{{ _named }}"><i class="fas fa-user" aria-hidden="true"></i> {{ 'polls.comment.named'|trans }}</p>
+            {% endif %}
             {{ form_errors(voteForm.comment) }}
           </div>
         {% endif %}

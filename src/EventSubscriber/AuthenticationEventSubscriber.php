@@ -8,9 +8,11 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -18,6 +20,7 @@ readonly class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private UrlGeneratorInterface $urlGenerator,
         private ?TokenStorageInterface $tokenStorage = null,
         private ?AuthorizationCheckerInterface $authorizationChecker = null,
     ) {
@@ -91,8 +94,11 @@ readonly class AuthenticationEventSubscriber implements EventSubscriberInterface
         /** @var Member $member */
         $member = $token->getUser();
         if (false === $member->isBrowsable()) {
-            $this->tokenStorage->setToken(null); // Force logout
+            // Banned, suspended or taken out since they logged in: the login ends here. The request ends too: the
+            // firewall has let it in as the member's, and the page would run without one (a server error).
+            $this->tokenStorage->setToken(null);
             $event->getRequest()->getSession()->invalidate();
+            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('security_login')));
         }
     }
 }

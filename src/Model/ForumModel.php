@@ -106,17 +106,22 @@ class ForumModel
 
     /**
      * Sets the post's text (and the thread's title, for its first post) in a language: an edit of the language it
-     * has, or a translation into a new one. The language the post was written in is its own text too.
+     * has, or a translation into a new one. The language the post was written in is its own text too. An edit of
+     * that text is mailed to the post's receivers, a translation is not.
      */
     public function savePost(ForumPost $post, Member $editor, string $locale, string $text, ?string $title, ?string $visibility): void
     {
         $changed = $this->setTranslation($post, $locale, $text, $editor);
-        if ($post->getLanguage()->getShortCode() === $locale) {
+        $ownLanguage = $post->getLanguage()->getShortCode() === $locale;
+        if ($ownLanguage) {
             $post->setMessage($text);
         }
+        // a translation changes nothing of what was written: the members who got the post get no mail about it
+        $notify = $changed && $ownLanguage;
         if (null !== $visibility && $visibility !== $post->getPostvisibility()) {
             $post->setPostvisibility($visibility);
             $changed = true;
+            $notify = true;
         }
 
         $thread = $post->getThread();
@@ -141,6 +146,8 @@ class ForumModel
 
         if ($changed) {
             $this->searchIndex->index($post);
+        }
+        if ($notify) {
             $this->queueNotifications($post, self::NOTIFICATION_EDIT);
         }
     }

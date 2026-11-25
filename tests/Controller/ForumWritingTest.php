@@ -166,6 +166,34 @@ final class ForumWritingTest extends WebTestCase
         self::assertGreaterThan(0, (int) $post->getEditCount());
     }
 
+    public function testATranslationIsNotMailedAnEditIs(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $post = $thread->getFirstPost();
+        $reader = $this->member('member-2' === $post->getAuthor()->getUsername() ? 'member-4' : 'member-2');
+        $this->joinGroup($reader, GroupEntity::BEWELCOME);
+        self::assertSame(0, $this->notifications($post, $reader));
+        $this->client->loginUser($post->getAuthor());
+
+        $crawler = $this->request('GET', '/forums/translate/m' . $post->getId() . '?locale=de');
+        $this->client->submit($crawler->filter('form[name="forum_post"]')->form([
+            'forum_post[locale]' => 'de',
+            'forum_post[text]' => 'Eine Übersetzung',
+            'forum_post[title]' => 'Ein Titel',
+        ]));
+        self::assertResponseRedirects();
+        self::assertSame('Eine Übersetzung', $this->entityManager()->find(ForumPost::class, $post->getId())->getMessageTranslations()['de']['message']);
+        self::assertSame(0, $this->notifications($post, $reader), 'a translation sends the members no mail');
+
+        $crawler = $this->request('GET', '/forums/edit/m' . $post->getId());
+        $this->client->submit($crawler->filter('form[name="forum_post"]')->form([
+            'forum_post[text]' => 'The text, corrected',
+            'forum_post[title]' => 'The title, corrected',
+        ]));
+        self::assertResponseRedirects();
+        self::assertSame(1, $this->notifications($post, $reader), 'an edit of the text is mailed');
+    }
+
     public function testOthersCantEditAPost(): void
     {
         $post = $this->thread(self::AGORA_THREAD)->getFirstPost();

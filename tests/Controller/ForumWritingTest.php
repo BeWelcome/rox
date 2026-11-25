@@ -307,6 +307,43 @@ final class ForumWritingTest extends WebTestCase
         self::assertSame(1, $this->countRows('group_membership', 'group_id = ? AND member_id = ? AND notifications_enabled = 0', [$hiking->getId(), $member->getId()]));
     }
 
+    /**
+     * "No more mails of this topic" in the mail of a member who gets the topic through the group, not by following it.
+     */
+    public function testTheMailLinkStopsATopicsMailsForAGroupMember(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $member = $this->member('member-4');
+        $other = $this->member('member-3');
+        $this->joinGroup($member, GroupEntity::BEWELCOME);
+        $this->joinGroup($other, GroupEntity::BEWELCOME);
+        $this->client->loginUser($member);
+
+        $this->request('GET', '/forums/subscriptions/disable/thread/' . $thread->getId());
+
+        self::assertResponseRedirects();
+        $this->client->loginUser($this->member('member-2'));
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId() . '/reply');
+        $this->client->submit($crawler->filter('form[name="forum_post"]')->form(['forum_post[text]' => 'One more reply']));
+        $reply = $this->thread(self::AGORA_THREAD)->getLastPost();
+        self::assertSame('One more reply', $reply->getMessage());
+        self::assertSame(0, $this->notifications($reply, $member), 'the member who stopped the topic gets no mail');
+        self::assertSame(1, $this->notifications($reply, $other), 'another member of the group gets it');
+
+        // the topic's page offers following it, which brings its mails back
+        $this->client->loginUser($member);
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        $follow = $crawler->filter('form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]');
+        self::assertGreaterThan(0, $follow->count());
+        $this->client->submit($follow->first()->form());
+        $this->client->loginUser($this->member('member-2'));
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId() . '/reply');
+        $this->client->submit($crawler->filter('form[name="forum_post"]')->form(['forum_post[text]' => 'And another one']));
+        $reply = $this->thread(self::AGORA_THREAD)->getLastPost();
+        self::assertSame('And another one', $reply->getMessage());
+        self::assertSame(1, $this->notifications($reply, $member));
+    }
+
     public function testTheSignedAgoraLinkWorksWithoutLoggingIn(): void
     {
         $member = $this->member('member-4');

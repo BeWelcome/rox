@@ -158,9 +158,13 @@ class ForumModel
         }
     }
 
+    /**
+     * The member follows the thread and gets its mails. With the mails switched off (the mail's "no more mails of
+     * this topic") the thread's page offers following it again, which switches them on.
+     */
     public function isSubscribed(ForumThread $thread, Member $member): bool
     {
-        return null !== $this->findSubscription($thread, $member);
+        return (bool) $this->findSubscription($thread, $member)?->getNotificationsEnabled();
     }
 
     public function subscribe(ForumThread $thread, Member $member): MemberThreadSubscription
@@ -201,7 +205,12 @@ class ForumModel
     {
         $subscription = $this->findSubscription($thread, $member);
         if (null === $subscription) {
-            return false;
+            if ($enabled) {
+                return false;
+            }
+            // A member who gets the topic through its group ("no more mails of this topic" in the mail): the topic
+            // is followed with its mails off, which queueNotifications puts before the group's mails.
+            $subscription = $this->subscribe($thread, $member);
         }
         $subscription->setNotificationsEnabled($enabled);
         $this->entityManager->flush();
@@ -292,14 +301,23 @@ class ForumModel
             $notified[$memberId] = true;
         }
 
+        // a member who switched the topic's mails off gets none of it, through the group either
+        $subscriptions = $this->entityManager->getRepository(MemberThreadSubscription::class)->findBy(['thread' => $thread]);
+        $paused = [];
+        foreach ($subscriptions as $subscription) {
+            if (!$subscription->getNotificationsEnabled()) {
+                $paused[$subscription->getSubscriber()->getId()] = true;
+            }
+        }
+
         foreach ($this->getGroupNotificationReceivers($group) as $member) {
-            if (!isset($notified[$member->getId()])) {
+            if (!isset($notified[$member->getId()]) && !isset($paused[$member->getId()])) {
                 $this->entityManager->persist($this->newNotification($member, $post, $type, self::SUBSCRIPTION_GROUP, 0));
                 $notified[$member->getId()] = true;
             }
         }
 
-        foreach ($this->entityManager->getRepository(MemberThreadSubscription::class)->findBy(['thread' => $thread]) as $subscription) {
+        foreach ($subscriptions as $subscription) {
             $member = $subscription->getSubscriber();
             if (isset($notified[$member->getId()]) || !$subscription->getNotificationsEnabled()) {
                 continue;

@@ -71,6 +71,9 @@ conversations.pick:
 conversation.reply.to:
     - Reply to {username}…
     - Placeholder of the reply box at the bottom of a conversation
+conversation.reply.closed:
+    - "This member isn't on BeWelcome any more, so this conversation can't be answered."
+    - In place of the reply box at the bottom of a conversation whose other member left, was banned or suspended; also the notice when a reply to them was not sent
 contact.sent.message.title:
     - 'Your message is on its way'
     - Title of the confirmation shown in the search preview once a message has been sent

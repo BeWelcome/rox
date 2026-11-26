@@ -5908,6 +5908,8 @@ main:has(.p-hero) {
   white-space: nowrap;
 }
 .c-inbox-reply:hover .c-inbox-reply__field { border-color: #fdba74; background: #fff; }
+/* In place of the reply bar when the other member left or was banned */
+.c-inbox-reply--closed { margin: 0; color: #64748b; font-size: 0.875rem; }
 .c-inbox-reply__btn {
   display: inline-flex;
   align-items: center;

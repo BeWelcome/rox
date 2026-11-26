@@ -14,6 +14,7 @@ use App\Form\MessageToMemberType;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
+use App\Security\ConversationVoter;
 use App\Service\InboxFolders;
 use App\Utilities\ActiveMemberTrait;
 use App\Utilities\ConversationThread;
@@ -70,7 +71,7 @@ class ConversationController extends AbstractController
 
     #[Route(path: '/conversation/{id}/reply', name: 'conversation_reply', requirements: ['id' => '\d+'])]
     #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
-    public function reply(Message $message): Response
+    public function reply(Request $request, Message $message): Response
     {
         // Always reply to the last item in the thread
         $conversationThread = new ConversationThread($this->entityManager);
@@ -93,6 +94,10 @@ class ConversationController extends AbstractController
         $receiver = ($message->getReceiver() === $member) ? $message->getSender() : $message->getReceiver();
         if ($refused = $this->refusedUntilActive($member, 'flash.conversation.not.active', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]))) {
             return $refused;
+        }
+
+        if (!$this->isGranted(ConversationVoter::CONVERSATION_REPLY, $message)) {
+            return $this->refuseReply($request, $message);
         }
 
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
@@ -201,6 +206,20 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
+    /**
+     * A reply to a member who left or was banned (ConversationVoter::CONVERSATION_REPLY) is not saved: back to the
+     * conversation, which says why it has no reply box.
+     */
+    private function refuseReply(Request $request, Message $message): Response
+    {
+        $this->addTranslatedFlash('notice', 'conversation.reply.closed');
+
+        return $this->redirectToRoute(
+            'conversation_view',
+            ['id' => $message->getId()] + ($request->query->getBoolean('embed') ? ['embed' => 1] : []),
+        );
+    }
+
     private function getController(Message $message): string
     {
         $controller = '';
@@ -263,8 +282,14 @@ class ConversationController extends AbstractController
 
         $this->conversationModel->markConversationAsRead($member, $thread);
 
+        // The other member left or was banned: the conversation can be read, not answered.
+        $canReply = $this->isGranted(ConversationVoter::CONVERSATION_REPLY, $current);
+
         // A reply written under the conversation is posted to this same page.
         if ($this->canReplyInline($current) && $request->isMethod('POST') && $request->request->has('app_message')) {
+            if (!$canReply) {
+                return $this->refuseReply($request, $current);
+            }
             // A request or invitation whose dates have passed gets a plain message, without
             // the "expired" notice its own reply page shows.
             if (
@@ -289,8 +314,11 @@ class ConversationController extends AbstractController
         $template = $this->getViewTemplate($message);
 
         return $this->render($template, [
-            'reply_form' => $this->createInlineReplyForm($current),
-            'request_form' => ($includeDeleted || $spam) ? null : $this->createInlineRequestForm($current, $member),
+            'reply_form' => $canReply ? $this->createInlineReplyForm($current) : null,
+            'request_form' => ($includeDeleted || $spam || !$canReply)
+                ? null
+                : $this->createInlineRequestForm($current, $member),
+            'reply_closed' => !$canReply,
             'show_deleted' => $includeDeleted,
             'show_report_modal' => $openReportModal,
             'form' => $reportForm->createView(),

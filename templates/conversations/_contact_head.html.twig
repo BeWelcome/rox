@@ -26,7 +26,8 @@
     {# From a conversation (its back path starts with /conversation) or from a trip #}
     <p class="c-contact-head__backlabel">{{ (app.request.query.get('back') starts with '/conversation' ? 'contact.conversation.back' : 'contact.trip.back')|trans }}</p>
     {% else %}
-    {% set _preview = kind == 'conversation' and (preview_in ?? null) ? path('search_member_preview', { username: member.username, embed: 1, in: preview_in, back: app.request.requestUri }) : null %}
+    {# No preview of a member who left, was banned or suspended (retired by data:retention too), for volunteers neither #}
+    {% set _preview = kind == 'conversation' and (preview_in ?? null) and member.visibleToMembers ? path('search_member_preview', { username: member.username, embed: 1, in: preview_in, back: app.request.requestUri }) : null %}
     {% if _preview %}<a class="c-contact-head__member" href="{{ _preview }}">{% endif %}
     <span class="c-contact-head__photo{{ _hosting ? ' c-contact-head__photo--' ~ _hosting }}">
         <img src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="">
@@ -40,7 +41,7 @@
             {{ ('contact.head.' ~ kind)|trans }}
         </p>
         {% endif %}
-        <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>
+        <p class="c-contact-head__name">{{ member is former_member ? member_name(member) : member.shortNameOrUsername }}</p>
     </div>
     {% if _preview %}</a>{% endif %}
     {% endif %}

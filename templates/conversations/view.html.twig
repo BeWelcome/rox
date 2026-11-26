@@ -59,7 +59,10 @@
 
             {% include 'conversations/_thread.html.twig' %}
 
-            {% if request_form ?? null %}
+            {% if reply_closed ?? false %}
+                {# The member left or was banned: nothing can be answered (ConversationVoter::CONVERSATION_REPLY) #}
+                <p class="c-inbox-reply c-inbox-reply--closed">{{ 'conversation.reply.closed'|trans }}</p>
+            {% elseif request_form ?? null %}
                 {# Hosting requests: the host answers (or the guest writes back) right here. #}
                 <div class="c-inbox-compose c-inbox-compose--respond">
                     {% if current.request.inviteForLeg %}

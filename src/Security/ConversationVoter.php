@@ -49,16 +49,21 @@ class ConversationVoter extends Voter
 
     private function canView(Message $message, Member $member): bool
     {
-        // if they can edit, they can view
-        if ($this->canReply($message, $member)) {
-            return true;
-        }
-
-        return false;
+        return $member === $message->getReceiver() || $member === $message->getSender();
     }
 
+    /**
+     * A member of the conversation answers it while the other member can still read the answer: not one who left
+     * (retired by data:retention too), was banned, taken out or suspended (Member::isVisibleToMembers()). Volunteers,
+     * who may still see such a member, can't answer them either.
+     */
     private function canReply(Message $message, Member $member): bool
     {
-        return $member === $message->getReceiver() || $member === $message->getSender();
+        if (!$this->canView($message, $member)) {
+            return false;
+        }
+        $correspondent = $member === $message->getSender() ? $message->getReceiver() : $message->getSender();
+
+        return $correspondent->isVisibleToMembers();
     }
 }

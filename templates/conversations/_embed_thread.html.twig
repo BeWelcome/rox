@@ -17,7 +17,12 @@
 
     {% include 'conversations/_thread.html.twig' %}
 
-    {% if request_form ?? null %}
+    {% if reply_closed ?? false %}
+        {# The member left or was banned: nothing can be answered (ConversationVoter::CONVERSATION_REPLY) #}
+        <div class="c-contact__foot c-contact__foot--reply">
+            <p class="c-inbox-reply c-inbox-reply--closed">{{ 'conversation.reply.closed'|trans }}</p>
+        </div>
+    {% elseif request_form ?? null %}
         {# Hosting requests and invitations: the same answer as in the inbox #}
         <div class="c-contact__foot c-contact__foot--respond">
             <div class="c-inbox-compose c-inbox-compose--respond">

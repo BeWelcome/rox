@@ -102,8 +102,8 @@ final class ProfileGroupsTest extends WebTestCase
     private function join(GroupEntity $group): void
     {
         $this->connection()->executeStatement(
-            "INSERT INTO group_membership (member_id, group_id, status, accept_mass_mail, notifications_enabled, shown_on_profile, created, updated)
-             VALUES (?, ?, 'In', 0, 1, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = 'In', shown_on_profile = 1",
+            "INSERT INTO group_membership (member_id, group_id, status, notifications_enabled, shown_on_profile, created, updated)
+             VALUES (?, ?, 'In', 1, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = 'In', shown_on_profile = 1",
             [$this->member->getId(), $group->getId()],
         );
     }

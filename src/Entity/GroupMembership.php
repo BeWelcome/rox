@@ -38,10 +38,6 @@ class GroupMembership
     #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
     private ?string $comment = null;
 
-    /** The member accepts mass mailings sent to the group's members. */
-    #[ORM\Column(name: 'accept_mass_mail', type: 'boolean', nullable: false, options: ['default' => false])]
-    private bool $acceptMassMail = false;
-
     /** The member gets notified about new posts in the group's forum. */
     #[ORM\Column(name: 'notifications_enabled', type: 'boolean', nullable: false, options: ['default' => true])]
     private bool $notificationsEnabled = true;
@@ -111,18 +107,6 @@ class GroupMembership
     public function getComment(): ?string
     {
         return $this->comment;
-    }
-
-    public function setAcceptMassMail(bool $acceptMassMail): self
-    {
-        $this->acceptMassMail = $acceptMassMail;
-
-        return $this;
-    }
-
-    public function isAcceptMassMail(): bool
-    {
-        return $this->acceptMassMail;
     }
 
     public function setNotificationsEnabled(bool $notificationsEnabled): self

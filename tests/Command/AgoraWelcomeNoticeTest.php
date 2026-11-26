@@ -31,8 +31,8 @@ final class AgoraWelcomeNoticeTest extends KernelTestCase
         $username = current(array_diff(['member-1', 'member-2', 'member-3', 'member-4', 'member-5'], $authors));
         $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
         $connection->executeStatement(
-            "INSERT INTO group_membership (member_id, group_id, status, accept_mass_mail, notifications_enabled, welcome_notice_sent, created, updated)
-             VALUES (?, ?, 'In', 0, 1, 0, NOW(), NOW()) ON DUPLICATE KEY UPDATE notifications_enabled = 1, welcome_notice_sent = 0",
+            "INSERT INTO group_membership (member_id, group_id, status, notifications_enabled, welcome_notice_sent, created, updated)
+             VALUES (?, ?, 'In', 1, 0, NOW(), NOW()) ON DUPLICATE KEY UPDATE notifications_enabled = 1, welcome_notice_sent = 0",
             [$member->getId(), GroupEntity::BEWELCOME],
         );
         $connection->executeStatement("UPDATE forum_post_notification SET status = 'Sent'");

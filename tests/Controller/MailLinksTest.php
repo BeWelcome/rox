@@ -215,8 +215,8 @@ final class MailLinksTest extends WebTestCase
     {
         $this->entityManager->getConnection()->executeStatement(
             'INSERT INTO group_membership
-                (member_id, group_id, status, accept_mass_mail, notifications_enabled, created, updated)
-             VALUES (?, ?, ?, 0, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = VALUES(status)',
+                (member_id, group_id, status, notifications_enabled, created, updated)
+             VALUES (?, ?, ?, 1, NOW(), NOW()) ON DUPLICATE KEY UPDATE status = VALUES(status)',
             [$member->getId(), $group->getId(), $status],
         );
     }

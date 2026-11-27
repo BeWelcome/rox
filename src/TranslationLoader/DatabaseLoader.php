@@ -4,6 +4,7 @@ namespace App\TranslationLoader;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -46,8 +47,9 @@ class DatabaseLoader implements LoaderInterface
     {
         try {
             return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
-        } catch (\Doctrine\DBAL\Exception $e) {
+        } catch (TableNotFoundException $e) {
             // Schema doesn't exist yet (fresh install/rebuild) — return no translations.
+            // Any other database error propagates, so that no empty catalogue ends up in the cache.
             return null;
         }
     }

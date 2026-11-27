@@ -3,12 +3,15 @@
 namespace App\Tests\Service;
 
 use App\Entity\FeedbackCategory;
+use App\Entity\Language;
 use App\Entity\Member;
+use App\Entity\Newsletter;
 use App\Logger\Logger;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -160,5 +163,87 @@ class MailerTest extends TestCase
         $replyTo = $captured->getReplyTo();
         $this->assertCount(1, $replyTo);
         $this->assertSame('member@gmail.com', $replyTo[0]->getAddress(), 'Reply-To must be the member so staff can reply');
+    }
+
+    public function testSendNewsletterEmailRefusesASubjectThatIsStillItsKey(): void
+    {
+        $this->innerMailer->expects($this->never())->method('send');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('broadcast_title_suspension.notification.2026');
+
+        // The translator has the body but no subject: it answers with the key.
+        $this->newsletterMailer(['broadcast_body_suspension.notification.2026' => 'Body'])
+            ->sendNewsletterEmail($this->newsletter(), $this->member('tr'), []);
+    }
+
+    public function testSendNewsletterEmailRefusesATextThatIsStillItsKey(): void
+    {
+        $this->innerMailer->expects($this->never())->method('send');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('broadcast_body_suspension.notification.2026');
+
+        $this->newsletterMailer(['broadcast_title_suspension.notification.2026' => 'Title'])
+            ->sendNewsletterEmail($this->newsletter(), $this->member('tr'), []);
+    }
+
+    public function testSendNewsletterEmailSendsATranslatedNewsletter(): void
+    {
+        $captured = null;
+        $this->innerMailer
+            ->expects($this->once())
+            ->method('send')
+            ->with($this->callback(static function (Email $email) use (&$captured) {
+                $captured = $email;
+
+                return true;
+            }));
+
+        $sent = $this->newsletterMailer([
+            'broadcast_title_suspension.notification.2026' => 'Title',
+            'broadcast_body_suspension.notification.2026' => 'Body',
+        ])->sendNewsletterEmail($this->newsletter(), $this->member('en'), ['unsubscribe_key' => 'key']);
+
+        $this->assertTrue($sent);
+        $this->assertSame('Title', $captured->getSubject());
+    }
+
+    private function newsletter(): Newsletter
+    {
+        return (new Newsletter())
+            ->setName('suspension.notification.2026')
+            ->setType(Newsletter::SUSPENSION_NOTIFICATION);
+    }
+
+    private function member(string $locale): Member
+    {
+        $language = (new Language())->setShortCode($locale);
+        $member = $this->createStub(Member::class);
+        $member->method('getPreferredLanguage')->willReturn($language);
+        $member->method('getEmail')->willReturn('member@example.org');
+        $member->method('getUsername')->willReturn('member');
+
+        return $member;
+    }
+
+    /**
+     * @param array<string, string> $messages
+     */
+    private function newsletterMailer(array $messages): Mailer
+    {
+        $translator = $this->createStub(Translator::class);
+        $translator->method('getLocale')->willReturn('en');
+        $translator->method('trans')->willReturnCallback(
+            static fn (string $id): string => $messages[$id] ?? $id
+        );
+
+        return new Mailer(
+            $this->createStub(EntityManagerInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $translator,
+            $this->innerMailer,
+            $this->createStub(Logger::class),
+        );
     }
 }

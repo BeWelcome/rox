@@ -9,6 +9,8 @@ use App\Logger\Logger;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;
+use Doctrine\DBAL\Exception as DbalException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -296,5 +298,36 @@ class DatabaseLoaderTest extends TestCase
         $translation = $result->get('english');
 
         $this->assertSame('English', $translation);
+    }
+
+    public function testMissingTableGivesAnEmptyCatalogue()
+    {
+        $loader = $this->loaderFailingWith($this->createStub(TableNotFoundException::class));
+
+        $this->assertSame('english', $loader->load(null, 'en')->get('english'));
+    }
+
+    public function testOtherDatabaseErrorsAreNotCached()
+    {
+        $loader = $this->loaderFailingWith(new DbalException('Connection refused'));
+
+        $this->expectException(DbalException::class);
+        $loader->load(null, 'en');
+    }
+
+    private function loaderFailingWith(\Throwable $error): DatabaseLoader
+    {
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->willThrowException($error);
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        return new DatabaseLoader($entityManagerStub);
     }
 }

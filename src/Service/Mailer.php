@@ -11,6 +11,7 @@ use App\Logger\Logger;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -132,6 +133,7 @@ class Mailer
     public function sendNewsletterEmail(Newsletter $newsletter, Member $receiver, array $parameters): bool
     {
         $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
+        $this->assertNewsletterIsTranslated($receiver, $parameters['subject'], $parameters['wordcode']);
 
         // Bounces of suspension notices need no support action: send them to a mailbox Znuny does not fetch.
         $returnPath = Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? $this->suspensionBounceAddress : null;
@@ -411,6 +413,25 @@ class Mailer
     /**
      * Make sure to send the email notification in the preferred language of the user.
      */
+    /**
+     * A translator returns the translation key itself when it has no text for it. Never send that to a member.
+     */
+    private function assertNewsletterIsTranslated(Member $receiver, string $subject, string $wordcode): void
+    {
+        $currentLocale = $this->translator->getLocale();
+        $this->setTranslatorLocale($receiver);
+
+        try {
+            foreach ([$subject, $wordcode] as $key) {
+                if ($this->translator->trans($key) === $key) {
+                    throw new RuntimeException(sprintf('No translation of "%s", the mail is not sent.', $key));
+                }
+            }
+        } finally {
+            $this->translator->setLocale($currentLocale);
+        }
+    }
+
     private function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();

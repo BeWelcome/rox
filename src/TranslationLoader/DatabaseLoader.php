@@ -91,10 +91,7 @@ class DatabaseLoader implements LoaderInterface
 
     private function loadEnglishOriginals($domain): MessageCatalogue
     {
-        if (!isset($this->originals[$domain])) {
-            $this->originals[$domain] = new MessageCatalogue('en');
-        }
-        $catalogue = $this->originals[$domain];
+        $catalogue = $this->originals[$domain] ?? new MessageCatalogue('en');
 
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale('en', $domain);
@@ -111,6 +108,8 @@ class DatabaseLoader implements LoaderInterface
                 $catalogue->setMetadata($code, $metaData, $domain);
             }
         }
+
+        $this->originals[$domain] = $catalogue;
 
         return $catalogue;
     }

@@ -315,6 +315,55 @@ class DatabaseLoaderTest extends TestCase
         $loader->load(null, 'en');
     }
 
+    public function testFailedEnglishLoadLeavesNoEmptyCatalogueBehind()
+    {
+        $english = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortCode('en'))
+            ->setSentence('English')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
+        ;
+        $german = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortCode('de'))
+            ->setSentence('Englisch')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setUpdated(new DateTime('2020-09-02 00:00'))
+        ;
+
+        $calls = 0;
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->willReturnCallback(function ($locale) use (&$calls, $english, $german) {
+                if (1 === ++$calls) {
+                    throw new DbalException('Connection refused');
+                }
+
+                return 'en' === $locale ? [$english] : [$german];
+            });
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        $loader = new DatabaseLoader($entityManagerStub);
+
+        try {
+            $loader->load(null, 'de');
+            $this->fail('The first load should fail with the database error.');
+        } catch (DbalException $exception) {
+            $this->assertSame('Connection refused', $exception->getMessage());
+        }
+
+        $result = $loader->load(null, 'de');
+
+        $this->assertSame('Englisch', $result->get('english'));
+    }
+
     private function loaderFailingWith(\Throwable $error): DatabaseLoader
     {
         $repositoryStub = $this->createStub(WordRepository::class);

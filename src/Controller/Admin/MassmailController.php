@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Exception\UntranslatedNewsletterException;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,9 +48,13 @@ class MassmailController extends AbstractController
             $memberEntities = $memberRepository->findBy(['username' => $members]);
 
             foreach ($memberEntities as $member) {
-                $mailer->sendNewsletterEmail($newsletter, $member, [
-                    'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd',
-                ]);
+                try {
+                    $mailer->sendNewsletterEmail($newsletter, $member, [
+                        'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd',
+                    ]);
+                } catch (UntranslatedNewsletterException $exception) {
+                    $this->addFlash('error', sprintf('%s: %s', $member->getUsername(), $exception->getMessage()));
+                }
             }
 
             return $this->redirectToRoute('admin_massmail');

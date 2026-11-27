@@ -7,11 +7,11 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
+use App\Exception\UntranslatedNewsletterException;
 use App\Logger\Logger;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -411,9 +411,6 @@ class Mailer
     }
 
     /**
-     * Make sure to send the email notification in the preferred language of the user.
-     */
-    /**
      * A translator returns the translation key itself when it has no text for it. Never send that to a member.
      */
     private function assertNewsletterIsTranslated(Member $receiver, string $subject, string $wordcode): void
@@ -424,7 +421,7 @@ class Mailer
         try {
             foreach ([$subject, $wordcode] as $key) {
                 if ($this->translator->trans($key) === $key) {
-                    throw new RuntimeException(sprintf('No translation of "%s", the mail is not sent.', $key));
+                    throw new UntranslatedNewsletterException(sprintf('No translation of "%s", the mail is not sent.', $key));
                 }
             }
         } finally {
@@ -432,6 +429,9 @@ class Mailer
         }
     }
 
+    /**
+     * Make sure to send the email notification in the preferred language of the user.
+     */
     private function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();

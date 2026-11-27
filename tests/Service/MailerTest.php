@@ -6,12 +6,12 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Exception\UntranslatedNewsletterException;
 use App\Logger\Logger;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -169,7 +169,7 @@ class MailerTest extends TestCase
     {
         $this->innerMailer->expects($this->never())->method('send');
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(UntranslatedNewsletterException::class);
         $this->expectExceptionMessage('broadcast_title_suspension.notification.2026');
 
         // The translator has the body but no subject: it answers with the key.
@@ -181,7 +181,7 @@ class MailerTest extends TestCase
     {
         $this->innerMailer->expects($this->never())->method('send');
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(UntranslatedNewsletterException::class);
         $this->expectExceptionMessage('broadcast_body_suspension.notification.2026');
 
         $this->newsletterMailer(['broadcast_title_suspension.notification.2026' => 'Title'])

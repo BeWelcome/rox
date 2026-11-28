@@ -74,11 +74,13 @@ class UpcomingStaysTest extends WebTestCase
         $guest = $members->findOneBy(['username' => 'member-2']);
         $host = $members->findOneBy(['username' => 'member-5']);
         $stranger = $members->findOneBy(['username' => 'member-3']);
-        $stay = $this->request($guest, $host, HostingRequest::REQUEST_ACCEPTED, Carbon::today()->addDays(4));
+        // Put the stay in a different month from the calendar default.
+        $arrival = Carbon::today()->startOfMonth()->addMonth()->addDays(10);
+        $stay = $this->request($guest, $host, HostingRequest::REQUEST_ACCEPTED, $arrival);
         $requestId = $stay->getRequest()->getId();
 
         $client->loginUser($guest);
-        $crawler = $client->request('GET', '/stays');
+        $crawler = $client->request('GET', '/stays', ['month' => $arrival->format('Y-m')]);
         self::assertCount(1, $crawler->filter('.p-stays__add a[href="/stays/' . $requestId . '/calendar.ics"]'));
 
         $client->request('GET', '/stays/' . $requestId . '/calendar.ics');

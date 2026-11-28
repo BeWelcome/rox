@@ -112,12 +112,12 @@ class ActivityModel
         return $repository->findLatest($page, $limit);
     }
 
-    public function getProblematicActivities($page, $limit): Pagerfanta
+    public function getUpcomingActivitiesForChecker(int $page, int $limit): Pagerfanta
     {
         /** @var ActivityRepository $repository */
         $repository = $this->entityManager->getRepository(Activity::class);
 
-        return $repository->findProblematicActivities($page, $limit);
+        return $repository->findUpcomingActivitiesForChecker($page, $limit);
     }
 
     public function deleteAsSpamByChecker($activityIds): void

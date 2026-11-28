@@ -53,34 +53,15 @@ class ActivityRepository extends EntityRepository
             ');
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * Only lists activities which do have only banned admins.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function findProblematicActivities($page = 1, $items = 10)
+    /** Activities that have not ended yet, newest first, including cancelled activities. */
+    public function findUpcomingActivitiesForChecker(int $page, int $items): Pagerfanta
     {
-        $paginator = new Pagerfanta(new QueryAdapter($this->queryProblematicActivities(), false));
-        $paginator->setMaxPerPage($items);
-        $paginator->setCurrentPage($page);
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.ends > :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('a.id', 'DESC');
 
-        return $paginator;
-    }
-
-    public function queryProblematicActivities(): Query
-    {
-        return $this->createQueryBuilder('a')
-            ->join(ActivityAttendee::class, 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
-            ->join(Member::class, 'm', Join::WITH, 'aa.attendee = m')
-            ->where("m.status = 'Banned'")
-            ->orWhere('DATEDIFF(a.ends, a.starts) > 1')
-            ->orderBy('a.id', 'desc')
-            ->getQuery();
+        return $this->paginate($qb, $page, $items);
     }
 
     /**

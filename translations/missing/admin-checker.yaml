@@ -10,8 +10,8 @@ admin.checker.intro.blocked_words:
 admin.checker.intro.processed_blocked_words:
   - 'Block word messages that have a decision. Change one and save if it was wrong.'
   - 'Checker, processed block word messages: the text above the list.'
-admin.checker.intro.activities:
-  - 'Activities that look like spam. Deleting one also removes it for everybody who joined.'
+admin.checker.activities.upcoming.intro:
+  - 'Activities that have not ended yet. Deleting one also removes it for everybody who joined.'
   - 'Checker, activities: the text above the list.'
 admin.checker.messages.none:
   - 'No messages to check'
@@ -64,8 +64,8 @@ admin.checker.messages.saved:
 admin.checker.activities.none:
   - 'No activities to check'
   - 'Checker: the activities section is empty.'
-admin.checker.activities.none.text:
-  - 'Activities that look like spam show up here.'
+admin.checker.activities.upcoming.none.text:
+  - 'Upcoming activities will appear here.'
   - 'Checker: the activities section is empty.'
 admin.checker.activities.select.all:
   - 'Select all'

@@ -6,6 +6,7 @@ use App\Controller\Admin\CheckerController;
 use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Member;
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
@@ -188,6 +189,28 @@ final class CheckerTest extends WebTestCase
         self::assertSame(['ToCheck', 'SpamSayMember'], $this->state($message));
     }
 
+    public function testTheActivitiesThatHaveNotEndedAreListed(): void
+    {
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        [$past, $running, $nextWeek] = $entityManager->getRepository(Activity::class)->findBy([], ['id' => 'ASC']);
+
+        $past->setStarts(new DateTime('-4 days'))->setEnds(new DateTime('-1 day'));
+        $running->setStarts(new DateTime('-1 hour'))->setEnds(new DateTime('+1 hour'));
+        $nextWeek->setStarts(new DateTime('+1 week'))->setEnds(new DateTime('+1 week +1 hour'));
+        $nextWeek->setStatus(Activity::STATUS_CANCELLED);
+        $entityManager->flush();
+
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->client->request('GET', '/admin/spam/activities');
+
+        $this->assertResponseIsSuccessful();
+        $listed = $crawler->filter('input[name="ids[]"]')->each(
+            static fn (Crawler $input): int => (int) $input->attr('value'),
+        );
+        self::assertSame([$nextWeek->getId(), $running->getId()], $listed);
+        self::assertSame('2', trim($crawler->filter('.c-cnews-menu__item.is-active .c-cnews-menu__count')->text()));
+    }
+
     public function testActivitiesAreDeleted(): void
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
@@ -196,10 +219,11 @@ final class CheckerTest extends WebTestCase
             ->setMaxResults(2)
             ->getSingleColumnResult());
         self::assertCount(2, $ids);
-        // longer than a day: looks like spam
         $entityManager
-            ->createQuery('UPDATE ' . Activity::class . " a SET a.ends = DATE_ADD(a.starts, 3, 'DAY') WHERE a.id IN (:ids)")
+            ->createQuery('UPDATE ' . Activity::class . ' a SET a.starts = :starts, a.ends = :ends WHERE a.id IN (:ids)')
             ->setParameter('ids', $ids)
+            ->setParameter('starts', new DateTime('+1 day'))
+            ->setParameter('ends', new DateTime('+1 day +1 hour'))
             ->execute();
         $this->client->loginUser($this->member('bwadmin'));
 

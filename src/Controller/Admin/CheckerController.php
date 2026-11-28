@@ -22,8 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The checkers' pages: the messages members reported and the ones with a block word (one decision per message, spam
- * or not spam), the decided ones to correct a decision, the activities that look like spam and the reported community
- * news comments. The menu with the open counts is on every page (admin/checker/_menu.html.twig).
+ * or not spam), the decided ones to correct a decision, activities that have yet to end and
+ * the reported community news comments. The menu with the open counts is on every page (admin/checker/_menu.html.twig).
  */
 class CheckerController extends AbstractController
 {
@@ -84,8 +84,7 @@ class CheckerController extends AbstractController
     }
 
     /**
-     * The activities that look like spam (an organizer is banned or they last longer than a day): Delete removes one,
-     * Delete selected the ticked ones.
+     * Lists upcoming activities, including ones already in progress. A checker can delete one activity or a selection.
      */
     #[Route(path: '/admin/spam/activities', name: 'admin_spam_activities', methods: ['GET', 'POST'])]
     public function showActivities(Request $request): Response
@@ -105,7 +104,7 @@ class CheckerController extends AbstractController
             return $this->redirectToRoute('admin_spam_activities', array_filter(['page' => 1 < $page ? $page : null]));
         }
 
-        $activities = $this->page(fn (int $page): Pagerfanta => $this->activityModel->getProblematicActivities($page, 10), $page);
+        $activities = $this->page(fn (int $page): Pagerfanta => $this->activityModel->getUpcomingActivitiesForChecker($page, 10), $page);
 
         return $this->render('admin/checker/activities.html.twig', [
             'activities' => $activities,
@@ -261,7 +260,7 @@ class CheckerController extends AbstractController
         return [
             'messages' => $this->checkerModel->getReportedMessages(1, 1)->getNbResults(),
             'blocked_words' => $this->checkerModel->getBlockWordsMessages(1, 1)->getNbResults(),
-            'activities' => $this->activityModel->getProblematicActivities(1, 1)->getNbResults(),
+            'activities' => $this->activityModel->getUpcomingActivitiesForChecker(1, 1)->getNbResults(),
             'community_news' => $this->communityNewsModel->countReportedComments(),
         ];
     }

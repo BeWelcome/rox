@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {#
-  The checkers' activities (Admin\CheckerController::showActivities): the ones that look like spam, with their date,
-  place, description and organizers. Delete removes one, Delete selected the ticked ones.
+  The checkers' activities (Admin\CheckerController::showActivities): upcoming activities with their dates,
+  places, descriptions and organizers. Delete removes one, Delete selected the ticked ones.
   Expects activities (pager), counts and active.
 #}
 {% set inline_notices = true %}
@@ -25,12 +25,12 @@
 
         <section class="c-cnews-checker__main">
           {% include 'admin/massmail/_flash.html.twig' %}
-          <p class="c-cnews-checker__intro">{{ 'admin.checker.intro.activities'|trans }}</p>
+          <p class="c-cnews-checker__intro">{{ 'admin.checker.activities.upcoming.intro'|trans }}</p>
           {% if activities.nbResults == 0 %}
             <div class="c-cnews-card c-cnews-empty">
               <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-calendar-days"></i></span>
               <p class="c-cnews-empty__title">{{ 'admin.checker.activities.none'|trans }}</p>
-              <p class="c-cnews-empty__text">{{ 'admin.checker.activities.none.text'|trans }}</p>
+              <p class="c-cnews-empty__text">{{ 'admin.checker.activities.upcoming.none.text'|trans }}</p>
             </div>
           {% else %}
             <form method="post" class="c-cnews-card c-checker__card js-checker-select">
